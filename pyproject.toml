@@ -8,6 +8,7 @@ authors = ["Nguyễn Hồng Quân <ng.hong.quan@gmail.com>"]
 python = "^3.7"
 single-version = "^1.1"
 xdgenvpy = "^2.3.0"
+logbook = "^1.5.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

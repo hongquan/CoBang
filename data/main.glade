@@ -55,7 +55,7 @@
                 <property name="valign">center</property>
                 <property name="use_stock">True</property>
                 <property name="always_show_image">True</property>
-                <signal name="clicked" handler="on_quit" swapped="no"/>
+                <signal name="clicked" handler="on_btn_quit_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -84,9 +84,10 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkDrawingArea">
+                  <object class="GtkDrawingArea" id="area-webcam">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <signal name="realize" handler="on_area_webcam_realize" swapped="no"/>
                   </object>
                   <packing>
                     <property name="name">pl_webcam</property>
