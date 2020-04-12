@@ -13,6 +13,7 @@ logbook = "^1.5.3"
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 PyGObject-stubs = "^0.0.2"
+black = {version = "^19.10b0", allow-prereleases = true}
 
 [build-system]
 requires = ["poetry>=0.12"]
