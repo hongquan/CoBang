@@ -87,6 +87,7 @@
                   <object class="GtkDrawingArea" id="area-webcam">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="double_buffered">False</property>
                     <signal name="realize" handler="on_area_webcam_realize" swapped="no"/>
                   </object>
                   <packing>
