@@ -28,6 +28,7 @@ ColorizedStderrHandler().push_application()
 # Some Gstreamer CLI examples
 # gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! waylandsink
 # gst-launch-1.0 playbin3 uri=v4l2:///dev/video0 video-sink=waylandsink
+# Better integration: gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! gtksink
 
 
 class CoBangApplication(Gtk.Application):
@@ -49,25 +50,25 @@ class CoBangApplication(Gtk.Application):
         action.connect("activate", self.quit_from_action)
         self.add_action(action)
         # self.old_pipeline = Gst.parse_launch("playbin3 uri=v4l2:///dev/video0 video-sink=waylandsink")
-        self.gst_pipeline = Gst.Pipeline.new('main')
-        gst_source = Gst.ElementFactory.make('v4l2src')
-        gst_source.set_property('device', '/dev/video0')
+        # self.gst_pipeline = Gst.Pipeline.new('main')
+        # gst_source = Gst.ElementFactory.make('v4l2src')
+        # gst_source.set_property('device', '/dev/video0')
         # gst_filter = Gst.Caps.new_empty_simple('video/x-raw')
-        gst_sink = Gst.ElementFactory.make('gtksink', 'gtksink')
-        area = gst_sink.get_property('widget')
-        logger.debug('GtkSink widget: {}', area)
+        # gst_sink = Gst.ElementFactory.make('gtksink', 'gtksink')
+        # area = gst_sink.get_property('widget')
+        # logger.debug('GtkSink widget: {}', area)
         Cheese.CameraDeviceMonitor.new_async(None, self.camera_monitor_started)
         self.camera_devices = {}
-        self.gst_pipeline.add(gst_source)
-        self.gst_pipeline.add(Gst.ElementFactory.make('videoconvert'))
-        self.gst_pipeline.add(gst_sink)
+        # self.gst_pipeline.add(gst_source)
+        # self.gst_pipeline.add(Gst.ElementFactory.make('videoconvert'))
+        # self.gst_pipeline.add(gst_sink)
         # gst_source.link_filtered(gst_sink, gst_filter)
-        ex_pipeline: Gst.Pipeline = Gst.parse_launch('v4l2src device=/dev/video0 ! videoconvert ! gtksink')
+        ex_pipeline: Gst.Pipeline = Gst.parse_launch('v4l2src device=/dev/video0 name=source ! videoconvert ! gtksink name=sink')
         logger.debug('Exp: {}', ex_pipeline)
         itr = ex_pipeline.iterate_elements()
         logger.debug('Itr: {}', itr)
         itr.foreach(lambda x: print(x))
-        self.gst_pipeline.iterate_elements().foreach(lambda x: print(x))
+        self.gst_pipeline = ex_pipeline
 
     def build_main_window(self):
         source = get_ui_filepath("main.glade")
@@ -118,7 +119,7 @@ class CoBangApplication(Gtk.Application):
         src: GstBase.PushSrc = device.get_src()
         loc: str = src.get_property("device")
         self.camera_devices[loc] = device
-        sink = self.gst_pipeline.get_by_name('gtksink')
+        sink = self.gst_pipeline.get_by_name('sink')
         area = sink.get_property('widget')
         old_area = self.stack_img_source.get_child_by_name('src_webcam')
         logger.debug('Old area: {}', old_area)
