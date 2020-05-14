@@ -28,7 +28,9 @@ ColorizedStderrHandler().push_application()
 # Some Gstreamer CLI examples
 # gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! waylandsink
 # gst-launch-1.0 playbin3 uri=v4l2:///dev/video0 video-sink=waylandsink
-# Better integration: gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! gtksink
+# Better integration:
+#   gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! gtksink
+#   gst-launch-1.0 v4l2src ! videoconvert ! glsinkbin sink=gtkglsink
 
 
 class CoBangApplication(Gtk.Application):
@@ -55,9 +57,25 @@ class CoBangApplication(Gtk.Application):
         self.build_gstreamer_pipeline()
 
     def build_gstreamer_pipeline(self):
-        command = f'v4l2src ! videoconvert ! gtksink name={self.SINK_NAME}'
+        # Try GL backend first
+        command = f'v4l2src ! videoconvert ! glsinkbin sink=gtkglsink name=sinkbin'
         logger.debug('To build pipeline: {}', command)
         pipeline = Gst.parse_launch(command)
+        if pipeline:
+            glbin = pipeline.get_by_name('sinkbin')
+            itr = glbin.iterate_sinks()
+            r, glsink = itr.next()
+            logger.debug('GtkGLSink: {}', glsink)
+            glsink.set_property('name', self.SINK_NAME)
+        else:
+            # Fallback to non-GL
+            command = f'v4l2src ! videoconvert ! gtksink name={self.SINK_NAME}'
+            logger.debug('To build pipeline: {}', command)
+            pipeline = Gst.parse_launch(command)
+        if not pipeline:
+            # TODO: Print error in status bar
+            logger.error('Failed to create Gst Pipeline')
+            return
         logger.debug('Created {}', pipeline)
         self.gst_pipeline = pipeline
         return pipeline
