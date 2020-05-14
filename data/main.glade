@@ -88,7 +88,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="double_buffered">False</property>
-                    <signal name="realize" handler="on_area_webcam_realize" swapped="no"/>
                   </object>
                   <packing>
                     <property name="name">src_webcam</property>

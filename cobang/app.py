@@ -35,8 +35,9 @@ class CoBangApplication(Gtk.Application):
     window = None
     main_grid = None
     area_webcam: Optional[Gtk.Widget] = None
-    old_pipeline = None
     stack_img_source: Optional[Gtk.Stack] = None
+    SINK_NAME = 'sink'
+    gst_pipeline: Optional[Gst.Pipeline] = None
     camera_devices = {}
 
     def __init__(self, *args, **kwargs):
@@ -49,26 +50,16 @@ class CoBangApplication(Gtk.Application):
         action = Gio.SimpleAction.new("quit", None)
         action.connect("activate", self.quit_from_action)
         self.add_action(action)
-        # self.old_pipeline = Gst.parse_launch("playbin3 uri=v4l2:///dev/video0 video-sink=waylandsink")
-        # self.gst_pipeline = Gst.Pipeline.new('main')
-        # gst_source = Gst.ElementFactory.make('v4l2src')
-        # gst_source.set_property('device', '/dev/video0')
-        # gst_filter = Gst.Caps.new_empty_simple('video/x-raw')
-        # gst_sink = Gst.ElementFactory.make('gtksink', 'gtksink')
-        # area = gst_sink.get_property('widget')
-        # logger.debug('GtkSink widget: {}', area)
         Cheese.CameraDeviceMonitor.new_async(None, self.camera_monitor_started)
-        self.camera_devices = {}
-        # self.gst_pipeline.add(gst_source)
-        # self.gst_pipeline.add(Gst.ElementFactory.make('videoconvert'))
-        # self.gst_pipeline.add(gst_sink)
-        # gst_source.link_filtered(gst_sink, gst_filter)
-        ex_pipeline: Gst.Pipeline = Gst.parse_launch('v4l2src device=/dev/video0 name=source ! videoconvert ! gtksink name=sink')
-        logger.debug('Exp: {}', ex_pipeline)
-        itr = ex_pipeline.iterate_elements()
-        logger.debug('Itr: {}', itr)
-        itr.foreach(lambda x: print(x))
-        self.gst_pipeline = ex_pipeline
+        self.build_gstreamer_pipeline()
+
+    def build_gstreamer_pipeline(self):
+        command = f'v4l2src ! videoconvert ! gtksink name={self.SINK_NAME}'
+        logger.debug('To build pipeline: {}', command)
+        pipeline = Gst.parse_launch(command)
+        logger.debug('Created {}', pipeline)
+        self.gst_pipeline = pipeline
+        return pipeline
 
     def build_main_window(self):
         source = get_ui_filepath("main.glade")
@@ -83,19 +74,7 @@ class CoBangApplication(Gtk.Application):
         return window
 
     def signal_handlers_for_glade(self):
-        return {"on_area_webcam_realize": self.pass_window_to_gstreamer, "on_btn_quit_clicked": self.quit_from_widget}
-
-    def pass_window_to_gstreamer(self, area_webcam: Gtk.DrawingArea):
-        window: Gdk.Window = area_webcam.get_window()
-        is_native = window.ensure_native()
-        if not is_native:
-            logger.error("DrawingArea {} is not a native window", area_webcam.get_name())
-            return
-        # https://gist.github.com/jonasl/92c1ef32cfd87047e15f5ae24c6b510e
-        if window.__class__.__name__ != "GdkWaylandWindow":
-            # X11
-            logger.error("Implement later")
-        logger.debug("Area for webcam is realized")
+        return {"on_btn_quit_clicked": self.quit_from_widget}
 
     def do_activate(self):
         if not self.window:
@@ -119,12 +98,14 @@ class CoBangApplication(Gtk.Application):
         src: GstBase.PushSrc = device.get_src()
         loc: str = src.get_property("device")
         self.camera_devices[loc] = device
-        sink = self.gst_pipeline.get_by_name('sink')
+        sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
         area = sink.get_property('widget')
         old_area = self.stack_img_source.get_child_by_name('src_webcam')
         logger.debug('Old area: {}', old_area)
         self.stack_img_source.remove(old_area)
         self.stack_img_source.add_titled(area, 'src_webcam', 'Webcam')
+        self.stack_img_source.child_set_property(area, 'icon-name', 'camera-web')
+        self.stack_img_source.child_set_property(area, 'position', 0)
         area.show()
         self.stack_img_source.set_visible_child(area)
         logger.debug('Play {}', self.gst_pipeline)
