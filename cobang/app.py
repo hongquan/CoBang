@@ -11,7 +11,7 @@ gi.require_version("GstBase", "1.0")
 gi.require_version("GstVideo", "1.0")
 gi.require_version("GstGL", "1.0")
 gi.require_version("Cheese", "3.0")
-from gi.repository import Gtk, Gio, Gdk, Gst, GstBase, GstVideo, GstGL, Cheese  # noqa
+from gi.repository import Gtk, Gio, Gst, GstBase, Cheese
 
 from .resources import get_ui_filepath
 
@@ -37,6 +37,7 @@ class CoBangApplication(Gtk.Application):
     area_webcam: Optional[Gtk.Widget] = None
     stack_img_source: Optional[Gtk.Stack] = None
     SINK_NAME = 'sink'
+    WEBCAM_WIDGET_NAME = 'src_webcam'
     gst_pipeline: Optional[Gst.Pipeline] = None
     camera_devices = {}
 
@@ -71,6 +72,7 @@ class CoBangApplication(Gtk.Application):
         window.set_application(self)
         self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
         self.stack_img_source = builder.get_object("stack-img-source")
+        self.replace_webcam_placeholder_with_gstreamer_sink()
         return window
 
     def signal_handlers_for_glade(self):
@@ -92,22 +94,33 @@ class CoBangApplication(Gtk.Application):
         monitor.connect("removed", self.on_camera_removed)
         monitor.coldplug()
 
+    def replace_webcam_placeholder_with_gstreamer_sink(self):
+        '''
+        In glade file, we put a placeholder to reserve a place for putting webcam screen.
+        Now it is time to replace that widget with which coming with gtksink.
+        '''
+        sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
+        area = sink.get_property('widget')
+        old_area = self.stack_img_source.get_child_by_name(self.WEBCAM_WIDGET_NAME)
+        logger.debug('To replace {} with {}', old_area, area)
+        # Extract properties of old widget
+        property_names = ('icon-name', 'needs-attention', 'position', 'title')
+        stack = self.stack_img_source
+        properties = {k: stack.child_get_property(old_area, k) for k in property_names}
+        # Remove old widget
+        self.stack_img_source.remove(old_area)
+        self.stack_img_source.add_named(area, self.WEBCAM_WIDGET_NAME)
+        for n in property_names:
+            stack.child_set_property(area, n, properties[n])
+        area.show()
+        self.stack_img_source.set_visible_child(area)
+
     def on_camera_added(self, monitor: Cheese.CameraDeviceMonitor, device: Cheese.CameraDevice):
         logger.info("Added {}", device)
         # GstV4l2Src type, but don't know where to import
         src: GstBase.PushSrc = device.get_src()
         loc: str = src.get_property("device")
         self.camera_devices[loc] = device
-        sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
-        area = sink.get_property('widget')
-        old_area = self.stack_img_source.get_child_by_name('src_webcam')
-        logger.debug('Old area: {}', old_area)
-        self.stack_img_source.remove(old_area)
-        self.stack_img_source.add_titled(area, 'src_webcam', 'Webcam')
-        self.stack_img_source.child_set_property(area, 'icon-name', 'camera-web')
-        self.stack_img_source.child_set_property(area, 'position', 0)
-        area.show()
-        self.stack_img_source.set_visible_child(area)
         logger.debug('Play {}', self.gst_pipeline)
         self.gst_pipeline.set_state(Gst.State.PLAYING)
 
@@ -116,8 +129,8 @@ class CoBangApplication(Gtk.Application):
         src: GstBase.PushSrc = device.get_src()
         loc: str = src.get_property("device")
         self.camera_devices.pop(loc)
-        # if not self.camera_devices:
-        #     self.old_pipeline.set_state(Gst.State.NULL)
+        if not self.camera_devices:
+            self.gst_pipeline.set_state(Gst.State.NULL)
 
     def set_rectangle_webcam_display(self, drawing_area: Gtk.DrawingArea, cr: cairo.Context, sink: Gst.Bin):
         logger.debug('Set rectangle on redraw')
