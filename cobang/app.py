@@ -14,7 +14,6 @@ gi.require_version("Cheese", "3.0")
 from gi.repository import Gtk, Gio, Gdk, Gst, GstBase, GstVideo, GstGL, Cheese  # noqa
 
 from .resources import get_ui_filepath
-from .wayland import get_wayland_window_handle, get_default_wayland_display_context, get_wayland_display_context
 
 
 logger = Logger(__name__)
@@ -35,7 +34,8 @@ class CoBangApplication(Gtk.Application):
     window = None
     main_grid = None
     area_webcam: Optional[Gtk.Widget] = None
-    gst_pipeline = None
+    old_pipeline = None
+    stack_img_source: Optional[Gtk.Stack] = None
     camera_devices = {}
 
     def __init__(self, *args, **kwargs):
@@ -48,9 +48,26 @@ class CoBangApplication(Gtk.Application):
         action = Gio.SimpleAction.new("quit", None)
         action.connect("activate", self.quit_from_action)
         self.add_action(action)
-        self.gst_pipeline = Gst.parse_launch("playbin3 uri=v4l2:///dev/video0 video-sink=waylandsink")
+        # self.old_pipeline = Gst.parse_launch("playbin3 uri=v4l2:///dev/video0 video-sink=waylandsink")
+        self.gst_pipeline = Gst.Pipeline.new('main')
+        gst_source = Gst.ElementFactory.make('v4l2src')
+        gst_source.set_property('device', '/dev/video0')
+        # gst_filter = Gst.Caps.new_empty_simple('video/x-raw')
+        gst_sink = Gst.ElementFactory.make('gtksink', 'gtksink')
+        area = gst_sink.get_property('widget')
+        logger.debug('GtkSink widget: {}', area)
         Cheese.CameraDeviceMonitor.new_async(None, self.camera_monitor_started)
         self.camera_devices = {}
+        self.gst_pipeline.add(gst_source)
+        self.gst_pipeline.add(Gst.ElementFactory.make('videoconvert'))
+        self.gst_pipeline.add(gst_sink)
+        # gst_source.link_filtered(gst_sink, gst_filter)
+        ex_pipeline: Gst.Pipeline = Gst.parse_launch('v4l2src device=/dev/video0 ! videoconvert ! gtksink')
+        logger.debug('Exp: {}', ex_pipeline)
+        itr = ex_pipeline.iterate_elements()
+        logger.debug('Itr: {}', itr)
+        itr.foreach(lambda x: print(x))
+        self.gst_pipeline.iterate_elements().foreach(lambda x: print(x))
 
     def build_main_window(self):
         source = get_ui_filepath("main.glade")
@@ -61,7 +78,7 @@ class CoBangApplication(Gtk.Application):
         builder.get_object("main-grid")
         window.set_application(self)
         self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
-        builder.get_object("stack-img-source")
+        self.stack_img_source = builder.get_object("stack-img-source")
         return window
 
     def signal_handlers_for_glade(self):
@@ -77,13 +94,7 @@ class CoBangApplication(Gtk.Application):
         if window.__class__.__name__ != "GdkWaylandWindow":
             # X11
             logger.error("Implement later")
-        area_webcam.set_double_buffered(False)
-        self.area_webcam = area_webcam
         logger.debug("Area for webcam is realized")
-        bus = self.gst_pipeline.get_bus()
-        bus.add_signal_watch()
-        bus.set_sync_handler(self.gst_bus_sync_handler, area_webcam)
-        logger.debug("Set sync handler for {}", bus)
 
     def do_activate(self):
         if not self.window:
@@ -107,7 +118,15 @@ class CoBangApplication(Gtk.Application):
         src: GstBase.PushSrc = device.get_src()
         loc: str = src.get_property("device")
         self.camera_devices[loc] = device
-        logger.debug("Play the pipeline")
+        sink = self.gst_pipeline.get_by_name('gtksink')
+        area = sink.get_property('widget')
+        old_area = self.stack_img_source.get_child_by_name('src_webcam')
+        logger.debug('Old area: {}', old_area)
+        self.stack_img_source.remove(old_area)
+        self.stack_img_source.add_titled(area, 'src_webcam', 'Webcam')
+        area.show()
+        self.stack_img_source.set_visible_child(area)
+        logger.debug('Play {}', self.gst_pipeline)
         self.gst_pipeline.set_state(Gst.State.PLAYING)
 
     def on_camera_removed(self, monitor: Cheese.CameraDeviceMonitor, device: Cheese.CameraDevice):
@@ -115,45 +134,8 @@ class CoBangApplication(Gtk.Application):
         src: GstBase.PushSrc = device.get_src()
         loc: str = src.get_property("device")
         self.camera_devices.pop(loc)
-        if not self.camera_devices:
-            self.gst_pipeline.set_state(Gst.State.NULL)
-
-    def set_context_for_video_display(self, message: Gst.Message, video_widget: Gtk.Widget):
-        logger.debug('Message Src: {}', message.src)
-        waylandsink: GstVideo.VideoSink = message.src
-        context = get_wayland_display_context(video_widget)
-        logger.debug('Context {}', context)
-        waylandsink.set_context(context)
-
-    def gst_bus_sync_handler(self, bus: Gst.Bus, message: Gst.Message, video_widget: Gtk.Widget) -> Gst.BusSyncReply:
-        if message.type == Gst.MessageType.NEED_CONTEXT:
-            _, context_type = message.parse_context_type()
-            if context_type == "GstWaylandDisplayHandleContextType":
-                logger.info("Need GstWaylandDisplayHandleContextType")
-                self.set_context_for_video_display(message, video_widget)
-                return Gst.BusSyncReply.DROP
-            return Gst.BusSyncReply.PASS
-        if GstVideo.is_video_overlay_prepare_window_handle_message(message):
-            logger.info("Should set window handle. Message: {}", message)
-            # Wayland
-            whandle = get_wayland_window_handle(self.area_webcam)
-            logger.debug("GdkWaylandWindow window handle {}", whandle)
-            # result: Gst.IteratorResult
-            # result, sink = self.gst_pipeline.iterate_sinks().next()
-            # logger.info('Sink {}', sink)
-            # sink.set_window_handle(whandle)
-            # rectangle: Gdk.Rectangle = self.area_webcam.get_allocation()
-            logger.info("Set window handle for: {}", message.src)
-            playsink: Gst.Bin = message.src
-            playsink.set_window_handle(whandle)
-            allocation = self.area_webcam.get_allocation()
-            x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
-            logger.debug("Rectangle: ({}, {}), {} x {}", x, y, w, h)
-            r = playsink.set_render_rectangle(x, y, w, h)
-            logger.debug(" -> {}", r)
-            # self.area_webcam.connect("draw", self.set_rectangle_webcam_display, playsink)
-            return Gst.BusSyncReply.DROP
-        return Gst.BusSyncReply.PASS
+        # if not self.camera_devices:
+        #     self.old_pipeline.set_state(Gst.State.NULL)
 
     def set_rectangle_webcam_display(self, drawing_area: Gtk.DrawingArea, cr: cairo.Context, sink: Gst.Bin):
         logger.debug('Set rectangle on redraw')

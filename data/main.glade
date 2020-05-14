@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.1 -->
+<!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkApplicationWindow" id="main-window">
@@ -91,7 +91,7 @@
                     <signal name="realize" handler="on_area_webcam_realize" swapped="no"/>
                   </object>
                   <packing>
-                    <property name="name">pl_webcam</property>
+                    <property name="name">src_webcam</property>
                     <property name="title" translatable="yes">Webcam</property>
                     <property name="icon_name">camera-web</property>
                   </packing>
@@ -102,7 +102,7 @@
                     <property name="can_focus">False</property>
                   </object>
                   <packing>
-                    <property name="name">pl_image</property>
+                    <property name="name">src_image</property>
                     <property name="title" translatable="yes">Image</property>
                     <property name="icon_name">insert-image</property>
                     <property name="position">1</property>
