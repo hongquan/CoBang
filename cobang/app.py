@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 import gi
@@ -5,14 +6,16 @@ import cairo
 from logbook import Logger
 from logbook.more import ColorizedStderrHandler
 
+gi.require_version("GLib", "2.0")
 gi.require_version("Gtk", "3.0")
+gi.require_version("GdkPixbuf", "2.0")
 gi.require_version("Gst", "1.0")
 gi.require_version("GstBase", "1.0")
 gi.require_version("GstApp", "1.0")
 gi.require_version("GstVideo", "1.0")
 gi.require_version("GstGL", "1.0")
 gi.require_version("Cheese", "3.0")
-from gi.repository import Gtk, Gio, Gst, GstBase, GstApp, Cheese
+from gi.repository import GLib, Gtk, GdkPixbuf, Gio, Gst, GstBase, GstApp, Cheese
 
 from .resources import get_ui_filepath
 
@@ -59,9 +62,10 @@ class CoBangApplication(Gtk.Application):
         self.build_gstreamer_pipeline()
 
     def build_gstreamer_pipeline(self):
+        # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
         # Try GL backend first
         command = (f'v4l2src ! tee name=t ! queue ! glsinkbin sink=gtkglsink name=sink_bin '
-                   't. ! queue ! videoconvert ! video/x-raw,format=GRAY8 ! '
+                   't. ! queue ! videoconvert ! video/x-raw,format=RGB ! '
                    f'appsink name={self.APPSINK_NAME} emit-signals=1')
         logger.debug('To build pipeline: {}', command)
         pipeline = Gst.parse_launch(command)
@@ -74,7 +78,7 @@ class CoBangApplication(Gtk.Application):
         else:
             # Fallback to non-GL
             command = (f'v4l2src ! videoconvert ! tee name=t ! queue ! gtksink name={self.SINK_NAME} '
-                       f't. ! queue ! video/x-raw,format=GRAY8 ! appsink name={self.APPSINK_NAME} emit-signals=1')
+                       f't. ! queue ! video/x-raw,format=RGB ! appsink name={self.APPSINK_NAME} emit-signals=1')
             logger.debug('To build pipeline: {}', command)
             pipeline = Gst.parse_launch(command)
         if not pipeline:
@@ -186,7 +190,16 @@ class CoBangApplication(Gtk.Application):
             logger.error('Failed to get mapinfo.')
             return Gst.FlowReturn.ERROR
         logger.debug('Data size: {}', mapinfo.size)
-        logger.debug('Image size: {}x{}', width, height)
+        logger.debug('Image size: {}x{} = {}', width, height, width * height)
+        rowstride = 4 * (width * 3 / 4)
+        gbytes = GLib.Bytes.new(mapinfo.data)
+        logger.debug('Gbytes: {}', gbytes)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_bytes(gbytes, GdkPixbuf.Colorspace.RGB,
+                                                 False, 8, width, height, rowstride)
+        # Grayscale it
+        pixbuf.saturate_and_pixelate(pixbuf, 0.2, False)
+        filename = datetime.now().strftime('%Y%m%d_%H%M%S')
+        pixbuf.savev(f'/tmp/test/{filename}.png', 'png', '', '')
         return Gst.FlowReturn.OK
 
     def quit_from_widget(self, widget: Gtk.Widget):
