@@ -58,7 +58,7 @@ class CoBangApplication(Gtk.Application):
 
     def build_gstreamer_pipeline(self):
         # Try GL backend first
-        command = f'v4l2src ! videoconvert ! glsinkbin sink=gtkglsink name=sinkbin'
+        command = f'v4l2src ! glsinkbin sink=gtkglsink name=sinkbin'
         logger.debug('To build pipeline: {}', command)
         pipeline = Gst.parse_launch(command)
         if pipeline:
