@@ -8,10 +8,11 @@ from logbook.more import ColorizedStderrHandler
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gst", "1.0")
 gi.require_version("GstBase", "1.0")
+gi.require_version("GstApp", "1.0")
 gi.require_version("GstVideo", "1.0")
 gi.require_version("GstGL", "1.0")
 gi.require_version("Cheese", "3.0")
-from gi.repository import Gtk, Gio, Gst, GstBase, Cheese
+from gi.repository import Gtk, Gio, Gst, GstBase, GstApp, Cheese
 
 from .resources import get_ui_filepath
 
@@ -39,6 +40,7 @@ class CoBangApplication(Gtk.Application):
     area_webcam: Optional[Gtk.Widget] = None
     stack_img_source: Optional[Gtk.Stack] = None
     SINK_NAME = 'sink'
+    APPSINK_NAME = 'app_sink'
     WEBCAM_WIDGET_NAME = 'src_webcam'
     gst_pipeline: Optional[Gst.Pipeline] = None
     camera_devices = {}
@@ -58,18 +60,21 @@ class CoBangApplication(Gtk.Application):
 
     def build_gstreamer_pipeline(self):
         # Try GL backend first
-        command = f'v4l2src ! glsinkbin sink=gtkglsink name=sinkbin'
+        command = (f'v4l2src ! tee name=t ! queue ! glsinkbin sink=gtkglsink name=sink_bin '
+                   't. ! queue ! videoconvert ! video/x-raw,format=GRAY8 ! '
+                   f'appsink name={self.APPSINK_NAME} emit-signals=1')
         logger.debug('To build pipeline: {}', command)
         pipeline = Gst.parse_launch(command)
         if pipeline:
-            glbin = pipeline.get_by_name('sinkbin')
+            glbin = pipeline.get_by_name('sink_bin')
             itr = glbin.iterate_sinks()
             r, glsink = itr.next()
             logger.debug('GtkGLSink: {}', glsink)
             glsink.set_property('name', self.SINK_NAME)
         else:
             # Fallback to non-GL
-            command = f'v4l2src ! videoconvert ! gtksink name={self.SINK_NAME}'
+            command = (f'v4l2src ! videoconvert ! tee name=t ! queue ! gtksink name={self.SINK_NAME} '
+                       f't. ! queue ! video/x-raw,format=GRAY8 ! appsink name={self.APPSINK_NAME} emit-signals=1')
             logger.debug('To build pipeline: {}', command)
             pipeline = Gst.parse_launch(command)
         if not pipeline:
@@ -77,6 +82,9 @@ class CoBangApplication(Gtk.Application):
             logger.error('Failed to create Gst Pipeline')
             return
         logger.debug('Created {}', pipeline)
+        appsink: GstApp.AppSink = pipeline.get_by_name(self.APPSINK_NAME)
+        logger.debug('Appsink: {}', appsink)
+        appsink.connect('new-sample', self.on_new_webcam_sample)
         self.gst_pipeline = pipeline
         return pipeline
 
@@ -160,6 +168,26 @@ class CoBangApplication(Gtk.Application):
         # Disconnect signal
         drawing_area.disconnect_by_func(self.set_rectangle_webcam_display)
         return False
+
+    def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
+        if appsink.is_eos():
+            return Gst.FlowReturn.OK
+        sample: Gst.Sample = appsink.try_pull_sample(0.5)
+        buffer: Gst.Buffer = sample.get_buffer()
+        caps: Gst.Caps = sample.get_caps()
+        struct: Gst.Structure = caps.get_structure(0)
+        s_w, width = struct.get_int('width')
+        s_h, height = struct.get_int('height')
+        if not s_w or not s_h:
+            logger.error('Failed to get width & height')
+            return Gst.FlowReturn.ERROR
+        success, mapinfo = buffer.map(Gst.MapFlags.READ)   # type: bool, Gst.MapInfo
+        if not success:
+            logger.error('Failed to get mapinfo.')
+            return Gst.FlowReturn.ERROR
+        logger.debug('Data size: {}', mapinfo.size)
+        logger.debug('Image size: {}x{}', width, height)
+        return Gst.FlowReturn.OK
 
     def quit_from_widget(self, widget: Gtk.Widget):
         self.quit()
