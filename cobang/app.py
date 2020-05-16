@@ -1,3 +1,4 @@
+import time
 from typing import Optional
 
 import gi
@@ -39,10 +40,11 @@ class CoBangApplication(Gtk.Application):
     APPSINK_NAME = 'app_sink'
     WEBCAM_WIDGET_NAME = 'src_webcam'
     SIGNAL_QRCODE_DETECTED = 'qrcode-detected'
-    window = None
-    main_grid = None
+    window: Optional[Gtk.Window] = None
+    main_grid: Optional[Gtk.Grid] = None
     area_webcam: Optional[Gtk.Widget] = None
     stack_img_source: Optional[Gtk.Stack] = None
+    btn_pause: Optional[Gtk.Widget] = None
     gst_pipeline: Optional[Gst.Pipeline] = None
     zbar_scanner: Optional[zbar.ImageScanner] = None
     camera_devices = {}
@@ -65,8 +67,8 @@ class CoBangApplication(Gtk.Application):
     def build_gstreamer_pipeline(self):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
         # Try GL backend first
-        command = (f'v4l2src ! tee name=t ! queue ! glsinkbin async=0 sink=gtkglsink name=sink_bin '
-                   't. ! queue leaky=1 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
+        command = (f'v4l2src name=webcam_source ! tee name=t ! queue flush-on-eos=true ! glsinkbin sink=gtkglsink name=sink_bin '
+                   't. ! queue flush-on-eos=true leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
                    f'appsink name={self.APPSINK_NAME} max_buffers=2 drop=1 emit-signals=1')
         logger.debug('To build pipeline: {}', command)
         pipeline = Gst.parse_launch(command)
@@ -78,7 +80,7 @@ class CoBangApplication(Gtk.Application):
             glsink.set_property('name', self.SINK_NAME)
         else:
             # Fallback to non-GL
-            command = (f'v4l2src ! videoconvert ! tee name=t ! queue ! gtksink async=0 name={self.SINK_NAME} '
+            command = (f'v4l2src name=webcam_source ! videoconvert ! tee name=t ! queue ! gtksink name={self.SINK_NAME} '
                        't. ! queue leaky=1 max-size-buffers=2 ! video/x-raw,format=GRAY8 ! '
                        f'appsink name={self.APPSINK_NAME} emit-signals=1')
             logger.debug('To build pipeline: {}', command)
@@ -104,14 +106,14 @@ class CoBangApplication(Gtk.Application):
         window.set_application(self)
         self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
         self.stack_img_source = builder.get_object("stack-img-source")
+        self.btn_pause = builder.get_object('btn-pause')
         self.replace_webcam_placeholder_with_gstreamer_sink()
         return window
 
     def signal_handlers_for_glade(self):
         return {
             "on_btn_quit_clicked": self.quit_from_widget,
-            'on_btn_pause_clicked': self.pause_webcam_video,
-            'on_btn_play_clicked': self.play_webcam_video,
+            'on_btn_play_toggled': self.play_webcam_video,
         }
 
     def do_activate(self):
@@ -189,10 +191,7 @@ class CoBangApplication(Gtk.Application):
         if not n:
             return Gst.FlowReturn.OK
         # Found QR code in webcam screenshot
-        self.pause_webcam_video()
-        # Tell appsink to stop emitting signals
-        logger.debug('Stop appsink from emitting signals')
-        appsink.set_emit_signals(False)
+        self.btn_pause.set_active(True)
         try:
             sym = next(iter(img.symbols))
         except StopIteration:
@@ -202,21 +201,25 @@ class CoBangApplication(Gtk.Application):
         logger.info('Decoded string: {}', sym.data)
         return Gst.FlowReturn.OK
 
-    def pause_webcam_video(self, widget: Optional[Gtk.Widget] = None):
-        play_sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
-        r = play_sink.set_state(Gst.State.READY)
-        logger.debug('Change {} state to ready: {}', play_sink, r)
-        r = play_sink.set_state(Gst.State.PAUSED)
-        logger.debug('Change {} state to paused: {}', play_sink, r)
-        app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
-        app_sink.set_emit_signals(False)
-
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
-        app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
-        app_sink.set_emit_signals(True)
+        to_pause = isinstance(widget, Gtk.RadioButton) and not widget.get_active()
         play_sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
-        r = play_sink.set_state(Gst.State.PLAYING)
-        logger.debug('Change {} state to playing: {}', play_sink, r)
+        app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
+        source = self.gst_pipeline.get_by_name('webcam_source')
+        if to_pause:
+            r = play_sink.set_state(Gst.State.READY)
+            logger.debug('Change {} state to ready: {}', play_sink, r)
+            # r = play_sink.set_state(Gst.State.PAUSED)
+            # logger.debug('Change {} state to paused: {}', play_sink, r)
+            # Tell appsink to stop emitting signals
+            logger.debug('Stop appsink from emitting signals')
+            app_sink.set_emit_signals(False)
+            source.set_state(Gst.State.PAUSED)
+        else:
+            source.set_state(Gst.State.PLAYING)
+            app_sink.set_emit_signals(True)
+            r = play_sink.set_state(Gst.State.PLAYING)
+            logger.debug('Change {} state to playing: {}', play_sink, r)
 
     def quit_from_widget(self, widget: Gtk.Widget):
         self.quit()

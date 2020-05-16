@@ -50,14 +50,16 @@
                 <property name="can_focus">False</property>
                 <property name="layout_style">start</property>
                 <child>
-                  <object class="GtkButton" id="btn-play">
+                  <object class="GtkRadioButton" id="btn-play">
                     <property name="label">gtk-media-play</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
+                    <property name="receives_default">False</property>
                     <property name="use_stock">True</property>
                     <property name="always_show_image">True</property>
-                    <signal name="clicked" handler="on_btn_play_clicked" swapped="no"/>
+                    <property name="active">True</property>
+                    <property name="draw_indicator">False</property>
+                    <signal name="toggled" handler="on_btn_play_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -66,14 +68,16 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="btn-pause">
+                  <object class="GtkRadioButton" id="btn-pause">
                     <property name="label">gtk-media-pause</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
+                    <property name="receives_default">False</property>
                     <property name="use_stock">True</property>
                     <property name="always_show_image">True</property>
-                    <signal name="clicked" handler="on_btn_pause_clicked" swapped="no"/>
+                    <property name="active">True</property>
+                    <property name="draw_indicator">False</property>
+                    <property name="group">btn-play</property>
                   </object>
                   <packing>
                     <property name="expand">True</property>
