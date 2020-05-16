@@ -65,20 +65,20 @@ class CoBangApplication(Gtk.Application):
     def build_gstreamer_pipeline(self):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
         # Try GL backend first
-        command = (f'v4l2src ! tee name=t ! queue ! glsinkbin sink=gtkglsink name=sink_bin '
+        command = (f'v4l2src ! tee name=t ! queue ! glsinkbin async=0 sink=gtkglsink name=sink_bin '
                    't. ! queue leaky=1 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
                    f'appsink name={self.APPSINK_NAME} max_buffers=2 drop=1 emit-signals=1')
         logger.debug('To build pipeline: {}', command)
         pipeline = Gst.parse_launch(command)
         if pipeline:
             glbin = pipeline.get_by_name('sink_bin')
-            itr = glbin.iterate_sinks()
-            r, glsink = itr.next()
+            itr = iter(glbin.iterate_sinks())
+            glsink = next(itr)
             logger.debug('GtkGLSink: {}', glsink)
             glsink.set_property('name', self.SINK_NAME)
         else:
             # Fallback to non-GL
-            command = (f'v4l2src ! videoconvert ! tee name=t ! queue ! gtksink name={self.SINK_NAME} '
+            command = (f'v4l2src ! videoconvert ! tee name=t ! queue ! gtksink async=0 name={self.SINK_NAME} '
                        't. ! queue leaky=1 max-size-buffers=2 ! video/x-raw,format=GRAY8 ! '
                        f'appsink name={self.APPSINK_NAME} emit-signals=1')
             logger.debug('To build pipeline: {}', command)
@@ -175,12 +175,10 @@ class CoBangApplication(Gtk.Application):
         sample: Gst.Sample = appsink.try_pull_sample(0.5)
         buffer: Gst.Buffer = sample.get_buffer()
         caps: Gst.Caps = sample.get_caps()
-        struct: Gst.Structure = caps.get_structure(0)
-        s_w, width = struct.get_int('width')
-        s_h, height = struct.get_int('height')
-        if not s_w or not s_h:
-            logger.error('Failed to get width & height')
-            return Gst.FlowReturn.ERROR
+        # This Pythonic usage is thank to python3-gst
+        struct: Gst.Structure = caps[0]
+        width = struct['width']
+        height = struct['height']
         success, mapinfo = buffer.map(Gst.MapFlags.READ)   # type: bool, Gst.MapInfo
         if not success:
             logger.error('Failed to get mapinfo.')
