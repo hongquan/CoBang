@@ -1,9 +1,8 @@
-from typing import Optional, Any
+from typing import Optional
 
 import gi
 import zbar
 from logbook import Logger
-from logbook.more import ColorizedStderrHandler
 
 gi.require_version('GObject', "2.0")
 gi.require_version("Gtk", "3.0")
@@ -21,7 +20,6 @@ from .resources import get_ui_filepath
 
 logger = Logger(__name__)
 Gst.init(None)
-ColorizedStderrHandler().push_application()
 
 # Require: gstreamer1.0-plugins-bad, gir1.2-gst-plugins-bad-1.0
 # Ref:
@@ -107,7 +105,6 @@ class CoBangApplication(Gtk.Application):
         self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
         self.stack_img_source = builder.get_object("stack-img-source")
         self.replace_webcam_placeholder_with_gstreamer_sink()
-        window.connect(self.SIGNAL_QRCODE_DETECTED, self.on_qrcode_detected)
         return window
 
     def signal_handlers_for_glade(self):
@@ -190,7 +187,7 @@ class CoBangApplication(Gtk.Application):
         if not n:
             return Gst.FlowReturn.OK
         # Found QR code in webcam screenshot
-        self.window.emit(self.SIGNAL_QRCODE_DETECTED, 1)
+        self.pause_webcam_video()
         # Tell appsink to stop emitting signals
         logger.debug('Stop appsink from emitting signals')
         appsink.set_emit_signals(False)
@@ -203,14 +200,12 @@ class CoBangApplication(Gtk.Application):
         logger.info('Decoded string: {}', sym.data)
         return Gst.FlowReturn.OK
 
-    def on_qrcode_detected(self, window: Gtk.Window, data: Any):
-        logger.debug('QR code detected')
+    def pause_webcam_video(self):
         sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
         r = sink.set_state(Gst.State.READY)
-        logger.debug('State -> Ready: {}', r)
+        logger.debug('Change {} state to ready: {}', sink, r)
         r = sink.set_state(Gst.State.PAUSED)
-        logger.debug('Paused: {}', r)
-        return True
+        logger.debug('Change {} state to paused: {}', sink, r)
 
     def quit_from_widget(self, widget: Gtk.Widget):
         self.quit()
