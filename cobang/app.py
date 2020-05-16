@@ -1,12 +1,10 @@
-from datetime import datetime
 from typing import Optional
 
 import gi
-import cairo
+import zbar
 from logbook import Logger
 from logbook.more import ColorizedStderrHandler
 
-gi.require_version("GLib", "2.0")
 gi.require_version("Gtk", "3.0")
 gi.require_version("GdkPixbuf", "2.0")
 gi.require_version("Gst", "1.0")
@@ -15,7 +13,8 @@ gi.require_version("GstApp", "1.0")
 gi.require_version("GstVideo", "1.0")
 gi.require_version("GstGL", "1.0")
 gi.require_version("Cheese", "3.0")
-from gi.repository import GLib, Gtk, GdkPixbuf, Gio, Gst, GstBase, GstApp, Cheese
+
+from gi.repository import Gtk, Gio, Gst, GstBase, GstApp, Cheese
 
 from .resources import get_ui_filepath
 
@@ -38,14 +37,15 @@ ColorizedStderrHandler().push_application()
 
 
 class CoBangApplication(Gtk.Application):
+    SINK_NAME = 'sink'
+    APPSINK_NAME = 'app_sink'
+    WEBCAM_WIDGET_NAME = 'src_webcam'
     window = None
     main_grid = None
     area_webcam: Optional[Gtk.Widget] = None
     stack_img_source: Optional[Gtk.Stack] = None
-    SINK_NAME = 'sink'
-    APPSINK_NAME = 'app_sink'
-    WEBCAM_WIDGET_NAME = 'src_webcam'
     gst_pipeline: Optional[Gst.Pipeline] = None
+    zbar_scanner: Optional[zbar.ImageScanner] = None
     camera_devices = {}
 
     def __init__(self, *args, **kwargs):
@@ -65,7 +65,7 @@ class CoBangApplication(Gtk.Application):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
         # Try GL backend first
         command = (f'v4l2src ! tee name=t ! queue ! glsinkbin sink=gtkglsink name=sink_bin '
-                   't. ! queue ! videoconvert ! video/x-raw,format=RGB ! '
+                   't. ! queue leaky=1 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
                    f'appsink name={self.APPSINK_NAME} emit-signals=1')
         logger.debug('To build pipeline: {}', command)
         pipeline = Gst.parse_launch(command)
@@ -78,7 +78,8 @@ class CoBangApplication(Gtk.Application):
         else:
             # Fallback to non-GL
             command = (f'v4l2src ! videoconvert ! tee name=t ! queue ! gtksink name={self.SINK_NAME} '
-                       f't. ! queue ! video/x-raw,format=RGB ! appsink name={self.APPSINK_NAME} emit-signals=1')
+                       't. ! queue leaky=1 max-size-buffers=2 ! video/x-raw,format=GRAY8 ! '
+                       f'appsink name={self.APPSINK_NAME} emit-signals=1')
             logger.debug('To build pipeline: {}', command)
             pipeline = Gst.parse_launch(command)
         if not pipeline:
@@ -111,6 +112,7 @@ class CoBangApplication(Gtk.Application):
     def do_activate(self):
         if not self.window:
             self.window = self.build_main_window()
+            self.zbar_scanner = zbar.ImageScanner()
         self.window.present()
         logger.debug("Window {} is shown", self.window)
 
@@ -162,17 +164,6 @@ class CoBangApplication(Gtk.Application):
         if not self.camera_devices:
             self.gst_pipeline.set_state(Gst.State.NULL)
 
-    def set_rectangle_webcam_display(self, drawing_area: Gtk.DrawingArea, cr: cairo.Context, sink: Gst.Bin):
-        logger.debug('Set rectangle on redraw')
-        allocation = drawing_area.get_allocation()
-        x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
-        logger.debug('Sink: {}', sink)
-        logger.debug("Rectangle: ({}, {}), {} x {}", x, y, w, h)
-        sink.set_render_rectangle(x, y, w, h)
-        # Disconnect signal
-        drawing_area.disconnect_by_func(self.set_rectangle_webcam_display)
-        return False
-
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
             return Gst.FlowReturn.OK
@@ -189,17 +180,22 @@ class CoBangApplication(Gtk.Application):
         if not success:
             logger.error('Failed to get mapinfo.')
             return Gst.FlowReturn.ERROR
-        logger.debug('Data size: {}', mapinfo.size)
-        logger.debug('Image size: {}x{} = {}', width, height, width * height)
-        rowstride = 4 * (width * 3 / 4)
-        gbytes = GLib.Bytes.new(mapinfo.data)
-        logger.debug('Gbytes: {}', gbytes)
-        pixbuf = GdkPixbuf.Pixbuf.new_from_bytes(gbytes, GdkPixbuf.Colorspace.RGB,
-                                                 False, 8, width, height, rowstride)
-        # Grayscale it
-        pixbuf.saturate_and_pixelate(pixbuf, 0.2, False)
-        filename = datetime.now().strftime('%Y%m%d_%H%M%S')
-        pixbuf.savev(f'/tmp/test/{filename}.png', 'png', '', '')
+        img = zbar.Image(width, height, 'Y800', mapinfo.data)
+        n = self.zbar_scanner.scan(img)
+        logger.debug('Any QR code?: {}', n)
+        if not n:
+            return Gst.FlowReturn.OK
+        # Found QR code in webcam screenshot
+        # Tell appsink to stop emitting signals
+        logger.debug('Stop appsink from emitting signals')
+        appsink.set_emit_signals(False)
+        try:
+            sym = next(iter(img.symbols))
+        except StopIteration:
+            logger.error('Something wrong. Failed to extract symbol from zbar image!')
+            return Gst.FlowReturn.ERROR
+        logger.info('QR type: {}', sym.type)
+        logger.info('Decoded string: {}', sym.data)
         return Gst.FlowReturn.OK
 
     def quit_from_widget(self, widget: Gtk.Widget):
