@@ -1,12 +1,12 @@
-from typing import Optional
+from typing import Optional, Any
 
 import gi
 import zbar
 from logbook import Logger
 from logbook.more import ColorizedStderrHandler
 
+gi.require_version('GObject', "2.0")
 gi.require_version("Gtk", "3.0")
-gi.require_version("GdkPixbuf", "2.0")
 gi.require_version("Gst", "1.0")
 gi.require_version("GstBase", "1.0")
 gi.require_version("GstApp", "1.0")
@@ -14,7 +14,7 @@ gi.require_version("GstVideo", "1.0")
 gi.require_version("GstGL", "1.0")
 gi.require_version("Cheese", "3.0")
 
-from gi.repository import Gtk, Gio, Gst, GstBase, GstApp, Cheese
+from gi.repository import GObject, Gtk, Gio, Gst, GstBase, GstApp, Cheese
 
 from .resources import get_ui_filepath
 
@@ -40,6 +40,7 @@ class CoBangApplication(Gtk.Application):
     SINK_NAME = 'sink'
     APPSINK_NAME = 'app_sink'
     WEBCAM_WIDGET_NAME = 'src_webcam'
+    SIGNAL_QRCODE_DETECTED = 'qrcode-detected'
     window = None
     main_grid = None
     area_webcam: Optional[Gtk.Widget] = None
@@ -55,6 +56,8 @@ class CoBangApplication(Gtk.Application):
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
+        GObject.signal_new(self.SIGNAL_QRCODE_DETECTED, Gtk.Window, GObject.SignalFlags.RUN_LAST,
+                           GObject.TYPE_BOOLEAN, (GObject.TYPE_PYOBJECT,))
         action = Gio.SimpleAction.new("quit", None)
         action.connect("activate", self.quit_from_action)
         self.add_action(action)
@@ -66,7 +69,7 @@ class CoBangApplication(Gtk.Application):
         # Try GL backend first
         command = (f'v4l2src ! tee name=t ! queue ! glsinkbin sink=gtkglsink name=sink_bin '
                    't. ! queue leaky=1 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
-                   f'appsink name={self.APPSINK_NAME} emit-signals=1')
+                   f'appsink name={self.APPSINK_NAME} max_buffers=2 drop=1 emit-signals=1')
         logger.debug('To build pipeline: {}', command)
         pipeline = Gst.parse_launch(command)
         if pipeline:
@@ -104,6 +107,7 @@ class CoBangApplication(Gtk.Application):
         self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
         self.stack_img_source = builder.get_object("stack-img-source")
         self.replace_webcam_placeholder_with_gstreamer_sink()
+        window.connect(self.SIGNAL_QRCODE_DETECTED, self.on_qrcode_detected)
         return window
 
     def signal_handlers_for_glade(self):
@@ -186,6 +190,7 @@ class CoBangApplication(Gtk.Application):
         if not n:
             return Gst.FlowReturn.OK
         # Found QR code in webcam screenshot
+        self.window.emit(self.SIGNAL_QRCODE_DETECTED, 1)
         # Tell appsink to stop emitting signals
         logger.debug('Stop appsink from emitting signals')
         appsink.set_emit_signals(False)
@@ -197,6 +202,15 @@ class CoBangApplication(Gtk.Application):
         logger.info('QR type: {}', sym.type)
         logger.info('Decoded string: {}', sym.data)
         return Gst.FlowReturn.OK
+
+    def on_qrcode_detected(self, window: Gtk.Window, data: Any):
+        logger.debug('QR code detected')
+        sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
+        r = sink.set_state(Gst.State.READY)
+        logger.debug('State -> Ready: {}', r)
+        r = sink.set_state(Gst.State.PAUSED)
+        logger.debug('Paused: {}', r)
+        return True
 
     def quit_from_widget(self, widget: Gtk.Widget):
         self.quit()
