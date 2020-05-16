@@ -108,7 +108,11 @@ class CoBangApplication(Gtk.Application):
         return window
 
     def signal_handlers_for_glade(self):
-        return {"on_btn_quit_clicked": self.quit_from_widget}
+        return {
+            "on_btn_quit_clicked": self.quit_from_widget,
+            'on_btn_pause_clicked': self.pause_webcam_video,
+            'on_btn_play_clicked': self.play_webcam_video,
+        }
 
     def do_activate(self):
         if not self.window:
@@ -200,12 +204,21 @@ class CoBangApplication(Gtk.Application):
         logger.info('Decoded string: {}', sym.data)
         return Gst.FlowReturn.OK
 
-    def pause_webcam_video(self):
-        sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
-        r = sink.set_state(Gst.State.READY)
-        logger.debug('Change {} state to ready: {}', sink, r)
-        r = sink.set_state(Gst.State.PAUSED)
-        logger.debug('Change {} state to paused: {}', sink, r)
+    def pause_webcam_video(self, widget: Optional[Gtk.Widget] = None):
+        play_sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
+        r = play_sink.set_state(Gst.State.READY)
+        logger.debug('Change {} state to ready: {}', play_sink, r)
+        r = play_sink.set_state(Gst.State.PAUSED)
+        logger.debug('Change {} state to paused: {}', play_sink, r)
+        app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
+        app_sink.set_emit_signals(False)
+
+    def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
+        app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
+        app_sink.set_emit_signals(True)
+        play_sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
+        r = play_sink.set_state(Gst.State.PLAYING)
+        logger.debug('Change {} state to playing: {}', play_sink, r)
 
     def quit_from_widget(self, widget: Gtk.Widget):
         self.quit()
