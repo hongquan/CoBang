@@ -203,23 +203,18 @@ class CoBangApplication(Gtk.Application):
 
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
         to_pause = isinstance(widget, Gtk.RadioButton) and not widget.get_active()
-        play_sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
         app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
         source = self.gst_pipeline.get_by_name('webcam_source')
         if to_pause:
-            r = play_sink.set_state(Gst.State.READY)
-            logger.debug('Change {} state to ready: {}', play_sink, r)
-            # r = play_sink.set_state(Gst.State.PAUSED)
-            # logger.debug('Change {} state to paused: {}', play_sink, r)
             # Tell appsink to stop emitting signals
             logger.debug('Stop appsink from emitting signals')
             app_sink.set_emit_signals(False)
-            source.set_state(Gst.State.PAUSED)
+            r = source.set_state(Gst.State.PAUSED)
+            logger.debug('Change {} state to paused; {}', source.get_name(), r)
         else:
-            source.set_state(Gst.State.PLAYING)
+            r = source.set_state(Gst.State.PLAYING)
+            logger.debug('Change {} state to paused; {}', source.get_name(), r)
             app_sink.set_emit_signals(True)
-            r = play_sink.set_state(Gst.State.PLAYING)
-            logger.debug('Change {} state to playing: {}', play_sink, r)
 
     def quit_from_widget(self, widget: Gtk.Widget):
         self.quit()
