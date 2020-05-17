@@ -157,18 +157,22 @@ class CoBangApplication(Gtk.Application):
         logger.info("Added {}", device)
         # GstV4l2Src type, but don't know where to import
         src: GstBase.PushSrc = device.get_src()
-        loc: str = src.get_property("device")
+        loc: str = src.get_property('device')
         self.camera_devices[loc] = device
+        ppl_source = self.gst_pipeline.get_by_name('webcam_source')
+        logger.debug('Source: {}', ppl_source)
+        ppl_source.set_property('device', loc)
         logger.debug('Play {}', self.gst_pipeline)
         self.gst_pipeline.set_state(Gst.State.PLAYING)
 
     def on_camera_removed(self, monitor: Cheese.CameraDeviceMonitor, device: Cheese.CameraDevice):
         logger.info("Removed {}", device)
         src: GstBase.PushSrc = device.get_src()
-        loc: str = src.get_property("device")
-        self.camera_devices.pop(loc)
-        if not self.camera_devices:
+        loc: str = src.get_property('device')
+        ppl_source = self.gst_pipeline.get_by_name('webcam_source')
+        if loc == ppl_source.get_property('device'):
             self.gst_pipeline.set_state(Gst.State.NULL)
+        self.camera_devices.pop(loc)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
