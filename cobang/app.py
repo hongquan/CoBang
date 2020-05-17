@@ -44,6 +44,7 @@ class CoBangApplication(Gtk.Application):
     btn_pause: Optional[Gtk.Widget] = None
     gst_pipeline: Optional[Gst.Pipeline] = None
     zbar_scanner: Optional[zbar.ImageScanner] = None
+    raw_result_buffer: Optional[Gtk.TextBuffer] = None
     camera_devices = {}
 
     def __init__(self, *args, **kwargs):
@@ -107,6 +108,7 @@ class CoBangApplication(Gtk.Application):
         self.stack_img_source = builder.get_object("stack-img-source")
         self.btn_pause = builder.get_object('btn-pause')
         self.replace_webcam_placeholder_with_gstreamer_sink()
+        self.raw_result_buffer = builder.get_object('raw-result-buffer')
         return window
 
     def signal_handlers_for_glade(self):
@@ -203,6 +205,7 @@ class CoBangApplication(Gtk.Application):
             return Gst.FlowReturn.ERROR
         logger.info('QR type: {}', sym.type)
         logger.info('Decoded string: {}', sym.data)
+        self.raw_result_buffer.set_text(sym.data)
         return Gst.FlowReturn.OK
 
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
@@ -219,6 +222,7 @@ class CoBangApplication(Gtk.Application):
         else:
             r = source.set_state(Gst.State.PLAYING)
             logger.debug('Change {} state to paused; {}', source.get_name(), r)
+            self.raw_result_buffer.set_text('')
             app_sink.set_emit_signals(True)
 
     def quit_from_widget(self, widget: Gtk.Widget):

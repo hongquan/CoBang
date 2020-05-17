@@ -2,6 +2,7 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkTextBuffer" id="raw-result-buffer"/>
   <object class="GtkApplicationWindow" id="main-window">
     <property name="can_focus">False</property>
     <child type="titlebar">
@@ -201,10 +202,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkTextView">
+              <object class="GtkTextView" id="raw-result-display">
                 <property name="height_request">100</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="wrap_mode">char</property>
+                <property name="buffer">raw-result-buffer</property>
+                <property name="monospace">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
