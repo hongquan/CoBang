@@ -1,4 +1,3 @@
-import time
 from typing import Optional
 
 import gi
@@ -67,8 +66,9 @@ class CoBangApplication(Gtk.Application):
     def build_gstreamer_pipeline(self):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
         # Try GL backend first
-        command = (f'v4l2src name=webcam_source ! tee name=t ! queue flush-on-eos=true ! glsinkbin sink=gtkglsink name=sink_bin '
-                   't. ! queue flush-on-eos=true leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
+        command = (f'v4l2src name=webcam_source ! tee name=t ! '
+                   'queue ! glsinkbin sink=gtkglsink name=sink_bin '
+                   't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
                    f'appsink name={self.APPSINK_NAME} max_buffers=2 drop=1 emit-signals=1')
         logger.debug('To build pipeline: {}', command)
         pipeline = Gst.parse_launch(command)
@@ -80,7 +80,8 @@ class CoBangApplication(Gtk.Application):
             glsink.set_property('name', self.SINK_NAME)
         else:
             # Fallback to non-GL
-            command = (f'v4l2src name=webcam_source ! videoconvert ! tee name=t ! queue ! gtksink name={self.SINK_NAME} '
+            command = (f'v4l2src name=webcam_source ! videoconvert ! tee name=t ! '
+                       'queue ! gtksink name={self.SINK_NAME} '
                        't. ! queue leaky=1 max-size-buffers=2 ! video/x-raw,format=GRAY8 ! '
                        f'appsink name={self.APPSINK_NAME} emit-signals=1')
             logger.debug('To build pipeline: {}', command)
@@ -191,6 +192,7 @@ class CoBangApplication(Gtk.Application):
         if not n:
             return Gst.FlowReturn.OK
         # Found QR code in webcam screenshot
+        logger.debug('Emulate pressing Pause button')
         self.btn_pause.set_active(True)
         try:
             sym = next(iter(img.symbols))
@@ -209,8 +211,9 @@ class CoBangApplication(Gtk.Application):
             # Tell appsink to stop emitting signals
             logger.debug('Stop appsink from emitting signals')
             app_sink.set_emit_signals(False)
+            r = source.set_state(Gst.State.READY)
             r = source.set_state(Gst.State.PAUSED)
-            logger.debug('Change {} state to paused; {}', source.get_name(), r)
+            logger.debug('Change {} state to paused: {}', source.get_name(), r)
         else:
             r = source.set_state(Gst.State.PLAYING)
             logger.debug('Change {} state to paused; {}', source.get_name(), r)

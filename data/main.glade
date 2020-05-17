@@ -52,6 +52,7 @@
                 <child>
                   <object class="GtkRadioButton" id="btn-play">
                     <property name="label">gtk-media-play</property>
+                    <property name="name">btn-play</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -84,9 +85,6 @@
                     <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
-                </child>
-                <child>
-                  <placeholder/>
                 </child>
               </object>
               <packing>
