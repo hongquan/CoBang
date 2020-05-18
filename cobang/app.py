@@ -118,6 +118,7 @@ class CoBangApplication(Gtk.Application):
         return {
             "on_btn_quit_clicked": self.quit_from_widget,
             'on_btn_play_toggled': self.play_webcam_video,
+            'on_webcam_combobox_changed': self.on_webcam_combobox_changed,
         }
 
     def do_activate(self):
@@ -179,6 +180,18 @@ class CoBangApplication(Gtk.Application):
         ppl_source = self.gst_pipeline.get_by_name('webcam_source')
         if cam_path == ppl_source.get_property('device'):
             self.gst_pipeline.set_state(Gst.State.NULL)
+
+    def on_webcam_combobox_changed(self, combo: Gtk.ComboBox):
+        liter = combo.get_active_iter()
+        if not liter:
+            return
+        model = combo.get_model()
+        path, name = model[liter]
+        logger.debug('{} {}', path, name)
+        ppl_source = self.gst_pipeline.get_by_name('webcam_source')
+        self.gst_pipeline.set_state(Gst.State.NULL)
+        ppl_source.set_property('device', path)
+        self.gst_pipeline.set_state(Gst.State.PLAYING)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():

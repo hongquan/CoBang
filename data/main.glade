@@ -73,6 +73,7 @@
                 <property name="active">0</property>
                 <property name="id_column">0</property>
                 <property name="active_id">/dev/device0</property>
+                <signal name="changed" handler="on_webcam_combobox_changed" swapped="no"/>
                 <child>
                   <object class="GtkCellRendererText" id="webcam-item-renderer"/>
                   <attributes>
