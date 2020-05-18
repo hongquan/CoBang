@@ -45,7 +45,8 @@ class CoBangApplication(Gtk.Application):
     gst_pipeline: Optional[Gst.Pipeline] = None
     zbar_scanner: Optional[zbar.ImageScanner] = None
     raw_result_buffer: Optional[Gtk.TextBuffer] = None
-    camera_devices = {}
+    wecam_combobox: Optional[Gtk.ComboBox] = None
+    webcam_store: Optional[Gtk.ListStore] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -97,11 +98,11 @@ class CoBangApplication(Gtk.Application):
         return pipeline
 
     def build_main_window(self):
-        source = get_ui_filepath("main.glade")
+        source = get_ui_filepath('main.glade')
         builder: Gtk.Builder = Gtk.Builder.new_from_file(str(source))
         handlers = self.signal_handlers_for_glade()
         builder.connect_signals(handlers)
-        window: Gtk.Window = builder.get_object("main-window")
+        window: Gtk.Window = builder.get_object('main-window')
         builder.get_object("main-grid")
         window.set_application(self)
         self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
@@ -109,6 +110,8 @@ class CoBangApplication(Gtk.Application):
         self.btn_pause = builder.get_object('btn-pause')
         self.replace_webcam_placeholder_with_gstreamer_sink()
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
+        self.webcam_store = builder.get_object('webcam-list')
+        self.wecam_combobox = builder.get_object('webcam-combobox')
         return window
 
     def signal_handlers_for_glade(self):
@@ -159,22 +162,23 @@ class CoBangApplication(Gtk.Application):
         logger.info("Added {}", device)
         # GstV4l2Src type, but don't know where to import
         src: GstBase.PushSrc = device.get_src()
-        loc: str = src.get_property('device')
-        self.camera_devices[loc] = device
+        cam_path: str = src.get_property('device')
+        cam_name: str = device.get_name()
+        self.webcam_store.append((cam_path, cam_name))
+        self.wecam_combobox.set_active_id(cam_path)
         ppl_source = self.gst_pipeline.get_by_name('webcam_source')
         logger.debug('Source: {}', ppl_source)
-        ppl_source.set_property('device', loc)
+        ppl_source.set_property('device', cam_path)
         logger.debug('Play {}', self.gst_pipeline)
         self.gst_pipeline.set_state(Gst.State.PLAYING)
 
     def on_camera_removed(self, monitor: Cheese.CameraDeviceMonitor, device: Cheese.CameraDevice):
         logger.info("Removed {}", device)
         src: GstBase.PushSrc = device.get_src()
-        loc: str = src.get_property('device')
+        cam_path: str = src.get_property('device')
         ppl_source = self.gst_pipeline.get_by_name('webcam_source')
-        if loc == ppl_source.get_property('device'):
+        if cam_path == ppl_source.get_property('device'):
             self.gst_pipeline.set_state(Gst.State.NULL)
-        self.camera_devices.pop(loc)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
