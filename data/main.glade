@@ -154,8 +154,10 @@
                 <property name="height_request">300</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <signal name="notify::visible-child" handler="on_stack_img_source_visible_child_notify" swapped="no"/>
                 <child>
                   <object class="GtkDrawingArea" id="area-webcam">
+                    <property name="name">area-webcam</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="double_buffered">False</property>
@@ -167,7 +169,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkDrawingArea">
+                  <object class="GtkDrawingArea" id="area-image">
+                    <property name="name">area-image</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                   </object>

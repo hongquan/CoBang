@@ -35,7 +35,8 @@ Gst.init(None)
 class CoBangApplication(Gtk.Application):
     SINK_NAME = 'sink'
     APPSINK_NAME = 'app_sink'
-    WEBCAM_WIDGET_NAME = 'src_webcam'
+    WEBCAM_STACK_CHILD_NAME = 'src_webcam'
+    GST_SOURCE_NAME = 'webcam_source'
     SIGNAL_QRCODE_DETECTED = 'qrcode-detected'
     window: Optional[Gtk.Window] = None
     main_grid: Optional[Gtk.Grid] = None
@@ -66,7 +67,7 @@ class CoBangApplication(Gtk.Application):
     def build_gstreamer_pipeline(self):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
         # Try GL backend first
-        command = (f'v4l2src name=webcam_source ! tee name=t ! '
+        command = (f'v4l2src name={self.GST_SOURCE_NAME} ! tee name=t ! '
                    'queue ! glsinkbin sink=gtkglsink name=sink_bin '
                    't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
                    f'appsink name={self.APPSINK_NAME} max_buffers=2 drop=1 emit-signals=1')
@@ -80,7 +81,7 @@ class CoBangApplication(Gtk.Application):
             glsink.set_property('name', self.SINK_NAME)
         else:
             # Fallback to non-GL
-            command = (f'v4l2src name=webcam_source ! videoconvert ! tee name=t ! '
+            command = (f'v4l2src name={self.GST_SOURCE_NAME} ! videoconvert ! tee name=t ! '
                        'queue ! gtksink name={self.SINK_NAME} '
                        't. ! queue leaky=1 max-size-buffers=2 ! video/x-raw,format=GRAY8 ! '
                        f'appsink name={self.APPSINK_NAME} emit-signals=1')
@@ -119,6 +120,7 @@ class CoBangApplication(Gtk.Application):
             "on_btn_quit_clicked": self.quit_from_widget,
             'on_btn_play_toggled': self.play_webcam_video,
             'on_webcam_combobox_changed': self.on_webcam_combobox_changed,
+            'on_stack_img_source_visible_child_notify': self.on_stack_img_source_visible_child_notify,
         }
 
     def do_activate(self):
@@ -145,7 +147,8 @@ class CoBangApplication(Gtk.Application):
         '''
         sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
         area = sink.get_property('widget')
-        old_area = self.stack_img_source.get_child_by_name(self.WEBCAM_WIDGET_NAME)
+        old_area = self.stack_img_source.get_child_by_name(self.WEBCAM_STACK_CHILD_NAME)
+        widget_name = old_area.get_name()
         logger.debug('To replace {} with {}', old_area, area)
         # Extract properties of old widget
         property_names = ('icon-name', 'needs-attention', 'position', 'title')
@@ -153,9 +156,10 @@ class CoBangApplication(Gtk.Application):
         properties = {k: stack.child_get_property(old_area, k) for k in property_names}
         # Remove old widget
         self.stack_img_source.remove(old_area)
-        self.stack_img_source.add_named(area, self.WEBCAM_WIDGET_NAME)
+        self.stack_img_source.add_named(area, self.WEBCAM_STACK_CHILD_NAME)
         for n in property_names:
             stack.child_set_property(area, n, properties[n])
+        area.set_name(widget_name)
         area.show()
         self.stack_img_source.set_visible_child(area)
 
@@ -167,17 +171,18 @@ class CoBangApplication(Gtk.Application):
         cam_name: str = device.get_name()
         self.webcam_store.append((cam_path, cam_name))
         self.wecam_combobox.set_active_id(cam_path)
-        ppl_source = self.gst_pipeline.get_by_name('webcam_source')
+        ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
         logger.debug('Source: {}', ppl_source)
         ppl_source.set_property('device', cam_path)
         logger.debug('Play {}', self.gst_pipeline)
         self.gst_pipeline.set_state(Gst.State.PLAYING)
+        self.btn_pause.set_active(False)
 
     def on_camera_removed(self, monitor: Cheese.CameraDeviceMonitor, device: Cheese.CameraDevice):
         logger.info("Removed {}", device)
         src: GstBase.PushSrc = device.get_src()
         cam_path: str = src.get_property('device')
-        ppl_source = self.gst_pipeline.get_by_name('webcam_source')
+        ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
         if cam_path == ppl_source.get_property('device'):
             self.gst_pipeline.set_state(Gst.State.NULL)
 
@@ -188,10 +193,23 @@ class CoBangApplication(Gtk.Application):
         model = combo.get_model()
         path, name = model[liter]
         logger.debug('{} {}', path, name)
-        ppl_source = self.gst_pipeline.get_by_name('webcam_source')
+        ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
         self.gst_pipeline.set_state(Gst.State.NULL)
         ppl_source.set_property('device', path)
         self.gst_pipeline.set_state(Gst.State.PLAYING)
+
+    def on_stack_img_source_visible_child_notify(self, stack: Gtk.Stack, param: GObject.ParamSpec):
+        child = stack.get_visible_child()
+        child_name = child.get_name()
+        logger.debug('Child: {} ({})', child, child_name)
+        if not child_name.endswith('webcam'):
+            # self.btn_pause.set_active(True)
+            self.gst_pipeline.set_state(Gst.State.NULL)
+        elif self.gst_pipeline:
+            ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
+            if ppl_source.get_property('device'):
+                self.gst_pipeline.set_state(Gst.State.PLAYING)
+                # self.btn_pause.set_active(False)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
@@ -228,7 +246,7 @@ class CoBangApplication(Gtk.Application):
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
         to_pause = isinstance(widget, Gtk.RadioButton) and not widget.get_active()
         app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
-        source = self.gst_pipeline.get_by_name('webcam_source')
+        source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
         if to_pause:
             # Tell appsink to stop emitting signals
             logger.debug('Stop appsink from emitting signals')
