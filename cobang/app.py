@@ -43,10 +43,11 @@ class CoBangApplication(Gtk.Application):
     area_webcam: Optional[Gtk.Widget] = None
     stack_img_source: Optional[Gtk.Stack] = None
     btn_play: Optional[Gtk.RadioToolButton] = None
+    btn_img_chooser: Optional[Gtk.FileChooserButton] = None
     gst_pipeline: Optional[Gst.Pipeline] = None
     zbar_scanner: Optional[zbar.ImageScanner] = None
     raw_result_buffer: Optional[Gtk.TextBuffer] = None
-    wecam_combobox: Optional[Gtk.ComboBox] = None
+    webcam_combobox: Optional[Gtk.ComboBox] = None
     webcam_store: Optional[Gtk.ListStore] = None
 
     def __init__(self, *args, **kwargs):
@@ -108,10 +109,11 @@ class CoBangApplication(Gtk.Application):
         self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
         self.stack_img_source = builder.get_object("stack-img-source")
         self.btn_play = builder.get_object('btn-play')
+        self.btn_img_chooser = builder.get_object('btn-img-chooser')
         self.replace_webcam_placeholder_with_gstreamer_sink()
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
         self.webcam_store = builder.get_object('webcam-list')
-        self.wecam_combobox = builder.get_object('webcam-combobox')
+        self.webcam_combobox = builder.get_object('webcam-combobox')
         builder.connect_signals(handlers)
         return window
 
@@ -170,7 +172,7 @@ class CoBangApplication(Gtk.Application):
         cam_path: str = src.get_property('device')
         cam_name: str = device.get_name()
         self.webcam_store.append((cam_path, cam_name))
-        self.wecam_combobox.set_active_id(cam_path)
+        self.webcam_combobox.set_active_id(cam_path)
         ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
         logger.debug('Source: {}', ppl_source)
         ppl_source.set_property('device', cam_path)
@@ -207,11 +209,15 @@ class CoBangApplication(Gtk.Application):
             logger.info('To disable webcam')
             self.gst_pipeline.set_state(Gst.State.NULL)
             toolbar.hide()
+            self.webcam_combobox.hide()
+            self.btn_img_chooser.show()
         elif self.gst_pipeline:
             logger.info('To enable webcam')
             ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
             if ppl_source.get_property('device'):
                 self.gst_pipeline.set_state(Gst.State.PLAYING)
+            self.btn_img_chooser.hide()
+            self.webcam_combobox.show()
             toolbar.show()
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:

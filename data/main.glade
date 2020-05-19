@@ -2,6 +2,11 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkFileFilter" id="img-file-filter">
+    <mime-types>
+      <mime-type>image/*</mime-type>
+    </mime-types>
+  </object>
   <object class="GtkApplicationWindow" id="main-window">
     <property name="can_focus">False</property>
     <child type="titlebar">
@@ -226,7 +231,16 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkFileChooserButton" id="btn-img-chooser">
+                <property name="can_focus">False</property>
+                <property name="filter">img-file-filter</property>
+                <property name="title" translatable="yes"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">4</property>
+              </packing>
             </child>
             <child>
               <object class="GtkButton" id="btn-quit">
@@ -242,6 +256,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
+                <property name="pack_type">end</property>
                 <property name="position">5</property>
               </packing>
             </child>
