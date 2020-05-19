@@ -42,7 +42,7 @@ class CoBangApplication(Gtk.Application):
     main_grid: Optional[Gtk.Grid] = None
     area_webcam: Optional[Gtk.Widget] = None
     stack_img_source: Optional[Gtk.Stack] = None
-    btn_pause: Optional[Gtk.Widget] = None
+    btn_play: Optional[Gtk.RadioToolButton] = None
     gst_pipeline: Optional[Gst.Pipeline] = None
     zbar_scanner: Optional[zbar.ImageScanner] = None
     raw_result_buffer: Optional[Gtk.TextBuffer] = None
@@ -102,17 +102,17 @@ class CoBangApplication(Gtk.Application):
         source = get_ui_filepath('main.glade')
         builder: Gtk.Builder = Gtk.Builder.new_from_file(str(source))
         handlers = self.signal_handlers_for_glade()
-        builder.connect_signals(handlers)
         window: Gtk.Window = builder.get_object('main-window')
         builder.get_object("main-grid")
         window.set_application(self)
         self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
         self.stack_img_source = builder.get_object("stack-img-source")
-        self.btn_pause = builder.get_object('btn-pause')
+        self.btn_play = builder.get_object('btn-play')
         self.replace_webcam_placeholder_with_gstreamer_sink()
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
         self.webcam_store = builder.get_object('webcam-list')
         self.wecam_combobox = builder.get_object('webcam-combobox')
+        builder.connect_signals(handlers)
         return window
 
     def signal_handlers_for_glade(self):
@@ -176,7 +176,7 @@ class CoBangApplication(Gtk.Application):
         ppl_source.set_property('device', cam_path)
         logger.debug('Play {}', self.gst_pipeline)
         self.gst_pipeline.set_state(Gst.State.PLAYING)
-        self.btn_pause.set_active(False)
+        self.btn_play.set_active(True)
 
     def on_camera_removed(self, monitor: Cheese.CameraDeviceMonitor, device: Cheese.CameraDevice):
         logger.info("Removed {}", device)
@@ -202,14 +202,17 @@ class CoBangApplication(Gtk.Application):
         child = stack.get_visible_child()
         child_name = child.get_name()
         logger.debug('Child: {} ({})', child, child_name)
+        toolbar = self.btn_play.get_parent()
         if not child_name.endswith('webcam'):
-            # self.btn_pause.set_active(True)
+            logger.info('To disable webcam')
             self.gst_pipeline.set_state(Gst.State.NULL)
+            toolbar.hide()
         elif self.gst_pipeline:
+            logger.info('To enable webcam')
             ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
             if ppl_source.get_property('device'):
                 self.gst_pipeline.set_state(Gst.State.PLAYING)
-                # self.btn_pause.set_active(False)
+            toolbar.show()
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
@@ -232,7 +235,7 @@ class CoBangApplication(Gtk.Application):
             return Gst.FlowReturn.OK
         # Found QR code in webcam screenshot
         logger.debug('Emulate pressing Pause button')
-        self.btn_pause.set_active(True)
+        self.btn_play.set_active(False)
         try:
             sym = next(iter(img.symbols))
         except StopIteration:
