@@ -4,8 +4,10 @@ import gi
 import zbar
 from logbook import Logger
 
-gi.require_version('GObject', "2.0")
+gi.require_version('GObject', '2.0')
+gi.require_version('GLib', '2.0')
 gi.require_version("Gtk", "3.0")
+gi.require_version('Gdk', '3.0')
 gi.require_version('Gio', '2.0')
 gi.require_version('GdkPixbuf', '2.0')
 gi.require_version("Gst", "1.0")
@@ -13,7 +15,7 @@ gi.require_version("GstBase", "1.0")
 gi.require_version("GstApp", "1.0")
 gi.require_version("Cheese", "3.0")
 
-from gi.repository import GObject, Gtk, Gio, GdkPixbuf, Gst, GstBase, GstApp, Cheese
+from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstBase, GstApp, Cheese
 
 from .resources import get_ui_filepath
 
@@ -51,6 +53,7 @@ class CoBangApplication(Gtk.Application):
     raw_result_buffer: Optional[Gtk.TextBuffer] = None
     webcam_combobox: Optional[Gtk.ComboBox] = None
     webcam_store: Optional[Gtk.ListStore] = None
+    area_image: Optional[Gtk.Image] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -116,6 +119,7 @@ class CoBangApplication(Gtk.Application):
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
         self.webcam_store = builder.get_object('webcam-list')
         self.webcam_combobox = builder.get_object('webcam-combobox')
+        self.area_image = builder.get_object('area-image')
         builder.connect_signals(handlers)
         return window
 
@@ -126,6 +130,7 @@ class CoBangApplication(Gtk.Application):
             'on_webcam_combobox_changed': self.on_webcam_combobox_changed,
             'on_stack_img_source_visible_child_notify': self.on_stack_img_source_visible_child_notify,
             'on_btn_img_chooser_update_preview': self.on_btn_img_chooser_update_preview,
+            'on_btn_img_chooser_file_set': self.on_btn_img_chooser_file_set,
         }
 
     def do_activate(self):
@@ -241,6 +246,32 @@ class CoBangApplication(Gtk.Application):
         preview.set_from_pixbuf(pix)
         chooser.set_preview_widget_active(True)
         return
+
+    def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
+        chosen_file: Gio.File = chooser.get_file()
+        stream: Gio.FileInputStream = chosen_file.read(None)
+        size, b = self.area_image.get_allocated_size()  # type: Gdk.Rectangle, int
+        logger.debug('Size: {}', size)
+        full_pix = GdkPixbuf.Pixbuf.new_from_stream(stream)
+        w = full_pix.get_width()
+        h = full_pix.get_height()
+        scaled_pix = full_pix.scale_simple(w * size.height / h, size.height, GdkPixbuf.InterpType.BILINEAR)
+        self.area_image.set_from_pixbuf(scaled_pix)
+        full_pix.saturate_and_pixelate(full_pix, 0.5, False)
+        pixels: GLib.Bytes = full_pix.read_pixel_bytes()
+        img = zbar.Image(w, h, 'Y800', pixels.get_data())
+        n = self.zbar_scanner.scan(img)
+        logger.debug('Any QR code?: {}', n)
+        if not n:
+            return
+        try:
+            sym = next(iter(img.symbols))
+        except StopIteration:
+            logger.error('Something wrong. Failed to extract symbol from zbar image!')
+            return
+        logger.info('QR type: {}', sym.type)
+        logger.info('Decoded string: {}', sym.data)
+        self.raw_result_buffer.set_text(sym.data)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():

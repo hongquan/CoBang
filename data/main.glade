@@ -77,10 +77,10 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkDrawingArea" id="area-image">
-                        <property name="name">area-image</property>
+                      <object class="GtkImage" id="area-image">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="stock">gtk-missing-image</property>
                       </object>
                       <packing>
                         <property name="name">src_image</property>
@@ -252,6 +252,7 @@
                 <property name="preview_widget">img-preview</property>
                 <property name="preview_widget_active">False</property>
                 <property name="title" translatable="yes">Please choose an image file</property>
+                <signal name="file-set" handler="on_btn_img_chooser_file_set" swapped="no"/>
                 <signal name="update-preview" handler="on_btn_img_chooser_update_preview" swapped="no"/>
               </object>
               <packing>
