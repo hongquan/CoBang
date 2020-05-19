@@ -2,15 +2,6 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkTextBuffer" id="raw-result-buffer"/>
-  <object class="GtkListStore" id="webcam-list">
-    <columns>
-      <!-- column-name path -->
-      <column type="gchararray"/>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
   <object class="GtkApplicationWindow" id="main-window">
     <property name="can_focus">False</property>
     <child type="titlebar">
@@ -25,15 +16,122 @@
       </object>
     </child>
     <child>
-      <object class="GtkGrid" id="main-grid">
+      <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="margin_left">4</property>
         <property name="margin_right">4</property>
-        <property name="margin_top">4</property>
+        <property name="margin_top">2</property>
         <property name="margin_bottom">4</property>
-        <property name="hexpand">False</property>
-        <property name="row_spacing">2</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">4</property>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkStack" id="stack-img-source">
+                    <property name="width_request">400</property>
+                    <property name="height_request">300</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <signal name="notify::visible-child" handler="on_stack_img_source_visible_child_notify" swapped="no"/>
+                    <child>
+                      <object class="GtkDrawingArea" id="area-webcam">
+                        <property name="name">area-webcam</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="double_buffered">False</property>
+                      </object>
+                      <packing>
+                        <property name="name">src_webcam</property>
+                        <property name="title" translatable="yes">Webcam</property>
+                        <property name="icon_name">camera-web</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkDrawingArea" id="area-image">
+                        <property name="name">area-image</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="name">src_image</property>
+                        <property name="title" translatable="yes">Image</property>
+                        <property name="icon_name">insert-image</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="width_request">200</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkTextView">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkTextView" id="raw-result-display">
+                    <property name="height_request">100</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="wrap_mode">char</property>
+                    <property name="buffer">raw-result-buffer</property>
+                    <property name="monospace">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
@@ -72,7 +170,6 @@
                 <property name="model">webcam-list</property>
                 <property name="active">0</property>
                 <property name="id_column">0</property>
-                <property name="active_id">/dev/device0</property>
                 <signal name="changed" handler="on_webcam_combobox_changed" swapped="no"/>
                 <child>
                   <object class="GtkCellRendererText" id="webcam-item-renderer"/>
@@ -99,6 +196,7 @@
                     <property name="label" translatable="yes">Play</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-media-play</property>
+                    <property name="active">True</property>
                     <signal name="toggled" handler="on_btn_play_toggled" swapped="no"/>
                   </object>
                   <packing>
@@ -130,124 +228,40 @@
             <child>
               <placeholder/>
             </child>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">True</property>
-            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkStack" id="stack-img-source">
-                <property name="width_request">400</property>
-                <property name="height_request">300</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <signal name="notify::visible-child" handler="on_stack_img_source_visible_child_notify" swapped="no"/>
-                <child>
-                  <object class="GtkDrawingArea" id="area-webcam">
-                    <property name="name">area-webcam</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="double_buffered">False</property>
-                  </object>
-                  <packing>
-                    <property name="name">src_webcam</property>
-                    <property name="title" translatable="yes">Webcam</property>
-                    <property name="icon_name">camera-web</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkDrawingArea" id="area-image">
-                    <property name="name">area-image</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="name">src_image</property>
-                    <property name="title" translatable="yes">Image</property>
-                    <property name="icon_name">insert-image</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="btn-quit">
-            <property name="label">gtk-quit</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="halign">end</property>
-            <property name="valign">center</property>
-            <property name="use_stock">True</property>
-            <signal name="clicked" handler="on_btn_quit_clicked" swapped="no"/>
-          </object>
-          <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="width_request">200</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_left">4</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkTextView">
+              <object class="GtkButton" id="btn-quit">
+                <property name="label">gtk-quit</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkTextView" id="raw-result-display">
-                <property name="height_request">100</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="wrap_mode">char</property>
-                <property name="buffer">raw-result-buffer</property>
-                <property name="monospace">True</property>
+                <property name="receives_default">True</property>
+                <property name="halign">end</property>
+                <property name="valign">center</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_btn_quit_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">5</property>
               </packing>
             </child>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">0</property>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkTextBuffer" id="raw-result-buffer"/>
+  <object class="GtkListStore" id="webcam-list">
+    <columns>
+      <!-- column-name path -->
+      <column type="gchararray"/>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+    </columns>
   </object>
 </interface>
