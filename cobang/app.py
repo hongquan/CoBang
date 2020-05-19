@@ -6,12 +6,14 @@ from logbook import Logger
 
 gi.require_version('GObject', "2.0")
 gi.require_version("Gtk", "3.0")
+gi.require_version('Gio', '2.0')
+gi.require_version('GdkPixbuf', '2.0')
 gi.require_version("Gst", "1.0")
 gi.require_version("GstBase", "1.0")
 gi.require_version("GstApp", "1.0")
 gi.require_version("Cheese", "3.0")
 
-from gi.repository import GObject, Gtk, Gio, Gst, GstBase, GstApp, Cheese
+from gi.repository import GObject, Gtk, Gio, GdkPixbuf, Gst, GstBase, GstApp, Cheese
 
 from .resources import get_ui_filepath
 
@@ -123,6 +125,7 @@ class CoBangApplication(Gtk.Application):
             'on_btn_play_toggled': self.play_webcam_video,
             'on_webcam_combobox_changed': self.on_webcam_combobox_changed,
             'on_stack_img_source_visible_child_notify': self.on_stack_img_source_visible_child_notify,
+            'on_btn_img_chooser_update_preview': self.on_btn_img_chooser_update_preview,
         }
 
     def do_activate(self):
@@ -219,6 +222,25 @@ class CoBangApplication(Gtk.Application):
             self.btn_img_chooser.hide()
             self.webcam_combobox.show()
             toolbar.show()
+
+    def on_btn_img_chooser_update_preview(self, chooser: Gtk.FileChooserButton):
+        file_uri: Optional[str] = chooser.get_preview_uri()
+        logger.debug('Chose file: {}', file_uri)
+        if not file_uri:
+            chooser.set_preview_widget_active(False)
+            return
+        gfile = Gio.file_new_for_uri(file_uri)
+        ftype: Gio.FileType = gfile.query_file_type(Gio.FileQueryInfoFlags.NONE, None)
+        if ftype != Gio.FileType.REGULAR:
+            chooser.set_preview_widget_active(False)
+            return
+        stream: Gio.FileInputStream = gfile.read(None)
+        pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(stream, 200, 400, True, None)
+        preview = chooser.get_preview_widget()
+        logger.debug('Preview: {}', preview)
+        preview.set_from_pixbuf(pix)
+        chooser.set_preview_widget_active(True)
+        return
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
