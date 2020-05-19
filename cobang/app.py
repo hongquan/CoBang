@@ -244,7 +244,7 @@ class CoBangApplication(Gtk.Application):
         return Gst.FlowReturn.OK
 
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
-        to_pause = isinstance(widget, Gtk.RadioButton) and not widget.get_active()
+        to_pause = isinstance(widget, Gtk.RadioToolButton) and not widget.get_active()
         app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
         source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
         if to_pause:
@@ -256,7 +256,7 @@ class CoBangApplication(Gtk.Application):
             logger.debug('Change {} state to paused: {}', source.get_name(), r)
         else:
             r = source.set_state(Gst.State.PLAYING)
-            logger.debug('Change {} state to paused; {}', source.get_name(), r)
+            logger.debug('Change {} state to playing: {}', source.get_name(), r)
             self.raw_result_buffer.set_text('')
             app_sink.set_emit_signals(True)
 

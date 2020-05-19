@@ -88,52 +88,47 @@
               </packing>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkToolbar">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_top">2</property>
+                <property name="show_arrow">False</property>
                 <child>
-                  <object class="GtkRadioButton" id="btn-play">
-                    <property name="label">gtk-media-play</property>
-                    <property name="name">btn-play</property>
+                  <object class="GtkRadioToolButton" id="btn-play">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="use_stock">True</property>
-                    <property name="always_show_image">True</property>
-                    <property name="active">True</property>
-                    <property name="draw_indicator">False</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Play</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-media-play</property>
                     <signal name="toggled" handler="on_btn_play_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
+                    <property name="homogeneous">True</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkRadioButton" id="btn-pause">
-                    <property name="label">gtk-media-pause</property>
+                  <object class="GtkRadioToolButton" id="btn-pause">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="use_stock">True</property>
-                    <property name="always_show_image">True</property>
-                    <property name="draw_indicator">False</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Pause</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-media-pause</property>
                     <property name="group">btn-play</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="homogeneous">True</property>
                   </packing>
                 </child>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">4</property>
+                <property name="position">3</property>
               </packing>
+            </child>
+            <child>
+              <placeholder/>
             </child>
           </object>
           <packing>
