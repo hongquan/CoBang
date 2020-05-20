@@ -107,6 +107,11 @@ Because the software is not packaged, you have to run it from development source
 
 Add ``-v`` option to see more detailed log.
 
+Screenshots
++++++++++++
+
+.. image:: https://i.imgur.com/78OKyyL.png
+
 
 Credit
 ++++++
