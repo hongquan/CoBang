@@ -1,19 +1,21 @@
+import io
 from typing import Optional
 
 import gi
 import zbar
 from logbook import Logger
+from PIL import Image
 
 gi.require_version('GObject', '2.0')
 gi.require_version('GLib', '2.0')
-gi.require_version("Gtk", "3.0")
+gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 gi.require_version('Gio', '2.0')
 gi.require_version('GdkPixbuf', '2.0')
-gi.require_version("Gst", "1.0")
-gi.require_version("GstBase", "1.0")
-gi.require_version("GstApp", "1.0")
-gi.require_version("Cheese", "3.0")
+gi.require_version('Gst', '1.0')
+gi.require_version('GstBase', '1.0')
+gi.require_version('GstApp', '1.0')
+gi.require_version('Cheese', '3.0')
 
 from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstBase, GstApp, Cheese
 
@@ -64,8 +66,8 @@ class CoBangApplication(Gtk.Application):
         Gtk.Application.do_startup(self)
         GObject.signal_new(self.SIGNAL_QRCODE_DETECTED, Gtk.Window, GObject.SignalFlags.RUN_LAST,
                            GObject.TYPE_BOOLEAN, (GObject.TYPE_PYOBJECT,))
-        action = Gio.SimpleAction.new("quit", None)
-        action.connect("activate", self.quit_from_action)
+        action = Gio.SimpleAction.new('quit', None)
+        action.connect('activate', self.quit_from_action)
         self.add_action(action)
         Cheese.CameraDeviceMonitor.new_async(None, self.camera_monitor_started)
         self.build_gstreamer_pipeline()
@@ -125,7 +127,7 @@ class CoBangApplication(Gtk.Application):
 
     def signal_handlers_for_glade(self):
         return {
-            "on_btn_quit_clicked": self.quit_from_widget,
+            'on_btn_quit_clicked': self.quit_from_widget,
             'on_btn_play_toggled': self.play_webcam_video,
             'on_webcam_combobox_changed': self.on_webcam_combobox_changed,
             'on_stack_img_source_visible_child_notify': self.on_stack_img_source_visible_child_notify,
@@ -146,8 +148,8 @@ class CoBangApplication(Gtk.Application):
 
     def camera_monitor_started(self, monitor: Cheese.CameraDeviceMonitor, result: Gio.AsyncResult):
         monitor = Cheese.CameraDeviceMonitor.new_finish(result)
-        monitor.connect("added", self.on_camera_added)
-        monitor.connect("removed", self.on_camera_removed)
+        monitor.connect('added', self.on_camera_added)
+        monitor.connect('removed', self.on_camera_removed)
         monitor.coldplug()
 
     def replace_webcam_placeholder_with_gstreamer_sink(self):
@@ -251,15 +253,15 @@ class CoBangApplication(Gtk.Application):
         chosen_file: Gio.File = chooser.get_file()
         stream: Gio.FileInputStream = chosen_file.read(None)
         size, b = self.area_image.get_allocated_size()  # type: Gdk.Rectangle, int
-        logger.debug('Size: {}', size)
-        full_pix = GdkPixbuf.Pixbuf.new_from_stream(stream)
-        w = full_pix.get_width()
-        h = full_pix.get_height()
-        scaled_pix = full_pix.scale_simple(w * size.height / h, size.height, GdkPixbuf.InterpType.BILINEAR)
+        scaled_pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(stream, size.width, size.height, True, None)
         self.area_image.set_from_pixbuf(scaled_pix)
-        full_pix.saturate_and_pixelate(full_pix, 0.5, False)
-        pixels: GLib.Bytes = full_pix.read_pixel_bytes()
-        img = zbar.Image(w, h, 'Y800', pixels.get_data())
+        stream.seek(0, GLib.SeekType.SET)
+        full_buf, etag_out = chosen_file.load_bytes()  # type: GLib.Bytes, Optional[str]
+        immediate = io.BytesIO(full_buf.get_data())
+        pim = Image.open(immediate)
+        grayscale = pim.convert('L')
+        w, h = grayscale.size
+        img = zbar.Image(w, h, 'Y800', grayscale.tobytes())
         n = self.zbar_scanner.scan(img)
         logger.debug('Any QR code?: {}', n)
         if not n:
