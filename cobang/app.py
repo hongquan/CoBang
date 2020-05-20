@@ -25,11 +25,6 @@ from .resources import get_ui_filepath
 logger = Logger(__name__)
 Gst.init(None)
 
-# Require: gstreamer1.0-plugins-bad, gir1.2-gst-plugins-bad-1.0
-# Ref:
-# https://github.com/sreerenjb/gst-wayland
-# https://github.com/GStreamer/gst-plugins-bad/blob/master/tests/examples/waylandsink/main.c
-# https://gist.github.com/jonasl/92c1ef32cfd87047e15f5ae24c6b510e
 # Some Gstreamer CLI examples
 # gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! waylandsink
 # gst-launch-1.0 playbin3 uri=v4l2:///dev/video0 video-sink=waylandsink
