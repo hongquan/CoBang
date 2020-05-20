@@ -219,8 +219,7 @@
                     <property name="label" translatable="yes">Play</property>
                     <property name="use_underline">True</property>
                     <property name="stock_id">gtk-media-play</property>
-                    <property name="active">True</property>
-                    <signal name="toggled" handler="on_btn_play_toggled" swapped="no"/>
+                    <signal name="toggled" handler="on_btn_play_toggled" after="yes" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>

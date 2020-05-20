@@ -49,6 +49,7 @@ class CoBangApplication(Gtk.Application):
     area_webcam: Optional[Gtk.Widget] = None
     stack_img_source: Optional[Gtk.Stack] = None
     btn_play: Optional[Gtk.RadioToolButton] = None
+    btn_pause: Optional[Gtk.RadioToolButton] = None
     btn_img_chooser: Optional[Gtk.FileChooserButton] = None
     gst_pipeline: Optional[Gst.Pipeline] = None
     zbar_scanner: Optional[zbar.ImageScanner] = None
@@ -116,12 +117,14 @@ class CoBangApplication(Gtk.Application):
         self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
         self.stack_img_source = builder.get_object("stack-img-source")
         self.btn_play = builder.get_object('btn-play')
+        self.btn_pause = builder.get_object('btn-pause')
         self.btn_img_chooser = builder.get_object('btn-img-chooser')
         self.replace_webcam_placeholder_with_gstreamer_sink()
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
         self.webcam_store = builder.get_object('webcam-list')
         self.webcam_combobox = builder.get_object('webcam-combobox')
         self.area_image = builder.get_object('area-image')
+        logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         return window
 
@@ -296,7 +299,7 @@ class CoBangApplication(Gtk.Application):
             return Gst.FlowReturn.OK
         # Found QR code in webcam screenshot
         logger.debug('Emulate pressing Pause button')
-        self.btn_play.set_active(False)
+        self.btn_pause.set_active(True)
         try:
             sym = next(iter(img.symbols))
         except StopIteration:
@@ -308,7 +311,7 @@ class CoBangApplication(Gtk.Application):
         return Gst.FlowReturn.OK
 
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
-        to_pause = isinstance(widget, Gtk.RadioToolButton) and not widget.get_active()
+        to_pause = (isinstance(widget, Gtk.RadioToolButton) and not widget.get_active())
         app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
         source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
         if to_pause:
