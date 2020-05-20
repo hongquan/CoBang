@@ -57,6 +57,10 @@ class CoBangApplication(Gtk.Application):
         super().__init__(
             *args, application_id="vn.hoabinh.quan.cobang", flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE, **kwargs
         )
+        self.add_main_option(
+            'verbose', ord('v'), GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
+            "More detailed log", None
+        )
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
@@ -74,7 +78,7 @@ class CoBangApplication(Gtk.Application):
         command = (f'v4l2src name={self.GST_SOURCE_NAME} ! tee name=t ! '
                    'queue ! glsinkbin sink=gtkglsink name=sink_bin '
                    't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
-                   f'appsink name={self.APPSINK_NAME} max_buffers=2 drop=1 emit-signals=1')
+                   f'appsink name={self.APPSINK_NAME} max_buffers=2 drop=1')
         logger.debug('To build pipeline: {}', command)
         pipeline = Gst.parse_launch(command)
         if pipeline:
@@ -88,7 +92,7 @@ class CoBangApplication(Gtk.Application):
             command = (f'v4l2src name={self.GST_SOURCE_NAME} ! videoconvert ! tee name=t ! '
                        'queue ! gtksink name={self.SINK_NAME} '
                        't. ! queue leaky=1 max-size-buffers=2 ! video/x-raw,format=GRAY8 ! '
-                       f'appsink name={self.APPSINK_NAME} emit-signals=1')
+                       f'appsink name={self.APPSINK_NAME}')
             logger.debug('To build pipeline: {}', command)
             pipeline = Gst.parse_launch(command)
         if not pipeline:
@@ -140,7 +144,9 @@ class CoBangApplication(Gtk.Application):
         self.window.present()
         logger.debug("Window {} is shown", self.window)
 
-    def do_command_line(self, command_line):
+    def do_command_line(self, command_line: Gio.ApplicationCommandLine):
+        options = command_line.get_options_dict().end().unpack()
+        options['verbose']
         self.activate()
         return 0
 
@@ -187,6 +193,8 @@ class CoBangApplication(Gtk.Application):
         logger.debug('Play {}', self.gst_pipeline)
         self.gst_pipeline.set_state(Gst.State.PLAYING)
         self.btn_play.set_active(True)
+        app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
+        app_sink.set_emit_signals(True)
 
     def on_camera_removed(self, monitor: Cheese.CameraDeviceMonitor, device: Cheese.CameraDevice):
         logger.info("Removed {}", device)
