@@ -12,6 +12,7 @@
     <property name="can_focus">False</property>
     <property name="margin_right">4</property>
     <property name="stock">gtk-missing-image</property>
+    <property name="icon_size">3</property>
   </object>
   <object class="GtkTextBuffer" id="raw-result-buffer"/>
   <object class="GtkListStore" id="webcam-list">
@@ -49,6 +50,7 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="spacing">4</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -112,6 +114,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
+                <property name="spacing">8</property>
                 <child>
                   <object class="GtkTextView">
                     <property name="visible">True</property>
