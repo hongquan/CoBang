@@ -3,6 +3,7 @@ from typing import Optional
 
 import gi
 import zbar
+import logbook
 from logbook import Logger
 from PIL import Image
 
@@ -20,6 +21,7 @@ gi.require_version('Cheese', '3.0')
 from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstBase, GstApp, Cheese
 
 from .resources import get_ui_filepath
+from .consts import APP_ID
 
 
 logger = Logger(__name__)
@@ -55,7 +57,7 @@ class CoBangApplication(Gtk.Application):
 
     def __init__(self, *args, **kwargs):
         super().__init__(
-            *args, application_id="vn.hoabinh.quan.cobang", flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE, **kwargs
+            *args, application_id=APP_ID, flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE, **kwargs
         )
         self.add_main_option(
             'verbose', ord('v'), GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
@@ -146,7 +148,9 @@ class CoBangApplication(Gtk.Application):
 
     def do_command_line(self, command_line: Gio.ApplicationCommandLine):
         options = command_line.get_options_dict().end().unpack()
-        options['verbose']
+        if options.get('verbose'):
+            logger.level = logbook.DEBUG
+            GLib.setenv('G_MESSAGES_DEBUG', 'all', True)
         self.activate()
         return 0
 

@@ -1,11 +1,11 @@
 import sys
 
-from logbook.more import ColorizedStderrHandler
 from .app import CoBangApplication
+from .logging import GLibLogHandler
 
 
 def main():
-    with ColorizedStderrHandler().applicationbound():
+    with GLibLogHandler().applicationbound():
         app = CoBangApplication()
         app.run(sys.argv)
 
