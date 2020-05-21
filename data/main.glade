@@ -82,7 +82,7 @@
                       <object class="GtkImage" id="area-image">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="stock">gtk-missing-image</property>
+                        <property name="pixbuf">image-add.svg</property>
                       </object>
                       <packing>
                         <property name="name">src_image</property>
