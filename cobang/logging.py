@@ -9,7 +9,7 @@ gi.require_version('GLib', '2.0')
 
 from gi.repository import GLib
 
-from .consts import APP_ID
+from .consts import SHORT_NAME
 
 
 LOGBOOK_LEVEL_TO_GLIB = {
@@ -37,7 +37,7 @@ def _log(level: GLib.LogLevelFlags, message: str):
         'CODE_LINE': variant_line,
         'CODE_FUNC': variant_func
     })
-    GLib.log_variant(APP_ID, level, variant_dict)
+    GLib.log_variant(SHORT_NAME, level, variant_dict)
 
 
 # Logbook custom handler to redirect message to GLib log

@@ -1,3 +1,4 @@
+import os
 import io
 from typing import Optional
 
@@ -21,7 +22,7 @@ gi.require_version('Cheese', '3.0')
 from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstBase, GstApp, Cheese
 
 from .resources import get_ui_filepath
-from .consts import APP_ID
+from .consts import APP_ID, SHORT_NAME
 
 
 logger = Logger(__name__)
@@ -150,7 +151,10 @@ class CoBangApplication(Gtk.Application):
         options = command_line.get_options_dict().end().unpack()
         if options.get('verbose'):
             logger.level = logbook.DEBUG
-            GLib.setenv('G_MESSAGES_DEBUG', 'all', True)
+            displayed_apps = os.getenv('G_MESSAGES_DEBUG', '').split(',')
+            displayed_apps.append(SHORT_NAME)
+            GLib.setenv('G_MESSAGES_DEBUG',
+                        ','.join(displayed_apps), True)
         self.activate()
         return 0
 
