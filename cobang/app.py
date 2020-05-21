@@ -151,10 +151,9 @@ class CoBangApplication(Gtk.Application):
         options = command_line.get_options_dict().end().unpack()
         if options.get('verbose'):
             logger.level = logbook.DEBUG
-            displayed_apps = os.getenv('G_MESSAGES_DEBUG', '').split(',')
+            displayed_apps = os.getenv('G_MESSAGES_DEBUG', '').split()
             displayed_apps.append(SHORT_NAME)
-            GLib.setenv('G_MESSAGES_DEBUG',
-                        ','.join(displayed_apps), True)
+            GLib.setenv('G_MESSAGES_DEBUG', ' '.join(displayed_apps), True)
         self.activate()
         return 0
 
