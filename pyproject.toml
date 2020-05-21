@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "CoBang"
 version = "0.1.0"
-description = ""
+description = "QR code scanner for Linux desktop"
 authors = ["Nguyễn Hồng Quân <ng.hong.quan@gmail.com>"]
+license = "Apache-2.0"
 
 [tool.poetry.dependencies]
 python = "^3.7"
