@@ -16,7 +16,7 @@ A missing native QR Code scanner application for Linux desktop.
 Name
 ++++
 
-It is "Cỏ bàng" (Lepironia articulata), in Vietnamese (I failed to find exact icon for this plant).
+It is "`Cỏ bàng <co_bang_>`_" (Lepironia articulata), in Vietnamese (I failed to find exact icon for this plant).
 
 Motivation
 ++++++++++
@@ -50,7 +50,7 @@ Install dependencies
 1. Create Python virtual environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This application is written in Python, using `GTK+ <gtk>`_ for UI, `GStreamer`_ for webcam capture and a part of `ZBar`_ for decode QR code from image.
+This application is written in Python, using `GTK+ <gtk_>`_ for UI, `GStreamer`_ for webcam capture and a part of `ZBar`_ for decode QR code from image.
 
 Because Python binding of many GObject-based libraries (like GTK+, GStreamer) are not distributable via `PyPI`_, you have to create a Python virtual environment with ``--system-site-packages`` flag,
 so that the project can access those system-installed Python libraries.
@@ -77,8 +77,8 @@ The GObject-based dependencies are listed in *deb-packages.txt* file, under the 
 
 On other distros (Fedora, ArchLinux etc.), please try to figure out equivalent package names and install with your favorite package manager.
 
-2. Install PyPI-distributable Python packages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+3. Install PyPI-hosted Python packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For other Python dependencies, this project is using `Poetry`_ to manage. Please install it, then, inside the created virtual environment, run:
 
@@ -118,10 +118,12 @@ Credit
 
 - Brought to you by `Nguyễn Hồng Quân <author_>`_.
 
-- Icons from `www.flaticon.com`_, made by `Freepik`_, `Good Ware <good_ware>`_.
+- Icons from `www.flaticon.com`_, made by `Freepik`_, `Good Ware <good_ware_>`_.
 
 .. [1] Every Electron application brings along a pair of NodeJS + Chromium, which make the package size > 50MB, no matter how small the application code is. To make the situation worse, those NodeJS + Chromium set are not shared. It means that if you installed two Electron apps, you end up having two set of NodeJS & Chromium in your system!
 
+
+.. _co_bang: https://nhipsongquehuong.com/bien-co-bang-thanh-do-thu-cong-dep-mat
 .. _gtk: https://www.gtk.org/
 .. _GStreamer: https://gstreamer.freedesktop.org/
 .. _ZBar: https://github.com/ZBar/ZBar
