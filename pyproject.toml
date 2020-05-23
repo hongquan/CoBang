@@ -4,11 +4,13 @@ version = "0.1.0"
 description = "QR code scanner for Linux desktop"
 authors = ["Nguyễn Hồng Quân <ng.hong.quan@gmail.com>"]
 license = "Apache-2.0"
+homepage = "https://github.com/hongquan/CoBang"
+repository = "https://github.com/hongquan/CoBang.git"
+readme = "README.rst"
 
 [tool.poetry.dependencies]
 python = "^3.7"
 single-version = "^1.1"
-xdgenvpy = "^2.3.0"
 logbook = "^1.5.3"
 
 [tool.poetry.dev-dependencies]

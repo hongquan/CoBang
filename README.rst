@@ -50,7 +50,7 @@ Install dependencies
 1. Create Python virtual environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This application is written in Python, using `GTK+ <gtk_>`_ for UI, `GStreamer`_ for webcam capture and a part of `ZBar`_ for decode QR code from image.
+This application is written in Python, using `GTK+ <gtk_>`_ for UI, `GStreamer`_ for webcam capture and a part of `ZBar`_ for decoding QR code from image.
 
 Because Python binding of many GObject-based libraries (like GTK+, GStreamer) are not distributable via `PyPI`_, you have to create a Python virtual environment with ``--system-site-packages`` flag,
 so that the project can access those system-installed Python libraries.

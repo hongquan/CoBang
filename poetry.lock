@@ -278,14 +278,6 @@ version = "0.1.9"
 
 [[package]]
 category = "main"
-description = "Another XDG Base Directory Specification utility."
-name = "xdgenvpy"
-optional = false
-python-versions = "*"
-version = "2.3.0"
-
-[[package]]
-category = "main"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 name = "zipp"
 optional = false
@@ -297,7 +289,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "dd3d19c8f1318375a67c688f1b4d8c72aa4a9663998b98df6612b0b7730dd25f"
+content-hash = "cde53b1d64aa85bf1a617c23a11f8fdffd97f83d7fbcccdc07a979058086ba87"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -443,10 +435,6 @@ typed-ast = [
 wcwidth = [
     {file = "wcwidth-0.1.9-py2.py3-none-any.whl", hash = "sha256:cafe2186b3c009a04067022ce1dcd79cb38d8d65ee4f4791b8888d6599d1bbe1"},
     {file = "wcwidth-0.1.9.tar.gz", hash = "sha256:ee73862862a156bf77ff92b09034fc4825dd3af9cf81bc5b360668d425f3c5f1"},
-]
-xdgenvpy = [
-    {file = "xdgenvpy-2.3.0-py3-none-any.whl", hash = "sha256:8abd3d6fe97c2c0a09a616a66694f8a314c6356a6ddc87ae61070490278d41a5"},
-    {file = "xdgenvpy-2.3.0.tar.gz", hash = "sha256:79b8840a5722746c23fec30dd261b75331ddded6a2200764833b52fc6f12a9b7"},
 ]
 zipp = [
     {file = "zipp-3.1.0-py3-none-any.whl", hash = "sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"},
