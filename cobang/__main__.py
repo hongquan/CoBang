@@ -7,7 +7,7 @@ from .logging import GLibLogHandler
 def main():
     with GLibLogHandler().applicationbound():
         app = CoBangApplication()
-        app.run(sys.argv)
+        return app.run(sys.argv)
 
 
 if __name__ == '__main__':

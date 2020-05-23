@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "QR code scanner for Linux desktop"
 authors = ["Nguyễn Hồng Quân <ng.hong.quan@gmail.com>"]
 license = "Apache-2.0"
-include = ["data/*.glade", "data/*.svg"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -16,6 +15,9 @@ logbook = "^1.5.3"
 pytest = "^5.2"
 PyGObject-stubs = "^0.0.2"
 black = {version = "^19.10b0", allow-prereleases = true}
+
+[tool.poetry.scripts]
+cobang = 'cobang.__main__:main'
 
 [tool.black]
 line-length = 120
