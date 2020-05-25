@@ -100,7 +100,35 @@ to install those dependencies.
 Package for Debian/Ubuntu
 -------------------------
 
-Will try to figure out later.
+This repo is organized in two branches:
+
+- ``master``: Main place for development. Latest code is here.
+- ``packaging/ubuntu``: This branch is based on ``master``, but added *debian* folder and *setup.py* file, used for building *\*.deb* file.
+
+Follow this step to package:
+
+- Checkout to ``master`` branch, and export source code:
+
+  .. code-block:: sh
+
+    export VER='0.1.0'  # Change to version you want
+    git archive --format=tar --prefix=cobang-$VER/ HEAD | gzip -c > ../cobang_$VER.orig.tar.gz
+
+- Move the *\*.orig.tar.gz* file to somewhere, then extract it, as *cobang-0.1.0* for example.
+
+- Checkout to ``packaging/ubuntu`` branch, copy *debian* folder and *setup.py* file, putting to just-extracted *cobang-0.1.0* folder.
+
+- If you are about to build *deb* file locally, run:
+
+  .. code-block:: sh
+
+    debuild -us -uc
+
+- If you are about to create source package which are suitable to build on Ubuntu's PPA [2]_, run:
+
+  .. code-block:: sh
+
+    debuild -S
 
 
 Run
@@ -129,6 +157,7 @@ Credit
 - Icons from `www.flaticon.com`_, made by `Freepik`_, `Good Ware <good_ware_>`_.
 
 .. [1] Every Electron application brings along a pair of NodeJS + Chromium, which make the package size > 50MB, no matter how small the application code is. To make the situation worse, those NodeJS + Chromium set are not shared. It means that if you installed two Electron apps, you end up having two set of NodeJS & Chromium in your system!
+.. [2] Ubuntu PPA requires to upload source package, not prebuilt binary. Read more at: https://help.launchpad.net/Packaging/PPA/Uploading
 
 
 .. _co_bang: https://nhipsongquehuong.com/bien-co-bang-thanh-do-thu-cong-dep-mat
