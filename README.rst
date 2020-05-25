@@ -43,7 +43,7 @@ So I decide to build *CoBang*, a new, native Linux application for scanning QR c
 Install
 +++++++
 
-For now, there is no way to install from Python standard tools (``pip``, Poetry) because we cannot tell them to install data files (UI design, icons etc.) to correct places for a desktop app. The app will be installed from Ubuntu PPA after we finishing making a Debian packaging script.
+For now, there is no way to install with Python standard tools (``pip``, Poetry) because we cannot tell them to install data files (UI design, icons etc.) to correct places for a desktop app. The app will be installable from Ubuntu PPA after we finishing making a Debian packaging script.
 
 
 Development

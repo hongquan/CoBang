@@ -11,9 +11,9 @@ from .consts import SHORT_NAME
 def get_ui_folder() -> Path:
     top_app_dir = Path(__file__).parent.parent.resolve()
     str_top_app_dir = str(top_app_dir)
-    if str_top_app_dir.startswith('/usr/local'):
+    if str_top_app_dir.startswith('/usr/local/'):
         data_folder = Path(f'/usr/local/share/{SHORT_NAME}')
-    elif str_top_app_dir.startswith('/usr/bin'):
+    elif str_top_app_dir.startswith('/usr/'):
         data_folder = Path(f'/usr/share/{SHORT_NAME}')
     elif str_top_app_dir.startswith(str(Path('~/.local/').expanduser())):
         data_folder = Path(f'~/.local/share/{SHORT_NAME}').expanduser()
