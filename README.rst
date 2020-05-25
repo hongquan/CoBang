@@ -40,6 +40,12 @@ X-dependence is a major concern because I want to boost up the migration of Linu
 So I decide to build *CoBang*, a new, native Linux application for scanning QR code.
 
 
+Install
++++++++
+
+For now, there is no way to install from Python standard tools (``pip``, Poetry) because we cannot tell them to install data files (UI design, icons etc.) to correct places for a desktop app. The app will be installed from Ubuntu PPA after we finishing making a Debian packaging script.
+
+
 Development
 +++++++++++
 
@@ -94,7 +100,7 @@ to install those dependencies.
 Package for Debian/Ubuntu
 -------------------------
 
-Will try to figure out later. Currently, we have `Logbook`_ as one dependency and it has not gone into in Debian/Ubuntu repo yet. That will block our packaging process, or we have to package Logbook ourselves.
+Will try to figure out later.
 
 
 Run
