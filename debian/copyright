@@ -1,0 +1,11 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: cobang
+Source: <https://github.com/hongquan/CoBang>
+
+Files: *
+Copyright: Copyright (c) 2020 Nguyễn Hồng Quân
+License: Apache-2.0
+
+Files: debian/*
+Copyright: 2020 Nguyễn Hồng Quân <ng.hong.quan@gmail.com>
+License: MIT

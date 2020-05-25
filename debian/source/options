@@ -1,0 +1,4 @@
+tar-ignore = ".git"
+tar-ignore = ".gitignore"
+tar-ignore = ".vscode"
+extend-diff-ignore  = "setup.py"

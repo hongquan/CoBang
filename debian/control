@@ -1,0 +1,17 @@
+Source: cobang
+Maintainer: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>
+Section: python
+Priority: optional
+Build-Depends: dh-python, python3-setuptools (>= 5.5.1), python3-all (>= 3.4.2-2), debhelper (>= 11), debhelper-compat (= 12)
+Standards-Version: 4.5.0
+Homepage: https://github.com/hongquan/CoBang
+
+Package: cobang
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends}
+Description: QR code scanner for Linux desktop
+ A missing native QR Code scanner application for Linux desktop.
+ .
+ It is written in Python, using GTK+ for UI, GStreamer for webcam capture
+ and a part of ZBar for decoding QR code from image.
+ .
