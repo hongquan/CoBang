@@ -1,4 +1,11 @@
-# This setup.py file is only to help building Debian package.
+import re
+from pathlib import Path
+
+# This setup.py file is only to help build Debian package.
+# It can not be used to install the app, because it cannot install the desktop files
+# to correct place. That task is handled by debian/install file.
+# This file can be converted from pyproject.toml, with help of dephell tool,
+# but need to be modified afterward.
 
 try:
     from setuptools import setup
@@ -11,10 +18,21 @@ It is written in Python, using GTK+ for UI, GStreamer for webcam capture and a p
 for decoding QR code from image.
 '''
 
+
+def get_version():
+    '''
+    Get version string from pyproject.toml, so that we have a single source of data.
+    '''
+    filepath = Path('pyproject.toml')
+    content = filepath.read_text()
+    m = re.search(r'version\s*=\s*"([.\-\w]+)"', content)
+    return m.group(1)
+
+
 setup(
     long_description=long_description,
     name='cobang',
-    version='0.1.0',
+    version=get_version(),
     description='QR code scanner for Linux desktop',
     python_requires='==3.*,>=3.7.0',
     author='Nguyễn Hồng Quân',

@@ -1,3 +1,4 @@
 data/*.glade	usr/share/cobang/
 data/image-add.svg	usr/share/cobang/
-data/cobang.svg	usr/share/icons/hicolor/scalable/apps/
+data/vn.hoabinh.quan.cobang.svg	usr/share/icons/hicolor/scalable/apps/
+data/*.desktop	usr/share/applications/
