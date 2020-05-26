@@ -40,7 +40,8 @@ Gst.init(None)
 class CoBangApplication(Gtk.Application):
     SINK_NAME = 'sink'
     APPSINK_NAME = 'app_sink'
-    WEBCAM_STACK_CHILD_NAME = 'src_webcam'
+    STACK_CHILD_NAME_WEBCAM = 'src_webcam'
+    STACK_CHILD_NAME_IMAGE = 'src_image'
     GST_SOURCE_NAME = 'webcam_source'
     SIGNAL_QRCODE_DETECTED = 'qrcode-detected'
     window: Optional[Gtk.Window] = None
@@ -55,7 +56,8 @@ class CoBangApplication(Gtk.Application):
     raw_result_buffer: Optional[Gtk.TextBuffer] = None
     webcam_combobox: Optional[Gtk.ComboBox] = None
     webcam_store: Optional[Gtk.ListStore] = None
-    area_image: Optional[Gtk.Image] = None
+    # Box holds the emplement to display when no image is chosen
+    box_image_empty: Optional[Gtk.Box] = None
     dlg_about: Optional[Gtk.AboutDialog] = None
 
     def __init__(self, *args, **kwargs):
@@ -131,7 +133,7 @@ class CoBangApplication(Gtk.Application):
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
         self.webcam_store = builder.get_object('webcam-list')
         self.webcam_combobox = builder.get_object('webcam-combobox')
-        self.area_image = builder.get_object('area-image')
+        self.box_image_empty = builder.get_object('box-image-empty')
         main_menubutton: Gtk.MenuButton = builder.get_object('main-menubutton')
         main_menubutton.set_menu_model(build_app_menu_model())
         self.dlg_about = builder.get_object('dlg-about')
@@ -179,7 +181,7 @@ class CoBangApplication(Gtk.Application):
         '''
         sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
         area = sink.get_property('widget')
-        old_area = self.stack_img_source.get_child_by_name(self.WEBCAM_STACK_CHILD_NAME)
+        old_area = self.stack_img_source.get_child_by_name(self.STACK_CHILD_NAME_WEBCAM)
         widget_name = old_area.get_name()
         logger.debug('To replace {} with {}', old_area, area)
         # Extract properties of old widget
@@ -187,13 +189,49 @@ class CoBangApplication(Gtk.Application):
         stack = self.stack_img_source
         properties = {k: stack.child_get_property(old_area, k) for k in property_names}
         # Remove old widget
-        self.stack_img_source.remove(old_area)
-        self.stack_img_source.add_named(area, self.WEBCAM_STACK_CHILD_NAME)
+        stack.remove(old_area)
+        stack.add_named(area, self.STACK_CHILD_NAME_WEBCAM)
         for n in property_names:
             stack.child_set_property(area, n, properties[n])
         area.set_name(widget_name)
         area.show()
-        self.stack_img_source.set_visible_child(area)
+        stack.set_visible_child(area)
+
+    def insert_image_to_placeholder(self, image: Gtk.Image):
+        property_names = ('icon-name', 'needs-attention', 'position', 'title')
+        stack = self.stack_img_source
+        properties = {k: stack.child_get_property(self.box_image_empty, k) for k in property_names}
+        widget_name = self.box_image_empty.get_name()
+        # Disconnect handler of notify::visible-child signal, to prevent it from being called when removing child
+        stack.disconnect_by_func(self.on_stack_img_source_visible_child_notify)
+        # Detach the box
+        stack.remove(self.box_image_empty)
+        stack.add_named(image, self.STACK_CHILD_NAME_IMAGE)
+        for n in property_names:
+            stack.child_set_property(image, n, properties[n])
+        image.set_name(widget_name)
+        image.show()
+        stack.set_visible_child(image)
+        stack.connect('notify::visible-child', self.on_stack_img_source_visible_child_notify)
+
+    def reset_image_placeholder(self):
+        stack = self.stack_img_source
+        logger.debug('Children: {}', stack.get_children())
+        old_widget = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
+        if old_widget == self.box_image_empty:
+            return
+        # Disconnect handler of notify::visible-child signal, to prevent it from being called when removing child
+        stack.disconnect_by_func(self.on_stack_img_source_visible_child_notify)
+        property_names = ('icon-name', 'needs-attention', 'position', 'title')
+        properties = {k: stack.child_get_property(old_widget, k) for k in property_names}
+        logger.debug('Properties: {}', properties)
+        widget_name = old_widget.get_name()
+        stack.remove(old_widget)
+        stack.add_named(self.box_image_empty, self.STACK_CHILD_NAME_IMAGE)
+        for n in property_names:
+            stack.child_set_property(self.box_image_empty, n, properties[n])
+        self.box_image_empty.set_name(widget_name)
+        stack.connect('notify::visible-child', self.on_stack_img_source_visible_child_notify)
 
     def on_camera_added(self, monitor: Cheese.CameraDeviceMonitor, device: Cheese.CameraDevice):
         logger.info("Added {}", device)
@@ -237,7 +275,7 @@ class CoBangApplication(Gtk.Application):
         self.btn_img_chooser.unselect_all()
         child = stack.get_visible_child()
         child_name = child.get_name()
-        logger.debug('Child: {} ({})', child, child_name)
+        logger.debug('Visible child: {} ({})', child, child_name)
         toolbar = self.btn_play.get_parent()
         if not child_name.endswith('webcam'):
             logger.info('To disable webcam')
@@ -253,6 +291,7 @@ class CoBangApplication(Gtk.Application):
                 self.gst_pipeline.set_state(Gst.State.PLAYING)
             self.btn_img_chooser.hide()
             self.webcam_combobox.show()
+            self.reset_image_placeholder()
             toolbar.show()
 
     def on_btn_img_chooser_update_preview(self, chooser: Gtk.FileChooserButton):
@@ -277,9 +316,11 @@ class CoBangApplication(Gtk.Application):
     def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
         chosen_file: Gio.File = chooser.get_file()
         stream: Gio.FileInputStream = chosen_file.read(None)
-        size, b = self.area_image.get_allocated_size()  # type: Gdk.Rectangle, int
+        widget = self.stack_img_source.get_visible_child()
+        size, b = widget.get_allocated_size()  # type: Gdk.Rectangle, int
         scaled_pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(stream, size.width, size.height, True, None)
-        self.area_image.set_from_pixbuf(scaled_pix)
+        scaled_image = Gtk.Image.new_from_pixbuf(scaled_pix)
+        self.insert_image_to_placeholder(scaled_image)
         stream.seek(0, GLib.SeekType.SET)
         full_buf, etag_out = chosen_file.load_bytes()  # type: GLib.Bytes, Optional[str]
         immediate = io.BytesIO(full_buf.get_data())
