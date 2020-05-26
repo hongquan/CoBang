@@ -39,6 +39,25 @@
             <property name="stack">stack-img-source</property>
           </object>
         </child>
+        <child>
+          <object class="GtkMenuButton">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="focus_on_click">False</property>
+            <property name="receives_default">True</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="icon_name">open-menu-symbolic</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack_type">end</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
       </object>
     </child>
     <child>
@@ -87,7 +106,8 @@
                       <object class="GtkImage" id="area-image">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="pixbuf">image-add.svg</property>
+                        <property name="pixel_size">64</property>
+                        <property name="icon_name">insert-image</property>
                       </object>
                       <packing>
                         <property name="name">src_image</property>
