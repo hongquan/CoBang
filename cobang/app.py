@@ -233,6 +233,8 @@ class CoBangApplication(Gtk.Application):
         self.gst_pipeline.set_state(Gst.State.PLAYING)
 
     def on_stack_img_source_visible_child_notify(self, stack: Gtk.Stack, param: GObject.ParamSpec):
+        self.raw_result_buffer.set_text('')
+        self.btn_img_chooser.unselect_all()
         child = stack.get_visible_child()
         child_name = child.get_name()
         logger.debug('Child: {} ({})', child, child_name)
@@ -247,6 +249,7 @@ class CoBangApplication(Gtk.Application):
             logger.info('To enable webcam')
             ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
             if ppl_source.get_property('device'):
+                self.btn_pause.set_active(False)
                 self.gst_pipeline.set_state(Gst.State.PLAYING)
             self.btn_img_chooser.hide()
             self.webcam_combobox.show()
