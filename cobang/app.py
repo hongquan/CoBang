@@ -199,15 +199,21 @@ class CoBangApplication(Gtk.Application):
         area.show()
         stack.set_visible_child(area)
 
-    def insert_image_to_placeholder(self, image: Gtk.Image):
-        property_names = ('icon-name', 'needs-attention', 'position', 'title')
+    def insert_image_to_placeholder(self, pixbuf: GdkPixbuf.Pixbuf):
         stack = self.stack_img_source
-        properties = {k: stack.child_get_property(self.box_image_empty, k) for k in property_names}
-        widget_name = self.box_image_empty.get_name()
+        child = stack.get_visible_child()
+        logger.debug('Visible child: {}', child.get_name())
+        if isinstance(child, Gtk.Image):
+            child.set_from_pixbuf(pixbuf)
+            return
         # Disconnect handler of notify::visible-child signal, to prevent it from being called when removing child
         stack.disconnect_by_func(self.on_stack_img_source_visible_child_notify)
+        image = Gtk.Image.new_from_pixbuf(pixbuf)
+        property_names = ('icon-name', 'needs-attention', 'position', 'title')
+        properties = {k: stack.child_get_property(child, k) for k in property_names}
+        widget_name = self.box_image_empty.get_name()
         # Detach the box
-        stack.remove(self.box_image_empty)
+        stack.remove(child)
         stack.add_named(image, self.STACK_CHILD_NAME_IMAGE)
         for n in property_names:
             stack.child_set_property(image, n, properties[n])
@@ -317,12 +323,12 @@ class CoBangApplication(Gtk.Application):
 
     def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
         chosen_file: Gio.File = chooser.get_file()
+        self.raw_result_buffer.set_text('')
         stream: Gio.FileInputStream = chosen_file.read(None)
         widget = self.stack_img_source.get_visible_child()
         size, b = widget.get_allocated_size()  # type: Gdk.Rectangle, int
         scaled_pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(stream, size.width, size.height, True, None)
-        scaled_image = Gtk.Image.new_from_pixbuf(scaled_pix)
-        self.insert_image_to_placeholder(scaled_image)
+        self.insert_image_to_placeholder(scaled_pix)
         stream.seek(0, GLib.SeekType.SET)
         full_buf, etag_out = chosen_file.load_bytes()  # type: GLib.Bytes, Optional[str]
         immediate = io.BytesIO(full_buf.get_data())
