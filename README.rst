@@ -40,10 +40,34 @@ X-dependence is a major concern because I want to boost up the migration of Linu
 So I decide to build *CoBang*, a new, native Linux application for scanning QR code.
 
 
+Screenshots
++++++++++++
+
+.. image:: https://i.imgur.com/ddD4YCU.png
+.. image:: https://i.imgur.com/OHXIt7Z.png
+
+
 Install
 +++++++
 
-For now, there is no way to install with Python standard tools (``pip``, Poetry) because we cannot tell them to install data files (UI design, icons etc.) to correct places for a desktop app. The app will be installable from Ubuntu PPA after we finishing making a Debian packaging script.
+For now, there is no way to install with Python standard tools (``pip``, Poetry) because we cannot tell them to install desktop-integration files (icons, \*.desktop etc.) to correct places for a desktop app. You have to install it with OS package manager.
+
+Ubuntu
+------
+
+CoBang is packaged as *\*.deb* file for Ubuntu and derivatives (Linux Mint etc.). You can install it from `PPA`_:
+
+.. code-block:: sh
+
+    sudo add-apt-repository ppa:ng-hong-quan/ppa
+    sudo apt update
+    sudo apt install cobang
+
+Other distros
+-------------
+
+Unfortunately, I don't use other distro than Ubuntu and don't know how to package CoBang for them. You may have to run it from source (please see below).
+If you want to help package it for Fedora, ArchLinux, Gentoo, please submit pull request.
 
 
 Development
@@ -143,11 +167,6 @@ Because the software is not packaged, you have to run it from development source
 
 Add ``-v`` option to see more detailed log.
 
-Screenshots
-+++++++++++
-
-.. image:: https://i.imgur.com/78OKyyL.png
-
 
 Credit
 ++++++
@@ -166,6 +185,7 @@ Credit
 .. _ZBar: https://github.com/ZBar/ZBar
 .. _QtQR: https://launchpad.net/qr-tools
 .. _PyPI: https://pypi.org/
+.. _ppa: https://launchpad.net/~ng-hong-quan/+archive/ubuntu/ppa
 .. _virtualenvwrapper: https://pypi.org/project/virtualenvwrapper/
 .. _poetry: https://python-poetry.org/
 .. _pipenv: https://pipenv.pypa.io
