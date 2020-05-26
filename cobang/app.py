@@ -23,6 +23,7 @@ from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstBase,
 
 from .resources import get_ui_filepath
 from .consts import APP_ID, SHORT_NAME
+from . import __version__
 
 
 logger = Logger(__name__)
@@ -39,7 +40,8 @@ Gst.init(None)
 class CoBangApplication(Gtk.Application):
     SINK_NAME = 'sink'
     APPSINK_NAME = 'app_sink'
-    WEBCAM_STACK_CHILD_NAME = 'src_webcam'
+    STACK_CHILD_NAME_WEBCAM = 'src_webcam'
+    STACK_CHILD_NAME_IMAGE = 'src_image'
     GST_SOURCE_NAME = 'webcam_source'
     SIGNAL_QRCODE_DETECTED = 'qrcode-detected'
     window: Optional[Gtk.Window] = None
@@ -47,6 +49,8 @@ class CoBangApplication(Gtk.Application):
     area_webcam: Optional[Gtk.Widget] = None
     stack_img_source: Optional[Gtk.Stack] = None
     btn_play: Optional[Gtk.RadioToolButton] = None
+    # We connect Play button with "toggled" signal, but when we want to imitate mouse click on the button,
+    # calling "set_active" on it doesn't work! We have to call on the Pause button instead
     btn_pause: Optional[Gtk.RadioToolButton] = None
     btn_img_chooser: Optional[Gtk.FileChooserButton] = None
     gst_pipeline: Optional[Gst.Pipeline] = None
@@ -54,7 +58,9 @@ class CoBangApplication(Gtk.Application):
     raw_result_buffer: Optional[Gtk.TextBuffer] = None
     webcam_combobox: Optional[Gtk.ComboBox] = None
     webcam_store: Optional[Gtk.ListStore] = None
-    area_image: Optional[Gtk.Image] = None
+    # Box holds the emplement to display when no image is chosen
+    box_image_empty: Optional[Gtk.Box] = None
+    dlg_about: Optional[Gtk.AboutDialog] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -67,13 +73,17 @@ class CoBangApplication(Gtk.Application):
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
-        GObject.signal_new(self.SIGNAL_QRCODE_DETECTED, Gtk.Window, GObject.SignalFlags.RUN_LAST,
-                           GObject.TYPE_BOOLEAN, (GObject.TYPE_PYOBJECT,))
-        action = Gio.SimpleAction.new('quit', None)
-        action.connect('activate', self.quit_from_action)
-        self.add_action(action)
+        self.setup_actions()
         Cheese.CameraDeviceMonitor.new_async(None, self.camera_monitor_started)
         self.build_gstreamer_pipeline()
+
+    def setup_actions(self):
+        action_quit = Gio.SimpleAction.new('quit', None)
+        action_quit.connect('activate', self.quit_from_action)
+        self.add_action(action_quit)
+        action_about = Gio.SimpleAction.new('about', None)
+        action_about.connect('activate', self.show_about_dialog)
+        self.add_action(action_about)
 
     def build_gstreamer_pipeline(self):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
@@ -125,14 +135,17 @@ class CoBangApplication(Gtk.Application):
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
         self.webcam_store = builder.get_object('webcam-list')
         self.webcam_combobox = builder.get_object('webcam-combobox')
-        self.area_image = builder.get_object('area-image')
+        self.box_image_empty = builder.get_object('box-image-empty')
+        main_menubutton: Gtk.MenuButton = builder.get_object('main-menubutton')
+        main_menubutton.set_menu_model(build_app_menu_model())
+        self.dlg_about = builder.get_object('dlg-about')
+        self.dlg_about.set_version(__version__)
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         return window
 
     def signal_handlers_for_glade(self):
         return {
-            'on_btn_quit_clicked': self.quit_from_widget,
             'on_btn_play_toggled': self.play_webcam_video,
             'on_webcam_combobox_changed': self.on_webcam_combobox_changed,
             'on_stack_img_source_visible_child_notify': self.on_stack_img_source_visible_child_notify,
@@ -170,7 +183,7 @@ class CoBangApplication(Gtk.Application):
         '''
         sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
         area = sink.get_property('widget')
-        old_area = self.stack_img_source.get_child_by_name(self.WEBCAM_STACK_CHILD_NAME)
+        old_area = self.stack_img_source.get_child_by_name(self.STACK_CHILD_NAME_WEBCAM)
         widget_name = old_area.get_name()
         logger.debug('To replace {} with {}', old_area, area)
         # Extract properties of old widget
@@ -178,13 +191,55 @@ class CoBangApplication(Gtk.Application):
         stack = self.stack_img_source
         properties = {k: stack.child_get_property(old_area, k) for k in property_names}
         # Remove old widget
-        self.stack_img_source.remove(old_area)
-        self.stack_img_source.add_named(area, self.WEBCAM_STACK_CHILD_NAME)
+        stack.remove(old_area)
+        stack.add_named(area, self.STACK_CHILD_NAME_WEBCAM)
         for n in property_names:
             stack.child_set_property(area, n, properties[n])
         area.set_name(widget_name)
         area.show()
-        self.stack_img_source.set_visible_child(area)
+        stack.set_visible_child(area)
+
+    def insert_image_to_placeholder(self, pixbuf: GdkPixbuf.Pixbuf):
+        stack = self.stack_img_source
+        child = stack.get_visible_child()
+        logger.debug('Visible child: {}', child.get_name())
+        if isinstance(child, Gtk.Image):
+            child.set_from_pixbuf(pixbuf)
+            return
+        # Disconnect handler of notify::visible-child signal, to prevent it from being called when removing child
+        stack.disconnect_by_func(self.on_stack_img_source_visible_child_notify)
+        image = Gtk.Image.new_from_pixbuf(pixbuf)
+        property_names = ('icon-name', 'needs-attention', 'position', 'title')
+        properties = {k: stack.child_get_property(child, k) for k in property_names}
+        widget_name = self.box_image_empty.get_name()
+        # Detach the box
+        stack.remove(child)
+        stack.add_named(image, self.STACK_CHILD_NAME_IMAGE)
+        for n in property_names:
+            stack.child_set_property(image, n, properties[n])
+        image.set_name(widget_name)
+        image.show()
+        stack.set_visible_child(image)
+        stack.connect('notify::visible-child', self.on_stack_img_source_visible_child_notify)
+
+    def reset_image_placeholder(self):
+        stack = self.stack_img_source
+        logger.debug('Children: {}', stack.get_children())
+        old_widget = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
+        if old_widget == self.box_image_empty:
+            return
+        # Disconnect handler of notify::visible-child signal, to prevent it from being called when removing child
+        stack.disconnect_by_func(self.on_stack_img_source_visible_child_notify)
+        property_names = ('icon-name', 'needs-attention', 'position', 'title')
+        properties = {k: stack.child_get_property(old_widget, k) for k in property_names}
+        logger.debug('Properties: {}', properties)
+        widget_name = old_widget.get_name()
+        stack.remove(old_widget)
+        stack.add_named(self.box_image_empty, self.STACK_CHILD_NAME_IMAGE)
+        for n in property_names:
+            stack.child_set_property(self.box_image_empty, n, properties[n])
+        self.box_image_empty.set_name(widget_name)
+        stack.connect('notify::visible-child', self.on_stack_img_source_visible_child_notify)
 
     def on_camera_added(self, monitor: Cheese.CameraDeviceMonitor, device: Cheese.CameraDevice):
         logger.info("Added {}", device)
@@ -224,9 +279,11 @@ class CoBangApplication(Gtk.Application):
         self.gst_pipeline.set_state(Gst.State.PLAYING)
 
     def on_stack_img_source_visible_child_notify(self, stack: Gtk.Stack, param: GObject.ParamSpec):
+        self.raw_result_buffer.set_text('')
+        self.btn_img_chooser.unselect_all()
         child = stack.get_visible_child()
         child_name = child.get_name()
-        logger.debug('Child: {} ({})', child, child_name)
+        logger.debug('Visible child: {} ({})', child, child_name)
         toolbar = self.btn_play.get_parent()
         if not child_name.endswith('webcam'):
             logger.info('To disable webcam')
@@ -238,9 +295,11 @@ class CoBangApplication(Gtk.Application):
             logger.info('To enable webcam')
             ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
             if ppl_source.get_property('device'):
+                self.btn_pause.set_active(False)
                 self.gst_pipeline.set_state(Gst.State.PLAYING)
             self.btn_img_chooser.hide()
             self.webcam_combobox.show()
+            self.reset_image_placeholder()
             toolbar.show()
 
     def on_btn_img_chooser_update_preview(self, chooser: Gtk.FileChooserButton):
@@ -264,10 +323,12 @@ class CoBangApplication(Gtk.Application):
 
     def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
         chosen_file: Gio.File = chooser.get_file()
+        self.raw_result_buffer.set_text('')
         stream: Gio.FileInputStream = chosen_file.read(None)
-        size, b = self.area_image.get_allocated_size()  # type: Gdk.Rectangle, int
+        widget = self.stack_img_source.get_visible_child()
+        size, b = widget.get_allocated_size()  # type: Gdk.Rectangle, int
         scaled_pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(stream, size.width, size.height, True, None)
-        self.area_image.set_from_pixbuf(scaled_pix)
+        self.insert_image_to_placeholder(scaled_pix)
         stream.seek(0, GLib.SeekType.SET)
         full_buf, etag_out = chosen_file.load_bytes()  # type: GLib.Bytes, Optional[str]
         immediate = io.BytesIO(full_buf.get_data())
@@ -335,10 +396,25 @@ class CoBangApplication(Gtk.Application):
             r = source.set_state(Gst.State.PLAYING)
             logger.debug('Change {} state to playing: {}', source.get_name(), r)
             self.raw_result_buffer.set_text('')
-            app_sink.set_emit_signals(True)
+            # Delay set_emit_signals call to prevent scanning old frame
+            GLib.timeout_add_seconds(1, app_sink.set_emit_signals, True)
 
-    def quit_from_widget(self, widget: Gtk.Widget):
+    def show_about_dialog(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
+        if self.gst_pipeline:
+            self.btn_pause.set_active(True)
+        self.dlg_about.present()
+
+    def quit_from_action(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
         self.quit()
 
-    def quit_from_action(self, action, param):
-        self.quit()
+    def quit(self):
+        if self.gst_pipeline:
+            self.gst_pipeline.set_state(Gst.State.NULL)
+        super().quit()
+
+
+def build_app_menu_model() -> Gio.Menu:
+    menu = Gio.Menu()
+    menu.append('About', 'app.about')
+    menu.append('Quit', 'app.quit')
+    return menu

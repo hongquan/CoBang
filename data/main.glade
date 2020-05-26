@@ -2,6 +2,49 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkAboutDialog" id="dlg-about">
+    <property name="can_focus">False</property>
+    <property name="type_hint">dialog</property>
+    <property name="program_name">CoBang</property>
+    <property name="copyright" translatable="yes">© 2020 Nguyễn Hồng Quân</property>
+    <property name="website">https://github.com/hongquan/CoBang</property>
+    <property name="license" translatable="yes">Apache-2.0</property>
+    <property name="authors">Nguyễn Hồng Quân</property>
+    <property name="artists">Freepik
+Good Ware</property>
+    <property name="logo">cobang_128.png</property>
+    <property name="license_type">custom</property>
+    <child type="titlebar">
+      <placeholder/>
+    </child>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkFileFilter" id="img-file-filter">
     <mime-types>
       <mime-type>image/*</mime-type>
@@ -14,7 +57,18 @@
     <property name="stock">gtk-missing-image</property>
     <property name="icon_size">3</property>
   </object>
+  <object class="GtkAdjustment" id="raw-result-adjustment">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkTextBuffer" id="raw-result-buffer"/>
+  <object class="GtkPopover" id="top-popover">
+    <property name="can_focus">False</property>
+    <child>
+      <placeholder/>
+    </child>
+  </object>
   <object class="GtkListStore" id="webcam-list">
     <columns>
       <!-- column-name path -->
@@ -32,7 +86,32 @@
         <property name="title" translatable="yes">CoBang</property>
         <property name="show_close_button">True</property>
         <child>
-          <placeholder/>
+          <object class="GtkStackSwitcher" id="stack-sw-im-source">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="icon_size">3</property>
+            <property name="stack">stack-img-source</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkMenuButton" id="main-menubutton">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="focus_on_click">False</property>
+            <property name="receives_default">True</property>
+            <property name="popover">top-popover</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="icon_name">open-menu-symbolic</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack_type">end</property>
+            <property name="position">1</property>
+          </packing>
         </child>
       </object>
     </child>
@@ -79,10 +158,51 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkImage" id="area-image">
+                      <object class="GtkBox" id="box-image-empty">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="pixbuf">image-add.svg</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child type="center">
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">10</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="pixel_size">128</property>
+                                <property name="icon_name">insert-image</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Please select an image file with the button below</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="name">src_image</property>
@@ -131,6 +251,7 @@
                     <property name="height_request">100</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="vadjustment">raw-result-adjustment</property>
                     <property name="wrap_mode">char</property>
                     <property name="buffer">raw-result-buffer</property>
                     <property name="monospace">True</property>
@@ -163,28 +284,7 @@
             <property name="hexpand">True</property>
             <property name="spacing">3</property>
             <child>
-              <object class="GtkStackSwitcher" id="stack-sw-im-source">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="icon_size">3</property>
-                <property name="stack">stack-img-source</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparator">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
+              <placeholder/>
             </child>
             <child>
               <object class="GtkComboBox" id="webcam-combobox">
@@ -214,6 +314,7 @@
                 <property name="show_arrow">False</property>
                 <child>
                   <object class="GtkRadioToolButton" id="btn-play">
+                    <property name="name">btn-play</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Play</property>
@@ -228,6 +329,7 @@
                 </child>
                 <child>
                   <object class="GtkRadioToolButton" id="btn-pause">
+                    <property name="name">btn-pause</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Pause</property>
@@ -261,24 +363,6 @@
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">4</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="btn-quit">
-                <property name="label">gtk-quit</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="halign">end</property>
-                <property name="valign">center</property>
-                <property name="use_stock">True</property>
-                <signal name="clicked" handler="on_btn_quit_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="pack_type">end</property>
-                <property name="position">5</property>
               </packing>
             </child>
           </object>
