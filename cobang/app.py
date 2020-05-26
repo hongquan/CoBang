@@ -49,6 +49,8 @@ class CoBangApplication(Gtk.Application):
     area_webcam: Optional[Gtk.Widget] = None
     stack_img_source: Optional[Gtk.Stack] = None
     btn_play: Optional[Gtk.RadioToolButton] = None
+    # We connect Play button with "toggled" signal, but when we want to imitate mouse click on the button,
+    # calling "set_active" on it doesn't work! We have to call on the Pause button instead
     btn_pause: Optional[Gtk.RadioToolButton] = None
     btn_img_chooser: Optional[Gtk.FileChooserButton] = None
     gst_pipeline: Optional[Gst.Pipeline] = None
@@ -388,7 +390,8 @@ class CoBangApplication(Gtk.Application):
             r = source.set_state(Gst.State.PLAYING)
             logger.debug('Change {} state to playing: {}', source.get_name(), r)
             self.raw_result_buffer.set_text('')
-            app_sink.set_emit_signals(True)
+            # Delay set_emit_signals call to prevent scanning old frame
+            GLib.timeout_add_seconds(1, app_sink.set_emit_signals, True)
 
     def show_about_dialog(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
         if self.gst_pipeline:
