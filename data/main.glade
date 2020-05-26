@@ -57,6 +57,11 @@ Good Ware</property>
     <property name="stock">gtk-missing-image</property>
     <property name="icon_size">3</property>
   </object>
+  <object class="GtkAdjustment" id="raw-result-adjustment">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkTextBuffer" id="raw-result-buffer"/>
   <object class="GtkPopover" id="top-popover">
     <property name="can_focus">False</property>
@@ -246,6 +251,7 @@ Good Ware</property>
                     <property name="height_request">100</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="vadjustment">raw-result-adjustment</property>
                     <property name="wrap_mode">char</property>
                     <property name="buffer">raw-result-buffer</property>
                     <property name="monospace">True</property>
