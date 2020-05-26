@@ -142,7 +142,6 @@ class CoBangApplication(Gtk.Application):
 
     def signal_handlers_for_glade(self):
         return {
-            'on_btn_quit_clicked': self.quit_from_widget,
             'on_btn_play_toggled': self.play_webcam_video,
             'on_webcam_combobox_changed': self.on_webcam_combobox_changed,
             'on_stack_img_source_visible_child_notify': self.on_stack_img_source_visible_child_notify,
@@ -351,9 +350,6 @@ class CoBangApplication(Gtk.Application):
         if self.gst_pipeline:
             self.btn_pause.set_active(True)
         self.dlg_about.present()
-
-    def quit_from_widget(self, widget: Gtk.Widget):
-        self.quit()
 
     def quit_from_action(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
         self.quit()

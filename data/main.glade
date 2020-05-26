@@ -299,6 +299,9 @@ Good Ware</property>
               </packing>
             </child>
             <child>
+              <placeholder/>
+            </child>
+            <child>
               <object class="GtkFileChooserButton" id="btn-img-chooser">
                 <property name="can_focus">False</property>
                 <property name="filter">img-file-filter</property>
@@ -312,24 +315,6 @@ Good Ware</property>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">4</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="btn-quit">
-                <property name="label">gtk-quit</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="halign">end</property>
-                <property name="valign">center</property>
-                <property name="use_stock">True</property>
-                <signal name="clicked" handler="on_btn_quit_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="pack_type">end</property>
-                <property name="position">5</property>
               </packing>
             </child>
           </object>
