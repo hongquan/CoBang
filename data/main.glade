@@ -2,6 +2,49 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkAboutDialog" id="dlg-about">
+    <property name="can_focus">False</property>
+    <property name="type_hint">dialog</property>
+    <property name="program_name">CoBang</property>
+    <property name="copyright" translatable="yes">© 2020 Nguyễn Hồng Quân</property>
+    <property name="website">https://github.com/hongquan/CoBang</property>
+    <property name="license" translatable="yes">Apache-2.0</property>
+    <property name="authors">Nguyễn Hồng Quân</property>
+    <property name="artists">Freepik
+Good Ware</property>
+    <property name="logo">cobang_128.png</property>
+    <property name="license_type">custom</property>
+    <child type="titlebar">
+      <placeholder/>
+    </child>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkFileFilter" id="img-file-filter">
     <mime-types>
       <mime-type>image/*</mime-type>
@@ -15,6 +58,12 @@
     <property name="icon_size">3</property>
   </object>
   <object class="GtkTextBuffer" id="raw-result-buffer"/>
+  <object class="GtkPopover" id="top-popover">
+    <property name="can_focus">False</property>
+    <child>
+      <placeholder/>
+    </child>
+  </object>
   <object class="GtkListStore" id="webcam-list">
     <columns>
       <!-- column-name path -->
@@ -40,11 +89,12 @@
           </object>
         </child>
         <child>
-          <object class="GtkMenuButton">
+          <object class="GtkMenuButton" id="main-menubutton">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="focus_on_click">False</property>
             <property name="receives_default">True</property>
+            <property name="popover">top-popover</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>

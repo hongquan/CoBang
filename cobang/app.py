@@ -23,6 +23,7 @@ from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstBase,
 
 from .resources import get_ui_filepath
 from .consts import APP_ID, SHORT_NAME
+from . import __version__
 
 
 logger = Logger(__name__)
@@ -55,6 +56,7 @@ class CoBangApplication(Gtk.Application):
     webcam_combobox: Optional[Gtk.ComboBox] = None
     webcam_store: Optional[Gtk.ListStore] = None
     area_image: Optional[Gtk.Image] = None
+    dlg_about: Optional[Gtk.AboutDialog] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -67,13 +69,17 @@ class CoBangApplication(Gtk.Application):
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
-        GObject.signal_new(self.SIGNAL_QRCODE_DETECTED, Gtk.Window, GObject.SignalFlags.RUN_LAST,
-                           GObject.TYPE_BOOLEAN, (GObject.TYPE_PYOBJECT,))
-        action = Gio.SimpleAction.new('quit', None)
-        action.connect('activate', self.quit_from_action)
-        self.add_action(action)
+        self.setup_actions()
         Cheese.CameraDeviceMonitor.new_async(None, self.camera_monitor_started)
         self.build_gstreamer_pipeline()
+
+    def setup_actions(self):
+        action_quit = Gio.SimpleAction.new('quit', None)
+        action_quit.connect('activate', self.quit_from_action)
+        self.add_action(action_quit)
+        action_about = Gio.SimpleAction.new('about', None)
+        action_about.connect('activate', self.show_about_dialog)
+        self.add_action(action_about)
 
     def build_gstreamer_pipeline(self):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
@@ -126,6 +132,10 @@ class CoBangApplication(Gtk.Application):
         self.webcam_store = builder.get_object('webcam-list')
         self.webcam_combobox = builder.get_object('webcam-combobox')
         self.area_image = builder.get_object('area-image')
+        main_menubutton: Gtk.MenuButton = builder.get_object('main-menubutton')
+        main_menubutton.set_menu_model(build_app_menu_model())
+        self.dlg_about = builder.get_object('dlg-about')
+        self.dlg_about.set_version(__version__)
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         return window
@@ -337,8 +347,25 @@ class CoBangApplication(Gtk.Application):
             self.raw_result_buffer.set_text('')
             app_sink.set_emit_signals(True)
 
+    def show_about_dialog(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
+        if self.gst_pipeline:
+            self.btn_pause.set_active(True)
+        self.dlg_about.present()
+
     def quit_from_widget(self, widget: Gtk.Widget):
         self.quit()
 
-    def quit_from_action(self, action, param):
+    def quit_from_action(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
         self.quit()
+
+    def quit(self):
+        if self.gst_pipeline:
+            self.gst_pipeline.set_state(Gst.State.NULL)
+        super().quit()
+
+
+def build_app_menu_model() -> Gio.Menu:
+    menu = Gio.Menu()
+    menu.append('About', 'app.about')
+    menu.append('Quit', 'app.quit')
+    return menu
