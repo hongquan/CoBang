@@ -1,3 +1,9 @@
+cobang (0.1.0-3) focal; urgency=low
+
+  * Still forgot one dependency for deb package.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Wed, 27 May 2020 09:50:06 +0700
+
 cobang (0.1.0-2) focal; urgency=low
 
   * Forgot to specify some dependencies for deb package.
