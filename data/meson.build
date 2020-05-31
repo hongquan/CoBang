@@ -1,11 +1,3 @@
-# desktop_file = i18n.merge_file(
-#   input: 'vn.hoabinh.quan.CoBang.desktop.in',
-#   output: 'vn.hoabinh.quan.CoBang.desktop',
-#   type: 'desktop',
-#   po_dir: '../po',
-#   install: true,
-#   install_dir: join_paths(get_option('datadir'), 'applications')
-# )
 
 desktop_file = 'vn.hoabinh.quan.CoBang.desktop'
 
@@ -15,14 +7,6 @@ if desktop_utils.found()
     args: [desktop_file]
   )
 endif
-
-# appstream_file = i18n.merge_file(
-#   input: 'vn.hoabinh.quan.CoBang.appdata.xml.in',
-#   output: 'vn.hoabinh.quan.CoBang.appdata.xml',
-#   po_dir: '../po',
-#   install: true,
-#   install_dir: join_paths(get_option('datadir'), 'appdata')
-# )
 
 appstream_file = 'vn.hoabinh.quan.CoBang.appdata.xml'
 

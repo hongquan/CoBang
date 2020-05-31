@@ -2,6 +2,8 @@
 
 # cobang.in
 #
+# This file serves as entry point for program when running inside Flatpak.
+#
 # Copyright 2020 Nguyễn Hồng Quân
 
-@PYTHON@ -m cobang
+@PYTHON@ -m cobang "$@"
