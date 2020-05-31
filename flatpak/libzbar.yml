@@ -1,0 +1,18 @@
+name: libzbar
+config-opts:
+  - --without-java
+  - --without-qt
+  - --without-gtk
+  - --without-xv
+  - --without-imagemagick
+  - --disable-video
+  # - --without-python
+  - --without-dbus
+sources:
+  - type: git
+    url: git://git.linuxtv.org/zbar.git
+    tag: 0.23.1
+  - type: script
+    dest-filename: autogen.sh
+    commands:
+      - autoreconf -vfi -W none

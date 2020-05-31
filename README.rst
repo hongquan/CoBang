@@ -138,7 +138,7 @@ Package for Debian/Ubuntu
 This repo is organized in two branches:
 
 - ``master``: Main place for development. Latest code is here.
-- ``packaging/ubuntu``: This branch is based on ``master``, but added *debian* folder and *setup.py* file, used for building *\*.deb* file.
+- ``packaging/ubuntu``: This branch is based on ``master``, but added *debian* folder, used for building *\*.deb* file.
 
 Follow this step to package:
 
@@ -164,6 +164,17 @@ Follow this step to package:
   .. code-block:: sh
 
     debuild -S
+
+
+Package as Flatpak
+------------------
+
+This work is not done yet. I prepare some scripts, but haven't solved the issue of including Cheese as dependency.
+
+.. code-block: sh
+
+    flatpak-builder _build --force-clean vn.hoabinh.quan.CoBang.yaml
+    flatpak-builder --run _build vn.hoabinh.quan.CoBang.yaml cobang
 
 
 Credit
