@@ -18,7 +18,7 @@ gi.require_version('Gst', '1.0')
 gi.require_version('GstBase', '1.0')
 gi.require_version('GstApp', '1.0')
 
-from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstBase, GstApp
+from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstApp
 
 from .resources import get_ui_filepath
 from .consts import APP_ID, SHORT_NAME
@@ -176,6 +176,7 @@ class CoBangApplication(Gtk.Application):
             self.discover_webcam()
         self.window.present()
         logger.debug("Window {} is shown", self.window)
+        # If no webcam is selected, select the first one
         if not self.webcam_combobox.get_active_iter():
             self.webcam_combobox.set_active(0)
 
@@ -256,32 +257,36 @@ class CoBangApplication(Gtk.Application):
 
     def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data):
         logger.debug('Message: {}', message)
+        # A private GstV4l2Device type
+        if message.type == Gst.MessageType.DEVICE_ADDED:
+            added_dev: Optional[Gst.Device] = message.parse_device_added()
+            if not added_dev:
+                return True
+            logger.debug('Added: {}', added_dev)
+            cam_path = added_dev.get_property('device_path')
+            cam_name = added_dev.get_display_name()
+            self.webcam_store.append((cam_path, cam_name))
+            return True
+        elif message.type == Gst.MessageType.DEVICE_REMOVED:
+            removed_dev: Optional[Gst.Device] = message.parse_device_removed()
+            if not removed_dev:
+                return True
+            logger.debug('Removed: {}', removed_dev)
+            cam_path = removed_dev.get_property('device_path')
+            ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
+            if cam_path == ppl_source.get_property('device'):
+                self.gst_pipeline.set_state(Gst.State.NULL)
+            # Find the entry of just-removed in the list and remove it.
+            itr: Optional[Gtk.TreeIter] = None
+            for row in self.webcam_store:
+                logger.debug('Row: {}', row)
+                if row[0] == cam_path:
+                    itr = row.iter
+                    break
+            if itr:
+                logger.debug('To remove {} from list', cam_path)
+                self.webcam_store.remove(itr)
         return True
-
-    def on_camera_added(self, monitor: Gst.DeviceMonitor, device: Gst.Device):
-        logger.info("Added {}", device)
-        # GstV4l2Src type, but don't know where to import
-        src: GstBase.PushSrc = device.get_src()
-        cam_path: str = src.get_property('device')
-        cam_name: str = device.get_name()
-        self.webcam_store.append((cam_path, cam_name))
-        self.webcam_combobox.set_active_id(cam_path)
-        ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
-        logger.debug('Source: {}', ppl_source)
-        ppl_source.set_property('device', cam_path)
-        logger.debug('Play {}', self.gst_pipeline)
-        self.gst_pipeline.set_state(Gst.State.PLAYING)
-        self.btn_play.set_active(True)
-        app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
-        app_sink.set_emit_signals(True)
-
-    def on_camera_removed(self, monitor: Gst.DeviceMonitor, device: Gst.Device):
-        logger.info("Removed {}", device)
-        src: GstBase.PushSrc = device.get_src()
-        cam_path: str = src.get_property('device')
-        ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
-        if cam_path == ppl_source.get_property('device'):
-            self.gst_pipeline.set_state(Gst.State.NULL)
 
     def on_webcam_combobox_changed(self, combo: Gtk.ComboBox):
         liter = combo.get_active_iter()
@@ -289,7 +294,7 @@ class CoBangApplication(Gtk.Application):
             return
         model = combo.get_model()
         path, name = model[liter]
-        logger.debug('{} {}', path, name)
+        logger.debug('Picked {} {}', path, name)
         ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
         self.gst_pipeline.set_state(Gst.State.NULL)
         ppl_source.set_property('device', path)
