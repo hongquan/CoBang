@@ -299,6 +299,8 @@ class CoBangApplication(Gtk.Application):
         self.gst_pipeline.set_state(Gst.State.NULL)
         ppl_source.set_property('device', path)
         self.gst_pipeline.set_state(Gst.State.PLAYING)
+        app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
+        app_sink.set_emit_signals(True)
 
     def on_stack_img_source_visible_child_notify(self, stack: Gtk.Stack, param: GObject.ParamSpec):
         self.raw_result_buffer.set_text('')
