@@ -7,21 +7,35 @@ from .consts import SHORT_NAME
 # - If this app is install in /usr/local/bin and run from there, look for /usr/local/share/cobang
 # - If this app is run from source, look in the source folder
 
+DOT_LOCAL = Path('~/.local').expanduser()
 
-def get_ui_folder() -> Path:
+
+def get_location_prefix() -> Path:
     top_app_dir = Path(__file__).parent.parent.resolve()
     str_top_app_dir = str(top_app_dir)
     if str_top_app_dir.startswith('/usr/local/'):
-        data_folder = Path(f'/usr/local/share/{SHORT_NAME}')
-    elif str_top_app_dir.startswith('/usr/'):
-        data_folder = Path(f'/usr/share/{SHORT_NAME}')
-    elif str_top_app_dir.startswith(str(Path('~/.local/').expanduser())):
-        data_folder = Path(f'~/.local/share/{SHORT_NAME}').expanduser()
-    else:
-        # Run from source
-        data_folder = top_app_dir / 'data'
-    if data_folder.exists():
-        return data_folder
+        return Path('/usr/local/')
+    if str_top_app_dir.startswith('/usr/'):
+        return Path('/usr/')
+    if str_top_app_dir.startswith(str(DOT_LOCAL)):
+        return DOT_LOCAL
+    # Run from source
+    return top_app_dir
+
+
+def get_ui_folder() -> Path:
+    prefix = get_location_prefix()
+    if str(prefix).startswith('/usr/'):
+        return prefix / 'share' / SHORT_NAME
+    if str(prefix).startswith(str(DOT_LOCAL)):
+        return prefix / 'share' / SHORT_NAME
+    # Run from source
+    return prefix / 'data'
+
+
+def get_locale_folder() -> Path:
+    prefix = get_location_prefix()
+    return prefix / 'locale'
 
 
 def get_ui_filepath(filename: str) -> Path:

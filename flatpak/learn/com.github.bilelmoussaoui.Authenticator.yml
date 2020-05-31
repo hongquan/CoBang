@@ -1,0 +1,101 @@
+app-id: com.github.bilelmoussaoui.Authenticator
+runtime: org.gnome.Platform
+runtime-version: '3.30'
+sdk: org.gnome.Sdk
+command: authenticator
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --filesystem=home
+  - --talk-name=org.freedesktop.secrets
+  - --talk-name=org.gnome.Shell.Screenshot
+  - --filesystem=xdg-run/dconf
+  - --filesystem=~/.config/dconf:ro
+  - --talk-name=ca.desrt.dconf
+  - --env=DCONF_USER_CONFIG_DIR=.config/dconf
+  - --env=ZBAR_PATH=/app/lib/libzbar.so
+modules:
+  - name: zbar
+    config-opts:
+      - --without-qt
+      - --without-gtk
+      - --without-xv
+      - --without-imagemagick
+      - --disable-video
+      - --without-python
+      - --enable-codes=qrcode
+    sources:
+      - type: git
+        url: git://git.linuxtv.org/zbar.git
+        commit: 14900c67eccfb97e152063296f20cd32aa787578
+      - type: script
+        dest-filename: autogen.sh
+        commands:
+          - autoreconf -vfi -W none
+  - name: pyotp
+    buildsystem: simple
+    build-commands:
+      - python3 setup.py install --prefix=/app
+    ensure-writable:
+      - /lib/python*/site-packages/easy-install.pth
+      - /lib/python*/site-packages/setuptools.pth
+      - /app/lib/python*/site-packages/easy-install.pth
+      - /app/lib/python*/site-packages/setuptools.pth
+    sources:
+      - type: archive
+        url: https://pypi.python.org/packages/ac/0c/bd96508e36956ae627e527a7a7fba486865a738b4682e7290cd0e7c34f52/pyotp-2.2.4.tar.gz#md5=16cb1a08d38777ca74b5e9c7803810b6
+        sha256: 92c3973ba91273e7e4a7fd4a1020ae4b050ccd2e149b554911e1b45ca458ac2d
+  - name: python-pillow
+    buildsystem: simple
+    build-options:
+      arch:
+        i386:
+          env:
+            MAX_CONCURRENCY: '1'
+        arm:
+          env:
+            MAX_CONCURRENCY: '1'
+    ensure-writable:
+      - /lib/python*/site-packages/easy-install.pth
+      - /lib/python*/site-packages/setuptools.pth
+      - /app/lib/python*/site-packages/easy-install.pth
+      - /app/lib/python*/site-packages/setuptools.pth
+    build-commands:
+      - python3 setup.py install --prefix=/app
+    sources:
+      - type: archive
+        url: https://github.com/python-pillow/Pillow/archive/5.0.0.tar.gz
+        sha256: e85301adaa827b9f29ab518eff99d5719e572ca5f369866ebfe57a92e7135aec
+      - type: shell
+        commands:
+          - sed -i 's/if not platform_/if not dirs/' setup.py
+  - name: pyzbar
+    buildsystem: simple
+    build-commands:
+      - python3 setup.py install --prefix=/app
+    ensure-writable:
+      - /lib/python*/site-packages/easy-install.pth
+      - /lib/python*/site-packages/setuptools.pth
+      - /app/lib/python*/site-packages/easy-install.pth
+      - /app/lib/python*/site-packages/setuptools.pth
+    sources:
+      - type: archive
+        url: https://github.com/NaturalHistoryMuseum/pyzbar/archive/v0.1.7.tar.gz
+        sha256: 4dbbece533650f2aeb6c8d1f41cf424614d2877d7331c48a9eed35ae9f949626
+      - type: patch
+        path: pyzbar.patch
+  - name: python-gnupg
+    buildsystem: simple
+    build-commands:
+      - pip3 install --prefix=/app python_gnupg-0.4.3-py2.py3-none-any.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/4a/87/76ead690afc4c7710012ede242537cd9807dde9de6299e65d075925c0b02/python_gnupg-0.4.3-py2.py3-none-any.whl
+        sha256: faa69bab58ed0936f0ccf96c99b92369b7a1819305d37dfe5c927d21a437a09d
+  - name: Authenticator
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/World/Authenticator.git
+        commit: 522c26ebea0807c1ee421086ae6a489db13e3c29

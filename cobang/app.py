@@ -17,9 +17,8 @@ gi.require_version('GdkPixbuf', '2.0')
 gi.require_version('Gst', '1.0')
 gi.require_version('GstBase', '1.0')
 gi.require_version('GstApp', '1.0')
-gi.require_version('Cheese', '3.0')
 
-from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstBase, GstApp, Cheese
+from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstApp
 
 from .resources import get_ui_filepath
 from .consts import APP_ID, SHORT_NAME
@@ -61,6 +60,7 @@ class CoBangApplication(Gtk.Application):
     # Box holds the emplement to display when no image is chosen
     box_image_empty: Optional[Gtk.Box] = None
     dlg_about: Optional[Gtk.AboutDialog] = None
+    devmonitor: Optional[Gst.DeviceMonitor] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -74,8 +74,11 @@ class CoBangApplication(Gtk.Application):
     def do_startup(self):
         Gtk.Application.do_startup(self)
         self.setup_actions()
-        Cheese.CameraDeviceMonitor.new_async(None, self.camera_monitor_started)
         self.build_gstreamer_pipeline()
+        devmonitor = Gst.DeviceMonitor.new()
+        devmonitor.add_filter('Video/Source', Gst.Caps.from_string('video/x-raw'))
+        logger.debug('Monitor: {}', devmonitor)
+        self.devmonitor = devmonitor
 
     def setup_actions(self):
         action_quit = Gio.SimpleAction.new('quit', None)
@@ -153,12 +156,29 @@ class CoBangApplication(Gtk.Application):
             'on_btn_img_chooser_file_set': self.on_btn_img_chooser_file_set,
         }
 
+    def discover_webcam(self):
+        bus: Gst.Bus = self.devmonitor.get_bus()
+        logger.debug('Bus: {}', bus)
+        bus.add_watch(GLib.PRIORITY_DEFAULT, self.on_device_monitor_message, None)
+        devices = self.devmonitor.get_devices()
+        for d in devices:  # type: Gst.Device
+            logger.debug('Found device {}', d.get_path_string())
+            cam_path = d.get_property('device_path')
+            cam_name = d.get_display_name()
+            self.webcam_store.append((cam_path, cam_name))
+        logger.debug('Start device monitoring')
+        self.devmonitor.start()
+
     def do_activate(self):
         if not self.window:
             self.window = self.build_main_window()
             self.zbar_scanner = zbar.ImageScanner()
+            self.discover_webcam()
         self.window.present()
         logger.debug("Window {} is shown", self.window)
+        # If no webcam is selected, select the first one
+        if not self.webcam_combobox.get_active_iter():
+            self.webcam_combobox.set_active(0)
 
     def do_command_line(self, command_line: Gio.ApplicationCommandLine):
         options = command_line.get_options_dict().end().unpack()
@@ -169,12 +189,6 @@ class CoBangApplication(Gtk.Application):
             GLib.setenv('G_MESSAGES_DEBUG', ' '.join(displayed_apps), True)
         self.activate()
         return 0
-
-    def camera_monitor_started(self, monitor: Cheese.CameraDeviceMonitor, result: Gio.AsyncResult):
-        monitor = Cheese.CameraDeviceMonitor.new_finish(result)
-        monitor.connect('added', self.on_camera_added)
-        monitor.connect('removed', self.on_camera_removed)
-        monitor.coldplug()
 
     def replace_webcam_placeholder_with_gstreamer_sink(self):
         '''
@@ -241,30 +255,38 @@ class CoBangApplication(Gtk.Application):
         self.box_image_empty.set_name(widget_name)
         stack.connect('notify::visible-child', self.on_stack_img_source_visible_child_notify)
 
-    def on_camera_added(self, monitor: Cheese.CameraDeviceMonitor, device: Cheese.CameraDevice):
-        logger.info("Added {}", device)
-        # GstV4l2Src type, but don't know where to import
-        src: GstBase.PushSrc = device.get_src()
-        cam_path: str = src.get_property('device')
-        cam_name: str = device.get_name()
-        self.webcam_store.append((cam_path, cam_name))
-        self.webcam_combobox.set_active_id(cam_path)
-        ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
-        logger.debug('Source: {}', ppl_source)
-        ppl_source.set_property('device', cam_path)
-        logger.debug('Play {}', self.gst_pipeline)
-        self.gst_pipeline.set_state(Gst.State.PLAYING)
-        self.btn_play.set_active(True)
-        app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
-        app_sink.set_emit_signals(True)
-
-    def on_camera_removed(self, monitor: Cheese.CameraDeviceMonitor, device: Cheese.CameraDevice):
-        logger.info("Removed {}", device)
-        src: GstBase.PushSrc = device.get_src()
-        cam_path: str = src.get_property('device')
-        ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
-        if cam_path == ppl_source.get_property('device'):
-            self.gst_pipeline.set_state(Gst.State.NULL)
+    def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data):
+        logger.debug('Message: {}', message)
+        # A private GstV4l2Device type
+        if message.type == Gst.MessageType.DEVICE_ADDED:
+            added_dev: Optional[Gst.Device] = message.parse_device_added()
+            if not added_dev:
+                return True
+            logger.debug('Added: {}', added_dev)
+            cam_path = added_dev.get_property('device_path')
+            cam_name = added_dev.get_display_name()
+            self.webcam_store.append((cam_path, cam_name))
+            return True
+        elif message.type == Gst.MessageType.DEVICE_REMOVED:
+            removed_dev: Optional[Gst.Device] = message.parse_device_removed()
+            if not removed_dev:
+                return True
+            logger.debug('Removed: {}', removed_dev)
+            cam_path = removed_dev.get_property('device_path')
+            ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
+            if cam_path == ppl_source.get_property('device'):
+                self.gst_pipeline.set_state(Gst.State.NULL)
+            # Find the entry of just-removed in the list and remove it.
+            itr: Optional[Gtk.TreeIter] = None
+            for row in self.webcam_store:
+                logger.debug('Row: {}', row)
+                if row[0] == cam_path:
+                    itr = row.iter
+                    break
+            if itr:
+                logger.debug('To remove {} from list', cam_path)
+                self.webcam_store.remove(itr)
+        return True
 
     def on_webcam_combobox_changed(self, combo: Gtk.ComboBox):
         liter = combo.get_active_iter()
@@ -272,11 +294,13 @@ class CoBangApplication(Gtk.Application):
             return
         model = combo.get_model()
         path, name = model[liter]
-        logger.debug('{} {}', path, name)
+        logger.debug('Picked {} {}', path, name)
         ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
         self.gst_pipeline.set_state(Gst.State.NULL)
         ppl_source.set_property('device', path)
         self.gst_pipeline.set_state(Gst.State.PLAYING)
+        app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
+        app_sink.set_emit_signals(True)
 
     def on_stack_img_source_visible_child_notify(self, stack: Gtk.Stack, param: GObject.ParamSpec):
         self.raw_result_buffer.set_text('')
