@@ -2,12 +2,6 @@ app-id: vn.hoabinh.quan.CoBang
 runtime: org.gnome.Platform
 runtime-version: '3.36'
 sdk: org.gnome.Sdk
-copy-icon: true
-build-options:
-  env:
-    PYTHON: python3
-    GST_PLUGIN_SYSTEM_PATH: /app/lib/gstreamer-1.0/
-
 command: cobang
 finish-args:
   - --share=network
@@ -15,18 +9,17 @@ finish-args:
   - --socket=wayland
   - --filesystem=host
   - --device=all
-  - --talk-name=org.freedesktop.Notifications
 
-cleanup:
-  - /include
-  - /lib/pkgconfig
-  - /man
-  - /share/doc
-  - /share/gtk-doc
-  - /share/man
-  - /share/pkgconfig
-  - '*.la'
-  - '*.a'
+#cleanup:
+  #- /include
+  #- /lib/pkgconfig
+  #- /man
+  #- /share/doc
+  #- /share/gtk-doc
+  #- /share/man
+  #- /share/pkgconfig
+  #- '*.la'
+  #- '*.a'
 
 modules:
 
@@ -55,7 +48,7 @@ modules:
     sources:
       - type: git
         tag: 1.16.2
-        url: https://gitlab.freedesktop.org/gstreamer/gst-plugins-base.git
+        url: https://github.com/freedesktop/gstreamer-gst-plugins-base.git
 
   - name: gst-plugins-good
     buildsystem: meson
@@ -66,7 +59,7 @@ modules:
     sources:
       - type: git
         tag: 1.16.2
-        url: https://gitlab.freedesktop.org/gstreamer/gst-plugins-good.git
+        url: https://github.com/freedesktop/gstreamer-gst-plugins-good.git
 
   - name: gst-python
     buildsystem: meson
@@ -77,7 +70,7 @@ modules:
     sources:
       - type: git
         tag: 1.16.2
-        url: https://gitlab.freedesktop.org/gstreamer/gst-python.git
+        url: https://github.com/freedesktop/gstreamer-gst-python.git
 
   - name: cobang
     builddir: true
