@@ -8,7 +8,7 @@ Homepage: https://github.com/hongquan/CoBang
 
 Package: cobang
 Architecture: all
-Depends: python3-single-version, python3-logbook, python3-gst-1.0, gir1.2-gtk-3.0, gir1.2-cheese-3.0, gir1.2-gst-plugins-base-1.0, gstreamer1.0-plugins-good, python3-pil, ${misc:Depends}, ${python3:Depends}
+Depends: python3-single-version, python3-logbook, python3-gst-1.0, gir1.2-gtk-3.0, gir1.2-gst-plugins-base-1.0, gstreamer1.0-plugins-good, python3-zbar, python3-pil, ${misc:Depends}, ${python3:Depends}
 Description: QR code scanner for Linux desktop
  A missing native QR Code scanner application for Linux desktop.
  .
