@@ -107,21 +107,16 @@ class CoBangApplication(Gtk.Application):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
         # Try GL backend first
         command = (f'v4l2src name={self.GST_SOURCE_NAME} ! tee name=t ! '
-                   'queue ! glsinkbin sink=gtkglsink name=sink_bin '
+                   f'queue ! glsinkbin sink="gtkglsink name={self.SINK_NAME}" name=sink_bin '
                    't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
                    f'appsink name={self.APPSINK_NAME} max_buffers=2 drop=1')
         logger.debug('To build pipeline: {}', command)
         pipeline = Gst.parse_launch(command)
-        if pipeline:
-            glbin = pipeline.get_by_name('sink_bin')
-            itr = iter(glbin.iterate_sinks())
-            glsink = next(itr)
-            logger.debug('GtkGLSink: {}', glsink)
-            glsink.set_property('name', self.SINK_NAME)
-        else:
+        if not pipeline:
+            logger.info('OpenGL is not available, fallback to normal GtkSink')
             # Fallback to non-GL
             command = (f'v4l2src name={self.GST_SOURCE_NAME} ! videoconvert ! tee name=t ! '
-                       'queue ! gtksink name={self.SINK_NAME} '
+                       f'queue ! gtksink name={self.SINK_NAME} '
                        't. ! queue leaky=1 max-size-buffers=2 ! video/x-raw,format=GRAY8 ! '
                        f'appsink name={self.APPSINK_NAME}')
             logger.debug('To build pipeline: {}', command)
@@ -149,7 +144,8 @@ class CoBangApplication(Gtk.Application):
         self.btn_play = builder.get_object('btn-play')
         self.btn_pause = builder.get_object('btn-pause')
         self.btn_img_chooser = builder.get_object('btn-img-chooser')
-        self.replace_webcam_placeholder_with_gstreamer_sink()
+        if self.gst_pipeline:
+            self.replace_webcam_placeholder_with_gstreamer_sink()
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
         self.webcam_store = builder.get_object('webcam-list')
         self.webcam_combobox = builder.get_object('webcam-combobox')
@@ -304,6 +300,8 @@ class CoBangApplication(Gtk.Application):
         return True
 
     def on_webcam_combobox_changed(self, combo: Gtk.ComboBox):
+        if not self.gst_pipeline:
+            return
         liter = combo.get_active_iter()
         if not liter:
             return
@@ -326,7 +324,8 @@ class CoBangApplication(Gtk.Application):
         toolbar = self.btn_play.get_parent()
         if not child_name.endswith('webcam'):
             logger.info('To disable webcam')
-            self.gst_pipeline.set_state(Gst.State.NULL)
+            if self.gst_pipeline:
+                self.gst_pipeline.set_state(Gst.State.NULL)
             toolbar.hide()
             self.webcam_combobox.hide()
             self.btn_img_chooser.show()
@@ -421,6 +420,8 @@ class CoBangApplication(Gtk.Application):
         return Gst.FlowReturn.OK
 
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
+        if not self.gst_pipeline:
+            return
         to_pause = (isinstance(widget, Gtk.RadioToolButton) and not widget.get_active())
         app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
         source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
