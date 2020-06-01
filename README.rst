@@ -169,9 +169,9 @@ Follow this step to package:
 Package as Flatpak
 ------------------
 
-This work is not done yet. I prepare some scripts, but haven't solved the issue of including Cheese as dependency.
+You can package as Flatpak from the source. CoBang is not published to `FlatHub`_ yet.
 
-.. code-block: sh
+.. code-block:: sh
 
     flatpak-builder _build --force-clean vn.hoabinh.quan.CoBang.yaml
     flatpak-builder --run _build vn.hoabinh.quan.CoBang.yaml cobang
@@ -191,7 +191,7 @@ Credit
 .. _co_bang: https://nhipsongquehuong.com/bien-co-bang-thanh-do-thu-cong-dep-mat
 .. _gtk: https://www.gtk.org/
 .. _GStreamer: https://gstreamer.freedesktop.org/
-.. _ZBar: https://github.com/ZBar/ZBar
+.. _ZBar: https://github.com/mchehab/zbar
 .. _QtQR: https://launchpad.net/qr-tools
 .. _PyPI: https://pypi.org/
 .. _ppa: https://launchpad.net/~ng-hong-quan/+archive/ubuntu/ppa
@@ -199,6 +199,7 @@ Credit
 .. _poetry: https://python-poetry.org/
 .. _pipenv: https://pipenv.pypa.io
 .. _logbook: https://pypi.org/project/Logbook/
+.. _FlatHub: https://flathub.org/home
 .. _author: https://quan.hoabinh.vn
 .. _freepik: https://www.flaticon.com/authors/freepik
 .. _www.flaticon.com: https://www.flaticon.com
