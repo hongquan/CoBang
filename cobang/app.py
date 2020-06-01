@@ -72,6 +72,7 @@ class CoBangApplication(Gtk.Application):
     raw_result_buffer: Optional[Gtk.TextBuffer] = None
     webcam_combobox: Optional[Gtk.ComboBox] = None
     webcam_store: Optional[Gtk.ListStore] = None
+    frame_image: Optional[Gtk.AspectFrame] = None
     # Box holds the emplement to display when no image is chosen
     box_image_empty: Optional[Gtk.Box] = None
     dlg_about: Optional[Gtk.AboutDialog] = None
@@ -149,6 +150,7 @@ class CoBangApplication(Gtk.Application):
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
         self.webcam_store = builder.get_object('webcam-list')
         self.webcam_combobox = builder.get_object('webcam-combobox')
+        self.frame_image = builder.get_object('frame-image')
         self.box_image_empty = builder.get_object('box-image-empty')
         main_menubutton: Gtk.MenuButton = builder.get_object('main-menubutton')
         main_menubutton.set_menu_model(build_app_menu_model())
@@ -226,45 +228,41 @@ class CoBangApplication(Gtk.Application):
 
     def insert_image_to_placeholder(self, pixbuf: GdkPixbuf.Pixbuf):
         stack = self.stack_img_source
-        child = stack.get_visible_child()
-        logger.debug('Visible child: {}', child.get_name())
+        pane: Gtk.Container = stack.get_visible_child()
+        logger.debug('Visible pane: {}', pane.get_name())
+        if not isinstance(pane, Gtk.AspectFrame):
+            logger.error('Stack seems to be in wrong state')
+            return
+        try:
+            child: Gtk.Widget = pane.get_children()[0]
+            logger.debug('Child: {}', child)
+        except IndexError:
+            logger.error('{} doesnot have any child!', pane)
+            return
         if isinstance(child, Gtk.Image):
             child.set_from_pixbuf(pixbuf)
             return
-        # Disconnect handler of notify::visible-child signal, to prevent it from being called when removing child
-        stack.disconnect_by_func(self.on_stack_img_source_visible_child_notify)
         image = Gtk.Image.new_from_pixbuf(pixbuf)
-        property_names = ('icon-name', 'needs-attention', 'position', 'title')
-        properties = {k: stack.child_get_property(child, k) for k in property_names}
-        widget_name = self.box_image_empty.get_name()
         # Detach the box
-        stack.remove(child)
-        stack.add_named(image, self.STACK_CHILD_NAME_IMAGE)
-        for n in property_names:
-            stack.child_set_property(image, n, properties[n])
-        image.set_name(widget_name)
+        logger.debug('Detach {} from {}', child, pane)
+        pane.remove(child)
+        logger.debug('Attach {}', image)
+        pane.add(image)
         image.show()
-        stack.set_visible_child(image)
-        stack.connect('notify::visible-child', self.on_stack_img_source_visible_child_notify)
 
     def reset_image_placeholder(self):
         stack = self.stack_img_source
         logger.debug('Children: {}', stack.get_children())
-        old_widget = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
+        pane: Gtk.Container = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
+        try:
+            old_widget = pane.get_children()[0]
+        except IndexError:
+            logger.error('Stack seems to be in wrong state')
+            return
         if old_widget == self.box_image_empty:
             return
-        # Disconnect handler of notify::visible-child signal, to prevent it from being called when removing child
-        stack.disconnect_by_func(self.on_stack_img_source_visible_child_notify)
-        property_names = ('icon-name', 'needs-attention', 'position', 'title')
-        properties = {k: stack.child_get_property(old_widget, k) for k in property_names}
-        logger.debug('Properties: {}', properties)
-        widget_name = old_widget.get_name()
-        stack.remove(old_widget)
-        stack.add_named(self.box_image_empty, self.STACK_CHILD_NAME_IMAGE)
-        for n in property_names:
-            stack.child_set_property(self.box_image_empty, n, properties[n])
-        self.box_image_empty.set_name(widget_name)
-        stack.connect('notify::visible-child', self.on_stack_img_source_visible_child_notify)
+        pane.remove(old_widget)
+        pane.add(self.box_image_empty)
 
     def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data):
         logger.debug('Message: {}', message)
