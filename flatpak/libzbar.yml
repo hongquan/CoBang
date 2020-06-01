@@ -1,3 +1,5 @@
+
+# Ref: https://gitlab.gnome.org/World/Authenticator
 name: libzbar
 config-opts:
   - --without-java
@@ -6,7 +8,6 @@ config-opts:
   - --without-xv
   - --without-imagemagick
   - --disable-video
-  # - --without-python
   - --without-dbus
 sources:
   - type: git
