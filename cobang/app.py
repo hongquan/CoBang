@@ -156,8 +156,11 @@ class CoBangApplication(Gtk.Application):
         main_menubutton.set_menu_model(build_app_menu_model())
         self.dlg_about = builder.get_object('dlg-about')
         self.dlg_about.set_version(__version__)
+        self.frame_image.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
+        self.frame_image.drag_dest_add_uri_targets()
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
+        self.frame_image.connect('drag-data-received', self.on_frame_image_drag_data_received)
         return window
 
     def signal_handlers_for_glade(self):
@@ -357,8 +360,7 @@ class CoBangApplication(Gtk.Application):
         chooser.set_preview_widget_active(True)
         return
 
-    def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
-        chosen_file: Gio.File = chooser.get_file()
+    def process_passed_image(self, chosen_file: Gio.File):
         self.raw_result_buffer.set_text('')
         stream: Gio.FileInputStream = chosen_file.read(None)
         widget = self.stack_img_source.get_visible_child()
@@ -384,6 +386,19 @@ class CoBangApplication(Gtk.Application):
         logger.info('QR type: {}', sym.type)
         logger.info('Decoded string: {}', sym.data)
         self.raw_result_buffer.set_text(sym.data)
+
+    def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
+        chosen_file: Gio.File = chooser.get_file()
+        logger.debug('Chose file: {}', chosen_file.get_uri())
+        self.process_passed_image(chosen_file)
+
+    def on_frame_image_drag_data_received(self, widget: Gtk.AspectFrame, drag_context: Gdk.DragContext,
+                                          x: int, y: int, data: Gtk.SelectionData, info: int, time: int):
+        uri: str = data.get_data().strip().decode()
+        logger.debug('Dropped URI: {}', uri)
+        chosen_file = Gio.file_new_for_uri(uri)
+        self.btn_img_chooser.select_uri(uri)
+        self.process_passed_image(chosen_file)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
