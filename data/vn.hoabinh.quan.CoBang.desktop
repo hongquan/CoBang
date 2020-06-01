@@ -12,6 +12,6 @@ Keywords=qr;code;qr-code;qr-decoder;qr-scanner
 Exec=cobang %u
 Terminal=false
 Type=Application
-Icon=vn.hoabinh.quan.cobang
+Icon=vn.hoabinh.quan.CoBang
 StartupNotify=true
 Categories=GTK;Office;Graphics;AudioVideo;Video;Scanning;

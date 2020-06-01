@@ -6,7 +6,13 @@ if desktop_utils.found()
   test('Validate desktop file', desktop_utils,
     args: [desktop_file]
   )
+  install_data(desktop_file,
+    install_dir: join_paths(get_option('datadir'), 'applications')
+  )
 endif
+
+themedir = join_paths(get_option('datadir'), 'icons/hicolor')
+install_data('vn.hoabinh.quan.CoBang.svg', install_dir: join_paths(themedir, 'scalable/apps'))
 
 appstream_file = 'vn.hoabinh.quan.CoBang.appdata.xml'
 
@@ -14,6 +20,9 @@ appstream_util = find_program('appstream-util', required: false)
 if appstream_util.found()
   test('Validate appstream file', appstream_util,
     args: ['validate', appstream_file]
+  )
+  install_data(appstream_file,
+    install_dir: join_paths(get_option('datadir'), 'metainfo')
   )
 endif
 
