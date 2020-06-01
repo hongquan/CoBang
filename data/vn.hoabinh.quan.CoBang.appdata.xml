@@ -28,6 +28,14 @@
     <kudo>Notifications</kudo>
   </kudos>
 
+  <releases>
+    <release version="0.2.0" date="2020-06-01" urgency="medium">
+      <description>
+        <p>Drop Cheese dependency</p>
+      </description>
+    </release>
+  </releases>
+
   <content_rating type="oars-1.1">
     <content_attribute id="violence-cartoon">none</content_attribute>
     <content_attribute id="violence-fantasy">none</content_attribute>
