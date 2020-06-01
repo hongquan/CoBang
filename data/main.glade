@@ -362,8 +362,8 @@ Good Ware</property>
                               <object class="GtkImage">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="pixbuf">wireframe-image-add.svg</property>
                                 <property name="pixel_size">128</property>
-                                <property name="icon_name">insert-image</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>

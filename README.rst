@@ -181,7 +181,8 @@ Credit
 ++++++
 
 - Brought to you by `Nguyễn Hồng Quân <author_>`_.
-- Icons from `www.flaticon.com`_, made by `Freepik`_, `Good Ware <good_ware_>`_.
+- Application logo is from `www.flaticon.com`_, made by `Freepik`_.
+- One icon is composed from ones made by `Good Ware <good_ware_>`_ (allowed by Flaticon license).
 - Some contributors who proposed nicer UI for this app.
 
 .. [1] Every Electron application brings along a pair of NodeJS + Chromium, which make the package size > 50MB, no matter how small the application code is. To make the situation worse, those NodeJS + Chromium set are not shared. It means that if you installed two Electron apps, you end up having two set of NodeJS & Chromium in your system!

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   height="148"
+   viewBox="0 0 37.023678 37"
+   width="148.09471"
+   data-name="Layer 1"
+   version="1.1"
+   sodipodi:docname="wireframe-image-add.svg"
+   inkscape:version="1.0 (1.0+r73+1)">
+  <metadata
+     id="metadata117">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+        <cc:license
+           rdf:resource="https://www.flaticon.com/free-icon/gallery_2150350" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Nguyễn Hồng Quân</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:source />
+        <dc:relation>https://www.flaticon.com/authors/good-ware</dc:relation>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs115">
+    <inkscape:path-effect
+       message="Use fill-rule evenodd on &lt;b&gt;fill and stroke&lt;/b&gt; dialog if no flatten result after convert clip to paths."
+       hide_clip="false"
+       flatten="false"
+       inverse="true"
+       lpeversion="1"
+       is_visible="true"
+       id="path-effect868"
+       effect="powerclip" />
+    <clipPath
+       id="clipPath864"
+       clipPathUnits="userSpaceOnUse">
+      <circle
+         d="m 131.18114,108.79641 a 22.202726,22.202726 0 0 1 -22.20272,22.20273 22.202726,22.202726 0 0 1 -22.20273,-22.20273 22.202726,22.202726 0 0 1 22.20273,-22.202727 22.202726,22.202726 0 0 1 22.20272,22.202727"
+         r="22.202726"
+         id="circle866"
+         cy="108.79641"
+         cx="108.97842"
+         style="display:none;fill:#ffffff;stroke-width:0.385465" />
+      <path
+         d="m -0.25,-0.25 h 128.5 V 128.249 H -0.25 Z m 131.43114,109.04641 a 22.202726,22.202726 0 0 0 -22.20272,-22.202727 22.202726,22.202726 0 0 0 -22.20273,22.202727 22.202726,22.202726 0 0 0 22.20273,22.20273 22.202726,22.202726 0 0 0 22.20272,-22.20273"
+         class="powerclip"
+         style="fill:#ffffff;stroke-width:0.385465"
+         id="lpe_path-effect868" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     fit-margin-bottom="10"
+     fit-margin-right="10"
+     fit-margin-left="10"
+     fit-margin-top="10"
+     inkscape:document-rotation="0"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1848"
+     inkscape:window-height="1016"
+     id="namedview113"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="2.2318058"
+     inkscape:cx="119.70643"
+     inkscape:cy="107.93275"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <linearGradient
+     id="linear-gradient"
+     gradientUnits="userSpaceOnUse"
+     x1="122.739"
+     x2="5.2639999"
+     y1="122.736"
+     y2="5.2610002">
+    <stop
+       offset="0"
+       stop-color="#1bce89"
+       id="stop105" />
+    <stop
+       offset="1"
+       stop-color="#4e8ed5"
+       id="stop107" />
+  </linearGradient>
+  <g
+     transform="translate(-2.25,-2.25)"
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Layer 1">
+    <g
+       transform="matrix(0.27004447,0,0,0.27004447,3.4672888,3.4672888)"
+       id="g25">
+      <path
+         style="fill:url(#linear-gradient)"
+         id="path110"
+         fill="url(#linear-gradient)"
+         d="m 34.331,94.961 a 1.75,1.75 0 0 1 -1.417,-2.774 l 13.18,-18.249 a 1.75,1.75 0 1 1 2.837,2.049 L 35.75,94.235 a 1.747,1.747 0 0 1 -1.419,0.726 z M 121.5,4.75 H 6.5 A 1.75,1.75 0 0 0 4.75,6.5 v 115 c 0,0.042 0.009,0.081 0.012,0.122 a 1.742,1.742 0 0 0 0.019,0.192 c 0.01,0.057 0.028,0.11 0.043,0.165 0.015,0.055 0.029,0.108 0.05,0.16 a 1.713,1.713 0 0 0 0.075,0.156 c 0.025,0.05 0.049,0.1 0.08,0.147 0.031,0.047 0.068,0.094 0.1,0.139 0.032,0.045 0.066,0.087 0.105,0.127 a 1.737,1.737 0 0 0 0.146,0.13 c 0.031,0.026 0.057,0.056 0.091,0.081 0.006,0 0.012,0.005 0.018,0.009 a 1.74,1.74 0 0 0 0.431,0.217 c 0.034,0.012 0.068,0.022 0.1,0.032 a 1.728,1.728 0 0 0 0.469,0.072 h 115 a 1.75,1.75 0 0 0 1.75,-1.75 v -71.76 a 1.75,1.75 0 0 0 -3.5,0 v 40.349 l -19.57,-27.112 a 1.814,1.814 0 0 0 -2.838,0 L 85.389,79.518 a 1.7501889,1.7501889 0 1 0 2.838,2.049 l 10.523,-14.578 21,29.077 V 119.75 H 104.7 L 56.572,53.108 a 1.813,1.813 0 0 0 -2.837,0 L 31.167,84.356 a 1.7501889,1.7501889 0 1 0 2.838,2.049 L 55.154,57.122 100.385,119.75 H 9.922 L 27.8,95 A 1.75,1.75 0 1 0 24.963,92.951 L 8.25,116.088 V 8.25 h 111.5 V 21 a 1.75,1.75 0 0 0 3.5,0 V 6.5 A 1.75,1.75 0 0 0 121.5,4.75 Z m 0,24.75 a 1.75,1.75 0 0 0 -1.75,1.75 V 40 a 1.75,1.75 0 0 0 3.5,0 V 31.25 A 1.75,1.75 0 0 0 121.5,29.5 Z M 33.039,22.442 a 10.6,10.6 0 1 1 -10.6,10.6 10.608,10.608 0 0 1 10.6,-10.6 z m 0,3.5 a 7.1,7.1 0 1 0 7.1,7.1 7.1,7.1 0 0 0 -7.1,-7.1 z"
+         clip-path="url(#clipPath864)"
+         inkscape:path-effect="#path-effect868"
+         inkscape:original-d="m 34.331,94.961 a 1.75,1.75 0 0 1 -1.417,-2.774 l 13.18,-18.249 a 1.75,1.75 0 1 1 2.837,2.049 L 35.75,94.235 a 1.747,1.747 0 0 1 -1.419,0.726 z M 121.5,4.75 H 6.5 A 1.75,1.75 0 0 0 4.75,6.5 v 115 c 0,0.042 0.009,0.081 0.012,0.122 a 1.742,1.742 0 0 0 0.019,0.192 c 0.01,0.057 0.028,0.11 0.043,0.165 0.015,0.055 0.029,0.108 0.05,0.16 a 1.713,1.713 0 0 0 0.075,0.156 c 0.025,0.05 0.049,0.1 0.08,0.147 0.031,0.047 0.068,0.094 0.1,0.139 0.032,0.045 0.066,0.087 0.105,0.127 a 1.737,1.737 0 0 0 0.146,0.13 c 0.031,0.026 0.057,0.056 0.091,0.081 0.006,0 0.012,0.005 0.018,0.009 a 1.74,1.74 0 0 0 0.431,0.217 c 0.034,0.012 0.068,0.022 0.1,0.032 a 1.728,1.728 0 0 0 0.469,0.072 h 115 a 1.75,1.75 0 0 0 1.75,-1.75 v -71.76 a 1.75,1.75 0 0 0 -3.5,0 v 40.349 l -19.57,-27.112 a 1.814,1.814 0 0 0 -2.838,0 L 85.389,79.518 a 1.7501889,1.7501889 0 1 0 2.838,2.049 l 10.523,-14.578 21,29.077 V 119.75 H 104.7 L 56.572,53.108 a 1.813,1.813 0 0 0 -2.837,0 L 31.167,84.356 a 1.7501889,1.7501889 0 1 0 2.838,2.049 L 55.154,57.122 100.385,119.75 H 9.922 L 27.8,95 A 1.75,1.75 0 1 0 24.963,92.951 L 8.25,116.088 V 8.25 h 111.5 V 21 a 1.75,1.75 0 0 0 3.5,0 V 6.5 A 1.75,1.75 0 0 0 121.5,4.75 Z m 0,24.75 a 1.75,1.75 0 0 0 -1.75,1.75 V 40 a 1.75,1.75 0 0 0 3.5,0 V 31.25 A 1.75,1.75 0 0 0 121.5,29.5 Z M 33.039,22.442 a 10.6,10.6 0 1 1 -10.6,10.6 10.608,10.608 0 0 1 10.6,-10.6 z m 0,3.5 a 7.1,7.1 0 1 0 7.1,7.1 7.1,7.1 0 0 0 -7.1,-7.1 z" />
+      <g
+         transform="matrix(0.40332201,0,0,0.40332201,7.6639307,14.983713)"
+         id="g16">
+        <path
+           style="fill:#00b594"
+           d="m 224,240.8 c -4.4,0 -8.4,-3.6 -8.4,-8.4 0,-4.8 3.6,-8.4 8.4,-8.4 h 54.4 c 4.8,0 8.4,3.6 8.4,8.4 0,4.8 -3.6,8.4 -8.4,8.4 z"
+           id="path12" />
+        <path
+           style="fill:#00b594"
+           d="m 259.6,259.6 c 0,4.8 -3.6,8.4 -8.4,8.4 -4.8,0 -8.4,-3.6 -8.4,-8.4 v -54 c 0,-4.4 3.6,-8.4 8.4,-8.4 4.4,0 8.4,3.6 8.4,8.4 z"
+           id="path14" />
+      </g>
+    </g>
+  </g>
+</svg>
