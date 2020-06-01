@@ -1,3 +1,9 @@
+cobang (0.2.0-1) focal; urgency=low
+
+  * Drop Cheese dependency.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Mon, 01 Jun 2020 11:28:38 +0700
+
 cobang (0.1.0-3) focal; urgency=low
 
   * Still forgot one dependency for deb package.
