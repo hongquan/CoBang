@@ -77,6 +77,7 @@ class CoBangApplication(Gtk.Application):
     box_image_empty: Optional[Gtk.Box] = None
     dlg_about: Optional[Gtk.AboutDialog] = None
     devmonitor: Optional[Gst.DeviceMonitor] = None
+    clipboard: Optional[Gtk.Clipboard] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -158,6 +159,7 @@ class CoBangApplication(Gtk.Application):
         self.dlg_about.set_version(__version__)
         self.frame_image.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
         self.frame_image.drag_dest_add_uri_targets()
+        self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         self.frame_image.connect('drag-data-received', self.on_frame_image_drag_data_received)
@@ -170,6 +172,8 @@ class CoBangApplication(Gtk.Application):
             'on_stack_img_source_visible_child_notify': self.on_stack_img_source_visible_child_notify,
             'on_btn_img_chooser_update_preview': self.on_btn_img_chooser_update_preview,
             'on_btn_img_chooser_file_set': self.on_btn_img_chooser_file_set,
+            'on_eventbox_key_press_event': self.on_eventbox_key_press_event,
+            'on_box-image-empty_key_press_event': self.on_eventbox_key_press_event,
         }
 
     def discover_webcam(self):
@@ -237,20 +241,21 @@ class CoBangApplication(Gtk.Application):
             logger.error('Stack seems to be in wrong state')
             return
         try:
-            child: Gtk.Widget = pane.get_children()[0]
+            event_box: Gtk.Widget = pane.get_children()[0]
+            child = event_box.get_children()[0]
             logger.debug('Child: {}', child)
         except IndexError:
-            logger.error('{} doesnot have any child!', pane)
+            logger.error('{} doesnot have child or grandchild!', pane)
             return
         if isinstance(child, Gtk.Image):
             child.set_from_pixbuf(pixbuf)
             return
         image = Gtk.Image.new_from_pixbuf(pixbuf)
         # Detach the box
-        logger.debug('Detach {} from {}', child, pane)
-        pane.remove(child)
+        logger.debug('Detach {} from {}', child, event_box)
+        event_box.remove(child)
         logger.debug('Attach {}', image)
-        pane.add(image)
+        event_box.add(image)
         image.show()
 
     def reset_image_placeholder(self):
@@ -258,14 +263,15 @@ class CoBangApplication(Gtk.Application):
         logger.debug('Children: {}', stack.get_children())
         pane: Gtk.Container = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
         try:
-            old_widget = pane.get_children()[0]
+            event_box = pane.get_children()[0]
+            old_widget = event_box.get_children()[0]
         except IndexError:
             logger.error('Stack seems to be in wrong state')
             return
         if old_widget == self.box_image_empty:
             return
-        pane.remove(old_widget)
-        pane.add(self.box_image_empty)
+        event_box.remove(old_widget)
+        event_box.add(self.box_image_empty)
 
     def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data):
         logger.debug('Message: {}', message)
@@ -399,6 +405,9 @@ class CoBangApplication(Gtk.Application):
         chosen_file = Gio.file_new_for_uri(uri)
         self.btn_img_chooser.select_uri(uri)
         self.process_passed_image(chosen_file)
+
+    def on_eventbox_key_press_event(self, widget: Gtk.Widget, event: Gdk.Event):
+        logger.debug('Got event: {}', event)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
