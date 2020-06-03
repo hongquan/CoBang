@@ -30,6 +30,11 @@
   </kudos>
 
   <releases>
+    <release version="0.3.0" date="2020-06-04" urgency="medium">
+      <description>
+        <p>Let drag, drop and paste image</p>
+      </description>
+    </release>
     <release version="0.2.0" date="2020-06-01" urgency="medium">
       <description>
         <p>Drop Cheese dependency</p>

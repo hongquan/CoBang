@@ -15,13 +15,15 @@
 
 import os
 import io
-from typing import Optional
+from pathlib import Path
+from urllib.parse import urlsplit
+from typing import Optional, Sequence
 
 import gi
 import zbar
 import logbook
 from logbook import Logger
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 gi.require_version('GObject', '2.0')
 gi.require_version('GLib', '2.0')
@@ -36,7 +38,7 @@ gi.require_version('GstApp', '1.0')
 from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstApp
 
 from .resources import get_ui_filepath
-from .consts import APP_ID, SHORT_NAME
+from .consts import APP_ID, SHORT_NAME, WELKNOWN_IMAGE_EXTS
 from . import __version__
 
 
@@ -72,10 +74,12 @@ class CoBangApplication(Gtk.Application):
     raw_result_buffer: Optional[Gtk.TextBuffer] = None
     webcam_combobox: Optional[Gtk.ComboBox] = None
     webcam_store: Optional[Gtk.ListStore] = None
+    frame_image: Optional[Gtk.AspectFrame] = None
     # Box holds the emplement to display when no image is chosen
     box_image_empty: Optional[Gtk.Box] = None
     dlg_about: Optional[Gtk.AboutDialog] = None
     devmonitor: Optional[Gst.DeviceMonitor] = None
+    clipboard: Optional[Gtk.Clipboard] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -137,7 +141,7 @@ class CoBangApplication(Gtk.Application):
         builder: Gtk.Builder = Gtk.Builder.new_from_file(str(source))
         handlers = self.signal_handlers_for_glade()
         window: Gtk.Window = builder.get_object('main-window')
-        builder.get_object("main-grid")
+        builder.get_object('main-grid')
         window.set_application(self)
         self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
         self.stack_img_source = builder.get_object("stack-img-source")
@@ -149,13 +153,19 @@ class CoBangApplication(Gtk.Application):
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
         self.webcam_store = builder.get_object('webcam-list')
         self.webcam_combobox = builder.get_object('webcam-combobox')
+        self.frame_image = builder.get_object('frame-image')
         self.box_image_empty = builder.get_object('box-image-empty')
         main_menubutton: Gtk.MenuButton = builder.get_object('main-menubutton')
         main_menubutton.set_menu_model(build_app_menu_model())
         self.dlg_about = builder.get_object('dlg-about')
         self.dlg_about.set_version(__version__)
+        self.frame_image.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
+        self.frame_image.drag_dest_add_uri_targets()
+        self.clipboard = Gtk.Clipboard.get_for_display(Gdk.Display.get_default(),
+                                                       Gdk.SELECTION_CLIPBOARD)
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
+        self.frame_image.connect('drag-data-received', self.on_frame_image_drag_data_received)
         return window
 
     def signal_handlers_for_glade(self):
@@ -165,6 +175,8 @@ class CoBangApplication(Gtk.Application):
             'on_stack_img_source_visible_child_notify': self.on_stack_img_source_visible_child_notify,
             'on_btn_img_chooser_update_preview': self.on_btn_img_chooser_update_preview,
             'on_btn_img_chooser_file_set': self.on_btn_img_chooser_file_set,
+            'on_eventbox_key_press_event': self.on_eventbox_key_press_event,
+            'on_main-window_map_event': self.on_main_window_map_event,
         }
 
     def discover_webcam(self):
@@ -226,45 +238,43 @@ class CoBangApplication(Gtk.Application):
 
     def insert_image_to_placeholder(self, pixbuf: GdkPixbuf.Pixbuf):
         stack = self.stack_img_source
-        child = stack.get_visible_child()
-        logger.debug('Visible child: {}', child.get_name())
+        pane: Gtk.Container = stack.get_visible_child()
+        logger.debug('Visible pane: {}', pane.get_name())
+        if not isinstance(pane, Gtk.AspectFrame):
+            logger.error('Stack seems to be in wrong state')
+            return
+        try:
+            event_box: Gtk.Widget = pane.get_children()[0]
+            child = event_box.get_children()[0]
+            logger.debug('Child: {}', child)
+        except IndexError:
+            logger.error('{} doesnot have child or grandchild!', pane)
+            return
         if isinstance(child, Gtk.Image):
             child.set_from_pixbuf(pixbuf)
             return
-        # Disconnect handler of notify::visible-child signal, to prevent it from being called when removing child
-        stack.disconnect_by_func(self.on_stack_img_source_visible_child_notify)
         image = Gtk.Image.new_from_pixbuf(pixbuf)
-        property_names = ('icon-name', 'needs-attention', 'position', 'title')
-        properties = {k: stack.child_get_property(child, k) for k in property_names}
-        widget_name = self.box_image_empty.get_name()
         # Detach the box
-        stack.remove(child)
-        stack.add_named(image, self.STACK_CHILD_NAME_IMAGE)
-        for n in property_names:
-            stack.child_set_property(image, n, properties[n])
-        image.set_name(widget_name)
+        logger.debug('Detach {} from {}', child, event_box)
+        event_box.remove(child)
+        logger.debug('Attach {}', image)
+        event_box.add(image)
         image.show()
-        stack.set_visible_child(image)
-        stack.connect('notify::visible-child', self.on_stack_img_source_visible_child_notify)
 
     def reset_image_placeholder(self):
         stack = self.stack_img_source
         logger.debug('Children: {}', stack.get_children())
-        old_widget = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
+        pane: Gtk.Container = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
+        try:
+            event_box = pane.get_children()[0]
+            old_widget = event_box.get_children()[0]
+        except IndexError:
+            logger.error('Stack seems to be in wrong state')
+            return
         if old_widget == self.box_image_empty:
             return
-        # Disconnect handler of notify::visible-child signal, to prevent it from being called when removing child
-        stack.disconnect_by_func(self.on_stack_img_source_visible_child_notify)
-        property_names = ('icon-name', 'needs-attention', 'position', 'title')
-        properties = {k: stack.child_get_property(old_widget, k) for k in property_names}
-        logger.debug('Properties: {}', properties)
-        widget_name = old_widget.get_name()
-        stack.remove(old_widget)
-        stack.add_named(self.box_image_empty, self.STACK_CHILD_NAME_IMAGE)
-        for n in property_names:
-            stack.child_set_property(self.box_image_empty, n, properties[n])
-        self.box_image_empty.set_name(widget_name)
-        stack.connect('notify::visible-child', self.on_stack_img_source_visible_child_notify)
+        event_box.remove(old_widget)
+        event_box.add(self.box_image_empty)
 
     def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data):
         logger.debug('Message: {}', message)
@@ -359,8 +369,7 @@ class CoBangApplication(Gtk.Application):
         chooser.set_preview_widget_active(True)
         return
 
-    def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
-        chosen_file: Gio.File = chooser.get_file()
+    def process_passed_image(self, chosen_file: Gio.File):
         self.raw_result_buffer.set_text('')
         stream: Gio.FileInputStream = chosen_file.read(None)
         widget = self.stack_img_source.get_visible_child()
@@ -386,6 +395,43 @@ class CoBangApplication(Gtk.Application):
         logger.info('QR type: {}', sym.type)
         logger.info('Decoded string: {}', sym.data)
         self.raw_result_buffer.set_text(sym.data)
+
+    def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
+        chosen_file: Gio.File = chooser.get_file()
+        logger.debug('Chose file: {}', chosen_file.get_uri())
+        self.process_passed_image(chosen_file)
+
+    def on_frame_image_drag_data_received(self, widget: Gtk.AspectFrame, drag_context: Gdk.DragContext,
+                                          x: int, y: int, data: Gtk.SelectionData, info: int, time: int):
+        uri: str = data.get_data().strip().decode()
+        logger.debug('Dropped URI: {}', uri)
+        chosen_file = Gio.file_new_for_uri(uri)
+        self.btn_img_chooser.select_uri(uri)
+        self.process_passed_image(chosen_file)
+
+    def on_eventbox_key_press_event(self, widget: Gtk.Widget, event: Gdk.Event):
+        logger.debug('Got key press: {}, state {}', event, event.state)
+        key_name = Gdk.keyval_name(event.keyval)
+        if event.state != Gdk.ModifierType.CONTROL_MASK or key_name != 'v':
+            return
+        # Pressed Ctrl + V
+        self.raw_result_buffer.set_text('')
+        logger.debug('Clipboard -> {}', self.clipboard.wait_for_targets())
+        pixbuf: Optional[GdkPixbuf.Pixbuf] = self.clipboard.wait_for_image()
+        logger.debug('Got pasted image: {}', pixbuf)
+        if pixbuf:
+            self.insert_image_to_placeholder(pixbuf)
+            return
+        uris = self.clipboard.wait_for_uris()
+        logger.debug('URIs: {}', uris)
+        if not uris:
+            return
+        # Get first URI which looks like a URL of an image
+        gfile = choose_first_image(uris)
+        if not gfile:
+            return
+        self.btn_img_chooser.select_uri(gfile.get_uri())
+        self.process_passed_image(gfile)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
@@ -418,6 +464,13 @@ class CoBangApplication(Gtk.Application):
         logger.info('Decoded string: {}', sym.data)
         self.raw_result_buffer.set_text(sym.data)
         return Gst.FlowReturn.OK
+
+    def on_main_window_map_event(self, window: Gtk.ApplicationWindow, event: Gdk.EventAny):
+        # This step is needed to let our event box get key-press event
+        # Ref: https://discourse.gnome.org/t/cannot-catch-key-press-event-even-with-eventbox/3479/5
+        event_box: Gtk.EventBox = self.frame_image.get_children()[0]
+        event_box.grab_focus()
+        return True
 
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
         if not self.gst_pipeline:
@@ -458,3 +511,33 @@ def build_app_menu_model() -> Gio.Menu:
     menu.append('About', 'app.about')
     menu.append('Quit', 'app.quit')
     return menu
+
+
+def is_local_real_image(path: str) -> bool:
+    try:
+        Image.open(path)
+        return True
+    except (UnidentifiedImageError, ValueError):
+        return False
+    return False
+
+
+def maybe_remote_image(url: str):
+    parsed = urlsplit(url)
+    suffix = Path(parsed.path).suffix
+    # Strip leading dot
+    ext = suffix[1:].lower()
+    return ext in WELKNOWN_IMAGE_EXTS
+
+
+def choose_first_image(uris: Sequence[str]) -> Optional[Gio.File]:
+    for u in uris:
+        gfile: Gio.File = Gio.file_new_for_uri(u)
+        # Is local?
+        local_path = gfile.get_path()
+        if local_path:
+            if is_local_real_image(local_path):
+                return gfile
+        # Is remote
+        if maybe_remote_image(u):
+            return gfile

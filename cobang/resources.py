@@ -5,6 +5,7 @@ from .consts import SHORT_NAME
 # Folder to look for icon, glade files
 # - If this app is installed in ~/.local/bin and run from there, look for ~/.local/share/cobang
 # - If this app is install in /usr/local/bin and run from there, look for /usr/local/share/cobang
+# - If this app is install in /app/, which is the case of Faltpak container, look for /app/share/cobang
 # - If this app is run from source, look in the source folder
 
 DOT_LOCAL = Path('~/.local').expanduser()
@@ -17,6 +18,8 @@ def get_location_prefix() -> Path:
         return Path('/usr/local/')
     if str_top_app_dir.startswith('/usr/'):
         return Path('/usr/')
+    if str_top_app_dir.startswith('/app/'):
+        return Path('/app/')
     if str_top_app_dir.startswith(str(DOT_LOCAL)):
         return DOT_LOCAL
     # Run from source
@@ -25,9 +28,9 @@ def get_location_prefix() -> Path:
 
 def get_ui_folder() -> Path:
     prefix = get_location_prefix()
-    if str(prefix).startswith('/usr/'):
-        return prefix / 'share' / SHORT_NAME
-    if str(prefix).startswith(str(DOT_LOCAL)):
+    # Note: The trailing slash "/" is stripped by Path()
+    str_prefix = str(prefix)
+    if str_prefix.startswith(('/usr', '/app', str(DOT_LOCAL))):
         return prefix / 'share' / SHORT_NAME
     # Run from source
     return prefix / 'data'

@@ -66,5 +66,6 @@ modules:
     builddir: true
     buildsystem: meson
     sources:
-      - type: dir
-        path: '.'
+      - type: git
+        url: 'https://github.com/hongquan/CoBang.git'
+        branch: master
