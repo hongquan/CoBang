@@ -266,6 +266,7 @@ Good Ware</property>
   </object>
   <object class="GtkApplicationWindow" id="main-window">
     <property name="can_focus">False</property>
+    <signal name="map-event" handler="on_main-window_map_event" swapped="no"/>
     <child type="titlebar">
       <object class="GtkHeaderBar">
         <property name="visible">True</property>
@@ -354,7 +355,7 @@ Good Ware</property>
                         <child>
                           <object class="GtkEventBox" id="eventbox">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can_focus">True</property>
                             <property name="events">GDK_KEY_PRESS_MASK | GDK_STRUCTURE_MASK</property>
                             <property name="visible_window">False</property>
                             <property name="above_child">True</property>
@@ -365,7 +366,6 @@ Good Ware</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="orientation">vertical</property>
-                                <signal name="key-press-event" handler="on_box-image-empty_key_press_event" swapped="no"/>
                                 <child>
                                   <placeholder/>
                                 </child>

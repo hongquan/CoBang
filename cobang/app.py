@@ -15,13 +15,15 @@
 
 import os
 import io
-from typing import Optional
+from pathlib import Path
+from urllib.parse import urlsplit
+from typing import Optional, Sequence
 
 import gi
 import zbar
 import logbook
 from logbook import Logger
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 gi.require_version('GObject', '2.0')
 gi.require_version('GLib', '2.0')
@@ -36,7 +38,7 @@ gi.require_version('GstApp', '1.0')
 from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstApp
 
 from .resources import get_ui_filepath
-from .consts import APP_ID, SHORT_NAME
+from .consts import APP_ID, SHORT_NAME, WELKNOWN_IMAGE_EXTS
 from . import __version__
 
 
@@ -139,7 +141,7 @@ class CoBangApplication(Gtk.Application):
         builder: Gtk.Builder = Gtk.Builder.new_from_file(str(source))
         handlers = self.signal_handlers_for_glade()
         window: Gtk.Window = builder.get_object('main-window')
-        builder.get_object("main-grid")
+        builder.get_object('main-grid')
         window.set_application(self)
         self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
         self.stack_img_source = builder.get_object("stack-img-source")
@@ -159,7 +161,8 @@ class CoBangApplication(Gtk.Application):
         self.dlg_about.set_version(__version__)
         self.frame_image.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
         self.frame_image.drag_dest_add_uri_targets()
-        self.clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        self.clipboard = Gtk.Clipboard.get_for_display(Gdk.Display.get_default(),
+                                                       Gdk.SELECTION_CLIPBOARD)
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         self.frame_image.connect('drag-data-received', self.on_frame_image_drag_data_received)
@@ -173,7 +176,7 @@ class CoBangApplication(Gtk.Application):
             'on_btn_img_chooser_update_preview': self.on_btn_img_chooser_update_preview,
             'on_btn_img_chooser_file_set': self.on_btn_img_chooser_file_set,
             'on_eventbox_key_press_event': self.on_eventbox_key_press_event,
-            'on_box-image-empty_key_press_event': self.on_eventbox_key_press_event,
+            'on_main-window_map_event': self.on_main_window_map_event,
         }
 
     def discover_webcam(self):
@@ -407,7 +410,28 @@ class CoBangApplication(Gtk.Application):
         self.process_passed_image(chosen_file)
 
     def on_eventbox_key_press_event(self, widget: Gtk.Widget, event: Gdk.Event):
-        logger.debug('Got event: {}', event)
+        logger.debug('Got key press: {}, state {}', event, event.state)
+        key_name = Gdk.keyval_name(event.keyval)
+        if event.state != Gdk.ModifierType.CONTROL_MASK or key_name != 'v':
+            return
+        # Pressed Ctrl + V
+        self.raw_result_buffer.set_text('')
+        logger.debug('Clipboard -> {}', self.clipboard.wait_for_targets())
+        pixbuf: Optional[GdkPixbuf.Pixbuf] = self.clipboard.wait_for_image()
+        logger.debug('Got pasted image: {}', pixbuf)
+        if pixbuf:
+            self.insert_image_to_placeholder(pixbuf)
+            return
+        uris = self.clipboard.wait_for_uris()
+        logger.debug('URIs: {}', uris)
+        if not uris:
+            return
+        # Get first URI which looks like a URL of an image
+        gfile = choose_first_image(uris)
+        if not gfile:
+            return
+        self.btn_img_chooser.select_uri(gfile.get_uri())
+        self.process_passed_image(gfile)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
@@ -440,6 +464,13 @@ class CoBangApplication(Gtk.Application):
         logger.info('Decoded string: {}', sym.data)
         self.raw_result_buffer.set_text(sym.data)
         return Gst.FlowReturn.OK
+
+    def on_main_window_map_event(self, window: Gtk.ApplicationWindow, event: Gdk.EventAny):
+        # This step is needed to let our event box get key-press event
+        # Ref: https://discourse.gnome.org/t/cannot-catch-key-press-event-even-with-eventbox/3479/5
+        event_box: Gtk.EventBox = self.frame_image.get_children()[0]
+        event_box.grab_focus()
+        return True
 
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
         if not self.gst_pipeline:
@@ -480,3 +511,33 @@ def build_app_menu_model() -> Gio.Menu:
     menu.append('About', 'app.about')
     menu.append('Quit', 'app.quit')
     return menu
+
+
+def is_local_real_image(path: str) -> bool:
+    try:
+        Image.open(path)
+        return True
+    except (UnidentifiedImageError, ValueError):
+        return False
+    return False
+
+
+def maybe_remote_image(url: str):
+    parsed = urlsplit(url)
+    suffix = Path(parsed.path).suffix
+    # Strip leading dot
+    ext = suffix[1:].lower()
+    return ext in WELKNOWN_IMAGE_EXTS
+
+
+def choose_first_image(uris: Sequence[str]) -> Optional[Gio.File]:
+    for u in uris:
+        gfile: Gio.File = Gio.file_new_for_uri(u)
+        # Is local?
+        local_path = gfile.get_path()
+        if local_path:
+            if is_local_real_image(local_path):
+                return gfile
+        # Is remote
+        if maybe_remote_image(u):
+            return gfile
