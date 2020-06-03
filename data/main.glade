@@ -392,10 +392,13 @@ Good Ware</property>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">Please select an image file with the button below,
-or drag an image somewhere and drop here.
+                                        <property name="label" translatable="yes">Please add an image file by one of these methods:
 
-You can also add remote image (from &lt;tt&gt;http://...&lt;/tt&gt;, &lt;tt&gt;sftp://...&lt;/tt&gt;).</property>
+- Choose with button below
+- Drag and drop here
+- Copy from somewhere and paste (Ctrl+V) here
+
+Remote image (from &lt;tt&gt;http://...&lt;/tt&gt;, &lt;tt&gt;sftp://...&lt;/tt&gt;) is allowed.</property>
                                         <property name="use_markup">True</property>
                                       </object>
                                       <packing>
