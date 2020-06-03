@@ -1,4 +1,10 @@
 
+
+install_data(['main.glade', 'cobang_128.png', 'wireframe-image-add.svg'],
+  install_dir: get_option('datadir') / meson.project_name()
+)
+
+
 desktop_file = 'vn.hoabinh.quan.CoBang.desktop'
 
 desktop_utils = find_program('desktop-file-validate', required: false)
@@ -7,12 +13,14 @@ if desktop_utils.found()
     args: [desktop_file]
   )
   install_data(desktop_file,
-    install_dir: join_paths(get_option('datadir'), 'applications')
+    install_dir: get_option('datadir') / 'applications'
   )
 endif
 
-themedir = join_paths(get_option('datadir'), 'icons/hicolor')
-install_data('vn.hoabinh.quan.CoBang.svg', install_dir: join_paths(themedir, 'scalable/apps'))
+themedir = get_option('datadir') / 'icons/hicolor'
+install_data('vn.hoabinh.quan.CoBang.svg',
+  install_dir: themedir / 'scalable/apps'
+)
 
 appstream_file = 'vn.hoabinh.quan.CoBang.appdata.xml'
 
@@ -22,12 +30,12 @@ if appstream_util.found()
     args: ['validate', appstream_file]
   )
   install_data(appstream_file,
-    install_dir: join_paths(get_option('datadir'), 'metainfo')
+    install_dir: get_option('datadir') / 'metainfo'
   )
 endif
 
 install_data('vn.hoabinh.quan.CoBang.gschema.xml',
-  install_dir: join_paths(get_option('datadir'), 'glib-2.0/schemas')
+  install_dir: get_option('datadir') / 'glib-2.0/schemas'
 )
 
 compile_schemas = find_program('glib-compile-schemas', required: false)

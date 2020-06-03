@@ -6,7 +6,6 @@ project('cobang',
 )
 
 pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
-moduledir = join_paths(pkgdatadir, 'cobang')
 
 i18n = import('i18n')
 pymod = import('python')
@@ -40,6 +39,8 @@ conf.set('PYTHON', python.path())
 conf.set('VERSION', meson.project_version())
 conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
 conf.set('pkgdatadir', pkgdatadir)
+
+install_subdir('cobang', install_dir: python.get_install_dir())
 
 configure_file(
   input: 'cobang.in',
