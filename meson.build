@@ -1,11 +1,12 @@
 project('cobang',
-          version: '0.3.0',
-    meson_version: '>= 0.50.0',
-  default_options: [ 'warning_level=2',
-                   ],
+        version: '0.3.0',
+        meson_version: '>= 0.50.0',
+        default_options: [
+          'warning_level=2',
+        ],
 )
 
-pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
+pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
 
 i18n = import('i18n')
 pymod = import('python')
@@ -30,24 +31,16 @@ dependency('zbar')
 gst_dep = dependency('gstreamer-1.0', version : '>= 1.16',
   fallback : ['gstreamer', 'gst_dep'])
 
-
-subdir('data')
-subdir('po')
-
 conf = configuration_data()
 conf.set('PYTHON', python.path())
 conf.set('VERSION', meson.project_version())
-conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
+conf.set('localedir', get_option('prefix') / get_option('localedir'))
 conf.set('pkgdatadir', pkgdatadir)
 
-install_subdir('cobang', install_dir: python.get_install_dir())
 
-configure_file(
-  input: 'cobang.in',
-  output: 'cobang',
-  configuration: conf,
-  install: true,
-  install_dir: get_option('bindir')
-)
+subdir('cobang')
+subdir('data')
+subdir('exe')
+subdir('po')
 
 meson.add_install_script('flatpak/meson/postinstall.py')
