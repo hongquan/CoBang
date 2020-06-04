@@ -3,7 +3,7 @@ cobang (0.3.0-1) focal; urgency=medium
   * Let drag, drop and paste image.
   * Fix installed folder name.
 
- -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Thu, 04 Jun 2020 01:32:05 +0700
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Thu, 04 Jun 2020 14:19:34 +0700
 
 cobang (0.2.0-1) focal; urgency=low
 
