@@ -95,6 +95,7 @@ Example:
 
     $ workon cobang
 
+
 2. Install GObject-based Python packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -107,7 +108,6 @@ The GObject-based dependencies are listed in *deb-packages.txt* file, under the 
 
 On other distros (Fedora, ArchLinux etc.), please try to figure out equivalent package names and install with your favorite package manager.
 
-Note that, please don't install *gstreamer1.0-pipewire*. We are having conflict issue with that software (will be solved later).
 
 3. Install PyPI-hosted Python packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
