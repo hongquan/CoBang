@@ -9,4 +9,4 @@ sources = [
     'resources.py',
 ]
 
-python.install_sources(sources, pure: true)
+python.install_sources(sources, pure: true, subdir: meson.project_name())

@@ -235,7 +235,6 @@ Remote image (from &lt;tt&gt;http://...&lt;/tt&gt;, &lt;tt&gt;sftp://...&lt;/tt&
                   <object class="GtkTextView" id="raw-result-display">
                     <property name="height_request">100</property>
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
                     <property name="vadjustment">raw-result-adjustment</property>
                     <property name="editable">False</property>
