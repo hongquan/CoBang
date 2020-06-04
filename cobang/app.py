@@ -77,7 +77,6 @@ class CoBangApplication(Gtk.Application):
     frame_image: Optional[Gtk.AspectFrame] = None
     # Box holds the emplement to display when no image is chosen
     box_image_empty: Optional[Gtk.Box] = None
-    dlg_about: Optional[Gtk.AboutDialog] = None
     devmonitor: Optional[Gst.DeviceMonitor] = None
     clipboard: Optional[Gtk.Clipboard] = None
 
@@ -157,8 +156,6 @@ class CoBangApplication(Gtk.Application):
         self.box_image_empty = builder.get_object('box-image-empty')
         main_menubutton: Gtk.MenuButton = builder.get_object('main-menubutton')
         main_menubutton.set_menu_model(build_app_menu_model())
-        self.dlg_about = builder.get_object('dlg-about')
-        self.dlg_about.set_version(__version__)
         self.frame_image.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
         self.frame_image.drag_dest_add_uri_targets()
         self.clipboard = Gtk.Clipboard.get_for_display(Gdk.Display.get_default(),
@@ -489,8 +486,12 @@ class CoBangApplication(Gtk.Application):
     def show_about_dialog(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
         if self.gst_pipeline:
             self.btn_pause.set_active(True)
-        logger.debug('To present {}', self.dlg_about)
-        self.dlg_about.present()
+        source = get_ui_filepath('about.glade')
+        builder: Gtk.Builder = Gtk.Builder.new_from_file(str(source))
+        dlg_about: Gtk.AboutDialog = builder.get_object('dlg-about')
+        dlg_about.set_version(__version__)
+        logger.debug('To present {}', dlg_about)
+        dlg_about.present()
 
     def quit_from_action(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
         self.quit()

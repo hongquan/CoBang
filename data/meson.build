@@ -1,6 +1,6 @@
 
 
-install_data(['main.glade', 'cobang_128.png', 'wireframe-image-add.svg'],
+install_data(['main.glade', 'about.glade', 'cobang_128.png', 'wireframe-image-add.svg'],
   install_dir: get_option('datadir') / meson.project_name()
 )
 
