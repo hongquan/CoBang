@@ -77,7 +77,6 @@ class CoBangApplication(Gtk.Application):
     frame_image: Optional[Gtk.AspectFrame] = None
     # Box holds the emplement to display when no image is chosen
     box_image_empty: Optional[Gtk.Box] = None
-    dlg_about: Optional[Gtk.AboutDialog] = None
     devmonitor: Optional[Gst.DeviceMonitor] = None
     clipboard: Optional[Gtk.Clipboard] = None
 
@@ -157,8 +156,6 @@ class CoBangApplication(Gtk.Application):
         self.box_image_empty = builder.get_object('box-image-empty')
         main_menubutton: Gtk.MenuButton = builder.get_object('main-menubutton')
         main_menubutton.set_menu_model(build_app_menu_model())
-        self.dlg_about = builder.get_object('dlg-about')
-        self.dlg_about.set_version(__version__)
         self.frame_image.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
         self.frame_image.drag_dest_add_uri_targets()
         self.clipboard = Gtk.Clipboard.get_for_display(Gdk.Display.get_default(),
@@ -176,7 +173,6 @@ class CoBangApplication(Gtk.Application):
             'on_btn_img_chooser_update_preview': self.on_btn_img_chooser_update_preview,
             'on_btn_img_chooser_file_set': self.on_btn_img_chooser_file_set,
             'on_eventbox_key_press_event': self.on_eventbox_key_press_event,
-            'on_main-window_map_event': self.on_main_window_map_event,
         }
 
     def discover_webcam(self):
@@ -332,6 +328,7 @@ class CoBangApplication(Gtk.Application):
         child_name = child.get_name()
         logger.debug('Visible child: {} ({})', child, child_name)
         toolbar = self.btn_play.get_parent()
+        event_box: Gtk.EventBox = self.frame_image.get_children()[0]
         if not child_name.endswith('webcam'):
             logger.info('To disable webcam')
             if self.gst_pipeline:
@@ -339,6 +336,7 @@ class CoBangApplication(Gtk.Application):
             toolbar.hide()
             self.webcam_combobox.hide()
             self.btn_img_chooser.show()
+            event_box.grab_focus()
         elif self.gst_pipeline:
             logger.info('To enable webcam')
             ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
@@ -465,13 +463,6 @@ class CoBangApplication(Gtk.Application):
         self.raw_result_buffer.set_text(sym.data)
         return Gst.FlowReturn.OK
 
-    def on_main_window_map_event(self, window: Gtk.ApplicationWindow, event: Gdk.EventAny):
-        # This step is needed to let our event box get key-press event
-        # Ref: https://discourse.gnome.org/t/cannot-catch-key-press-event-even-with-eventbox/3479/5
-        event_box: Gtk.EventBox = self.frame_image.get_children()[0]
-        event_box.grab_focus()
-        return True
-
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
         if not self.gst_pipeline:
             return
@@ -495,7 +486,12 @@ class CoBangApplication(Gtk.Application):
     def show_about_dialog(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
         if self.gst_pipeline:
             self.btn_pause.set_active(True)
-        self.dlg_about.present()
+        source = get_ui_filepath('about.glade')
+        builder: Gtk.Builder = Gtk.Builder.new_from_file(str(source))
+        dlg_about: Gtk.AboutDialog = builder.get_object('dlg-about')
+        dlg_about.set_version(__version__)
+        logger.debug('To present {}', dlg_about)
+        dlg_about.present()
 
     def quit_from_action(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
         self.quit()
