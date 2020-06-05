@@ -26,7 +26,7 @@ dependency('glib-2.0')
 dependency('gobject-2.0')
 dependency('gobject-introspection-1.0')
 dependency('gtk+-3.0', version: '>=3.24')
-dependency('zbar')
+dependency('gstreamer-plugins-base-1.0')
 
 gst_dep = dependency('gstreamer-1.0', version : '>= 1.16',
   fallback : ['gstreamer', 'gst_dep'])
