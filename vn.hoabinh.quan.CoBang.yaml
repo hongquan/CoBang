@@ -7,7 +7,6 @@ finish-args:
   - --share=network
   - --share=ipc
   - --socket=wayland
-  - --socket=fallback-x11
   # Need to load image files
   - --filesystem=home:ro
   # Need to access webcam
