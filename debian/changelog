@@ -1,3 +1,10 @@
+cobang (0.3.1-1) focal; urgency=medium
+
+  * Fix non-OpenGL environment.
+  * Support PipeWire.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 06 Jun 2020 22:00:14 +0700
+
 cobang (0.3.0-1) focal; urgency=medium
 
   * Let drag, drop and paste image.
