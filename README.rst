@@ -63,13 +63,13 @@ CoBang is packaged as *\*.deb* file for Ubuntu and derivatives (Linux Mint etc.)
     sudo apt update
     sudo apt install cobang
 
+Even though being target to Wayland, this app can still work in X11 desktop environments, like `KDE`_ (in Kubuntu), `Xfce`_ (in Xubuntu), `LxQt`_ (in Lubuntu). But due to a gap between GTK and Qt, the app gets some quirky issue when running in Qt-based DEs like KDE and LxQt. CoBang should not be tried in VirtualBox virtual machine, because of poor graphics driver VirtualBox provides.
+
 Other distros
 -------------
 
 Unfortunately, I don't use other distro than Ubuntu and don't know how to package CoBang for them. You may have to run it from source (please see below).
 If you want to help package it for Fedora, ArchLinux, Gentoo, please submit pull request.
-
-Note that, this app doesn't work with desktop environments which lack Wayland support, like `Xfce`_ (in Xubuntu), `LxQt`_ (in Lubuntu).
 
 
 Development
@@ -198,6 +198,7 @@ Credit
 .. _QtQR: https://launchpad.net/qr-tools
 .. _PyPI: https://pypi.org/
 .. _PPA: https://launchpad.net/~ng-hong-quan/+archive/ubuntu/ppa
+.. _KDE: https://kde.org/
 .. _Xfce: https://www.xfce.org/
 .. _LxQt: https://lxqt.github.io/
 .. _virtualenvwrapper: https://pypi.org/project/virtualenvwrapper/
