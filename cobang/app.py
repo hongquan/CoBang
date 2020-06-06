@@ -16,8 +16,9 @@
 import os
 import io
 from pathlib import Path
+from fractions import Fraction
 from urllib.parse import urlsplit
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Tuple
 
 import gi
 import zbar
@@ -238,6 +239,10 @@ class CoBangApplication(Gtk.Application):
         area.show()
         stack.set_visible_child(area)
 
+    def grab_focus_on_event_box(self):
+        event_box: Gtk.EventBox = self.frame_image.get_children()[0]
+        event_box.grab_focus()
+
     def insert_image_to_placeholder(self, pixbuf: GdkPixbuf.Pixbuf):
         stack = self.stack_img_source
         pane: Gtk.Container = stack.get_visible_child()
@@ -334,7 +339,6 @@ class CoBangApplication(Gtk.Application):
         child_name = child.get_name()
         logger.debug('Visible child: {} ({})', child, child_name)
         toolbar = self.btn_play.get_parent()
-        event_box: Gtk.EventBox = self.frame_image.get_children()[0]
         if not child_name.endswith('webcam'):
             logger.info('To disable webcam')
             if self.gst_pipeline:
@@ -342,7 +346,7 @@ class CoBangApplication(Gtk.Application):
             toolbar.hide()
             self.webcam_combobox.hide()
             self.btn_img_chooser.show()
-            event_box.grab_focus()
+            self.grab_focus_on_event_box()
         elif self.gst_pipeline:
             logger.info('To enable webcam')
             ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
@@ -373,17 +377,19 @@ class CoBangApplication(Gtk.Application):
         chooser.set_preview_widget_active(True)
         return
 
-    def process_passed_image(self, chosen_file: Gio.File):
+    def process_passed_image_file(self, chosen_file: Gio.File):
         self.raw_result_buffer.set_text('')
         stream: Gio.FileInputStream = chosen_file.read(None)
-        widget = self.stack_img_source.get_visible_child()
-        size, b = widget.get_allocated_size()  # type: Gdk.Rectangle, int
-        scaled_pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(stream, size.width, size.height, True, None)
+        w, h = self.get_preview_size()
+        scaled_pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(stream, w, h, True, None)
         self.insert_image_to_placeholder(scaled_pix)
         stream.seek(0, GLib.SeekType.SET)
         full_buf, etag_out = chosen_file.load_bytes()  # type: GLib.Bytes, Optional[str]
-        immediate = io.BytesIO(full_buf.get_data())
-        pim = Image.open(immediate)
+        self.process_passed_rgb_image(full_buf.get_data())
+
+    def process_passed_rgb_image(self, file_content: bytes):
+        stream = io.BytesIO(file_content)
+        pim = Image.open(stream)
         grayscale = pim.convert('L')
         w, h = grayscale.size
         img = zbar.Image(w, h, 'Y800', grayscale.tobytes())
@@ -403,7 +409,8 @@ class CoBangApplication(Gtk.Application):
     def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
         chosen_file: Gio.File = chooser.get_file()
         logger.debug('Chose file: {}', chosen_file.get_uri())
-        self.process_passed_image(chosen_file)
+        self.process_passed_image_file(chosen_file)
+        self.grab_focus_on_event_box()
 
     def on_frame_image_drag_data_received(self, widget: Gtk.AspectFrame, drag_context: Gdk.DragContext,
                                           x: int, y: int, data: Gtk.SelectionData, info: int, time: int):
@@ -411,7 +418,8 @@ class CoBangApplication(Gtk.Application):
         logger.debug('Dropped URI: {}', uri)
         chosen_file = Gio.file_new_for_uri(uri)
         self.btn_img_chooser.select_uri(uri)
-        self.process_passed_image(chosen_file)
+        self.process_passed_image_file(chosen_file)
+        self.grab_focus_on_event_box()
 
     def on_eventbox_key_press_event(self, widget: Gtk.Widget, event: Gdk.Event):
         logger.debug('Got key press: {}, state {}', event, event.state)
@@ -424,7 +432,13 @@ class CoBangApplication(Gtk.Application):
         pixbuf: Optional[GdkPixbuf.Pixbuf] = self.clipboard.wait_for_image()
         logger.debug('Got pasted image: {}', pixbuf)
         if pixbuf:
-            self.insert_image_to_placeholder(pixbuf)
+            w, h = self.get_preview_size()
+            scaled_pixbuf = scale_pixbuf(pixbuf, w, h)
+            self.insert_image_to_placeholder(scaled_pixbuf)
+            success, content = pixbuf.save_to_bufferv('png', [], [])
+            if not success:
+                return
+            self.process_passed_rgb_image(content)
             return
         uris = self.clipboard.wait_for_uris()
         logger.debug('URIs: {}', uris)
@@ -435,7 +449,7 @@ class CoBangApplication(Gtk.Application):
         if not gfile:
             return
         self.btn_img_chooser.select_uri(gfile.get_uri())
-        self.process_passed_image(gfile)
+        self.process_passed_image_file(gfile)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
@@ -488,6 +502,11 @@ class CoBangApplication(Gtk.Application):
             self.raw_result_buffer.set_text('')
             # Delay set_emit_signals call to prevent scanning old frame
             GLib.timeout_add_seconds(1, app_sink.set_emit_signals, True)
+
+    def get_preview_size(self) -> Tuple[int, int]:
+        widget = self.stack_img_source.get_visible_child()
+        size, b = widget.get_allocated_size()  # type: Gdk.Rectangle, int
+        return (size.width, size.height)
 
     def show_about_dialog(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
         if self.gst_pipeline:
@@ -554,3 +573,20 @@ def get_device_path(device: Gst.Device):
         return properties['device.path']
     # Assume GstV4l2Device
     return device.get_property('device_path')
+
+
+def scale_pixbuf(pixbuf: GdkPixbuf.Pixbuf, outer_width: int, outer_height):
+    # Get original size
+    ow = pixbuf.get_width()
+    oh = pixbuf.get_height()
+    # Get aspect ration
+    ratio = Fraction(ow, oh)
+    # Try scaling to outer_height
+    scaled_height = outer_height
+    scaled_width = int(ratio * outer_height)
+    # If it is larger than outer_width, fixed by width
+    if scaled_width > outer_width:
+        scaled_width = outer_width
+        scaled_height = int(scaled_width / ratio)
+    # Now scale with calculated size
+    return pixbuf.scale_simple(scaled_width, scaled_height, GdkPixbuf.InterpType.BILINEAR)
