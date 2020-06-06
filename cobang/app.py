@@ -114,7 +114,11 @@ class CoBangApplication(Gtk.Application):
                    't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
                    f'appsink name={self.APPSINK_NAME} max_buffers=2 drop=1')
         logger.debug('To build pipeline: {}', command)
-        pipeline = Gst.parse_launch(command)
+        try:
+            pipeline = Gst.parse_launch(command)
+        except GLib.Error as e:
+            logger.debug('Error: {}', e)
+            pipeline = None
         if not pipeline:
             logger.info('OpenGL is not available, fallback to normal GtkSink')
             # Fallback to non-GL
@@ -123,11 +127,12 @@ class CoBangApplication(Gtk.Application):
                        't. ! queue leaky=1 max-size-buffers=2 ! video/x-raw,format=GRAY8 ! '
                        f'appsink name={self.APPSINK_NAME}')
             logger.debug('To build pipeline: {}', command)
-            pipeline = Gst.parse_launch(command)
-        if not pipeline:
-            # TODO: Print error in status bar
-            logger.error('Failed to create Gst Pipeline')
-            return
+            try:
+                pipeline = Gst.parse_launch(command)
+            except GLib.Error as e:
+                # TODO: Print error in status bar
+                logger.error('Failed to create Gst Pipeline. Error: {}', e)
+                return
         logger.debug('Created {}', pipeline)
         appsink: GstApp.AppSink = pipeline.get_by_name(self.APPSINK_NAME)
         logger.debug('Appsink: {}', appsink)
@@ -142,7 +147,7 @@ class CoBangApplication(Gtk.Application):
         window: Gtk.Window = builder.get_object('main-window')
         builder.get_object('main-grid')
         window.set_application(self)
-        self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
+        self.set_accels_for_action('app.quit', ("<Ctrl>Q",))
         self.stack_img_source = builder.get_object("stack-img-source")
         self.btn_play = builder.get_object('btn-play')
         self.btn_pause = builder.get_object('btn-pause')
@@ -181,9 +186,10 @@ class CoBangApplication(Gtk.Application):
         bus.add_watch(GLib.PRIORITY_DEFAULT, self.on_device_monitor_message, None)
         devices = self.devmonitor.get_devices()
         for d in devices:  # type: Gst.Device
+            # Device is of private type GstV4l2Device or GstPipeWireDevice
             logger.debug('Found device {}', d.get_path_string())
-            cam_path = d.get_property('device_path')
             cam_name = d.get_display_name()
+            cam_path = get_device_path(d)
             self.webcam_store.append((cam_path, cam_name))
         logger.debug('Start device monitoring')
         self.devmonitor.start()
@@ -274,13 +280,13 @@ class CoBangApplication(Gtk.Application):
 
     def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data):
         logger.debug('Message: {}', message)
-        # A private GstV4l2Device type
+        # A private GstV4l2Device or GstPipeWireDevice type
         if message.type == Gst.MessageType.DEVICE_ADDED:
             added_dev: Optional[Gst.Device] = message.parse_device_added()
             if not added_dev:
                 return True
             logger.debug('Added: {}', added_dev)
-            cam_path = added_dev.get_property('device_path')
+            cam_path = get_device_path(added_dev)
             cam_name = added_dev.get_display_name()
             self.webcam_store.append((cam_path, cam_name))
             return True
@@ -289,7 +295,7 @@ class CoBangApplication(Gtk.Application):
             if not removed_dev:
                 return True
             logger.debug('Removed: {}', removed_dev)
-            cam_path = removed_dev.get_property('device_path')
+            cam_path = get_device_path(removed_dev)
             ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
             if cam_path == ppl_source.get_property('device'):
                 self.gst_pipeline.set_state(Gst.State.NULL)
@@ -537,3 +543,14 @@ def choose_first_image(uris: Sequence[str]) -> Optional[Gio.File]:
         # Is remote
         if maybe_remote_image(u):
             return gfile
+
+
+def get_device_path(device: Gst.Device):
+    type_name = device.__class__.__name__
+    # GstPipeWireDevice doesn't have dedicated GIR binding yet,
+    # so we have to access its "device.path" in general GStreamer way
+    if type_name == 'GstPipeWireDevice':
+        properties = device.get_properties()
+        return properties['device.path']
+    # Assume GstV4l2Device
+    return device.get_property('device_path')

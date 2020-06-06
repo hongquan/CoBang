@@ -69,6 +69,8 @@ Other distros
 Unfortunately, I don't use other distro than Ubuntu and don't know how to package CoBang for them. You may have to run it from source (please see below).
 If you want to help package it for Fedora, ArchLinux, Gentoo, please submit pull request.
 
+Note that, this app doesn't work with desktop environments which lack Wayland support, like `Xfce`_ (in Xubuntu), `LxQt`_ (in Lubuntu).
+
 
 Development
 +++++++++++
@@ -95,6 +97,7 @@ Example:
 
     $ workon cobang
 
+
 2. Install GObject-based Python packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -107,7 +110,6 @@ The GObject-based dependencies are listed in *deb-packages.txt* file, under the 
 
 On other distros (Fedora, ArchLinux etc.), please try to figure out equivalent package names and install with your favorite package manager.
 
-Note that, please don't install *gstreamer1.0-pipewire*. We are having conflict issue with that software (will be solved later).
 
 3. Install PyPI-hosted Python packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -190,18 +192,20 @@ Credit
 
 
 .. _co_bang: https://nhipsongquehuong.com/bien-co-bang-thanh-do-thu-cong-dep-mat
-.. _gtk: https://www.gtk.org/
+.. _Gtk: https://www.gtk.org/
 .. _GStreamer: https://gstreamer.freedesktop.org/
 .. _ZBar: https://github.com/mchehab/zbar
 .. _QtQR: https://launchpad.net/qr-tools
 .. _PyPI: https://pypi.org/
-.. _ppa: https://launchpad.net/~ng-hong-quan/+archive/ubuntu/ppa
+.. _PPA: https://launchpad.net/~ng-hong-quan/+archive/ubuntu/ppa
+.. _Xfce: https://www.xfce.org/
+.. _LxQt: https://lxqt.github.io/
 .. _virtualenvwrapper: https://pypi.org/project/virtualenvwrapper/
-.. _poetry: https://python-poetry.org/
-.. _pipenv: https://pipenv.pypa.io
-.. _logbook: https://pypi.org/project/Logbook/
+.. _Poetry: https://python-poetry.org/
+.. _Pipenv: https://pipenv.pypa.io
+.. _Logbook: https://pypi.org/project/Logbook/
 .. _FlatHub: https://flathub.org/home
 .. _author: https://quan.hoabinh.vn
-.. _freepik: https://www.flaticon.com/authors/freepik
+.. _Freepik: https://www.flaticon.com/authors/freepik
 .. _www.flaticon.com: https://www.flaticon.com
 .. _good_ware: https://www.flaticon.com/authors/good-ware
