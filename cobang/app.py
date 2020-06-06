@@ -114,7 +114,11 @@ class CoBangApplication(Gtk.Application):
                    't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
                    f'appsink name={self.APPSINK_NAME} max_buffers=2 drop=1')
         logger.debug('To build pipeline: {}', command)
-        pipeline = Gst.parse_launch(command)
+        try:
+            pipeline = Gst.parse_launch(command)
+        except GLib.Error as e:
+            logger.debug('Error: {}', e)
+            pipeline = None
         if not pipeline:
             logger.info('OpenGL is not available, fallback to normal GtkSink')
             # Fallback to non-GL
@@ -123,11 +127,12 @@ class CoBangApplication(Gtk.Application):
                        't. ! queue leaky=1 max-size-buffers=2 ! video/x-raw,format=GRAY8 ! '
                        f'appsink name={self.APPSINK_NAME}')
             logger.debug('To build pipeline: {}', command)
-            pipeline = Gst.parse_launch(command)
-        if not pipeline:
-            # TODO: Print error in status bar
-            logger.error('Failed to create Gst Pipeline')
-            return
+            try:
+                pipeline = Gst.parse_launch(command)
+            except GLib.Error as e:
+                # TODO: Print error in status bar
+                logger.error('Failed to create Gst Pipeline. Error: {}', e)
+                return
         logger.debug('Created {}', pipeline)
         appsink: GstApp.AppSink = pipeline.get_by_name(self.APPSINK_NAME)
         logger.debug('Appsink: {}', appsink)
@@ -142,7 +147,7 @@ class CoBangApplication(Gtk.Application):
         window: Gtk.Window = builder.get_object('main-window')
         builder.get_object('main-grid')
         window.set_application(self)
-        self.set_accels_for_action("app.quit", ("<Ctrl>Q",))
+        self.set_accels_for_action('app.quit', ("<Ctrl>Q",))
         self.stack_img_source = builder.get_object("stack-img-source")
         self.btn_play = builder.get_object('btn-play')
         self.btn_pause = builder.get_object('btn-pause')
