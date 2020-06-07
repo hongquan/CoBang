@@ -7,6 +7,7 @@ finish-args:
   - --share=network
   - --share=ipc
   - --socket=wayland
+  - --socket=fallback-x11
   # Need to load image files
   - --filesystem=home:ro
   # Need to access webcam
@@ -62,4 +63,4 @@ modules:
     sources:
       - type: git
         url: 'https://github.com/hongquan/CoBang.git'
-        branch: master
+        tag: v0.4.0

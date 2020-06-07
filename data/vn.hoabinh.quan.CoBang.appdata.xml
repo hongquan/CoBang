@@ -3,6 +3,7 @@
 <component type="desktop">
   <id>vn.hoabinh.quan.CoBang</id>
   <launchable type="desktop-id">vn.hoabinh.quan.CoBang.desktop</launchable>
+
   <metadata_license>MIT</metadata_license>
   <project_license>Apache-2.0</project_license>
   <name>CoBang</name>
@@ -10,25 +11,41 @@
   <description>
     <p>A missing native QR Code scanner application for Linux desktop.</p>
     <p>CoBang can scan from webcam or from static image.
- It is written in Python, using GTK+ for UI, GStreamer for webcam capture
- and a part of ZBar for decoding QR code from image.</p>
+ To be part of Linux desktop modernization, it is set to support Wayland (not XWayland), and only implement native GUI (no web crap).</p>
   </description>
   <screenshots>
     <screenshot type="default">
       <image>https://i.imgur.com/ddD4YCU.png</image>
     </screenshot>
     <screenshot>
-      <image>https://i.imgur.com/OHXIt7Z.png</image>
+      <image>https://i.imgur.com/1oqDV1b.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://i.imgur.com/ldynPU6.png</image>
     </screenshot>
   </screenshots>
   <url type="homepage">https://github.com/hongquan/CoBang</url>
   <url type="bugtracker">https://github.com/hongquan/CoBang/issues</url>
+  <developer_name>Nguyễn Hồng Quân</developer_name>
+  <update_contact>ng.hong.quan_AT_gmail.com</update_contact>
   <kudos>
     <kudo>ModernToolkit</kudo>
     <kudo>Notifications</kudo>
   </kudos>
 
   <releases>
+    <release version="0.4.0" date="2020-06-07" urgency="medium">
+      <description>
+        <p>Release on FlatHub.</p>
+        <p>Test and verify to work on X11-based DEs like KDE, Xfce, LxQt.</p>
+      </description>
+    </release>
+    <release version="0.3.2" date="2020-06-07" urgency="medium">
+      <description>
+        <p>Fix to work on non-OpenGL environment.</p>
+        <p>Support PipeWire.</p>
+      </description>
+    </release>
     <release version="0.3.0" date="2020-06-04" urgency="medium">
       <description>
         <p>Let drag, drop and paste image</p>
