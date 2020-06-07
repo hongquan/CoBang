@@ -12,6 +12,10 @@ A missing native QR Code scanner application for Linux desktop.
 
 *This work is in progress*.
 
+CoBang can scan from webcam or static image, local or remote.
+
+In the future, it will support generating QR code and running on Linux phones.
+
 
 Name
 ++++
@@ -44,7 +48,8 @@ Screenshots
 +++++++++++
 
 .. image:: https://i.imgur.com/ddD4YCU.png
-.. image:: https://i.imgur.com/OHXIt7Z.png
+.. image:: https://i.imgur.com/1oqDV1b.png
+.. image:: https://i.imgur.com/ldynPU6.png
 
 
 Install
@@ -63,17 +68,29 @@ CoBang is packaged as *\*.deb* file for Ubuntu and derivatives (Linux Mint etc.)
     sudo apt update
     sudo apt install cobang
 
-Even though being target to Wayland, this app can still work in X11 desktop environments, like `KDE`_ (in Kubuntu), `Xfce`_ (in Xubuntu), `LxQt`_ (in Lubuntu). But due to a gap between GTK and Qt, the app gets some quirky issue when running in Qt-based DEs like KDE and LxQt. CoBang should not be tried in VirtualBox virtual machine, because of poor graphics driver VirtualBox provides.
 
 Other distros
 -------------
 
-Unfortunately, I don't use other distro than Ubuntu and don't know how to package CoBang for them. You may have to run it from source (please see below).
-If you want to help package it for Fedora, ArchLinux, Gentoo, please submit pull request.
+Users of other distros (Fedora, ArchLinux etc.) can install CoBang from `FlatHub`_.
+
+.. code-block:: sh
+
+    flatpak install flathub vn.hoabinh.quan.CoBang
+
+
+Compatibility
+-------------
+
+Though being targeted at Wayland, this app can still work in X11 desktop environments, like `KDE`_ (in Kubuntu), `Xfce`_ (in Xubuntu), `LxQt`_ (in Lubuntu). But due to a gap between GTK and Qt, the app gets some minor quirky issue when running in Qt-based DEs like KDE and LxQt. CoBang should not be tried in VirtualBox virtual machine, because of poor graphics stack VirtualBox provides.
+
+There is an known issue with file chooser button when running from Flatpak. Hope that it can be solved in the future.
 
 
 Development
 +++++++++++
+
+This application is written in Python, using `GTK+ <gtk_>`_ for UI, `GStreamer`_ for webcam capture and a part of `ZBar`_ for decoding QR code from image.
 
 
 Install dependencies
@@ -81,8 +98,6 @@ Install dependencies
 
 1. Create Python virtual environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This application is written in Python, using `GTK+ <gtk_>`_ for UI, `GStreamer`_ for webcam capture and a part of `ZBar`_ for decoding QR code from image.
 
 Because Python binding of many GObject-based libraries (like GTK+, GStreamer) are not distributable via `PyPI`_, you have to create a Python virtual environment with ``--system-site-packages`` flag,
 so that the project can access those system-installed Python libraries.
@@ -171,7 +186,7 @@ Follow this step to package:
 Package as Flatpak
 ------------------
 
-You can package as Flatpak from the source. CoBang is not published to `FlatHub`_ yet.
+You can package as Flatpak from the source.
 
 .. code-block:: sh
 
