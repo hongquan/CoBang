@@ -220,7 +220,7 @@ Credit
 .. _Poetry: https://python-poetry.org/
 .. _Pipenv: https://pipenv.pypa.io
 .. _Logbook: https://pypi.org/project/Logbook/
-.. _FlatHub: https://flathub.org/home
+.. _FlatHub: https://flathub.org/apps/details/vn.hoabinh.quan.CoBang
 .. _author: https://quan.hoabinh.vn
 .. _Freepik: https://www.flaticon.com/authors/freepik
 .. _www.flaticon.com: https://www.flaticon.com
