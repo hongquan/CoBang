@@ -17,7 +17,8 @@ import os
 import io
 from pathlib import Path
 from fractions import Fraction
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import SplitResult as UrlSplitResult
 from typing import Optional, Sequence, Tuple
 
 import gi
@@ -80,6 +81,7 @@ class CoBangApplication(Gtk.Application):
     box_image_empty: Optional[Gtk.Box] = None
     devmonitor: Optional[Gst.DeviceMonitor] = None
     clipboard: Optional[Gtk.Clipboard] = None
+    frame_result_display: Optional[Gtk.Frame] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -166,6 +168,7 @@ class CoBangApplication(Gtk.Application):
         self.frame_image.drag_dest_add_uri_targets()
         self.clipboard = Gtk.Clipboard.get_for_display(Gdk.Display.get_default(),
                                                        Gdk.SELECTION_CLIPBOARD)
+        self.frame_result_display = builder.get_object('result-display-frame')
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         self.frame_image.connect('drag-data-received', self.on_frame_image_drag_data_received)
@@ -283,6 +286,36 @@ class CoBangApplication(Gtk.Application):
         event_box.remove(old_widget)
         event_box.add(self.box_image_empty)
 
+    def display_url(self, url: UrlSplitResult):
+        logger.debug('Found URL: {}', url)
+        box: Gtk.Box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 4)
+        message = 'Found a URL, do you want to open it?'
+        label = Gtk.Label.new(message)
+        label.set_line_wrap(True)
+        link = Gtk.LinkButton.new_with_label(urlunsplit(url), url.netloc)
+        box.pack_start(label, False, True, 0)
+        box.pack_start(link, False, True, 0)
+        self.frame_result_display.add(box)
+        self.frame_result_display.show_all()
+
+    def display_result(self, symbols: zbar.SymbolSet):
+        # There can be more than one QR code in the image. We just pick the first.
+        # No need to to handle StopIteration exception, because this function is called
+        # only when QR code is detected from the image.
+        sym: zbar.Symbol = next(iter(symbols))
+        logger.info('QR type: {}', sym.type)
+        raw_data: str = sym.data
+        logger.info('Decoded string: {}', raw_data)
+        self.raw_result_buffer.set_text(raw_data)
+        # Is it a URL?
+        try:
+            url = urlsplit(raw_data)
+        except ValueError:
+            url = None
+        if url and url.scheme:
+            self.display_url(url)
+            return
+
     def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data):
         logger.debug('Message: {}', message)
         # A private GstV4l2Device or GstPipeWireDevice type
@@ -397,14 +430,7 @@ class CoBangApplication(Gtk.Application):
         logger.debug('Any QR code?: {}', n)
         if not n:
             return
-        try:
-            sym = next(iter(img.symbols))
-        except StopIteration:
-            logger.error('Something wrong. Failed to extract symbol from zbar image!')
-            return
-        logger.info('QR type: {}', sym.type)
-        logger.info('Decoded string: {}', sym.data)
-        self.raw_result_buffer.set_text(sym.data)
+        self.display_result(img.symbols)
 
     def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
         chosen_file: Gio.File = chooser.get_file()
@@ -473,14 +499,7 @@ class CoBangApplication(Gtk.Application):
         # Found QR code in webcam screenshot
         logger.debug('Emulate pressing Pause button')
         self.btn_pause.set_active(True)
-        try:
-            sym = next(iter(img.symbols))
-        except StopIteration:
-            logger.error('Something wrong. Failed to extract symbol from zbar image!')
-            return Gst.FlowReturn.ERROR
-        logger.info('QR type: {}', sym.type)
-        logger.info('Decoded string: {}', sym.data)
-        self.raw_result_buffer.set_text(sym.data)
+        self.display_result(img.symbols)
         return Gst.FlowReturn.OK
 
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
