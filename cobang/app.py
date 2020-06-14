@@ -81,7 +81,7 @@ class CoBangApplication(Gtk.Application):
     box_image_empty: Optional[Gtk.Box] = None
     devmonitor: Optional[Gst.DeviceMonitor] = None
     clipboard: Optional[Gtk.Clipboard] = None
-    frame_result_display: Optional[Gtk.Frame] = None
+    result_display: Optional[Gtk.Frame] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -168,7 +168,7 @@ class CoBangApplication(Gtk.Application):
         self.frame_image.drag_dest_add_uri_targets()
         self.clipboard = Gtk.Clipboard.get_for_display(Gdk.Display.get_default(),
                                                        Gdk.SELECTION_CLIPBOARD)
-        self.frame_result_display = builder.get_object('result-display-frame')
+        self.result_display = builder.get_object('result-display-frame')
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         self.frame_image.connect('drag-data-received', self.on_frame_image_drag_data_received)
@@ -295,8 +295,8 @@ class CoBangApplication(Gtk.Application):
         link = Gtk.LinkButton.new_with_label(urlunsplit(url), url.netloc)
         box.pack_start(label, False, True, 0)
         box.pack_start(link, False, True, 0)
-        self.frame_result_display.add(box)
-        self.frame_result_display.show_all()
+        self.result_display.add(box)
+        self.result_display.show_all()
 
     def display_result(self, symbols: zbar.SymbolSet):
         # There can be more than one QR code in the image. We just pick the first.
