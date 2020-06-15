@@ -298,6 +298,12 @@ class CoBangApplication(Gtk.Application):
         self.result_display.add(box)
         self.result_display.show_all()
 
+    def reset_result(self):
+        self.raw_result_buffer.set_text('')
+        child = self.result_display.get_child()
+        if child:
+            self.result_display.remove(child)
+
     def display_result(self, symbols: zbar.SymbolSet):
         # There can be more than one QR code in the image. We just pick the first.
         # No need to to handle StopIteration exception, because this function is called
@@ -366,7 +372,7 @@ class CoBangApplication(Gtk.Application):
         app_sink.set_emit_signals(True)
 
     def on_stack_img_source_visible_child_notify(self, stack: Gtk.Stack, param: GObject.ParamSpec):
-        self.raw_result_buffer.set_text('')
+        self.reset_result()
         self.btn_img_chooser.unselect_all()
         child = stack.get_visible_child()
         child_name = child.get_name()
@@ -411,7 +417,7 @@ class CoBangApplication(Gtk.Application):
         return
 
     def process_passed_image_file(self, chosen_file: Gio.File):
-        self.raw_result_buffer.set_text('')
+        self.reset_result()
         stream: Gio.FileInputStream = chosen_file.read(None)
         w, h = self.get_preview_size()
         scaled_pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(stream, w, h, True, None)
@@ -453,7 +459,7 @@ class CoBangApplication(Gtk.Application):
         if event.state != Gdk.ModifierType.CONTROL_MASK or key_name != 'v':
             return
         # Pressed Ctrl + V
-        self.raw_result_buffer.set_text('')
+        self.reset_result()
         logger.debug('Clipboard -> {}', self.clipboard.wait_for_targets())
         pixbuf: Optional[GdkPixbuf.Pixbuf] = self.clipboard.wait_for_image()
         logger.debug('Got pasted image: {}', pixbuf)
@@ -518,7 +524,7 @@ class CoBangApplication(Gtk.Application):
         else:
             r = source.set_state(Gst.State.PLAYING)
             logger.debug('Change {} state to playing: {}', source.get_name(), r)
-            self.raw_result_buffer.set_text('')
+            self.reset_result()
             # Delay set_emit_signals call to prevent scanning old frame
             GLib.timeout_add_seconds(1, app_sink.set_emit_signals, True)
 
