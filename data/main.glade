@@ -214,16 +214,27 @@ Remote image (from http://..., sftp://...) is allowed.</property>
             </child>
             <child>
               <object class="GtkBox">
-                <property name="width_request">200</property>
+                <property name="width_request">220</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">8</property>
                 <child>
-                  <object class="GtkTextView">
+                  <object class="GtkFrame" id="result-display-frame">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Result</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -232,26 +243,40 @@ Remote image (from http://..., sftp://...) is allowed.</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkTextView" id="raw-result-display">
-                    <property name="height_request">100</property>
+                  <object class="GtkExpander">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="vadjustment">raw-result-adjustment</property>
-                    <property name="editable">False</property>
-                    <property name="wrap_mode">char</property>
-                    <property name="buffer">raw-result-buffer</property>
-                    <property name="accepts_tab">False</property>
-                    <property name="monospace">True</property>
+                    <property name="can_focus">True</property>
+                    <child>
+                      <object class="GtkTextView" id="raw-result-display">
+                        <property name="height_request">100</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="vadjustment">raw-result-adjustment</property>
+                        <property name="editable">False</property>
+                        <property name="wrap_mode">char</property>
+                        <property name="buffer">raw-result-buffer</property>
+                        <property name="accepts_tab">False</property>
+                        <property name="monospace">True</property>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Raw result</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
+                    <property name="pack_type">end</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
