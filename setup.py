@@ -37,7 +37,7 @@ setup(
     python_requires='==3.*,>=3.7.0',
     author='Nguyễn Hồng Quân',
     author_email='ng.hong.quan@gmail.com',
-    license='Apache-2.0',
+    license='GPL-3.0-or-later',
     url='https://github.com/hongquan/CoBang',
     entry_points={"console_scripts": ["cobang = cobang.__main__:main"]},
     packages=['cobang'],

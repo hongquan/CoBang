@@ -5,7 +5,7 @@
   <launchable type="desktop-id">vn.hoabinh.quan.CoBang.desktop</launchable>
 
   <metadata_license>MIT</metadata_license>
-  <project_license>Apache-2.0</project_license>
+  <project_license>GPL-3.0-or-later</project_license>
   <name>CoBang</name>
   <summary>QR code scanner for Linux desktop</summary>
   <description>
