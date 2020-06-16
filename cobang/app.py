@@ -318,7 +318,7 @@ class CoBangApplication(Gtk.Application):
             url = urlsplit(raw_data)
         except ValueError:
             url = None
-        if url and url.scheme:
+        if url and url.scheme and url.netloc:
             self.display_url(url)
             return
 
