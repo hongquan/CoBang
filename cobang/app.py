@@ -19,7 +19,7 @@ from pathlib import Path
 from fractions import Fraction
 from urllib.parse import urlsplit, urlunsplit
 from urllib.parse import SplitResult as UrlSplitResult
-from typing import Optional, Sequence, Tuple
+from typing import Optional, Sequence, Tuple, Any
 
 import gi
 import zbar
@@ -430,16 +430,32 @@ class CoBangApplication(Gtk.Application):
 
     def process_passed_image_file(self, chosen_file: Gio.File):
         self.reset_result()
-        stream: Gio.FileInputStream = chosen_file.read(None)
-        w, h = self.get_preview_size()
-        scaled_pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(stream, w, h, True, None)
-        self.insert_image_to_placeholder(scaled_pix)
-        stream.seek(0, GLib.SeekType.SET)
-        full_buf, etag_out = chosen_file.load_bytes()  # type: GLib.Bytes, Optional[str]
-        self.process_passed_rgb_image(full_buf.get_data())
+        # The file can be remote, so we should read asynchronously
+        chosen_file.read_async(GLib.PRIORITY_DEFAULT, None, self.cb_file_read)
 
-    def process_passed_rgb_image(self, file_content: bytes):
-        stream = io.BytesIO(file_content)
+    def cb_file_read(self, remote_file: Gio.File, res: Gio.AsyncResult, user_data: Optional[Any] = None):
+        w, h = self.get_preview_size()
+        gi_stream: Gio.FileInputStream = remote_file.read_finish(res)
+        scaled_pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(gi_stream, w, h, True, None)
+        # Prevent freezing GUI
+        Gtk.main_iteration()
+        self.insert_image_to_placeholder(scaled_pix)
+        # Prevent freezing GUI
+        Gtk.main_iteration()
+        gi_stream.seek(0, GLib.SeekType.SET, None)
+        stream = io.BytesIO()
+        CHUNNK_SIZE = 8192
+        # There is no method like read_all_bytes(), so have to do verbose way below
+        while True:
+            buf: GLib.Bytes = gi_stream.read_bytes(CHUNNK_SIZE, None)
+            amount = buf.get_size()
+            logger.debug('Read {} bytes', amount)
+            stream.write(buf.get_data())
+            if amount <= 0:
+                break
+        self.process_passed_rgb_image(stream)
+
+    def process_passed_rgb_image(self, stream: io.BytesIO):
         pim = Image.open(stream)
         grayscale = pim.convert('L')
         w, h = grayscale.size
@@ -451,8 +467,9 @@ class CoBangApplication(Gtk.Application):
         self.display_result(img.symbols)
 
     def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
-        chosen_file: Gio.File = chooser.get_file()
-        logger.debug('Chose file: {}', chosen_file.get_uri())
+        uri = chooser.get_uri()
+        chosen_file: Gio.File = Gio.file_new_for_uri(uri)
+        logger.debug('Chose file: {}', uri)
         self.process_passed_image_file(chosen_file)
         self.grab_focus_on_event_box()
 
@@ -482,7 +499,8 @@ class CoBangApplication(Gtk.Application):
             success, content = pixbuf.save_to_bufferv('png', [], [])
             if not success:
                 return
-            self.process_passed_rgb_image(content)
+            stream = io.BytesIO(content)
+            self.process_passed_rgb_image(stream)
             return
         uris = self.clipboard.wait_for_uris()
         logger.debug('URIs: {}', uris)
