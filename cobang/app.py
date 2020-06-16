@@ -42,6 +42,8 @@ from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstApp
 from .resources import get_ui_filepath
 from .consts import APP_ID, SHORT_NAME, WELKNOWN_IMAGE_EXTS
 from . import __version__
+from .ui import build_wifi_info_display
+from .messages import WifiInfoMessage, parse_wifi_message
 
 
 logger = Logger(__name__)
@@ -298,6 +300,11 @@ class CoBangApplication(Gtk.Application):
         self.result_display.add(box)
         self.result_display.show_all()
 
+    def display_wifi(self, wifi: WifiInfoMessage):
+        box = build_wifi_info_display(wifi)
+        self.result_display.add(box)
+        self.result_display.show_all()
+
     def reset_result(self):
         self.raw_result_buffer.set_text('')
         child = self.result_display.get_child()
@@ -321,6 +328,11 @@ class CoBangApplication(Gtk.Application):
         if url and url.scheme and url.netloc:
             self.display_url(url)
             return
+        try:
+            wifi = parse_wifi_message(raw_data)
+            self.display_wifi(wifi)
+        except ValueError:
+            pass
 
     def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data):
         logger.debug('Message: {}', message)
