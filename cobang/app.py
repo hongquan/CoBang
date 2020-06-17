@@ -42,7 +42,7 @@ from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstApp
 from .resources import get_ui_filepath
 from .consts import APP_ID, SHORT_NAME, WELKNOWN_IMAGE_EXTS
 from . import __version__
-from .ui import build_wifi_info_display
+from . import ui
 from .messages import WifiInfoMessage, parse_wifi_message
 
 
@@ -290,18 +290,12 @@ class CoBangApplication(Gtk.Application):
 
     def display_url(self, url: UrlSplitResult):
         logger.debug('Found URL: {}', url)
-        box: Gtk.Box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 4)
-        message = 'Found a URL, do you want to open it?'
-        label = Gtk.Label.new(message)
-        label.set_line_wrap(True)
-        link = Gtk.LinkButton.new_with_label(urlunsplit(url), url.netloc)
-        box.pack_start(label, False, True, 0)
-        box.pack_start(link, False, True, 0)
+        box = ui.build_url_display(url)
         self.result_display.add(box)
         self.result_display.show_all()
 
     def display_wifi(self, wifi: WifiInfoMessage):
-        box = build_wifi_info_display(wifi)
+        box = ui.build_wifi_info_display(wifi)
         self.result_display.add(box)
         self.result_display.show_all()
 
