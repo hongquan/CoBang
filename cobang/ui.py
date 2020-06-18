@@ -1,7 +1,6 @@
 
 from urllib.parse import urlunsplit
 from urllib.parse import SplitResult as UrlSplitResult
-from typing import Any
 
 import gi
 from logbook import Logger
