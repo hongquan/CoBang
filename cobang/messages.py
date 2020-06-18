@@ -1,12 +1,20 @@
+from enum import Enum
 from dataclasses import dataclass
 from typing import Optional
+
+
+class WifiAuthType(str, Enum):
+    WEP = 'WEP'
+    WPA = 'WPA'
+    WPA2_EAP = 'WPA2-EAP'
 
 
 @dataclass
 class WifiInfoMessage:
     ssid: str = ''
     password: Optional[str] = None
-    auth_type: str = 'WPA'
+    # Value: WEP, WPA, WPA2-EAP, nopass
+    auth_type: Optional[WifiAuthType] = WifiAuthType.WPA
     hidden: bool = False
 
 

@@ -5,11 +5,14 @@ from urllib.parse import SplitResult as UrlSplitResult
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
+gi.require_version('NM', '1.0')
 
 from gi.repository import Gtk, Gdk
 
+from .common import _
 from .resources import get_ui_filepath
 from .messages import WifiInfoMessage
+from .net import is_connected_same_wifi
 
 
 def build_wifi_info_display(wifi: WifiInfoMessage) -> Gtk.Box:
@@ -19,6 +22,10 @@ def build_wifi_info_display(wifi: WifiInfoMessage) -> Gtk.Box:
     builder.get_object('ssid-value').set_text(wifi.ssid)
     if wifi.password:
         builder.get_object('password-value').set_text(wifi.password)
+    if is_connected_same_wifi(wifi):
+        btn: Gtk.Button = builder.get_object('btn-connect')
+        btn.set_sensitive(False)
+        btn.set_label(_('Connected'))
     builder.get_object('password-value').connect('icon-press', on_secondary_icon_pressed)
     return box
 

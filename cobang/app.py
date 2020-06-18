@@ -17,7 +17,7 @@ import os
 import io
 from pathlib import Path
 from fractions import Fraction
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urlsplit
 from urllib.parse import SplitResult as UrlSplitResult
 from typing import Optional, Sequence, Tuple, Any
 
