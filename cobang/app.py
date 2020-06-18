@@ -39,6 +39,7 @@ gi.require_version('GstApp', '1.0')
 
 from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstApp
 
+from .common import _
 from .resources import get_ui_filepath
 from .consts import APP_ID, SHORT_NAME, WELKNOWN_IMAGE_EXTS
 from . import __version__
@@ -85,6 +86,7 @@ class CoBangApplication(Gtk.Application):
     clipboard: Optional[Gtk.Clipboard] = None
     result_display: Optional[Gtk.Frame] = None
     progress_bar: Optional[Gtk.ProgressBar] = None
+    infobar: Optional[Gtk.InfoBar] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -173,6 +175,7 @@ class CoBangApplication(Gtk.Application):
                                                        Gdk.SELECTION_CLIPBOARD)
         self.result_display = builder.get_object('result-display-frame')
         self.progress_bar = builder.get_object('progress-bar')
+        self.infobar = builder.get_object('info-bar')
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         self.frame_image.connect('drag-data-received', self.on_frame_image_drag_data_received)
@@ -186,6 +189,7 @@ class CoBangApplication(Gtk.Application):
             'on_btn_img_chooser_update_preview': self.on_btn_img_chooser_update_preview,
             'on_btn_img_chooser_file_set': self.on_btn_img_chooser_file_set,
             'on_eventbox_key_press_event': self.on_eventbox_key_press_event,
+            'on_info_bar_response': self.on_info_bar_response,
         }
 
     def discover_webcam(self):
@@ -468,6 +472,14 @@ class CoBangApplication(Gtk.Application):
         uri = chooser.get_uri()
         chosen_file: Gio.File = Gio.file_new_for_uri(uri)
         logger.debug('Chose file: {}', uri)
+        # Check file content type
+        info: Gio.FileInfo = chosen_file.query_info(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE,
+                                                    Gio.FileQueryInfoFlags.NONE, None)
+        content_type: str = info.get_attribute_as_string(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE)
+        logger.debug('Content type: {}', content_type)
+        if not content_type.startswith('image/') or content_type == 'image/svg+xml':
+            self.show_error(_('Unsuported file type %s!') % content_type)
+            return
         self.process_passed_image_file(chosen_file)
         self.grab_focus_on_event_box()
 
@@ -475,6 +487,9 @@ class CoBangApplication(Gtk.Application):
                                           x: int, y: int, data: Gtk.SelectionData, info: int, time: int):
         uri: str = data.get_data().strip().decode()
         logger.debug('Dropped URI: {}', uri)
+        if not uri:
+            logger.debug('Something wrong with desktop environment. No URI is given.')
+            return
         chosen_file = Gio.file_new_for_uri(uri)
         self.btn_img_chooser.select_uri(uri)
         self.process_passed_image_file(chosen_file)
@@ -536,6 +551,9 @@ class CoBangApplication(Gtk.Application):
         self.display_result(img.symbols)
         return Gst.FlowReturn.OK
 
+    def on_info_bar_response(self, infobar: Gtk.InfoBar, response_id: int):
+        infobar.set_visible(False)
+
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
         if not self.gst_pipeline:
             return
@@ -570,6 +588,13 @@ class CoBangApplication(Gtk.Application):
         dlg_about.set_version(__version__)
         logger.debug('To present {}', dlg_about)
         dlg_about.present()
+
+    def show_error(self, message: str):
+        box: Gtk.Box = self.infobar.get_content_area()
+        label: Gtk.Label = box.get_children()[0]
+        label.set_label(message)
+        self.infobar.set_message_type(Gtk.MessageType.ERROR)
+        self.infobar.set_visible(True)
 
     def quit_from_action(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
         self.quit()
