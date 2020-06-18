@@ -21,6 +21,13 @@ from .net import is_connected_same_wifi, add_wifi_connection
 logger = Logger(__name__)
 
 
+def build_app_menu_model() -> Gio.Menu:
+    menu = Gio.Menu()
+    menu.append('About', 'app.about')
+    menu.append('Quit', 'app.quit')
+    return menu
+
+
 def update_progress(bar: Gtk.ProgressBar, jump: Optional[float] = None):
     if jump is None:
         f = bar.get_fraction()

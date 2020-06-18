@@ -166,7 +166,7 @@ class CoBangApplication(Gtk.Application):
         self.frame_image = builder.get_object('frame-image')
         self.box_image_empty = builder.get_object('box-image-empty')
         main_menubutton: Gtk.MenuButton = builder.get_object('main-menubutton')
-        main_menubutton.set_menu_model(build_app_menu_model())
+        main_menubutton.set_menu_model(ui.build_app_menu_model())
         self.frame_image.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
         self.frame_image.drag_dest_add_uri_targets()
         self.clipboard = Gtk.Clipboard.get_for_display(Gdk.Display.get_default(),
@@ -578,13 +578,6 @@ class CoBangApplication(Gtk.Application):
         if self.gst_pipeline:
             self.gst_pipeline.set_state(Gst.State.NULL)
         super().quit()
-
-
-def build_app_menu_model() -> Gio.Menu:
-    menu = Gio.Menu()
-    menu.append('About', 'app.about')
-    menu.append('Quit', 'app.quit')
-    return menu
 
 
 def is_local_real_image(path: str) -> bool:
