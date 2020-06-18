@@ -45,7 +45,7 @@ def parse_wifi_message(string: str) -> WifiInfoMessage:
             winfo.password = mecard_unescape(p[2:])
         elif p.startswith('T:'):
             auth_type = p[2:]
-            winfo.auth_type = auth_type if auth_type != 'nopass' else None
+            winfo.auth_type = WifiAuthType(auth_type) if auth_type != 'nopass' else None
         elif p.startswith('H:'):
             winfo.hidden = parse_true(p[2:])
     if not winfo.auth_type:

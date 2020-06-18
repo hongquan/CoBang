@@ -1,9 +1,11 @@
 from enum import Enum
+from typing import Optional, Callable, Any
 
 import gi
 gi.require_version('NM', '1.0')
 gi.require_version('GLib', '2.0')
-from gi.repository import GLib, NM
+gi.require_version('Gio', '2.0')
+from gi.repository import GLib, NM, Gio
 
 from .messages import WifiInfoMessage
 
@@ -26,7 +28,7 @@ def is_connected_same_wifi(info: WifiInfoMessage) -> bool:
     return conn.get_id() == info.ssid
 
 
-def add_wifi_connection(info: WifiInfoMessage):
+def add_wifi_connection(info: WifiInfoMessage, callback: Optional[Callable], user_data: Any):
     client = NM.Client.new()
     conn = NM.RemoteConnection()
     ssid = GLib.Bytes.new(info.ssid.encode())
@@ -34,7 +36,11 @@ def add_wifi_connection(info: WifiInfoMessage):
     wireless.set_property(NM.SETTING_WIRELESS_SSID, ssid)
     wireless.set_property(NM.SETTING_WIRELESS_HIDDEN, info.hidden)
     secure = NM.SettingWirelessSecurity.new()
-    key_mn = NMWifiKeyMn(info.auth_type.name) if info.auth_type else None
+    print(info)
+    try:
+        key_mn = NMWifiKeyMn[info.auth_type.name] if info.auth_type else None
+    except KeyError:
+        pass
     if key_mn:
         secure.set_property(NM.SETTING_WIRELESS_SECURITY_KEY_MGMT, key_mn)
     if info.password:
@@ -44,4 +50,4 @@ def add_wifi_connection(info: WifiInfoMessage):
             secure.set_property(NM.SETTING_WIRELESS_SECURITY_WEP_KEY0, info.password)
     conn.add_setting(wireless)
     conn.add_setting(secure)
-    client.add_connection_async(conn, True, None, None)
+    client.add_connection_async(conn, True, None, callback, user_data)
