@@ -19,7 +19,7 @@ from pathlib import Path
 from fractions import Fraction
 from urllib.parse import urlsplit
 from urllib.parse import SplitResult as UrlSplitResult
-from typing import Optional, Sequence, Tuple, Any
+from typing import Optional, Sequence, Tuple
 
 import gi
 import zbar
@@ -33,11 +33,12 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 gi.require_version('Gio', '2.0')
 gi.require_version('GdkPixbuf', '2.0')
+gi.require_version('Rsvg', '2.0')
 gi.require_version('Gst', '1.0')
 gi.require_version('GstBase', '1.0')
 gi.require_version('GstApp', '1.0')
 
-from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstApp
+from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Rsvg, Gst, GstApp
 
 from .common import _
 from .resources import get_ui_filepath
@@ -428,13 +429,13 @@ class CoBangApplication(Gtk.Application):
         chooser.set_preview_widget_active(True)
         return
 
-    def process_passed_image_file(self, chosen_file: Gio.File):
+    def process_passed_image_file(self, chosen_file: Gio.File, content_type: Optional[str] = None):
         self.reset_result()
         # The file can be remote, so we should read asynchronously
-        chosen_file.read_async(GLib.PRIORITY_DEFAULT, None, self.cb_file_read)
+        chosen_file.read_async(GLib.PRIORITY_DEFAULT, None, self.cb_file_read, content_type)
         GLib.timeout_add(100, ui.update_progress, self.progress_bar)
 
-    def cb_file_read(self, remote_file: Gio.File, res: Gio.AsyncResult, user_data: Optional[Any] = None):
+    def cb_file_read(self, remote_file: Gio.File, res: Gio.AsyncResult, content_type: Optional[str] = None):
         w, h = self.get_preview_size()
         gi_stream: Gio.FileInputStream = remote_file.read_finish(res)
         scaled_pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(gi_stream, w, h, True, None)
@@ -444,16 +445,21 @@ class CoBangApplication(Gtk.Application):
         # Prevent freezing GUI
         Gtk.main_iteration()
         gi_stream.seek(0, GLib.SeekType.SET, None)
-        stream = io.BytesIO()
-        CHUNNK_SIZE = 8192
-        # There is no method like read_all_bytes(), so have to do verbose way below
-        while True:
-            buf: GLib.Bytes = gi_stream.read_bytes(CHUNNK_SIZE, None)
-            amount = buf.get_size()
-            logger.debug('Read {} bytes', amount)
-            stream.write(buf.get_data())
-            if amount <= 0:
-                break
+        if content_type == 'image/svg+xml':
+            svg: Rsvg.Handle = Rsvg.Handle.new_from_stream_sync(gi_stream, remote_file,
+                                                                Rsvg.HandleFlags.FLAGS_NONE, None)
+            stream: io.BytesIO = export_svg(svg)
+        else:
+            stream = io.BytesIO()
+            CHUNNK_SIZE = 8192
+            # There is no method like read_all_bytes(), so have to do verbose way below
+            while True:
+                buf: GLib.Bytes = gi_stream.read_bytes(CHUNNK_SIZE, None)
+                amount = buf.get_size()
+                logger.debug('Read {} bytes', amount)
+                stream.write(buf.get_data())
+                if amount <= 0:
+                    break
         ui.update_progress(self.progress_bar, 1)
         self.process_passed_rgb_image(stream)
 
@@ -477,10 +483,10 @@ class CoBangApplication(Gtk.Application):
                                                     Gio.FileQueryInfoFlags.NONE, None)
         content_type: str = info.get_attribute_as_string(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE)
         logger.debug('Content type: {}', content_type)
-        if not content_type.startswith('image/') or content_type == 'image/svg+xml':
+        if not content_type.startswith('image/'):
             self.show_error(_('Unsuported file type %s!') % content_type)
             return
-        self.process_passed_image_file(chosen_file)
+        self.process_passed_image_file(chosen_file, content_type)
         self.grab_focus_on_event_box()
 
     def on_frame_image_drag_data_received(self, widget: Gtk.AspectFrame, drag_context: Gdk.DragContext,
@@ -661,3 +667,15 @@ def scale_pixbuf(pixbuf: GdkPixbuf.Pixbuf, outer_width: int, outer_height):
         scaled_height = int(scaled_width / ratio)
     # Now scale with calculated size
     return pixbuf.scale_simple(scaled_width, scaled_height, GdkPixbuf.InterpType.BILINEAR)
+
+
+def export_svg(svg: Rsvg.Handle) -> io.BytesIO:
+    stream = io.BytesIO()
+    pix: GdkPixbuf.Pixbuf = svg.get_pixbuf()
+
+    def write(buf: bytes, size, user_data=None):
+        stream.write(buf)
+        return True, None
+    pix.save_to_callbackv(write, None, 'bmp', [], [])
+    stream.seek(0)
+    return stream
