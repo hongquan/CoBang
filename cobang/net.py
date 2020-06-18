@@ -31,12 +31,14 @@ def is_connected_same_wifi(info: WifiInfoMessage) -> bool:
 def add_wifi_connection(info: WifiInfoMessage, callback: Optional[Callable], user_data: Any):
     client = NM.Client.new()
     conn = NM.RemoteConnection()
+    base = NM.SettingConnection.new()
+    base.set_property(NM.SETTING_CONNECTION_ID, info.ssid)
+    conn.add_setting(base)
     ssid = GLib.Bytes.new(info.ssid.encode())
     wireless = NM.SettingWireless.new()
     wireless.set_property(NM.SETTING_WIRELESS_SSID, ssid)
     wireless.set_property(NM.SETTING_WIRELESS_HIDDEN, info.hidden)
     secure = NM.SettingWirelessSecurity.new()
-    print(info)
     try:
         key_mn = NMWifiKeyMn[info.auth_type.name] if info.auth_type else None
     except KeyError:

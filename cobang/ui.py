@@ -4,6 +4,7 @@ from urllib.parse import SplitResult as UrlSplitResult
 from typing import Any
 
 import gi
+from logbook import Logger
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 gi.require_version('NM', '1.0')
@@ -15,6 +16,9 @@ from .common import _
 from .resources import get_ui_filepath
 from .messages import WifiInfoMessage
 from .net import is_connected_same_wifi, add_wifi_connection
+
+
+logger = Logger(__name__)
 
 
 def build_wifi_info_display(wifi: WifiInfoMessage) -> Gtk.Box:
@@ -52,6 +56,9 @@ def build_url_display(url: UrlSplitResult):
     return box
 
 
-def wifi_connect_done(client: NM.Client, res: Gio.AsyncResult, user_data: Any):
-    print(res)
-    print(client.add_connection_finish(res))
+def wifi_connect_done(client: NM.Client, res: Gio.AsyncResult, button: Gtk.Button):
+    created = client.add_connection_finish(res)
+    logger.debug('NetworkManager created connection: {}', created)
+    if created:
+        button.set_label(_('Saved'))
+        button.set_sensitive(False)
