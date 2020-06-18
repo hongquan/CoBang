@@ -7,6 +7,7 @@ gi.require_version('GLib', '2.0')
 gi.require_version('Gio', '2.0')
 from gi.repository import GLib, NM
 
+from .consts import BRAND_NAME
 from .messages import WifiInfoMessage
 
 
@@ -32,7 +33,8 @@ def add_wifi_connection(info: WifiInfoMessage, callback: Optional[Callable], use
     client = NM.Client.new()
     conn = NM.RemoteConnection()
     base = NM.SettingConnection.new()
-    base.set_property(NM.SETTING_CONNECTION_ID, info.ssid)
+    connection_name = f'{info.ssid} ({BRAND_NAME})'
+    base.set_property(NM.SETTING_CONNECTION_ID, connection_name)
     conn.add_setting(base)
     ssid = GLib.Bytes.new(info.ssid.encode())
     wireless = NM.SettingWireless.new()
