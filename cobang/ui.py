@@ -1,6 +1,7 @@
 
 from urllib.parse import urlunsplit
 from urllib.parse import SplitResult as UrlSplitResult
+from typing import Optional
 
 import gi
 from logbook import Logger
@@ -18,6 +19,18 @@ from .net import is_connected_same_wifi, add_wifi_connection
 
 
 logger = Logger(__name__)
+
+
+def update_progress(bar: Gtk.ProgressBar, jump: Optional[float] = None):
+    if jump is None:
+        f = bar.get_fraction()
+        bar.set_fraction(f + 0.05)
+    else:
+        bar.set_fraction(jump)
+    f = bar.get_fraction()
+    if f >= 1:
+        return False
+    return True
 
 
 def build_wifi_info_display(wifi: WifiInfoMessage) -> Gtk.Box:

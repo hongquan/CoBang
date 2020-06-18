@@ -84,6 +84,7 @@ class CoBangApplication(Gtk.Application):
     devmonitor: Optional[Gst.DeviceMonitor] = None
     clipboard: Optional[Gtk.Clipboard] = None
     result_display: Optional[Gtk.Frame] = None
+    progress_bar: Optional[Gtk.ProgressBar] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -171,6 +172,7 @@ class CoBangApplication(Gtk.Application):
         self.clipboard = Gtk.Clipboard.get_for_display(Gdk.Display.get_default(),
                                                        Gdk.SELECTION_CLIPBOARD)
         self.result_display = builder.get_object('result-display-frame')
+        self.progress_bar = builder.get_object('progress-bar')
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         self.frame_image.connect('drag-data-received', self.on_frame_image_drag_data_received)
@@ -426,6 +428,7 @@ class CoBangApplication(Gtk.Application):
         self.reset_result()
         # The file can be remote, so we should read asynchronously
         chosen_file.read_async(GLib.PRIORITY_DEFAULT, None, self.cb_file_read)
+        GLib.timeout_add(100, ui.update_progress, self.progress_bar)
 
     def cb_file_read(self, remote_file: Gio.File, res: Gio.AsyncResult, user_data: Optional[Any] = None):
         w, h = self.get_preview_size()
@@ -447,6 +450,7 @@ class CoBangApplication(Gtk.Application):
             stream.write(buf.get_data())
             if amount <= 0:
                 break
+        ui.update_progress(self.progress_bar, 1)
         self.process_passed_rgb_image(stream)
 
     def process_passed_rgb_image(self, stream: io.BytesIO):
