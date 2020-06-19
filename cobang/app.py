@@ -35,14 +35,15 @@ gi.require_version('Rsvg', '2.0')
 gi.require_version('Gst', '1.0')
 gi.require_version('GstBase', '1.0')
 gi.require_version('GstApp', '1.0')
+gi.require_version('NM', '1.0')
 
-from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Rsvg, Gst, GstApp
+from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Rsvg, Gst, GstApp, NM
 
+from .consts import APP_ID, SHORT_NAME
 from . import __version__
 from . import ui
 from .common import _
-from .resources import get_ui_filepath
-from .consts import APP_ID, SHORT_NAME
+from .resources import get_ui_filepath, guess_content_type
 from .prep import get_device_path, choose_first_image, export_svg, scale_pixbuf
 from .messages import WifiInfoMessage, parse_wifi_message
 
@@ -88,6 +89,7 @@ class CoBangApplication(Gtk.Application):
     progress_bar: Optional[Gtk.ProgressBar] = None
     infobar: Optional[Gtk.InfoBar] = None
     raw_result_expander: Optional[Gtk.Expander] = None
+    nm_client: Optional[NM.Client] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -106,6 +108,7 @@ class CoBangApplication(Gtk.Application):
         devmonitor.add_filter('Video/Source', Gst.Caps.from_string('video/x-raw'))
         logger.debug('Monitor: {}', devmonitor)
         self.devmonitor = devmonitor
+        NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
     def setup_actions(self):
         action_quit = Gio.SimpleAction.new('quit', None)
@@ -303,7 +306,7 @@ class CoBangApplication(Gtk.Application):
         self.result_display.show_all()
 
     def display_wifi(self, wifi: WifiInfoMessage):
-        box = ui.build_wifi_info_display(wifi)
+        box = ui.build_wifi_info_display(wifi, self.nm_client)
         self.result_display.add(box)
         self.result_display.show_all()
 
@@ -440,6 +443,14 @@ class CoBangApplication(Gtk.Application):
         chosen_file.read_async(GLib.PRIORITY_DEFAULT, None, self.cb_file_read, content_type)
         GLib.timeout_add(100, ui.update_progress, self.progress_bar)
 
+    def cb_networkmanager_client_init_done(self, client: NM.Client, res: Gio.AsyncResult):
+        if not client:
+            logger.error('Failed to initialize NetworkManager client')
+            return
+        client.new_finish(res)
+        self.nm_client = client
+        logger.debug('NM client: {}', client)
+
     def cb_file_read(self, remote_file: Gio.File, res: Gio.AsyncResult, content_type: Optional[str] = None):
         w, h = self.get_preview_size()
         gi_stream: Gio.FileInputStream = remote_file.read_finish(res)
@@ -450,6 +461,7 @@ class CoBangApplication(Gtk.Application):
         # Prevent freezing GUI
         Gtk.main_iteration()
         gi_stream.seek(0, GLib.SeekType.SET, None)
+        logger.debug('Content type: {}', content_type)
         if content_type == 'image/svg+xml':
             svg: Rsvg.Handle = Rsvg.Handle.new_from_stream_sync(gi_stream, remote_file,
                                                                 Rsvg.HandleFlags.FLAGS_NONE, None)
@@ -484,9 +496,7 @@ class CoBangApplication(Gtk.Application):
         chosen_file: Gio.File = Gio.file_new_for_uri(uri)
         logger.debug('Chose file: {}', uri)
         # Check file content type
-        info: Gio.FileInfo = chosen_file.query_info(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE,
-                                                    Gio.FileQueryInfoFlags.NONE, None)
-        content_type: str = info.get_attribute_as_string(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE)
+        content_type = guess_content_type(chosen_file)
         logger.debug('Content type: {}', content_type)
         if not content_type.startswith('image/'):
             self.show_error(_('Unsuported file type %s!') % content_type)
@@ -503,7 +513,9 @@ class CoBangApplication(Gtk.Application):
             return
         chosen_file = Gio.file_new_for_uri(uri)
         self.btn_img_chooser.select_uri(uri)
-        self.process_passed_image_file(chosen_file)
+        content_type = guess_content_type(chosen_file)
+        logger.debug('Content type: {}', content_type)
+        self.process_passed_image_file(chosen_file, content_type)
         self.grab_focus_on_event_box()
 
     def on_eventbox_key_press_event(self, widget: Gtk.Widget, event: Gdk.Event):
@@ -535,7 +547,8 @@ class CoBangApplication(Gtk.Application):
         if not gfile:
             return
         self.btn_img_chooser.select_uri(gfile.get_uri())
-        self.process_passed_image_file(gfile)
+        content_type = guess_content_type(gfile)
+        self.process_passed_image_file(gfile, content_type)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
