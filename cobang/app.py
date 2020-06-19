@@ -87,6 +87,7 @@ class CoBangApplication(Gtk.Application):
     result_display: Optional[Gtk.Frame] = None
     progress_bar: Optional[Gtk.ProgressBar] = None
     infobar: Optional[Gtk.InfoBar] = None
+    raw_result_expander: Optional[Gtk.Expander] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -163,6 +164,7 @@ class CoBangApplication(Gtk.Application):
         if self.gst_pipeline:
             self.replace_webcam_placeholder_with_gstreamer_sink()
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
+        self.raw_result_expander = builder.get_object('raw-result-expander')
         self.webcam_store = builder.get_object('webcam-list')
         self.webcam_combobox = builder.get_object('webcam-combobox')
         self.frame_image = builder.get_object('frame-image')
@@ -307,6 +309,7 @@ class CoBangApplication(Gtk.Application):
 
     def reset_result(self):
         self.raw_result_buffer.set_text('')
+        self.raw_result_expander.set_expanded(False)
         child = self.result_display.get_child()
         if child:
             self.result_display.remove(child)
@@ -331,8 +334,11 @@ class CoBangApplication(Gtk.Application):
         try:
             wifi = parse_wifi_message(raw_data)
             self.display_wifi(wifi)
+            return
         except ValueError:
             pass
+        # Unknown message, just show raw content
+        self.raw_result_expander.set_expanded(True)
 
     def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data):
         logger.debug('Message: {}', message)
