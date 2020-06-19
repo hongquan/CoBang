@@ -15,13 +15,19 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://i.imgur.com/ddD4YCU.png</image>
+      <image>https://i.imgur.com/oa0YYTm.png</image>
     </screenshot>
     <screenshot>
-      <image>https://i.imgur.com/1oqDV1b.png</image>
+      <image>https://i.imgur.com/bIV57cV.png</image>
     </screenshot>
     <screenshot>
       <image>https://i.imgur.com/ldynPU6.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://i.imgur.com/aORgQKj.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://i.imgur.com/a4R3iwb.png</image>
     </screenshot>
   </screenshots>
   <url type="homepage">https://github.com/hongquan/CoBang</url>
@@ -34,6 +40,14 @@
   </kudos>
 
   <releases>
+    <release version="0.5.0" date="2020-06-19" urgency="medium">
+      <description>
+        <p>Display result URL with a link.</p>
+        <p>Display result WiFi info and let save it to NetworkManager.</p>
+        <p>Support scanning from SVG file.</p>
+        <p>Change license to GPL-v3.</p>
+      </description>
+    </release>
     <release version="0.4.0" date="2020-06-07" urgency="medium">
       <description>
         <p>Release on FlatHub.</p>
