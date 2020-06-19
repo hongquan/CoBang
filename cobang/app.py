@@ -15,17 +15,15 @@
 
 import os
 import io
-from pathlib import Path
-from fractions import Fraction
 from urllib.parse import urlsplit
 from urllib.parse import SplitResult as UrlSplitResult
-from typing import Optional, Sequence, Tuple
+from typing import Optional, Tuple
 
 import gi
 import zbar
 import logbook
 from logbook import Logger
-from PIL import Image, UnidentifiedImageError
+from PIL import Image
 
 gi.require_version('GObject', '2.0')
 gi.require_version('GLib', '2.0')
@@ -40,11 +38,12 @@ gi.require_version('GstApp', '1.0')
 
 from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Rsvg, Gst, GstApp
 
-from .common import _
-from .resources import get_ui_filepath
-from .consts import APP_ID, SHORT_NAME, WELKNOWN_IMAGE_EXTS
 from . import __version__
 from . import ui
+from .common import _
+from .resources import get_ui_filepath
+from .consts import APP_ID, SHORT_NAME
+from .prep import get_device_path, choose_first_image, export_svg, scale_pixbuf
 from .messages import WifiInfoMessage, parse_wifi_message
 
 
@@ -609,73 +608,3 @@ class CoBangApplication(Gtk.Application):
         if self.gst_pipeline:
             self.gst_pipeline.set_state(Gst.State.NULL)
         super().quit()
-
-
-def is_local_real_image(path: str) -> bool:
-    try:
-        Image.open(path)
-        return True
-    except (UnidentifiedImageError, ValueError):
-        return False
-    return False
-
-
-def maybe_remote_image(url: str):
-    parsed = urlsplit(url)
-    suffix = Path(parsed.path).suffix
-    # Strip leading dot
-    ext = suffix[1:].lower()
-    return ext in WELKNOWN_IMAGE_EXTS
-
-
-def choose_first_image(uris: Sequence[str]) -> Optional[Gio.File]:
-    for u in uris:
-        gfile: Gio.File = Gio.file_new_for_uri(u)
-        # Is local?
-        local_path = gfile.get_path()
-        if local_path:
-            if is_local_real_image(local_path):
-                return gfile
-        # Is remote
-        if maybe_remote_image(u):
-            return gfile
-
-
-def get_device_path(device: Gst.Device):
-    type_name = device.__class__.__name__
-    # GstPipeWireDevice doesn't have dedicated GIR binding yet,
-    # so we have to access its "device.path" in general GStreamer way
-    if type_name == 'GstPipeWireDevice':
-        properties = device.get_properties()
-        return properties['device.path']
-    # Assume GstV4l2Device
-    return device.get_property('device_path')
-
-
-def scale_pixbuf(pixbuf: GdkPixbuf.Pixbuf, outer_width: int, outer_height):
-    # Get original size
-    ow = pixbuf.get_width()
-    oh = pixbuf.get_height()
-    # Get aspect ration
-    ratio = Fraction(ow, oh)
-    # Try scaling to outer_height
-    scaled_height = outer_height
-    scaled_width = int(ratio * outer_height)
-    # If it is larger than outer_width, fixed by width
-    if scaled_width > outer_width:
-        scaled_width = outer_width
-        scaled_height = int(scaled_width / ratio)
-    # Now scale with calculated size
-    return pixbuf.scale_simple(scaled_width, scaled_height, GdkPixbuf.InterpType.BILINEAR)
-
-
-def export_svg(svg: Rsvg.Handle) -> io.BytesIO:
-    stream = io.BytesIO()
-    pix: GdkPixbuf.Pixbuf = svg.get_pixbuf()
-
-    def write(buf: bytes, size, user_data=None):
-        stream.write(buf)
-        return True, None
-    pix.save_to_callbackv(write, None, 'bmp', [], [])
-    stream.seek(0)
-    return stream
