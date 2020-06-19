@@ -57,6 +57,80 @@ modules:
         tag: 1.16.2
         url: https://github.com/freedesktop/gstreamer-gst-python.git
 
+  - name: intltool
+    sources:
+      - type: archive
+        url: https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
+        md5: 12e517cac2b57a0121cda351570f1e63
+
+  - name: libndp
+    buildsystem: autotools
+    sources:
+      - type: git
+        branch: v1.6
+        url: https://github.com/jpirko/libndp.git
+        commit: 2f721c4ff519f38f46695a60d9f9d88f35bf3c1d
+
+  # This depend on linux-pan, but don't know how to include it,
+  - name: polkit
+    config-opts:
+      - --disable-polkitd
+      - --disable-man-pages
+      - --disable-introspection
+      - --enable-libsystemd-login=no
+      - --with-systemdsystemunitdir=no
+    rm-configure: true
+    cleanup:
+      - /bin/*
+      - /etc/pam.d
+      - /etc/dbus-1
+      - /share/dbus-1/system-services/*
+      - /share/polkit-1
+      - /lib/polkit-1
+    sources:
+      - type: archive
+        url: http://www.freedesktop.org/software/polkit/releases/polkit-0.113.tar.gz
+        sha256: e1c095093c654951f78f8618d427faf91cf62abdefed98de40ff65eca6413c81
+      - type: patch
+        path: flatpak/polkit-build-Add-option-to-build-without-polkitd.patch
+      - type: file
+        path: flatpak/polkit-autogen
+        dest-filename: autogen.sh
+
+  - name: NetworkManager
+    buildsystem: meson
+    build-options:
+      cflags: -ltinfo
+      cxxflags: -ltinfo
+    config-opts:
+      - -Dlibaudit=no
+      - -Ddbus_conf_dir=/app/etc/dbus-1/system.d
+      - -Ddbus_ifaces_dir=/app/share/dbus-1/interfaces
+      - -Ddbus_sys_dir=/app/share/dbus-1/system.d
+      - -Ddnsmasq=/usr/bin/true
+      - -Ddocs=false
+      - -Dintrospection=false
+      - -Diptables=/usr/bin/true
+      - -Djson_validation=false
+      - -Dlibnm_glib=false
+      - -Dlibpsl=false
+      - -Dmodem_manager=false
+      - -Dnmtui=false
+      - -Dovs=false
+      - -Dppp=false
+      - -Dqt=false
+      - -Dselinux=false
+      - -Dsession_tracking=no
+      - -Dsystemdsystemunitdir='no'
+      - -Dsystemd_journal=false
+      - -Dtests=no
+      - -Dvapi=false
+      - -Dwifi=true
+    sources:
+      - type: git
+        url: https://gitlab.freedesktop.org/NetworkManager/NetworkManager.git
+        tag: 1.24.2
+
   - name: cobang
     builddir: true
     buildsystem: meson

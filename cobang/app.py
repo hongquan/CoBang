@@ -15,17 +15,15 @@
 
 import os
 import io
-from pathlib import Path
-from fractions import Fraction
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urlsplit
 from urllib.parse import SplitResult as UrlSplitResult
-from typing import Optional, Sequence, Tuple
+from typing import Optional, Tuple
 
 import gi
 import zbar
 import logbook
 from logbook import Logger
-from PIL import Image, UnidentifiedImageError
+from PIL import Image
 
 gi.require_version('GObject', '2.0')
 gi.require_version('GLib', '2.0')
@@ -33,15 +31,20 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 gi.require_version('Gio', '2.0')
 gi.require_version('GdkPixbuf', '2.0')
+gi.require_version('Rsvg', '2.0')
 gi.require_version('Gst', '1.0')
 gi.require_version('GstBase', '1.0')
 gi.require_version('GstApp', '1.0')
 
-from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Gst, GstApp
+from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Rsvg, Gst, GstApp
 
-from .resources import get_ui_filepath
-from .consts import APP_ID, SHORT_NAME, WELKNOWN_IMAGE_EXTS
 from . import __version__
+from . import ui
+from .common import _
+from .resources import get_ui_filepath
+from .consts import APP_ID, SHORT_NAME
+from .prep import get_device_path, choose_first_image, export_svg, scale_pixbuf
+from .messages import WifiInfoMessage, parse_wifi_message
 
 
 logger = Logger(__name__)
@@ -82,6 +85,9 @@ class CoBangApplication(Gtk.Application):
     devmonitor: Optional[Gst.DeviceMonitor] = None
     clipboard: Optional[Gtk.Clipboard] = None
     result_display: Optional[Gtk.Frame] = None
+    progress_bar: Optional[Gtk.ProgressBar] = None
+    infobar: Optional[Gtk.InfoBar] = None
+    raw_result_expander: Optional[Gtk.Expander] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -158,17 +164,20 @@ class CoBangApplication(Gtk.Application):
         if self.gst_pipeline:
             self.replace_webcam_placeholder_with_gstreamer_sink()
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
+        self.raw_result_expander = builder.get_object('raw-result-expander')
         self.webcam_store = builder.get_object('webcam-list')
         self.webcam_combobox = builder.get_object('webcam-combobox')
         self.frame_image = builder.get_object('frame-image')
         self.box_image_empty = builder.get_object('box-image-empty')
         main_menubutton: Gtk.MenuButton = builder.get_object('main-menubutton')
-        main_menubutton.set_menu_model(build_app_menu_model())
+        main_menubutton.set_menu_model(ui.build_app_menu_model())
         self.frame_image.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
         self.frame_image.drag_dest_add_uri_targets()
         self.clipboard = Gtk.Clipboard.get_for_display(Gdk.Display.get_default(),
                                                        Gdk.SELECTION_CLIPBOARD)
         self.result_display = builder.get_object('result-display-frame')
+        self.progress_bar = builder.get_object('progress-bar')
+        self.infobar = builder.get_object('info-bar')
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         self.frame_image.connect('drag-data-received', self.on_frame_image_drag_data_received)
@@ -182,6 +191,7 @@ class CoBangApplication(Gtk.Application):
             'on_btn_img_chooser_update_preview': self.on_btn_img_chooser_update_preview,
             'on_btn_img_chooser_file_set': self.on_btn_img_chooser_file_set,
             'on_eventbox_key_press_event': self.on_eventbox_key_press_event,
+            'on_info_bar_response': self.on_info_bar_response,
         }
 
     def discover_webcam(self):
@@ -288,18 +298,18 @@ class CoBangApplication(Gtk.Application):
 
     def display_url(self, url: UrlSplitResult):
         logger.debug('Found URL: {}', url)
-        box: Gtk.Box = Gtk.Box.new(Gtk.Orientation.VERTICAL, 4)
-        message = 'Found a URL, do you want to open it?'
-        label = Gtk.Label.new(message)
-        label.set_line_wrap(True)
-        link = Gtk.LinkButton.new_with_label(urlunsplit(url), url.netloc)
-        box.pack_start(label, False, True, 0)
-        box.pack_start(link, False, True, 0)
+        box = ui.build_url_display(url)
+        self.result_display.add(box)
+        self.result_display.show_all()
+
+    def display_wifi(self, wifi: WifiInfoMessage):
+        box = ui.build_wifi_info_display(wifi)
         self.result_display.add(box)
         self.result_display.show_all()
 
     def reset_result(self):
         self.raw_result_buffer.set_text('')
+        self.raw_result_expander.set_expanded(False)
         child = self.result_display.get_child()
         if child:
             self.result_display.remove(child)
@@ -321,6 +331,14 @@ class CoBangApplication(Gtk.Application):
         if url and url.scheme and url.netloc:
             self.display_url(url)
             return
+        try:
+            wifi = parse_wifi_message(raw_data)
+            self.display_wifi(wifi)
+            return
+        except ValueError:
+            pass
+        # Unknown message, just show raw content
+        self.raw_result_expander.set_expanded(True)
 
     def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data):
         logger.debug('Message: {}', message)
@@ -416,18 +434,41 @@ class CoBangApplication(Gtk.Application):
         chooser.set_preview_widget_active(True)
         return
 
-    def process_passed_image_file(self, chosen_file: Gio.File):
+    def process_passed_image_file(self, chosen_file: Gio.File, content_type: Optional[str] = None):
         self.reset_result()
-        stream: Gio.FileInputStream = chosen_file.read(None)
-        w, h = self.get_preview_size()
-        scaled_pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(stream, w, h, True, None)
-        self.insert_image_to_placeholder(scaled_pix)
-        stream.seek(0, GLib.SeekType.SET)
-        full_buf, etag_out = chosen_file.load_bytes()  # type: GLib.Bytes, Optional[str]
-        self.process_passed_rgb_image(full_buf.get_data())
+        # The file can be remote, so we should read asynchronously
+        chosen_file.read_async(GLib.PRIORITY_DEFAULT, None, self.cb_file_read, content_type)
+        GLib.timeout_add(100, ui.update_progress, self.progress_bar)
 
-    def process_passed_rgb_image(self, file_content: bytes):
-        stream = io.BytesIO(file_content)
+    def cb_file_read(self, remote_file: Gio.File, res: Gio.AsyncResult, content_type: Optional[str] = None):
+        w, h = self.get_preview_size()
+        gi_stream: Gio.FileInputStream = remote_file.read_finish(res)
+        scaled_pix = GdkPixbuf.Pixbuf.new_from_stream_at_scale(gi_stream, w, h, True, None)
+        # Prevent freezing GUI
+        Gtk.main_iteration()
+        self.insert_image_to_placeholder(scaled_pix)
+        # Prevent freezing GUI
+        Gtk.main_iteration()
+        gi_stream.seek(0, GLib.SeekType.SET, None)
+        if content_type == 'image/svg+xml':
+            svg: Rsvg.Handle = Rsvg.Handle.new_from_stream_sync(gi_stream, remote_file,
+                                                                Rsvg.HandleFlags.FLAGS_NONE, None)
+            stream: io.BytesIO = export_svg(svg)
+        else:
+            stream = io.BytesIO()
+            CHUNNK_SIZE = 8192
+            # There is no method like read_all_bytes(), so have to do verbose way below
+            while True:
+                buf: GLib.Bytes = gi_stream.read_bytes(CHUNNK_SIZE, None)
+                amount = buf.get_size()
+                logger.debug('Read {} bytes', amount)
+                stream.write(buf.get_data())
+                if amount <= 0:
+                    break
+        ui.update_progress(self.progress_bar, 1)
+        self.process_passed_rgb_image(stream)
+
+    def process_passed_rgb_image(self, stream: io.BytesIO):
         pim = Image.open(stream)
         grayscale = pim.convert('L')
         w, h = grayscale.size
@@ -439,15 +480,27 @@ class CoBangApplication(Gtk.Application):
         self.display_result(img.symbols)
 
     def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
-        chosen_file: Gio.File = chooser.get_file()
-        logger.debug('Chose file: {}', chosen_file.get_uri())
-        self.process_passed_image_file(chosen_file)
+        uri = chooser.get_uri()
+        chosen_file: Gio.File = Gio.file_new_for_uri(uri)
+        logger.debug('Chose file: {}', uri)
+        # Check file content type
+        info: Gio.FileInfo = chosen_file.query_info(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE,
+                                                    Gio.FileQueryInfoFlags.NONE, None)
+        content_type: str = info.get_attribute_as_string(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE)
+        logger.debug('Content type: {}', content_type)
+        if not content_type.startswith('image/'):
+            self.show_error(_('Unsuported file type %s!') % content_type)
+            return
+        self.process_passed_image_file(chosen_file, content_type)
         self.grab_focus_on_event_box()
 
     def on_frame_image_drag_data_received(self, widget: Gtk.AspectFrame, drag_context: Gdk.DragContext,
                                           x: int, y: int, data: Gtk.SelectionData, info: int, time: int):
         uri: str = data.get_data().strip().decode()
         logger.debug('Dropped URI: {}', uri)
+        if not uri:
+            logger.debug('Something wrong with desktop environment. No URI is given.')
+            return
         chosen_file = Gio.file_new_for_uri(uri)
         self.btn_img_chooser.select_uri(uri)
         self.process_passed_image_file(chosen_file)
@@ -470,7 +523,8 @@ class CoBangApplication(Gtk.Application):
             success, content = pixbuf.save_to_bufferv('png', [], [])
             if not success:
                 return
-            self.process_passed_rgb_image(content)
+            stream = io.BytesIO(content)
+            self.process_passed_rgb_image(stream)
             return
         uris = self.clipboard.wait_for_uris()
         logger.debug('URIs: {}', uris)
@@ -508,6 +562,9 @@ class CoBangApplication(Gtk.Application):
         self.display_result(img.symbols)
         return Gst.FlowReturn.OK
 
+    def on_info_bar_response(self, infobar: Gtk.InfoBar, response_id: int):
+        infobar.set_visible(False)
+
     def play_webcam_video(self, widget: Optional[Gtk.Widget] = None):
         if not self.gst_pipeline:
             return
@@ -543,6 +600,13 @@ class CoBangApplication(Gtk.Application):
         logger.debug('To present {}', dlg_about)
         dlg_about.present()
 
+    def show_error(self, message: str):
+        box: Gtk.Box = self.infobar.get_content_area()
+        label: Gtk.Label = box.get_children()[0]
+        label.set_label(message)
+        self.infobar.set_message_type(Gtk.MessageType.ERROR)
+        self.infobar.set_visible(True)
+
     def quit_from_action(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
         self.quit()
 
@@ -550,68 +614,3 @@ class CoBangApplication(Gtk.Application):
         if self.gst_pipeline:
             self.gst_pipeline.set_state(Gst.State.NULL)
         super().quit()
-
-
-def build_app_menu_model() -> Gio.Menu:
-    menu = Gio.Menu()
-    menu.append('About', 'app.about')
-    menu.append('Quit', 'app.quit')
-    return menu
-
-
-def is_local_real_image(path: str) -> bool:
-    try:
-        Image.open(path)
-        return True
-    except (UnidentifiedImageError, ValueError):
-        return False
-    return False
-
-
-def maybe_remote_image(url: str):
-    parsed = urlsplit(url)
-    suffix = Path(parsed.path).suffix
-    # Strip leading dot
-    ext = suffix[1:].lower()
-    return ext in WELKNOWN_IMAGE_EXTS
-
-
-def choose_first_image(uris: Sequence[str]) -> Optional[Gio.File]:
-    for u in uris:
-        gfile: Gio.File = Gio.file_new_for_uri(u)
-        # Is local?
-        local_path = gfile.get_path()
-        if local_path:
-            if is_local_real_image(local_path):
-                return gfile
-        # Is remote
-        if maybe_remote_image(u):
-            return gfile
-
-
-def get_device_path(device: Gst.Device):
-    type_name = device.__class__.__name__
-    # GstPipeWireDevice doesn't have dedicated GIR binding yet,
-    # so we have to access its "device.path" in general GStreamer way
-    if type_name == 'GstPipeWireDevice':
-        properties = device.get_properties()
-        return properties['device.path']
-    # Assume GstV4l2Device
-    return device.get_property('device_path')
-
-
-def scale_pixbuf(pixbuf: GdkPixbuf.Pixbuf, outer_width: int, outer_height):
-    # Get original size
-    ow = pixbuf.get_width()
-    oh = pixbuf.get_height()
-    # Get aspect ration
-    ratio = Fraction(ow, oh)
-    # Try scaling to outer_height
-    scaled_height = outer_height
-    scaled_width = int(ratio * outer_height)
-    # If it is larger than outer_width, fixed by width
-    if scaled_width > outer_width:
-        scaled_width = outer_width
-        scaled_height = int(scaled_width / ratio)
-    # Now scale with calculated size
-    return pixbuf.scale_simple(scaled_width, scaled_height, GdkPixbuf.InterpType.BILINEAR)

@@ -47,9 +47,11 @@ So I decide to build *CoBang*, a new, native Linux application for scanning QR c
 Screenshots
 +++++++++++
 
-.. image:: https://i.imgur.com/ddD4YCU.png
-.. image:: https://i.imgur.com/1oqDV1b.png
+.. image:: https://i.imgur.com/oa0YYTm.png
+.. image:: https://i.imgur.com/bIV57cV.png
 .. image:: https://i.imgur.com/ldynPU6.png
+.. image:: https://i.imgur.com/aORgQKj.png
+.. image:: https://i.imgur.com/a4R3iwb.png
 
 
 Install
@@ -78,6 +80,8 @@ Users of other distros (Fedora, ArchLinux etc.) can install CoBang from `FlatHub
 
     flatpak install flathub vn.hoabinh.quan.CoBang
 
+The release on FlatHub may come later than the one on Ubuntu PPA, due to difficulty building as Flatpak.
+
 
 Compatibility
 -------------
@@ -90,7 +94,9 @@ There is an known issue with file chooser button when running from Flatpak. Hope
 Development
 +++++++++++
 
-This application is written in Python, using `GTK+ <gtk_>`_ for UI, `GStreamer`_ for webcam capture and a part of `ZBar`_ for decoding QR code from image.
+This section is for someone who wants to join development of CoBang.
+
+CoBang is written in Python, using `GTK+ <gtk_>`_ for UI, `GStreamer`_ for webcam capture and a part of `ZBar`_ for decoding QR code from image.
 
 
 Install dependencies

@@ -1,6 +1,10 @@
 from pathlib import Path
+from urllib.parse import urlsplit
 
-from .consts import SHORT_NAME
+from PIL import Image, UnidentifiedImageError
+
+from .consts import SHORT_NAME, WELKNOWN_IMAGE_EXTS
+
 
 # Folder to look for icon, glade files
 # - If this app is installed in ~/.local/bin and run from there, look for ~/.local/share/cobang
@@ -49,3 +53,20 @@ def get_ui_filepath(filename: str) -> Path:
 def get_ui_source(filename: str) -> str:
     filepath = get_ui_filepath(filename)
     return filepath.read_text()
+
+
+def is_local_real_image(path: str) -> bool:
+    try:
+        Image.open(path)
+        return True
+    except (UnidentifiedImageError, ValueError):
+        return False
+    return False
+
+
+def maybe_remote_image(url: str):
+    parsed = urlsplit(url)
+    suffix = Path(parsed.path).suffix
+    # Strip leading dot
+    ext = suffix[1:].lower()
+    return ext in WELKNOWN_IMAGE_EXTS
