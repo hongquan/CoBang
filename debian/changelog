@@ -1,3 +1,10 @@
+cobang (0.5.1-1) focal; urgency=medium
+
+  * Fix crash when detecting WiFi content from webcam.
+  * Fix: Forgot to check SVG in some cases.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 20 Jun 2020 00:04:56 +0700
+
 cobang (0.5.0-1) focal; urgency=medium
 
   * Display result URL with a link.
