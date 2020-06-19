@@ -1,3 +1,12 @@
+cobang (0.5.0-1) focal; urgency=medium
+
+  * Display result URL with a link.
+  * Display result WiFi info and let save it to NetworkManager.
+  * Support scanning from SVG file.
+  * Change license to GPL-v3.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Fri, 19 Jun 2020 17:01:31 +0700
+
 cobang (0.4.0-1) focal; urgency=medium
 
   * First FlatHub release.
