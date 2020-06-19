@@ -17,8 +17,7 @@ class NMWifiKeyMn(str, Enum):
     WPA2_EAP = 'wpa-eap'
 
 
-def is_connected_same_wifi(info: WifiInfoMessage) -> bool:
-    client = NM.Client.new()
+def is_connected_same_wifi(info: WifiInfoMessage, client: NM.Client) -> bool:
     try:
         conn = next(c for c in client.get_active_connections()
                     if c.get_connection_type() == NM.SETTING_WIRELESS_SETTING_NAME)
@@ -29,8 +28,7 @@ def is_connected_same_wifi(info: WifiInfoMessage) -> bool:
     return conn.get_id() == info.ssid
 
 
-def add_wifi_connection(info: WifiInfoMessage, callback: Optional[Callable], user_data: Any):
-    client = NM.Client.new()
+def add_wifi_connection(info: WifiInfoMessage, callback: Optional[Callable], btn: Any, nm_client: Optional[NM.Client]):
     conn = NM.RemoteConnection()
     base = NM.SettingConnection.new()
     connection_name = f'{info.ssid} ({BRAND_NAME})'
@@ -54,4 +52,4 @@ def add_wifi_connection(info: WifiInfoMessage, callback: Optional[Callable], use
             secure.set_property(NM.SETTING_WIRELESS_SECURITY_WEP_KEY0, info.password)
     conn.add_setting(wireless)
     conn.add_setting(secure)
-    client.add_connection_async(conn, True, None, callback, user_data)
+    nm_client.add_connection_async(conn, True, None, callback, btn)

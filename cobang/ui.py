@@ -40,7 +40,7 @@ def update_progress(bar: Gtk.ProgressBar, jump: Optional[float] = None):
     return True
 
 
-def build_wifi_info_display(wifi: WifiInfoMessage) -> Gtk.Box:
+def build_wifi_info_display(wifi: WifiInfoMessage, nm_client: Optional[NM.Client]) -> Gtk.Box:
     filepath = str(get_ui_filepath('wifi-display.glade'))
     builder = Gtk.Builder.new_from_file(filepath)
     box = builder.get_object('wifi-form')
@@ -48,11 +48,11 @@ def build_wifi_info_display(wifi: WifiInfoMessage) -> Gtk.Box:
     if wifi.password:
         builder.get_object('password-value').set_text(wifi.password)
     btn: Gtk.Button = builder.get_object('btn-connect')
-    if is_connected_same_wifi(wifi):
+    if nm_client and is_connected_same_wifi(wifi, nm_client):
         btn.set_sensitive(False)
         btn.set_label(_('Connected'))
     builder.get_object('password-value').connect('icon-press', on_secondary_icon_pressed)
-    btn.connect_after('clicked', on_btn_connect_clicked, wifi)
+    btn.connect_after('clicked', on_btn_connect_clicked, wifi, nm_client)
     return box
 
 
@@ -61,8 +61,8 @@ def on_secondary_icon_pressed(entry: Gtk.Entry, pos: Gtk.EntryIconPosition, even
     entry.set_visibility(not visible)
 
 
-def on_btn_connect_clicked(btn: Gtk.Button, wifi: WifiInfoMessage):
-    add_wifi_connection(wifi, wifi_connect_done, btn)
+def on_btn_connect_clicked(btn: Gtk.Button, wifi: WifiInfoMessage, nm_client: Optional[NM.Client]):
+    add_wifi_connection(wifi, wifi_connect_done, btn, nm_client)
 
 
 def build_url_display(url: UrlSplitResult):

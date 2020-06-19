@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.5.1" date="2020-06-19" urgency="medium">
+      <description>
+        <p>Fix crash when detecting WiFi content from webcam.</p>
+      </description>
+    </release>
     <release version="0.5.0" date="2020-06-19" urgency="medium">
       <description>
         <p>Display result URL with a link.</p>

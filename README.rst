@@ -50,8 +50,8 @@ Screenshots
 .. image:: https://i.imgur.com/oa0YYTm.png
 .. image:: https://i.imgur.com/bIV57cV.png
 .. image:: https://i.imgur.com/ldynPU6.png
-.. image:: https://i.imgur.com/aORgQKj.png
-.. image:: https://i.imgur.com/a4R3iwb.png
+.. image:: https://i.imgur.com/gtmPSpM.png
+.. image:: https://i.imgur.com/MyH9CEC.png
 
 
 Install

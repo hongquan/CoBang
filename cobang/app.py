@@ -35,8 +35,9 @@ gi.require_version('Rsvg', '2.0')
 gi.require_version('Gst', '1.0')
 gi.require_version('GstBase', '1.0')
 gi.require_version('GstApp', '1.0')
+gi.require_version('NM', '1.0')
 
-from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Rsvg, Gst, GstApp
+from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Rsvg, Gst, GstApp, NM
 
 from . import __version__
 from . import ui
@@ -88,6 +89,7 @@ class CoBangApplication(Gtk.Application):
     progress_bar: Optional[Gtk.ProgressBar] = None
     infobar: Optional[Gtk.InfoBar] = None
     raw_result_expander: Optional[Gtk.Expander] = None
+    nm_client: Optional[NM.Client] = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -106,6 +108,7 @@ class CoBangApplication(Gtk.Application):
         devmonitor.add_filter('Video/Source', Gst.Caps.from_string('video/x-raw'))
         logger.debug('Monitor: {}', devmonitor)
         self.devmonitor = devmonitor
+        NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
     def setup_actions(self):
         action_quit = Gio.SimpleAction.new('quit', None)
@@ -303,7 +306,7 @@ class CoBangApplication(Gtk.Application):
         self.result_display.show_all()
 
     def display_wifi(self, wifi: WifiInfoMessage):
-        box = ui.build_wifi_info_display(wifi)
+        box = ui.build_wifi_info_display(wifi, self.nm_client)
         self.result_display.add(box)
         self.result_display.show_all()
 
@@ -439,6 +442,14 @@ class CoBangApplication(Gtk.Application):
         # The file can be remote, so we should read asynchronously
         chosen_file.read_async(GLib.PRIORITY_DEFAULT, None, self.cb_file_read, content_type)
         GLib.timeout_add(100, ui.update_progress, self.progress_bar)
+
+    def cb_networkmanager_client_init_done(self, client: NM.Client, res: Gio.AsyncResult):
+        if not client:
+            logger.error('Failed to initialize NetworkManager client')
+            return
+        client.new_finish(res)
+        self.nm_client = client
+        logger.debug('NM client: {}', client)
 
     def cb_file_read(self, remote_file: Gio.File, res: Gio.AsyncResult, content_type: Optional[str] = None):
         w, h = self.get_preview_size()
