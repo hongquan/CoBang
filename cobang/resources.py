@@ -1,7 +1,11 @@
 from pathlib import Path
 from urllib.parse import urlsplit
 
+import gi
 from PIL import Image, UnidentifiedImageError
+
+gi.require_version('Gio', '2.0')
+from gi.repository import Gio
 
 from .consts import SHORT_NAME, WELKNOWN_IMAGE_EXTS
 
@@ -70,3 +74,9 @@ def maybe_remote_image(url: str):
     # Strip leading dot
     ext = suffix[1:].lower()
     return ext in WELKNOWN_IMAGE_EXTS
+
+
+def guess_content_type(file: Gio.File) -> str:
+    info: Gio.FileInfo = file.query_info(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE,
+                                         Gio.FileQueryInfoFlags.NONE, None)
+    return info.get_attribute_as_string(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE)

@@ -39,11 +39,11 @@ gi.require_version('NM', '1.0')
 
 from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Rsvg, Gst, GstApp, NM
 
+from .consts import APP_ID, SHORT_NAME
 from . import __version__
 from . import ui
 from .common import _
-from .resources import get_ui_filepath
-from .consts import APP_ID, SHORT_NAME
+from .resources import get_ui_filepath, guess_content_type
 from .prep import get_device_path, choose_first_image, export_svg, scale_pixbuf
 from .messages import WifiInfoMessage, parse_wifi_message
 
@@ -461,6 +461,7 @@ class CoBangApplication(Gtk.Application):
         # Prevent freezing GUI
         Gtk.main_iteration()
         gi_stream.seek(0, GLib.SeekType.SET, None)
+        logger.debug('Content type: {}', content_type)
         if content_type == 'image/svg+xml':
             svg: Rsvg.Handle = Rsvg.Handle.new_from_stream_sync(gi_stream, remote_file,
                                                                 Rsvg.HandleFlags.FLAGS_NONE, None)
@@ -495,9 +496,7 @@ class CoBangApplication(Gtk.Application):
         chosen_file: Gio.File = Gio.file_new_for_uri(uri)
         logger.debug('Chose file: {}', uri)
         # Check file content type
-        info: Gio.FileInfo = chosen_file.query_info(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE,
-                                                    Gio.FileQueryInfoFlags.NONE, None)
-        content_type: str = info.get_attribute_as_string(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE)
+        content_type = guess_content_type(chosen_file)
         logger.debug('Content type: {}', content_type)
         if not content_type.startswith('image/'):
             self.show_error(_('Unsuported file type %s!') % content_type)
@@ -514,7 +513,9 @@ class CoBangApplication(Gtk.Application):
             return
         chosen_file = Gio.file_new_for_uri(uri)
         self.btn_img_chooser.select_uri(uri)
-        self.process_passed_image_file(chosen_file)
+        content_type = guess_content_type(chosen_file)
+        logger.debug('Content type: {}', content_type)
+        self.process_passed_image_file(chosen_file, content_type)
         self.grab_focus_on_event_box()
 
     def on_eventbox_key_press_event(self, widget: Gtk.Widget, event: Gdk.Event):
@@ -546,7 +547,8 @@ class CoBangApplication(Gtk.Application):
         if not gfile:
             return
         self.btn_img_chooser.select_uri(gfile.get_uri())
-        self.process_passed_image_file(gfile)
+        content_type = guess_content_type(gfile)
+        self.process_passed_image_file(gfile, content_type)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
