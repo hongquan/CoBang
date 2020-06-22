@@ -1,3 +1,9 @@
+cobang (0.5.2-1) focal; urgency=medium
+
+  * Able to build Flatpak (sucessfully add NetworkManager dependency).
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Mon, 22 Jun 2020 17:28:04 +0700
+
 cobang (0.5.1-1) focal; urgency=medium
 
   * Fix crash when detecting WiFi content from webcam.
