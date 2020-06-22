@@ -177,8 +177,6 @@ modules:
     builddir: true
     buildsystem: meson
     sources:
-      # - type: git
-      #   url: 'https://github.com/hongquan/CoBang.git'
-      #   tag: v0.5.1
-      - type: dir
-        path: .
+      - type: git
+        url: 'https://github.com/hongquan/CoBang.git'
+        tag: v0.5.2
