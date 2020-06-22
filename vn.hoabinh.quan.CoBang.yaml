@@ -6,6 +6,8 @@ command: cobang
 finish-args:
   - --share=network
   - --share=ipc
+  - --socket=session-bus
+  - --socket=system-bus
   - --socket=wayland
   - --socket=fallback-x11
   # Need to load image files
@@ -63,6 +65,14 @@ modules:
         url: https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
         md5: 12e517cac2b57a0121cda351570f1e63
 
+  - name: pwquality
+    buildsystem: autotools
+    config-opts:
+      - --disable-python-bindings
+    sources:
+      - type: git
+        url: https://github.com/libpwquality/libpwquality.git
+
   - name: libndp
     buildsystem: autotools
     sources:
@@ -71,14 +81,20 @@ modules:
         url: https://github.com/jpirko/libndp.git
         commit: 2f721c4ff519f38f46695a60d9f9d88f35bf3c1d
 
-  # This depend on linux-pan, but don't know how to include it,
+  # This depend on linux-pam, but don't know how to include it,
   - name: polkit
+    buildsystem: autotools
     config-opts:
       - --disable-polkitd
       - --disable-man-pages
       - --disable-introspection
-      - --enable-libsystemd-login=no
+      - --disable-examples
+      - --disable-gtk-doc
+      - --disable-libelogind
+      - --disable-libsystemd-login
       - --with-systemdsystemunitdir=no
+      - --with-authdb=dummy
+      - --with-authfw=none
     rm-configure: true
     cleanup:
       - /bin/*
@@ -89,13 +105,39 @@ modules:
       - /lib/polkit-1
     sources:
       - type: archive
-        url: http://www.freedesktop.org/software/polkit/releases/polkit-0.113.tar.gz
-        sha256: e1c095093c654951f78f8618d427faf91cf62abdefed98de40ff65eca6413c81
+        url: https://www.freedesktop.org/software/polkit/releases/polkit-0.116.tar.gz
+        sha256: 88170c9e711e8db305a12fdb8234fac5706c61969b94e084d0f117d8ec5d34b1
       - type: patch
         path: flatpak/polkit-build-Add-option-to-build-without-polkitd.patch
       - type: file
         path: flatpak/polkit-autogen
         dest-filename: autogen.sh
+
+  - name: udev
+    config-opts:
+      - --disable-hwdb
+      - --disable-logging
+      - --disable-gudev
+      - --disable-introspection
+      - --disable-keymap
+      - --disable-mtd_probe
+    cleanup:
+      - /include
+      - /etc
+      - /libexec
+      - /sbin
+      - /lib/pkgconfig
+      - /man
+      - /share/aclocal
+      - /share/doc
+      - /share/gtk-doc
+      - /share/man
+      - /share/pkgconfig
+      - '*.la'
+      - '*.a'
+    sources:
+      - type: git
+        url: git://github.com/gentoo/eudev.git
 
   - name: NetworkManager
     buildsystem: meson
@@ -109,10 +151,10 @@ modules:
       - -Ddbus_sys_dir=/app/share/dbus-1/system.d
       - -Ddnsmasq=/usr/bin/true
       - -Ddocs=false
-      - -Dintrospection=false
+      - -Dintrospection=true
       - -Diptables=/usr/bin/true
       - -Djson_validation=false
-      - -Dlibnm_glib=false
+      - -Dlibnm_glib=true
       - -Dlibpsl=false
       - -Dmodem_manager=false
       - -Dnmtui=false
@@ -137,4 +179,4 @@ modules:
     sources:
       - type: git
         url: 'https://github.com/hongquan/CoBang.git'
-        tag: v0.4.0
+        tag: v0.5.2
