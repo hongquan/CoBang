@@ -496,7 +496,12 @@ class CoBangApplication(Gtk.Application):
         chosen_file: Gio.File = Gio.file_new_for_uri(uri)
         logger.debug('Chose file: {}', uri)
         # Check file content type
-        content_type = guess_content_type(chosen_file)
+        try:
+            content_type = guess_content_type(chosen_file)
+        except GLib.Error as e:
+            logger.error('Failed to open file. Error {}', e)
+            self.show_error('Failed to open file.')
+            return
         logger.debug('Content type: {}', content_type)
         if not content_type.startswith('image/'):
             self.show_error(_('Unsuported file type %s!') % content_type)
