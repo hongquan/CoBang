@@ -36,6 +36,7 @@ def update_progress(bar: Gtk.ProgressBar, jump: Optional[float] = None):
         bar.set_fraction(jump)
     f = bar.get_fraction()
     if f >= 1:
+        bar.set_visible(False)
         return False
     return True
 

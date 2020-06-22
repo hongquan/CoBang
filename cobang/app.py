@@ -441,6 +441,7 @@ class CoBangApplication(Gtk.Application):
         self.reset_result()
         # The file can be remote, so we should read asynchronously
         chosen_file.read_async(GLib.PRIORITY_DEFAULT, None, self.cb_file_read, content_type)
+        self.progress_bar.set_visible(True)
         GLib.timeout_add(100, ui.update_progress, self.progress_bar)
 
     def cb_networkmanager_client_init_done(self, client: NM.Client, res: Gio.AsyncResult):
