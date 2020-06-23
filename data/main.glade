@@ -244,48 +244,34 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkAspectFrame" id="frame-image">
-                        <property name="name">frame-image</property>
+                      <object class="GtkOverlay" id="cont-image">
+                        <property name="name">cont-image</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label_xalign">0</property>
-                        <property name="shadow_type">none</property>
                         <child>
-                          <object class="GtkEventBox" id="eventbox">
+                          <object class="GtkAspectFrame" id="frame-image">
+                            <property name="name">frame-image</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="events">GDK_KEY_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-                            <property name="visible_window">False</property>
-                            <property name="above_child">True</property>
-                            <signal name="key-press-event" handler="on_eventbox_key_press_event" swapped="no"/>
+                            <property name="can_focus">False</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">none</property>
                             <child>
-                              <object class="GtkBox" id="box-image-empty">
-                                <property name="name">box-image-empty</property>
+                              <object class="GtkEventBox" id="eventbox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="orientation">vertical</property>
+                                <property name="events">GDK_KEY_PRESS_MASK | GDK_STRUCTURE_MASK</property>
+                                <property name="visible_window">False</property>
+                                <property name="above_child">True</property>
+                                <signal name="key-press-event" handler="on_eventbox_key_press_event" swapped="no"/>
                                 <child>
-                                  <object class="GtkProgressBar" id="progress-bar">
-                                    <property name="can_focus">False</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child type="center">
-                                  <object class="GtkBox">
+                                  <object class="GtkBox" id="box-image-empty">
+                                    <property name="name">box-image-empty</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="orientation">vertical</property>
-                                    <property name="spacing">6</property>
                                     <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">True</property>
+                                      <object class="GtkProgressBar" id="progress-bar">
                                         <property name="can_focus">False</property>
-                                        <property name="pixbuf">wireframe-image-add.svg</property>
-                                        <property name="pixel_size">128</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -293,18 +279,44 @@
                                         <property name="position">0</property>
                                       </packing>
                                     </child>
-                                    <child>
-                                      <object class="GtkLabel">
+                                    <child type="center">
+                                      <object class="GtkBox">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">Please add an image file by one of these methods:
+                                        <property name="orientation">vertical</property>
+                                        <property name="spacing">6</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="pixbuf">wireframe-image-add.svg</property>
+                                            <property name="pixel_size">128</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">Please add an image file by one of these methods:
 
 - Drag and drop here.
 - Copy from somewhere and paste (Ctrl+V) here.
 - Choose with button below (non Flatpak).
 
 Remote image (from http://..., sftp://...) is allowed.</property>
-                                        <property name="use_markup">True</property>
+                                            <property name="use_markup">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -313,15 +325,13 @@ Remote image (from http://..., sftp://...) is allowed.</property>
                                       </packing>
                                     </child>
                                   </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
                                 </child>
                               </object>
                             </child>
                           </object>
+                          <packing>
+                            <property name="index">-1</property>
+                          </packing>
                         </child>
                       </object>
                       <packing>

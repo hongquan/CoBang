@@ -257,18 +257,15 @@ class CoBangApplication(Gtk.Application):
 
     def insert_image_to_placeholder(self, pixbuf: GdkPixbuf.Pixbuf):
         stack = self.stack_img_source
-        pane: Gtk.Container = stack.get_visible_child()
+        pane: Gtk.Bin = stack.get_visible_child()
         logger.debug('Visible pane: {}', pane.get_name())
-        if not isinstance(pane, Gtk.AspectFrame):
+        if not isinstance(pane, Gtk.Overlay):
             logger.error('Stack seems to be in wrong state')
             return
-        try:
-            event_box: Gtk.Widget = pane.get_children()[0]
-            child = event_box.get_children()[0]
-            logger.debug('Child: {}', child)
-        except IndexError:
-            logger.error('{} doesnot have child or grandchild!', pane)
-            return
+        frame: Gtk.AspectFrame = pane.get_child()
+        event_box: Gtk.EventBox = frame.get_child()
+        child: Gtk.Image = event_box.get_child()
+        logger.debug('Child: {}', child)
         if isinstance(child, Gtk.Image):
             child.set_from_pixbuf(pixbuf)
             return
@@ -283,13 +280,10 @@ class CoBangApplication(Gtk.Application):
     def reset_image_placeholder(self):
         stack = self.stack_img_source
         logger.debug('Children: {}', stack.get_children())
-        pane: Gtk.Container = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
-        try:
-            event_box = pane.get_children()[0]
-            old_widget = event_box.get_children()[0]
-        except IndexError:
-            logger.error('Stack seems to be in wrong state')
-            return
+        pane: Gtk.Overlay = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
+        frame: Gtk.AspectFrame = pane.get_child()
+        event_box: Gtk.EventBox = frame.get_child()
+        old_widget = event_box.get_child()
         if old_widget == self.box_image_empty:
             return
         event_box.remove(old_widget)
