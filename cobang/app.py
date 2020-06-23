@@ -349,7 +349,12 @@ class CoBangApplication(Gtk.Application):
             logger.debug('Added: {}', added_dev)
             cam_path = get_device_path(added_dev)
             cam_name = added_dev.get_display_name()
-            self.webcam_store.append((cam_path, cam_name))
+            # Check if this cam already in the list, add to list if not.
+            for row in self.webcam_store:
+                if row[0] == cam_path:
+                    break
+            else:
+                self.webcam_store.append((cam_path, cam_name))
             return True
         elif message.type == Gst.MessageType.DEVICE_REMOVED:
             removed_dev: Optional[Gst.Device] = message.parse_device_removed()
