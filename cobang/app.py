@@ -69,6 +69,7 @@ class CoBangApplication(Gtk.Application):
     window: Optional[Gtk.Window] = None
     main_grid: Optional[Gtk.Grid] = None
     area_webcam: Optional[Gtk.Widget] = None
+    cont_webcam: Optional[Gtk.Overlay] = None
     stack_img_source: Optional[Gtk.Stack] = None
     btn_play: Optional[Gtk.RadioToolButton] = None
     # We connect Play button with "toggled" signal, but when we want to imitate mouse click on the button,
@@ -160,10 +161,11 @@ class CoBangApplication(Gtk.Application):
         builder.get_object('main-grid')
         window.set_application(self)
         self.set_accels_for_action('app.quit', ("<Ctrl>Q",))
-        self.stack_img_source = builder.get_object("stack-img-source")
+        self.stack_img_source = builder.get_object('stack-img-source')
         self.btn_play = builder.get_object('btn-play')
         self.btn_pause = builder.get_object('btn-pause')
         self.btn_img_chooser = builder.get_object('btn-img-chooser')
+        self.cont_webcam = builder.get_object('cont-webcam')
         if self.gst_pipeline:
             self.replace_webcam_placeholder_with_gstreamer_sink()
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
@@ -181,6 +183,8 @@ class CoBangApplication(Gtk.Application):
         self.result_display = builder.get_object('result-display-frame')
         self.progress_bar = builder.get_object('progress-bar')
         self.infobar = builder.get_object('info-bar')
+        box_playpause = builder.get_object('evbox-playpause')
+        self.cont_webcam.add_overlay(box_playpause)
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         self.frame_image.connect('drag-data-received', self.on_frame_image_drag_data_received)
@@ -194,6 +198,8 @@ class CoBangApplication(Gtk.Application):
             'on_btn_img_chooser_update_preview': self.on_btn_img_chooser_update_preview,
             'on_btn_img_chooser_file_set': self.on_btn_img_chooser_file_set,
             'on_eventbox_key_press_event': self.on_eventbox_key_press_event,
+            'on_evbox_playpause_enter_notify_event': self.on_evbox_playpause_enter_notify_event,
+            'on_evbox_playpause_leave_notify_event': self.on_evbox_playpause_leave_notify_event,
             'on_info_bar_response': self.on_info_bar_response,
         }
 
@@ -239,21 +245,11 @@ class CoBangApplication(Gtk.Application):
         '''
         sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
         area = sink.get_property('widget')
-        old_area = self.stack_img_source.get_child_by_name(self.STACK_CHILD_NAME_WEBCAM)
-        widget_name = old_area.get_name()
+        old_area = self.cont_webcam.get_children()[0]
         logger.debug('To replace {} with {}', old_area, area)
-        # Extract properties of old widget
-        property_names = ('icon-name', 'needs-attention', 'position', 'title')
-        stack = self.stack_img_source
-        properties = {k: stack.child_get_property(old_area, k) for k in property_names}
-        # Remove old widget
-        stack.remove(old_area)
-        stack.add_named(area, self.STACK_CHILD_NAME_WEBCAM)
-        for n in property_names:
-            stack.child_set_property(area, n, properties[n])
-        area.set_name(widget_name)
+        self.cont_webcam.remove(old_area)
+        self.cont_webcam.add(area)
         area.show()
-        stack.set_visible_child(area)
 
     def grab_focus_on_event_box(self):
         event_box: Gtk.EventBox = self.frame_image.get_children()[0]
@@ -580,6 +576,14 @@ class CoBangApplication(Gtk.Application):
         self.btn_pause.set_active(True)
         self.display_result(img.symbols)
         return Gst.FlowReturn.OK
+
+    def on_evbox_playpause_enter_notify_event(self, box: Gtk.EventBox, event: Gdk.EventCrossing):
+        child: Gtk.Widget = box.get_child()
+        child.set_opacity(1)
+
+    def on_evbox_playpause_leave_notify_event(self, box: Gtk.EventBox, event: Gdk.EventCrossing):
+        child: Gtk.Widget = box.get_child()
+        child.set_opacity(0.2)
 
     def on_info_bar_response(self, infobar: Gtk.InfoBar, response_id: int):
         infobar.set_visible(False)
