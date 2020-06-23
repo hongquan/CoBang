@@ -6,6 +6,7 @@ command: cobang
 finish-args:
   - --share=network
   - --share=ipc
+  # Need to access NetworkManager D-Bus API
   - --socket=session-bus
   - --socket=system-bus
   - --socket=wayland
@@ -179,4 +180,4 @@ modules:
     sources:
       - type: git
         url: 'https://github.com/hongquan/CoBang.git'
-        tag: v0.5.2
+        tag: v0.5.3

@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.5.3" date="2020-06-23" urgency="medium">
+      <description>
+        <p>Fix missing files when building Flatpak.</p>
+      </description>
+    </release>
     <release version="0.5.2" date="2020-06-22" urgency="medium">
       <description>
         <p>Able to build Flatpak (sucessfully add NetworkManager dependency).</p>
