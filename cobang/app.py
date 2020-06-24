@@ -17,7 +17,7 @@ import os
 import io
 from urllib.parse import urlsplit
 from urllib.parse import SplitResult as UrlSplitResult
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict
 
 import gi
 import zbar
@@ -91,6 +91,7 @@ class CoBangApplication(Gtk.Application):
     infobar: Optional[Gtk.InfoBar] = None
     raw_result_expander: Optional[Gtk.Expander] = None
     nm_client: Optional[NM.Client] = None
+    g_event_sources: Dict[str, int] = {}
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -321,6 +322,7 @@ class CoBangApplication(Gtk.Application):
         logger.info('QR type: {}', sym.type)
         raw_data: str = sym.data
         logger.info('Decoded string: {}', raw_data)
+        logger.debug('Set text for raw_result_buffer')
         self.raw_result_buffer.set_text(raw_data)
         # Is it a URL?
         try:
@@ -332,6 +334,7 @@ class CoBangApplication(Gtk.Application):
             return
         try:
             wifi = parse_wifi_message(raw_data)
+            logger.debug('To display {}', wifi)
             self.display_wifi(wifi)
             return
         except ValueError:
@@ -442,8 +445,14 @@ class CoBangApplication(Gtk.Application):
         self.reset_result()
         # The file can be remote, so we should read asynchronously
         chosen_file.read_async(GLib.PRIORITY_DEFAULT, None, self.cb_file_read, content_type)
-        self.progress_bar.set_visible(True)
-        GLib.timeout_add(100, ui.update_progress, self.progress_bar)
+        # If this file is remote, reading it will take time, so we display progress bar.
+        if not chosen_file.is_native():
+            self.progress_bar.set_visible(True)
+            sid = GLib.timeout_add(100, ui.update_progress, self.progress_bar)
+            # Properly handle GLib event source
+            if self.g_event_sources.get('update_progress'):
+                GLib.Source.remove(self.g_event_sources['update_progress'])
+            self.g_event_sources['update_progress'] = sid
 
     def cb_networkmanager_client_init_done(self, client: NM.Client, res: Gio.AsyncResult):
         if not client:
@@ -479,6 +488,9 @@ class CoBangApplication(Gtk.Application):
                 stream.write(buf.get_data())
                 if amount <= 0:
                     break
+        if self.g_event_sources.get('update_progress'):
+            GLib.Source.remove(self.g_event_sources['update_progress'])
+            del self.g_event_sources['update_progress']
         ui.update_progress(self.progress_bar, 1)
         self.process_passed_rgb_image(stream)
 

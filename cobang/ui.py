@@ -29,6 +29,7 @@ def build_app_menu_model() -> Gio.Menu:
 
 
 def update_progress(bar: Gtk.ProgressBar, jump: Optional[float] = None):
+    # FIXME: Due to async operation, this function may be called after bar has been destroyed.
     if jump is None:
         f = bar.get_fraction()
         bar.set_fraction(f + 0.05)
