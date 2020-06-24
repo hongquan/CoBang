@@ -1,3 +1,9 @@
+cobang (0.5.4-1) focal; urgency=medium
+
+  * Move Play & Pause buttons to overlay.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Wed, 24 Jun 2020 17:38:35 +0700
+
 cobang (0.5.2-1) focal; urgency=medium
 
   * Able to build Flatpak (sucessfully add NetworkManager dependency).
