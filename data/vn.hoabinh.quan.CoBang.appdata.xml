@@ -15,7 +15,7 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://i.imgur.com/oa0YYTm.png</image>
+      <image>https://i.imgur.com/K3TU9bm.png</image>
     </screenshot>
     <screenshot>
       <image>https://i.imgur.com/bIV57cV.png</image>
@@ -27,7 +27,7 @@
       <image>https://i.imgur.com/aORgQKj.png</image>
     </screenshot>
     <screenshot>
-      <image>https://i.imgur.com/a4R3iwb.png</image>
+      <image>https://i.imgur.com/MyH9CEC.png</image>
     </screenshot>
   </screenshots>
   <url type="homepage">https://github.com/hongquan/CoBang</url>
@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.5.4" date="2020-06-24" urgency="medium">
+      <description>
+        <p>Move Play & Pause buttons to overlay.</p>
+      </description>
+    </release>
     <release version="0.5.3" date="2020-06-23" urgency="medium">
       <description>
         <p>Fix missing files when building Flatpak.</p>
