@@ -17,7 +17,7 @@ import os
 import io
 from urllib.parse import urlsplit
 from urllib.parse import SplitResult as UrlSplitResult
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict
 
 import gi
 import zbar
@@ -69,6 +69,7 @@ class CoBangApplication(Gtk.Application):
     window: Optional[Gtk.Window] = None
     main_grid: Optional[Gtk.Grid] = None
     area_webcam: Optional[Gtk.Widget] = None
+    cont_webcam: Optional[Gtk.Overlay] = None
     stack_img_source: Optional[Gtk.Stack] = None
     btn_play: Optional[Gtk.RadioToolButton] = None
     # We connect Play button with "toggled" signal, but when we want to imitate mouse click on the button,
@@ -90,6 +91,7 @@ class CoBangApplication(Gtk.Application):
     infobar: Optional[Gtk.InfoBar] = None
     raw_result_expander: Optional[Gtk.Expander] = None
     nm_client: Optional[NM.Client] = None
+    g_event_sources: Dict[str, int] = {}
 
     def __init__(self, *args, **kwargs):
         super().__init__(
@@ -160,10 +162,11 @@ class CoBangApplication(Gtk.Application):
         builder.get_object('main-grid')
         window.set_application(self)
         self.set_accels_for_action('app.quit', ("<Ctrl>Q",))
-        self.stack_img_source = builder.get_object("stack-img-source")
+        self.stack_img_source = builder.get_object('stack-img-source')
         self.btn_play = builder.get_object('btn-play')
         self.btn_pause = builder.get_object('btn-pause')
         self.btn_img_chooser = builder.get_object('btn-img-chooser')
+        self.cont_webcam = builder.get_object('cont-webcam')
         if self.gst_pipeline:
             self.replace_webcam_placeholder_with_gstreamer_sink()
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
@@ -181,6 +184,8 @@ class CoBangApplication(Gtk.Application):
         self.result_display = builder.get_object('result-display-frame')
         self.progress_bar = builder.get_object('progress-bar')
         self.infobar = builder.get_object('info-bar')
+        box_playpause = builder.get_object('evbox-playpause')
+        self.cont_webcam.add_overlay(box_playpause)
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         self.frame_image.connect('drag-data-received', self.on_frame_image_drag_data_received)
@@ -194,6 +199,8 @@ class CoBangApplication(Gtk.Application):
             'on_btn_img_chooser_update_preview': self.on_btn_img_chooser_update_preview,
             'on_btn_img_chooser_file_set': self.on_btn_img_chooser_file_set,
             'on_eventbox_key_press_event': self.on_eventbox_key_press_event,
+            'on_evbox_playpause_enter_notify_event': self.on_evbox_playpause_enter_notify_event,
+            'on_evbox_playpause_leave_notify_event': self.on_evbox_playpause_leave_notify_event,
             'on_info_bar_response': self.on_info_bar_response,
         }
 
@@ -239,36 +246,26 @@ class CoBangApplication(Gtk.Application):
         '''
         sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
         area = sink.get_property('widget')
-        old_area = self.stack_img_source.get_child_by_name(self.STACK_CHILD_NAME_WEBCAM)
-        widget_name = old_area.get_name()
+        old_area = self.cont_webcam.get_child()
         logger.debug('To replace {} with {}', old_area, area)
-        # Extract properties of old widget
-        property_names = ('icon-name', 'needs-attention', 'position', 'title')
-        stack = self.stack_img_source
-        properties = {k: stack.child_get_property(old_area, k) for k in property_names}
-        # Remove old widget
-        stack.remove(old_area)
-        stack.add_named(area, self.STACK_CHILD_NAME_WEBCAM)
-        for n in property_names:
-            stack.child_set_property(area, n, properties[n])
-        area.set_name(widget_name)
+        self.cont_webcam.remove(old_area)
+        self.cont_webcam.add(area)
         area.show()
-        stack.set_visible_child(area)
 
     def grab_focus_on_event_box(self):
-        event_box: Gtk.EventBox = self.frame_image.get_children()[0]
+        event_box: Gtk.EventBox = self.frame_image.get_child()
         event_box.grab_focus()
 
     def insert_image_to_placeholder(self, pixbuf: GdkPixbuf.Pixbuf):
         stack = self.stack_img_source
-        pane: Gtk.Container = stack.get_visible_child()
+        pane: Gtk.AspectFrame = stack.get_visible_child()
         logger.debug('Visible pane: {}', pane.get_name())
         if not isinstance(pane, Gtk.AspectFrame):
             logger.error('Stack seems to be in wrong state')
             return
         try:
-            event_box: Gtk.Widget = pane.get_children()[0]
-            child = event_box.get_children()[0]
+            event_box: Gtk.EventBox = pane.get_child()
+            child = event_box.get_child()
             logger.debug('Child: {}', child)
         except IndexError:
             logger.error('{} doesnot have child or grandchild!', pane)
@@ -287,10 +284,10 @@ class CoBangApplication(Gtk.Application):
     def reset_image_placeholder(self):
         stack = self.stack_img_source
         logger.debug('Children: {}', stack.get_children())
-        pane: Gtk.Container = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
+        pane: Gtk.AspectFrame = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
         try:
-            event_box = pane.get_children()[0]
-            old_widget = event_box.get_children()[0]
+            event_box: Gtk.EventBox = pane.get_child()
+            old_widget = event_box.get_child()
         except IndexError:
             logger.error('Stack seems to be in wrong state')
             return
@@ -325,6 +322,7 @@ class CoBangApplication(Gtk.Application):
         logger.info('QR type: {}', sym.type)
         raw_data: str = sym.data
         logger.info('Decoded string: {}', raw_data)
+        logger.debug('Set text for raw_result_buffer')
         self.raw_result_buffer.set_text(raw_data)
         # Is it a URL?
         try:
@@ -336,6 +334,7 @@ class CoBangApplication(Gtk.Application):
             return
         try:
             wifi = parse_wifi_message(raw_data)
+            logger.debug('To display {}', wifi)
             self.display_wifi(wifi)
             return
         except ValueError:
@@ -353,7 +352,12 @@ class CoBangApplication(Gtk.Application):
             logger.debug('Added: {}', added_dev)
             cam_path = get_device_path(added_dev)
             cam_name = added_dev.get_display_name()
-            self.webcam_store.append((cam_path, cam_name))
+            # Check if this cam already in the list, add to list if not.
+            for row in self.webcam_store:
+                if row[0] == cam_path:
+                    break
+            else:
+                self.webcam_store.append((cam_path, cam_name))
             return True
         elif message.type == Gst.MessageType.DEVICE_REMOVED:
             removed_dev: Optional[Gst.Device] = message.parse_device_removed()
@@ -441,8 +445,14 @@ class CoBangApplication(Gtk.Application):
         self.reset_result()
         # The file can be remote, so we should read asynchronously
         chosen_file.read_async(GLib.PRIORITY_DEFAULT, None, self.cb_file_read, content_type)
-        self.progress_bar.set_visible(True)
-        GLib.timeout_add(100, ui.update_progress, self.progress_bar)
+        # If this file is remote, reading it will take time, so we display progress bar.
+        if not chosen_file.is_native():
+            self.progress_bar.set_visible(True)
+            sid = GLib.timeout_add(100, ui.update_progress, self.progress_bar)
+            # Properly handle GLib event source
+            if self.g_event_sources.get('update_progress'):
+                GLib.Source.remove(self.g_event_sources['update_progress'])
+            self.g_event_sources['update_progress'] = sid
 
     def cb_networkmanager_client_init_done(self, client: NM.Client, res: Gio.AsyncResult):
         if not client:
@@ -478,6 +488,9 @@ class CoBangApplication(Gtk.Application):
                 stream.write(buf.get_data())
                 if amount <= 0:
                     break
+        if self.g_event_sources.get('update_progress'):
+            GLib.Source.remove(self.g_event_sources['update_progress'])
+            del self.g_event_sources['update_progress']
         ui.update_progress(self.progress_bar, 1)
         self.process_passed_rgb_image(stream)
 
@@ -580,6 +593,14 @@ class CoBangApplication(Gtk.Application):
         self.btn_pause.set_active(True)
         self.display_result(img.symbols)
         return Gst.FlowReturn.OK
+
+    def on_evbox_playpause_enter_notify_event(self, box: Gtk.EventBox, event: Gdk.EventCrossing):
+        child: Gtk.Widget = box.get_child()
+        child.set_opacity(1)
+
+    def on_evbox_playpause_leave_notify_event(self, box: Gtk.EventBox, event: Gdk.EventCrossing):
+        child: Gtk.Widget = box.get_child()
+        child.set_opacity(0.2)
 
     def on_info_bar_response(self, infobar: Gtk.InfoBar, response_id: int):
         infobar.set_visible(False)

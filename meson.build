@@ -1,5 +1,5 @@
 project('cobang',
-        version: '0.5.2',
+        version: '0.5.4',
         meson_version: '>= 0.50.0',
         default_options: [
           'warning_level=2',
@@ -27,7 +27,6 @@ dependency('gobject-2.0')
 dependency('gobject-introspection-1.0')
 dependency('gtk+-3.0', version: '>=3.24')
 dependency('libnm', version: '>= 1.24')
-# dependency('mm-glib', version: '>= 1.18')
 
 gst_dep = dependency('gstreamer-1.0', version : '>= 1.16',
   fallback : ['gstreamer', 'gst_dep'])
