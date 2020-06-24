@@ -246,26 +246,26 @@ class CoBangApplication(Gtk.Application):
         '''
         sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
         area = sink.get_property('widget')
-        old_area = self.cont_webcam.get_children()[0]
+        old_area = self.cont_webcam.get_child()
         logger.debug('To replace {} with {}', old_area, area)
         self.cont_webcam.remove(old_area)
         self.cont_webcam.add(area)
         area.show()
 
     def grab_focus_on_event_box(self):
-        event_box: Gtk.EventBox = self.frame_image.get_children()[0]
+        event_box: Gtk.EventBox = self.frame_image.get_child()
         event_box.grab_focus()
 
     def insert_image_to_placeholder(self, pixbuf: GdkPixbuf.Pixbuf):
         stack = self.stack_img_source
-        pane: Gtk.Container = stack.get_visible_child()
+        pane: Gtk.AspectFrame = stack.get_visible_child()
         logger.debug('Visible pane: {}', pane.get_name())
         if not isinstance(pane, Gtk.AspectFrame):
             logger.error('Stack seems to be in wrong state')
             return
         try:
-            event_box: Gtk.Widget = pane.get_children()[0]
-            child = event_box.get_children()[0]
+            event_box: Gtk.EventBox = pane.get_child()
+            child = event_box.get_child()
             logger.debug('Child: {}', child)
         except IndexError:
             logger.error('{} doesnot have child or grandchild!', pane)
@@ -284,10 +284,10 @@ class CoBangApplication(Gtk.Application):
     def reset_image_placeholder(self):
         stack = self.stack_img_source
         logger.debug('Children: {}', stack.get_children())
-        pane: Gtk.Container = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
+        pane: Gtk.AspectFrame = stack.get_child_by_name(self.STACK_CHILD_NAME_IMAGE)
         try:
-            event_box = pane.get_children()[0]
-            old_widget = event_box.get_children()[0]
+            event_box: Gtk.EventBox = pane.get_child()
+            old_widget = event_box.get_child()
         except IndexError:
             logger.error('Stack seems to be in wrong state')
             return
