@@ -47,7 +47,7 @@ So I decide to build *CoBang*, a new, native Linux application for scanning QR c
 Screenshots
 +++++++++++
 
-.. image:: https://i.imgur.com/oa0YYTm.png
+.. image:: https://i.imgur.com/K3TU9bm.png
 .. image:: https://i.imgur.com/bIV57cV.png
 .. image:: https://i.imgur.com/ldynPU6.png
 .. image:: https://i.imgur.com/gtmPSpM.png
