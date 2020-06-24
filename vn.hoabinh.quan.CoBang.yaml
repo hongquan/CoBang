@@ -180,4 +180,4 @@ modules:
     sources:
       - type: git
         url: 'https://github.com/hongquan/CoBang.git'
-        tag: v0.5.3
+        tag: v0.5.5

@@ -40,9 +40,14 @@
   </kudos>
 
   <releases>
+    <release version="0.5.5" date="2020-06-24" urgency="medium">
+      <description>
+        <p>Fix AppStream data.</p>
+      </description>
+    </release>
     <release version="0.5.4" date="2020-06-24" urgency="medium">
       <description>
-        <p>Move Play & Pause buttons to overlay.</p>
+        <p>Move Play &amp; Pause buttons to overlay.</p>
       </description>
     </release>
     <release version="0.5.3" date="2020-06-23" urgency="medium">
