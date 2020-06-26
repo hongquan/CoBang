@@ -6,6 +6,7 @@ from typing import Optional
 class WifiAuthType(str, Enum):
     WEP = 'WEP'
     WPA = 'WPA'
+    WPA2 = 'WPA2'
     WPA2_EAP = 'WPA2-EAP'
 
 

@@ -12,3 +12,10 @@ def test_wifi_info():
     out = parse_wifi_message(raw_data)
     assert out.ssid == 'Thi Tham Mua Xuan'
     assert out.password == 'thithammuaxuan'
+
+
+def test_wifi_info2():
+    raw_data = 'WIFI:S:my-network;T:WPA2;P:my-password;;'
+    out = parse_wifi_message(raw_data)
+    assert out.ssid == 'my-network'
+    assert out.password == 'my-password'

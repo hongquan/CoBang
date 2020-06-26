@@ -14,6 +14,7 @@ from .messages import WifiInfoMessage
 class NMWifiKeyMn(str, Enum):
     WEP = 'none'
     WPA = 'wpa-psk'
+    WPA2 = 'wpa-psk'
     WPA2_EAP = 'wpa-eap'
 
 
