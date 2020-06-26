@@ -43,13 +43,14 @@ from .consts import APP_ID, SHORT_NAME
 from . import __version__
 from . import ui
 from .common import _
-from .resources import get_ui_filepath, guess_content_type
+from .resources import get_ui_filepath, guess_content_type, cache_http_file
 from .prep import get_device_path, choose_first_image, export_svg, scale_pixbuf
 from .messages import WifiInfoMessage, parse_wifi_message
 
 
 logger = Logger(__name__)
 Gst.init(None)
+CONTROL_MASK = Gdk.ModifierType.CONTROL_MASK
 
 # Some Gstreamer CLI examples
 # gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! waylandsink
@@ -338,6 +339,7 @@ class CoBangApplication(Gtk.Application):
             self.display_wifi(wifi)
             return
         except ValueError:
+            logger.debug('Not a wellknown message')
             pass
         # Unknown message, just show raw content
         self.raw_result_expander.set_expanded(True)
@@ -506,9 +508,17 @@ class CoBangApplication(Gtk.Application):
         self.display_result(img.symbols)
 
     def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
-        uri = chooser.get_uri()
-        chosen_file: Gio.File = Gio.file_new_for_uri(uri)
+        uri: str = chooser.get_uri()
         logger.debug('Chose file: {}', uri)
+        # There is a limitation of Gio when handling HTTP remote files,
+        # like sometimes it can not read the same file twice (server doesn't handle Range header).
+        # So, for HTTP file, we can support Gio by caching to temporary local file.
+        if uri.startswith(('http://', 'https://')):
+            # Prevent freezing GUI
+            Gtk.main_iteration()
+            chosen_file = cache_http_file(uri)
+        else:
+            chosen_file: Gio.File = Gio.file_new_for_uri(uri)
         # Check file content type
         try:
             content_type = guess_content_type(chosen_file)
@@ -540,7 +550,8 @@ class CoBangApplication(Gtk.Application):
     def on_eventbox_key_press_event(self, widget: Gtk.Widget, event: Gdk.Event):
         logger.debug('Got key press: {}, state {}', event, event.state)
         key_name = Gdk.keyval_name(event.keyval)
-        if event.state != Gdk.ModifierType.CONTROL_MASK or key_name != 'v':
+        if (event.state & CONTROL_MASK) != CONTROL_MASK or key_name != 'v':
+            logger.debug('Ignore key "{}"', key_name)
             return
         # Pressed Ctrl + V
         self.reset_result()

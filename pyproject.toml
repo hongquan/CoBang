@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cobang"
-version = "0.5.4"
+version = "0.5.6"
 description = "QR code scanner for Linux desktop"
 authors = ["Nguyễn Hồng Quân <ng.hong.quan@gmail.com>"]
 license = "GPL-3.0-or-later"
@@ -13,6 +13,8 @@ python = "^3.7"
 single-version = "^1.1"
 logbook = "^1.5.3"
 Pillow = "^7.1.2"
+requests = "^2.24.0"
+kiss-headers = "^2.2.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

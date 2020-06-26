@@ -2,14 +2,27 @@ name: poetry-deps
 buildsystem: simple
 build-commands:
   - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-    first importlib-metadata logbook pillow single-version zipp
+    certifi chardet first idna importlib-metadata kiss-headers logbook pillow requests
+    single-version urllib3 zipp
 sources:
+  - type: file
+    url: https://files.pythonhosted.org/packages/5e/c4/6c4fe722df5343c33226f0b4e0bb042e4dc13483228b4718baf286f86d87/certifi-2020.6.20-py2.py3-none-any.whl
+    sha256: 8fc0819f1f30ba15bdb34cceffb9ef04d99f420f68eb75d901e9560b8749fc41
+  - type: file
+    url: https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl
+    sha256: fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691
   - type: file
     url: https://files.pythonhosted.org/packages/40/62/eda58db762d4845c971029becfecf6e85ad71c3bcba7d400598013a222a1/first-2.0.2-py2.py3-none-any.whl
     sha256: 8d8e46e115ea8ac652c76123c0865e3ff18372aef6f03c22809ceefcea9dec86
   - type: file
+    url: https://files.pythonhosted.org/packages/89/e3/afebe61c546d18fb1709a61bee788254b40e736cff7271c7de5de2dc4128/idna-2.9-py2.py3-none-any.whl
+    sha256: a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa
+  - type: file
     url: https://files.pythonhosted.org/packages/ad/e4/891bfcaf868ccabc619942f27940c77a8a4b45fd8367098955bb7e152fb1/importlib_metadata-1.6.0-py2.py3-none-any.whl
     sha256: 2a688cbaa90e0cc587f1df48bdc97a6eadccdcd9c35fb3f976a09e3b5016d90f
+  - type: file
+    url: https://files.pythonhosted.org/packages/08/9c/abc056425123626a24436296638c2b34945d8df0af98c06925e37c5d2a85/kiss_headers-2.2.3-py3-none-any.whl
+    sha256: 0eab1b9995ff1e81b97848aa13003b7f2447a50337ac34e1901ca9980a72dd64
   - type: file
     url: https://files.pythonhosted.org/packages/2f/d9/16ac346f7c0102835814cc9e5b684aaadea101560bb932a2403bd26b2320/Logbook-1.5.3.tar.gz
     sha256: 66f454ada0f56eae43066f604a222b09893f98c1adc18df169710761b8f32fe8
@@ -17,8 +30,14 @@ sources:
     url: https://files.pythonhosted.org/packages/ce/ef/e793f6ffe245c960c42492d0bb50f8d14e2ba223f1922a5c3c81569cec44/Pillow-7.1.2.tar.gz
     sha256: a0b49960110bc6ff5fead46013bcb8825d101026d466f3a4de3476defe0fb0dd
   - type: file
+    url: https://files.pythonhosted.org/packages/45/1e/0c169c6a5381e241ba7404532c16a21d86ab872c9bed8bdcd4c423954103/requests-2.24.0-py2.py3-none-any.whl
+    sha256: fe75cc94a9443b9246fc7049224f75604b113c36acb93f87b80ed42c44cbb898
+  - type: file
     url: https://files.pythonhosted.org/packages/57/f0/45669790cbced144b54127186fc027b2d728f491831959a0171a31db271e/single_version-1.1-py3-none-any.whl
     sha256: c3587b1fa60216431419c3751a853a277d9b9aa68d69b5f94a3f1dac15d72a38
+  - type: file
+    url: https://files.pythonhosted.org/packages/e1/e5/df302e8017440f111c11cc41a6b432838672f5a70aa29227bf58149dc72f/urllib3-1.25.9-py2.py3-none-any.whl
+    sha256: 88206b0eb87e6d677d424843ac5209e3fb9d0190d0ee169599165ec25e9d9115
   - type: file
     url: https://files.pythonhosted.org/packages/b2/34/bfcb43cc0ba81f527bc4f40ef41ba2ff4080e047acb0586b56b3d017ace4/zipp-3.1.0-py3-none-any.whl
     sha256: aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b
