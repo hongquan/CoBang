@@ -43,7 +43,7 @@ from .consts import APP_ID, SHORT_NAME
 from . import __version__
 from . import ui
 from .common import _
-from .resources import get_ui_filepath, guess_content_type
+from .resources import get_ui_filepath, guess_content_type, cache_http_file
 from .prep import get_device_path, choose_first_image, export_svg, scale_pixbuf
 from .messages import WifiInfoMessage, parse_wifi_message
 
@@ -338,6 +338,7 @@ class CoBangApplication(Gtk.Application):
             self.display_wifi(wifi)
             return
         except ValueError:
+            logger.debug('Not a wellknown message')
             pass
         # Unknown message, just show raw content
         self.raw_result_expander.set_expanded(True)
@@ -506,9 +507,14 @@ class CoBangApplication(Gtk.Application):
         self.display_result(img.symbols)
 
     def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
-        uri = chooser.get_uri()
-        chosen_file: Gio.File = Gio.file_new_for_uri(uri)
+        uri: str = chooser.get_uri()
         logger.debug('Chose file: {}', uri)
+        # There are some limitation of Gio when handling HTTP remote files, so if encountering
+        # HTTP URL, we download it to temporary file then handover to Gio
+        if uri.startswith(('http://', 'https://')):
+            chosen_file = cache_http_file(uri)
+        else:
+            chosen_file: Gio.File = Gio.file_new_for_uri(uri)
         # Check file content type
         try:
             content_type = guess_content_type(chosen_file)

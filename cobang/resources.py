@@ -1,7 +1,12 @@
+import tempfile
+import mimetypes
 from pathlib import Path
 from urllib.parse import urlsplit
+from typing import Optional
 
 import gi
+import requests
+from kiss_headers import parse_it
 from PIL import Image, UnidentifiedImageError
 
 gi.require_version('Gio', '2.0')
@@ -80,3 +85,23 @@ def guess_content_type(file: Gio.File) -> str:
     info: Gio.FileInfo = file.query_info(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE,
                                          Gio.FileQueryInfoFlags.NONE, None)
     return info.get_attribute_as_string(Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE)
+
+
+def cache_http_file(uri: str) -> Optional[Gio.File]:
+    with requests.get(uri, timeout=5, stream=True) as resp:
+        h = parse_it(resp)
+        if not str(h.content_type).startswith('image/'):
+            return
+        ext = mimetypes.guess_extension(str(h.content_type or '')) or ''
+        # Is an image, guess filename
+        if 'Content-Disposition' in h:
+            filename = h.content_disposition.filename
+        else:
+            path = Path(urlsplit(uri).path)
+            filename = path.name
+        dirpath = tempfile.mkdtemp(prefix=SHORT_NAME)
+        filepath = Path(dirpath) / (filename + ext)
+        with open(filepath, 'wb') as f:
+            for chunk in resp.iter_content():
+                f.write(chunk)
+    return Gio.File.new_for_path(str(filepath))
