@@ -513,6 +513,8 @@ class CoBangApplication(Gtk.Application):
         # There are some limitation of Gio when handling HTTP remote files, so if encountering
         # HTTP URL, we download it to temporary file then handover to Gio
         if uri.startswith(('http://', 'https://')):
+            # Prevent freezing GUI
+            Gtk.main_iteration()
             chosen_file = cache_http_file(uri)
         else:
             chosen_file: Gio.File = Gio.file_new_for_uri(uri)
