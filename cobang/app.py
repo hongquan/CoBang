@@ -50,6 +50,7 @@ from .messages import WifiInfoMessage, parse_wifi_message
 
 logger = Logger(__name__)
 Gst.init(None)
+CONTROL_MASK = Gdk.ModifierType.CONTROL_MASK
 
 # Some Gstreamer CLI examples
 # gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! waylandsink
@@ -546,7 +547,8 @@ class CoBangApplication(Gtk.Application):
     def on_eventbox_key_press_event(self, widget: Gtk.Widget, event: Gdk.Event):
         logger.debug('Got key press: {}, state {}', event, event.state)
         key_name = Gdk.keyval_name(event.keyval)
-        if event.state != Gdk.ModifierType.CONTROL_MASK or key_name != 'v':
+        if (event.state & CONTROL_MASK) != CONTROL_MASK or key_name != 'v':
+            logger.debug('Ignore key "{}"', key_name)
             return
         # Pressed Ctrl + V
         self.reset_result()
