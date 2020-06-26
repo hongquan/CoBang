@@ -510,8 +510,9 @@ class CoBangApplication(Gtk.Application):
     def on_btn_img_chooser_file_set(self, chooser: Gtk.FileChooserButton):
         uri: str = chooser.get_uri()
         logger.debug('Chose file: {}', uri)
-        # There are some limitation of Gio when handling HTTP remote files, so if encountering
-        # HTTP URL, we download it to temporary file then handover to Gio
+        # There is a limitation of Gio when handling HTTP remote files,
+        # like sometimes it can not read the same file twice (server doesn't handle Range header).
+        # So, for HTTP file, we can support Gio by caching to temporary local file.
         if uri.startswith(('http://', 'https://')):
             # Prevent freezing GUI
             Gtk.main_iteration()
