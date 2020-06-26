@@ -1,3 +1,9 @@
+cobang (0.5.6-1) focal; urgency=medium
+
+  * Fix handling HTTP file in some unusual case.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 27 Jun 2020 00:15:40 +0700
+
 cobang (0.5.4-1) focal; urgency=medium
 
   * Move Play & Pause buttons to overlay.
