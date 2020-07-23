@@ -26,7 +26,7 @@ dependency('glib-2.0')
 dependency('gobject-2.0')
 dependency('gobject-introspection-1.0')
 dependency('gtk+-3.0', version: '>=3.24')
-dependency('libnm', version: '>= 1.24')
+dependency('libnm', version: '>= 1.22')
 
 gst_dep = dependency('gstreamer-1.0', version : '>= 1.16',
   fallback : ['gstreamer', 'gst_dep'])
@@ -38,7 +38,10 @@ conf.set('localedir', get_option('prefix') / get_option('localedir'))
 conf.set('pkgdatadir', pkgdatadir)
 
 
-subdir('cobang')
+# To install the subdir "cobang", we don't use Meson's subdir function,
+# because Meson doesn't generate Python package metadata.
+# Issue: https://github.com/mesonbuild/meson/issues/7251
+meson.add_install_script('setup.py', 'install', '--prefix', get_option('prefix'))
 subdir('data')
 subdir('exe')
 subdir('po')
