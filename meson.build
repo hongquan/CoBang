@@ -41,7 +41,12 @@ conf.set('pkgdatadir', pkgdatadir)
 # To install the subdir "cobang", we don't use Meson's subdir function,
 # because Meson doesn't generate Python package metadata.
 # Issue: https://github.com/mesonbuild/meson/issues/7251
-meson.add_install_script('setup.py', 'install', '--prefix', get_option('prefix'))
+
+# Try to retrieve $DESTDIR envvar, which is not supported by Meson
+sh = run_command('sh', '-c', 'printf $DESTDIR')
+destdir = sh.stdout().strip()
+pyapp_prefix = destdir / get_option('prefix')
+meson.add_install_script('setup.py', 'install', '--prefix', pyapp_prefix)
 subdir('data')
 subdir('exe')
 subdir('po')
