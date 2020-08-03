@@ -7,7 +7,6 @@
 # but need to be modified afterward.
 
 import re
-import os
 from pathlib import Path
 
 from setuptools import setup
@@ -30,13 +29,6 @@ def get_version():
     m = re.search(r'version\s*=\s*"([.\-\w]+)"', content)
     return m.group(1)
 
-
-# Hack: When building by flatpak-builder, this script is ran from different location
-# and setuptools cannot find the source folder to install. So, in that case,
-# we just change "current directory" to the correct location.
-running_dir = os.getcwd()
-if str(SOURCE_DIR) != running_dir:
-    os.chdir(SOURCE_DIR)
 
 setup(
     name='cobang',
@@ -61,5 +53,3 @@ setup(
         ]
     },
 )
-
-os.chdir(running_dir)
