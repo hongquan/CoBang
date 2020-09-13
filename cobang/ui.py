@@ -51,6 +51,8 @@ def build_wifi_info_display(wifi: WifiInfoMessage, nm_client: Optional[NM.Client
         builder.get_object('password-value').set_text(wifi.password)
     btn: Gtk.Button = builder.get_object('btn-connect')
     if nm_client and is_connected_same_wifi(wifi, nm_client):
+        # Try to catch a crash here.
+        logger.debug('Set sensitive for {}', btn)
         btn.set_sensitive(False)
         btn.set_label(_('Connected'))
     builder.get_object('password-value').connect('icon-press', on_secondary_icon_pressed)
