@@ -594,7 +594,9 @@ class CoBangApplication(Gtk.Application):
         if not success:
             logger.error('Failed to get mapinfo.')
             return Gst.FlowReturn.ERROR
-        img = zbar.Image(width, height, 'Y800', mapinfo.data)
+        # In Gstreamer 1.18, Gst.MapInfo.data is memoryview instead of bytes
+        imgdata = mapinfo.data.tobytes() if isinstance(mapinfo.data, memoryview) else mapinfo.data
+        img = zbar.Image(width, height, 'Y800', imgdata)
         n = self.zbar_scanner.scan(img)
         logger.debug('Any QR code?: {}', n)
         if not n:
