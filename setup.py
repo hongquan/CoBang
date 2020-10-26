@@ -1,5 +1,4 @@
-import re
-from pathlib import Path
+#!/usr/bin/env python3
 
 # This setup.py file is only to help build Debian package.
 # It can not be used to install the app, because it cannot install the desktop files
@@ -7,10 +6,10 @@ from pathlib import Path
 # This file can be converted from pyproject.toml, with help of dephell tool,
 # but need to be modified afterward.
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+import re
+from pathlib import Path
+
+from setuptools import setup
 
 long_description = '''A missing native QR Code scanner application for Linux desktop.
 
@@ -18,20 +17,22 @@ It is written in Python, using GTK+ for UI, GStreamer for webcam capture and a p
 for decoding QR code from image.
 '''
 
+SOURCE_DIR = Path(__file__).parent
+
 
 def get_version():
     '''
     Get version string from pyproject.toml, so that we have a single source of data.
     '''
-    filepath = Path('pyproject.toml')
+    filepath = SOURCE_DIR / 'pyproject.toml'
     content = filepath.read_text()
     m = re.search(r'version\s*=\s*"([.\-\w]+)"', content)
     return m.group(1)
 
 
 setup(
-    long_description=long_description,
     name='cobang',
+    long_description=long_description,
     version=get_version(),
     description='QR code scanner for Linux desktop',
     python_requires='==3.*,>=3.7.0',
