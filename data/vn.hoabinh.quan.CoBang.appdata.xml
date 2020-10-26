@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.6.0" date="2020-10-26" urgency="medium">
+      <description>
+        <p>Compatible with GStreamer v1.18.</p>
+      </description>
+    </release>
     <release version="0.5.6" date="2020-06-27" urgency="medium">
       <description>
         <p>Fix handling HTTP file in some unusual case.</p>
