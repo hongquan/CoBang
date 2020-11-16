@@ -1,16 +1,15 @@
 # Italian translations for PROJECT.
 # Copyright (C) 2020 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2020.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2020-11-16 17:54+0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2020-11-16 20:08+0100\n"
+"Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language: it\n"
 "Language-Team: it <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -22,31 +21,31 @@ msgstr ""
 #: cobang/app.py:531
 #, python-format
 msgid "Unsuported file type %s!"
-msgstr ""
+msgstr "Tipo di file non supportato %s!"
 
 #: cobang/ui.py:57
 msgid "Connected"
-msgstr ""
+msgstr "Connesso"
 
 #: cobang/ui.py:86
 msgid "Saved"
-msgstr ""
+msgstr "Salvato"
 
 #: data/main.glade:35
 msgid "Play"
-msgstr ""
+msgstr "Avvia"
 
 #: data/main.glade:51
 msgid "Pause"
-msgstr ""
+msgstr "Pausa"
 
 #: data/main.glade:103
 msgid "CoBang"
-msgstr ""
+msgstr "CoBang"
 
 #: data/main.glade:233
 msgid "Webcam"
-msgstr ""
+msgstr "Webcam"
 
 #: data/main.glade:297
 msgid ""
@@ -58,38 +57,45 @@ msgid ""
 "\n"
 "Remote image (from http://..., sftp://...) is allowed."
 msgstr ""
+"Aggiungi un file immagine con uno di questi metodi:\n"
+"\n"
+"- Trascina e rilascia qui.\n"
+"- Copia da qualche parte e incolla (Ctrl + V) qui.\n"
+"- Scegli con il pulsante sotto (non Flatpak).\n"
+"\n"
+"L'immagine remota (da http:// ..., sftp://...) è consentita.
 
 #: data/main.glade:320
 msgid "Image"
-msgstr ""
+msgstr "Immagine"
 
 #: data/main.glade:369
 msgid "Please choose an image file"
-msgstr ""
+msgstr "Scegli un file immagine"
 
 #: data/main.glade:413
 msgid "Result"
-msgstr ""
+msgstr "Risultato"
 
 #: data/main.glade:445
 msgid "Raw result"
-msgstr ""
+msgstr "Risultato grezzo"
 
 #: data/url-display.glade:16
 msgid "Found an URL. Click to open:"
-msgstr ""
+msgstr "Trovato un URL. Fare clic per aprire:"
 
 #: data/url-display.glade:26
 msgid "button"
-msgstr ""
+msgstr "pulsante"
 
 #: data/wifi-display.glade:16
 msgid "Found a wifi configuration"
-msgstr ""
+msgstr "Trovato una configurazione wifi"
 
 #: data/wifi-display.glade:38
 msgid "SSID"
-msgstr ""
+msgstr "SSID"
 
 #: data/wifi-display.glade:51
 msgid "Generous"
@@ -97,9 +103,9 @@ msgstr ""
 
 #: data/wifi-display.glade:66
 msgid "Password"
-msgstr ""
+msgstr "Password"
 
 #: data/wifi-display.glade:99
 msgid "Save"
-msgstr ""
+msgstr "Salva"
 
