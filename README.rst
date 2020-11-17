@@ -155,6 +155,17 @@ Run from source
 Add ``-v`` option to see more detailed log.
 
 
+Translation
+-----------
+
+.. code-block:: sh
+
+  pybabel extract -F babel.cfg -o po/cobang.pot .
+  pybabel update -l vi -D cobang -i po/cobang.pot -d po
+  pybabel update -l it -D cobang -i po/cobang.pot -d po
+  pybabel compile -D cobang -d po
+
+
 Package for Debian/Ubuntu
 -------------------------
 

@@ -15,11 +15,13 @@ logbook = "^1.5.3"
 Pillow = "^7.1.2"
 requests = "^2.24.0"
 kiss-headers = "^2.2.3"
+BabelGladeExtractor = "^0.7.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 PyGObject-stubs = "^0.0.2"
 black = {version = "^19.10b0", allow-prereleases = true}
+BabelGladeExtractor = "^0.7.0"
 
 [tool.poetry.scripts]
 cobang = 'cobang.__main__:main'

@@ -13,12 +13,20 @@
 # limitations under the License.
 
 import sys
+import locale
+import gettext
 
+from .consts import SHORT_NAME
 from .app import CoBangApplication
+from .resources import get_locale_folder
 from .logging import GLibLogHandler
 
 
 def main():
+    locale.bindtextdomain(SHORT_NAME, get_locale_folder())
+    gettext.bindtextdomain(SHORT_NAME, get_locale_folder())
+    locale.textdomain(SHORT_NAME)
+    gettext.textdomain(SHORT_NAME)
     with GLibLogHandler().applicationbound():
         app = CoBangApplication()
         return app.run(sys.argv)
