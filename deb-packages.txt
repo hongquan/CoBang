@@ -5,3 +5,5 @@ gstreamer1.0-plugins-good
 gstreamer1.0-gtk3
 gir1.2-nm-1.0
 python3-pil
+python3-cairo-dev
+python3-babel

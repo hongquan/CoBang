@@ -51,7 +51,11 @@ def get_ui_folder() -> Path:
 
 def get_locale_folder() -> Path:
     prefix = get_location_prefix()
-    return prefix / 'locale'
+    str_prefix = str(prefix)
+    if str_prefix.startswith(('/usr', '/app', str(DOT_LOCAL))):
+        return prefix / 'share' / 'locale'
+    # Run from source
+    return prefix / 'po'
 
 
 def get_ui_filepath(filename: str) -> Path:
