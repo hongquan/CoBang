@@ -1,3 +1,9 @@
+cobang (0.6.0-1) groovy; urgency=medium
+
+  * Compatible with GStreamer v1.18.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Mon, 26 Oct 2020 20:39:05 +0700
+
 cobang (0.5.6-1) focal; urgency=medium
 
   * Fix handling HTTP file in some unusual case.
