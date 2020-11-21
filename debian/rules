@@ -4,4 +4,9 @@ export PYBUILD_NAME=cobang
 %:
 	dh $@ --with python3 --buildsystem=pybuild
 
+override_dh_clean:
+	dh_clean
+	rm -rf .pytest_cache
+	rm -rf *.egg-info
+
 

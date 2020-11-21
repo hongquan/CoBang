@@ -3,3 +3,5 @@ data/wireframe-image-add.svg	usr/share/cobang/
 data/*.png	usr/share/cobang/
 data/vn.hoabinh.quan.CoBang.svg	usr/share/icons/hicolor/scalable/apps/
 data/*.desktop	usr/share/applications/
+po/vi/LC_MESSAGES/*.mo	usr/share/locale/vi/LC_MESSAGES/
+po/it/LC_MESSAGES/*.mo	usr/share/locale/it/LC_MESSAGES/

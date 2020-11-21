@@ -1,4 +1,5 @@
 tar-ignore = ".git"
 tar-ignore = ".gitignore"
 tar-ignore = ".vscode"
-extend-diff-ignore  = "setup.py"
+tar-ignore = "*.mo"
+extend-diff-ignore  = "(setup.py|setup.cfg|MANIFEST.in|.mo)"
