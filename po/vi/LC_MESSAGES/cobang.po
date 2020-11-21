@@ -1,25 +1,32 @@
-# Vietnamese translations for PROJECT.
+# Vietnamese translations for CoBang.
 # Copyright (C) 2020 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
+# This file is distributed under the same license as the CoBang project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
 # Nguyễn Hồng Quân <ng.hong.quan@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: CoBang 0.6\n"
 "Report-Msgid-Bugs-To: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
-"POT-Creation-Date: 2020-11-17 17:19+0700\n"
+"POT-Creation-Date: 2020-11-21 13:34+0700\n"
 "PO-Revision-Date: 2020-11-17 17:31+0700\n"
 "Last-Translator: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
-"Language-Team: AgriConnect\n"
 "Language: vi\n"
+"Language-Team: AgriConnect\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Virtaal 1.0.0-beta1\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: cobang/app.py:531
+#: cobang/app.py:118
+msgid "quit"
+msgstr "thoát"
+
+#: cobang/app.py:121
+msgid "about"
+msgstr "giới thiệu"
+
+#: cobang/app.py:532
 #, python-format
 msgid "Unsuported file type %s!"
 msgstr "Loại tập tin %s không được hỗ trợ!"
@@ -104,8 +111,9 @@ msgstr "Phóng khoáng"
 
 #: data/wifi-display.glade:66
 msgid "Password"
-msgstr ""
+msgstr "Mật khẩu"
 
 #: data/wifi-display.glade:99
 msgid "Save"
 msgstr "Lưu"
+
