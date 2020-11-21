@@ -64,7 +64,7 @@ msgstr ""
 "- Chép và dán (Ctrl+V) từ ứng dụng khác vào đây.\n"
 "- Chọn qua nút dưới đây (không áp dụng với Flatpak).\n"
 "\n"
-"Có thể dùng hình ảnh ở xa (qua giao thức http://..., sftp://...)."
+"Có thể dùng hình ảnh trên mạng (qua giao thức http://..., sftp://...)."
 
 #: data/main.glade:320
 msgid "Image"
