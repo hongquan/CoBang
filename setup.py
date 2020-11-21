@@ -10,6 +10,7 @@ import re
 from pathlib import Path
 
 from setuptools import setup
+from setuptools.command.build_py import build_py as _build_py
 
 long_description = '''A missing native QR Code scanner application for Linux desktop.
 
@@ -30,6 +31,14 @@ def get_version():
     return m.group(1)
 
 
+# Ref: https://stackoverflow.com/q/40051076/502780
+# Ref: https://jichu4n.com/posts/how-to-add-custom-build-steps-and-commands-to-setuppy/
+class BuildWithMo(_build_py):
+    def run(self):
+        self.run_command('compile_catalog')
+        super().run()
+
+
 setup(
     name='cobang',
     long_description=long_description,
@@ -43,13 +52,18 @@ setup(
     entry_points={"console_scripts": ["cobang = cobang.__main__:main"]},
     packages=['cobang'],
     package_dir={"": "."},
+    include_package_data=True,
     install_requires=[
         'logbook==1.*,>=1.5.3', 'single-version==1.*,>=1.1.0',
     ],
+    setup_requires=['babel'],
     extras_require={
         "dev": [
             "black==19.*,>=19.10.0.b0", "pygobject-stubs==0.*,>=0.0.2",
             "pytest==5.*,>=5.2.0"
         ]
+    },
+    cmdclass={
+        'build_py': BuildWithMo,
     },
 )
