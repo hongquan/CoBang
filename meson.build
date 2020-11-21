@@ -45,6 +45,5 @@ conf.set('pkgdatadir', pkgdatadir)
 meson.add_install_script('meson-py-install.sh', get_option('prefix'))
 subdir('data')
 subdir('exe')
-subdir('po')
 
 meson.add_install_script('flatpak/meson/postinstall.py')

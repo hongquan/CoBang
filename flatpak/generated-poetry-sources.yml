@@ -3,7 +3,7 @@ buildsystem: simple
 build-commands:
   - pip3 install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
     certifi chardet first idna importlib-metadata kiss-headers logbook pillow requests
-    single-version urllib3 zipp
+    single-version urllib3 zipp pytz Babel
 sources:
   - type: file
     url: https://files.pythonhosted.org/packages/5e/c4/6c4fe722df5343c33226f0b4e0bb042e4dc13483228b4718baf286f86d87/certifi-2020.6.20-py2.py3-none-any.whl
@@ -41,3 +41,9 @@ sources:
   - type: file
     url: https://files.pythonhosted.org/packages/b2/34/bfcb43cc0ba81f527bc4f40ef41ba2ff4080e047acb0586b56b3d017ace4/zipp-3.1.0-py3-none-any.whl
     sha256: aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b
+  - type: file
+    url: https://files.pythonhosted.org/packages/12/f8/ff09af6ff61a3efaad5f61ba5facdf17e7722c4393f7d8a66674d2dbd29f/pytz-2020.4-py2.py3-none-any.whl
+    sha256: 5c55e189b682d420be27c6995ba6edce0c0a77dd67bfbe2ae6607134d5851ffd
+  - type: file
+    url: https://files.pythonhosted.org/packages/dd/a5/81076e10b5ef74493cf08a8e419e61b64324c9c55db4aa7f89c0240c4873/Babel-2.9.0-py2.py3-none-any.whl
+    sha256: 9d35c22fcc79893c3ecc85ac4a56cde1ecf3f19c540bba0922308a6c06ca6fa5
