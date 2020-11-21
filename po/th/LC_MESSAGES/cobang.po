@@ -1,17 +1,17 @@
-# Vietnamese translations for CoBang.
+# Thai translations for PROJECT.
 # Copyright (C) 2020 ORGANIZATION
-# This file is distributed under the same license as the CoBang project.
+# This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
-# Nguyễn Hồng Quân <ng.hong.quan@gmail.com>, 2020.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: CoBang 0.6\n"
-"Report-Msgid-Bugs-To: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2020-11-21 13:34+0700\n"
-"PO-Revision-Date: 2020-11-17 17:31+0700\n"
-"Last-Translator: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
-"Language: vi\n"
-"Language-Team: AgriConnect\n"
+"PO-Revision-Date: 2020-11-21 13:43+0700\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: th\n"
+"Language-Team: th <LL@li.org>\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -20,32 +20,32 @@ msgstr ""
 
 #: cobang/app.py:118
 msgid "quit"
-msgstr "thoát"
+msgstr ""
 
 #: cobang/app.py:121
 msgid "about"
-msgstr "giới thiệu"
+msgstr ""
 
 #: cobang/app.py:532
 #, python-format
 msgid "Unsuported file type %s!"
-msgstr "Loại tập tin %s không được hỗ trợ!"
+msgstr ""
 
 #: cobang/ui.py:57
 msgid "Connected"
-msgstr "Đã kết nối"
+msgstr ""
 
 #: cobang/ui.py:86
 msgid "Saved"
-msgstr "Đã lưu"
+msgstr ""
 
 #: data/main.glade:35
 msgid "Play"
-msgstr "Phát"
+msgstr ""
 
 #: data/main.glade:51
 msgid "Pause"
-msgstr "Chựng"
+msgstr ""
 
 #: data/main.glade:103
 msgid "CoBang"
@@ -65,41 +65,34 @@ msgid ""
 "\n"
 "Remote image (from http://..., sftp://...) is allowed."
 msgstr ""
-"Vui lòng đưa một tập tin hình ảnh bằng một trong các cách sau:\n"
-"\n"
-"- Kéo thả vào đây.\n"
-"- Chép và dán (Ctrl+V) từ ứng dụng khác vào đây.\n"
-"- Chọn qua nút dưới đây (không áp dụng với Flatpak).\n"
-"\n"
-"Có thể dùng hình ảnh trên mạng (qua giao thức http://..., sftp://...)."
 
 #: data/main.glade:320
 msgid "Image"
-msgstr "Hình ảnh"
+msgstr ""
 
 #: data/main.glade:369
 msgid "Please choose an image file"
-msgstr "Vui lòng chọn một tập tin hình ảnh"
+msgstr ""
 
 #: data/main.glade:413
 msgid "Result"
-msgstr "Kết quả"
+msgstr ""
 
 #: data/main.glade:445
 msgid "Raw result"
-msgstr "Kết quả thô"
+msgstr ""
 
 #: data/url-display.glade:16
 msgid "Found an URL. Click to open:"
-msgstr "Bắt gặp một URL. Bấm vào để mở:"
+msgstr ""
 
 #: data/url-display.glade:26
 msgid "button"
-msgstr "nút"
+msgstr ""
 
 #: data/wifi-display.glade:16
 msgid "Found a wifi configuration"
-msgstr "Bắt gặp một cấu hình wifi"
+msgstr ""
 
 #: data/wifi-display.glade:38
 msgid "SSID"
@@ -107,13 +100,13 @@ msgstr ""
 
 #: data/wifi-display.glade:51
 msgid "Generous"
-msgstr "Phóng khoáng"
+msgstr ""
 
 #: data/wifi-display.glade:66
 msgid "Password"
-msgstr "Mật khẩu"
+msgstr ""
 
 #: data/wifi-display.glade:99
 msgid "Save"
-msgstr "Lưu"
+msgstr ""
 

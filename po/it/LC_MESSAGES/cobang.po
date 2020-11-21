@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-17 17:19+0700\n"
+"POT-Creation-Date: 2020-11-21 13:34+0700\n"
 "PO-Revision-Date: 2020-11-16 20:08+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language: it\n"
@@ -18,7 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: cobang/app.py:531
+#: cobang/app.py:118
+msgid "quit"
+msgstr ""
+
+#: cobang/app.py:121
+msgid "about"
+msgstr ""
+
+#: cobang/app.py:532
 #, python-format
 msgid "Unsuported file type %s!"
 msgstr "Tipo di file non supportato %s!"
@@ -108,3 +116,4 @@ msgstr "Password"
 #: data/wifi-display.glade:99
 msgid "Save"
 msgstr "Salva"
+
