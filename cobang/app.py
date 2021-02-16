@@ -43,7 +43,6 @@ from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Rsvg, Gst, Gs
 from .consts import APP_ID, SHORT_NAME
 from . import __version__
 from . import ui
-from .common import _
 from .resources import get_ui_filepath, guess_content_type, cache_http_file
 from .prep import get_device_path, choose_first_image, export_svg, scale_pixbuf
 from .messages import WifiInfoMessage, parse_wifi_message
@@ -591,7 +590,9 @@ class CoBangApplication(Gtk.Application):
         struct: Gst.Structure = caps[0]
         width = struct['width']
         height = struct['height']
-        success, mapinfo = buffer.map(Gst.MapFlags.READ)   # type: bool, Gst.MapInfo
+        success: bool
+        mapinfo: Gst.MapInfo
+        success, mapinfo = buffer.map(Gst.MapFlags.READ)
         if not success:
             logger.error('Failed to get mapinfo.')
             return Gst.FlowReturn.ERROR
@@ -641,7 +642,9 @@ class CoBangApplication(Gtk.Application):
 
     def get_preview_size(self) -> Tuple[int, int]:
         widget = self.stack_img_source.get_visible_child()
-        size, b = widget.get_allocated_size()  # type: Gdk.Rectangle, int
+        size: Gdk.Rectangle
+        b: int
+        size, b = widget.get_allocated_size()
         return (size.width, size.height)
 
     def show_about_dialog(self, action: Gio.SimpleAction, param: Optional[GLib.Variant] = None):
