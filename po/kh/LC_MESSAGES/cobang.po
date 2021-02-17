@@ -1,0 +1,112 @@
+# kh translations for PROJECT.
+# Copyright (C) 2021 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-02-17 09:30+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: kh\n"
+"Language-Team: kh <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.0\n"
+
+#: cobang/app.py:117
+msgid "quit"
+msgstr ""
+
+#: cobang/app.py:120
+msgid "about"
+msgstr ""
+
+#: cobang/app.py:531
+#, python-format
+msgid "Unsuported file type %s!"
+msgstr ""
+
+#: cobang/ui.py:57
+msgid "Connected"
+msgstr ""
+
+#: cobang/ui.py:86
+msgid "Saved"
+msgstr ""
+
+#: data/main.glade:35
+msgid "Play"
+msgstr ""
+
+#: data/main.glade:51
+msgid "Pause"
+msgstr ""
+
+#: data/main.glade:103
+msgid "CoBang"
+msgstr ""
+
+#: data/main.glade:233
+msgid "Webcam"
+msgstr ""
+
+#: data/main.glade:297
+msgid ""
+"Please add an image file by one of these methods:\n"
+"\n"
+"- Drag and drop here.\n"
+"- Copy from somewhere and paste (Ctrl+V) here.\n"
+"- Choose with button below (non Flatpak).\n"
+"\n"
+"Remote image (from http://..., sftp://...) is allowed."
+msgstr ""
+
+#: data/main.glade:320
+msgid "Image"
+msgstr ""
+
+#: data/main.glade:369
+msgid "Please choose an image file"
+msgstr ""
+
+#: data/main.glade:413
+msgid "Result"
+msgstr ""
+
+#: data/main.glade:445
+msgid "Raw result"
+msgstr ""
+
+#: data/url-display.glade:16
+msgid "Found an URL. Click to open:"
+msgstr ""
+
+#: data/url-display.glade:26
+msgid "button"
+msgstr ""
+
+#: data/wifi-display.glade:16
+msgid "Found a wifi configuration"
+msgstr ""
+
+#: data/wifi-display.glade:38
+msgid "SSID"
+msgstr ""
+
+#: data/wifi-display.glade:51
+msgid "Generous"
+msgstr ""
+
+#: data/wifi-display.glade:66
+msgid "Password"
+msgstr ""
+
+#: data/wifi-display.glade:99
+msgid "Save"
+msgstr ""
+
