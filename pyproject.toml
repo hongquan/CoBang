@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cobang"
-version = "0.6.0"
+version = "0.6.2"
 description = "QR code scanner for Linux desktop"
 authors = ["Nguyễn Hồng Quân <ng.hong.quan@gmail.com>"]
 license = "GPL-3.0-or-later"
