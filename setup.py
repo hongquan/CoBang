@@ -3,6 +3,8 @@
 # This setup.py file is only to help build Debian package.
 # It can not be used to install the app, because it cannot install the desktop files
 # to correct place. That task is handled by debian/install file.
+# Also, due to the issue https://github.com/pypa/setuptools/issues/1916,
+# the _requires files were deleted to let dh-python run successfully.
 # This file can be converted from pyproject.toml, with help of dephell tool,
 # but need to be modified afterward.
 
@@ -53,16 +55,6 @@ setup(
     packages=['cobang'],
     package_dir={"": "."},
     include_package_data=True,
-    install_requires=[
-        'logbook==1.*,>=1.5.3', 'single-version==1.*,>=1.1.0',
-    ],
-    setup_requires=['babel'],
-    extras_require={
-        "dev": [
-            "black==19.*,>=19.10.0.b0", "pygobject-stubs==0.*,>=0.0.2",
-            "pytest==5.*,>=5.2.0"
-        ]
-    },
     cmdclass={
         'build_py': BuildWithMo,
     },
