@@ -71,16 +71,22 @@ CoBang is packaged as *\*.deb* file for Ubuntu and derivatives (Linux Mint etc.)
     sudo apt install cobang
 
 
+ArchLinux
+---------
+
+CoBang is available via AUR_.
+
+
 Other distros
 -------------
 
-Users of other distros (Fedora, ArchLinux etc.) can install CoBang from `FlatHub`_.
+Users of other distros (Fedora, etc.) can install CoBang from `FlatHub`_.
 
 .. code-block:: sh
 
     flatpak install flathub vn.hoabinh.quan.CoBang
 
-The release on FlatHub may come later than the one on Ubuntu PPA, due to difficulty building as Flatpak.
+The release on FlatHub is lagging behind PPA and AUR because I'm having difficulty include translation files to Faltpak (help needed).
 
 
 Compatibility
@@ -230,6 +236,7 @@ Credit
 .. _QtQR: https://launchpad.net/qr-tools
 .. _PyPI: https://pypi.org/
 .. _PPA: https://launchpad.net/~ng-hong-quan/+archive/ubuntu/ppa
+.. _AUR: https://aur.archlinux.org/packages/cobang/
 .. _KDE: https://kde.org/
 .. _Xfce: https://www.xfce.org/
 .. _LxQt: https://lxqt.github.io/
