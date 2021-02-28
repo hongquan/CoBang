@@ -177,12 +177,12 @@ Package for Debian/Ubuntu
 
 This repo is organized in two branches:
 
-- ``master``: Main place for development. Latest code is here.
-- ``packaging/ubuntu``: This branch is based on ``master``, but added *debian* folder, used for building *\*.deb* file.
+- ``main``: Main place for development. Latest code is here.
+- ``packaging/ubuntu``: This branch is based on ``main``, but added *debian* folder, used for building *\*.deb* file.
 
 Follow this step to package:
 
-- Checkout to ``master`` branch, and export source code:
+- Checkout to ``main`` branch, and export source code:
 
   .. code-block:: sh
 
