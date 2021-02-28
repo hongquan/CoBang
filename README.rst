@@ -86,7 +86,7 @@ Users of other distros (Fedora, etc.) can install CoBang from `FlatHub`_.
 
     flatpak install flathub vn.hoabinh.quan.CoBang
 
-The release on FlatHub is lagging behind PPA and AUR because I'm having difficulty include translation files to Faltpak (help needed).
+The release on FlatHub is lagging behind PPA and AUR because I'm having difficulty including translation files to Faltpak (help needed).
 
 
 Compatibility
