@@ -15,7 +15,6 @@ logbook = "^1.5.3"
 Pillow = "^7.1.2"
 requests = "^2.24.0"
 kiss-headers = "^2.2.3"
-BabelGladeExtractor = "^0.7.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
