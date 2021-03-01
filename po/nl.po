@@ -1,0 +1,117 @@
+# Dutch translations for PROJECT.
+# Copyright (C) 2021 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-02-17 09:30+0700\n"
+"PO-Revision-Date: 2021-02-16 19:17+0100\n"
+"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
+"Language: nl\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.0\n"
+
+#: cobang/app.py:117
+msgid "quit"
+msgstr "Afsluiten"
+
+#: cobang/app.py:120
+msgid "about"
+msgstr "Over"
+
+#: cobang/app.py:531
+#, python-format
+msgid "Unsuported file type %s!"
+msgstr "Niet-ondersteund bestandstype: %s"
+
+#: cobang/ui.py:57
+msgid "Connected"
+msgstr "Verbonden"
+
+#: cobang/ui.py:86
+msgid "Saved"
+msgstr "Opgeslagen"
+
+#: data/main.glade:35
+msgid "Play"
+msgstr "Afspelen"
+
+#: data/main.glade:51
+msgid "Pause"
+msgstr "Pauzeren"
+
+#: data/main.glade:103
+msgid "CoBang"
+msgstr "CoBang"
+
+#: data/main.glade:233
+msgid "Webcam"
+msgstr "Webcam"
+
+#: data/main.glade:297
+msgid ""
+"Please add an image file by one of these methods:\n"
+"\n"
+"- Drag and drop here.\n"
+"- Copy from somewhere and paste (Ctrl+V) here.\n"
+"- Choose with button below (non Flatpak).\n"
+"\n"
+"Remote image (from http://..., sftp://...) is allowed."
+msgstr ""
+"Voeg een afbeelding toe op één van de volgende manieren:\n"
+"-Sleep een bestand hierheen\n"
+"-Kopieer een bestand en plak het hier (met Ctrl+V).\n"
+"-Kies via onderstaande knop (werkt niet in Flatpak-uitgaven).\n"
+"Externe afbeeldingen (http://..., sftp://...) zijn toegestaan."
+
+#: data/main.glade:320
+msgid "Image"
+msgstr "Afbeelding"
+
+#: data/main.glade:369
+msgid "Please choose an image file"
+msgstr "Kies een afbeeldingsbestand"
+
+#: data/main.glade:413
+msgid "Result"
+msgstr "Resultaat"
+
+#: data/main.glade:445
+msgid "Raw result"
+msgstr "Resultaat (platte tekst)"
+
+#: data/url-display.glade:16
+msgid "Found an URL. Click to open:"
+msgstr "Er is er een url aangetroffen - klik om te openen:"
+
+#: data/url-display.glade:26
+msgid "button"
+msgstr "Knop"
+
+#: data/wifi-display.glade:16
+msgid "Found a wifi configuration"
+msgstr "Wifi-instellingen aangetroffen"
+
+#: data/wifi-display.glade:38
+msgid "SSID"
+msgstr "SSID"
+
+#: data/wifi-display.glade:51
+msgid "Generous"
+msgstr "Genereus"
+
+#: data/wifi-display.glade:66
+msgid "Password"
+msgstr "Wachtwoord"
+
+#: data/wifi-display.glade:99
+msgid "Save"
+msgstr "Opslaan"
+
