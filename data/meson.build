@@ -6,7 +6,7 @@ install_data(['main.glade', 'about.glade', 'url-display.glade', 'wifi-display.gl
 )
 
 
-desktop_file = 'vn.hoabinh.quan.CoBang.desktop'
+desktop_file = files('vn.hoabinh.quan.CoBang.desktop')
 
 desktop_utils = find_program('desktop-file-validate', required: false)
 if desktop_utils.found()

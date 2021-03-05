@@ -1,4 +1,0 @@
-graft cobang
-graft data
-graft po
-global-exclude *.py[cod] __pycache__ *.so *.mo

@@ -1,5 +1,5 @@
 project('cobang',
-        version: '0.6.0',
+        version: '0.6.3',
         meson_version: '>= 0.50.0',
         default_options: [
           'warning_level=2',
@@ -37,12 +37,10 @@ conf.set('VERSION', meson.project_version())
 conf.set('localedir', get_option('prefix') / get_option('localedir'))
 conf.set('pkgdatadir', pkgdatadir)
 
-
-# To install the subdir "cobang", we don't use Meson's subdir function,
-# because Meson doesn't generate Python package metadata.
-# Issue: https://github.com/mesonbuild/meson/issues/7251
-
-meson.add_install_script('meson-py-install.sh', get_option('prefix'))
+install_subdir(
+  meson.project_name(),
+  install_dir: python.get_install_dir()
+)
 subdir('data')
 subdir('exe')
 subdir('po')

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Legacy: No longer used.
+
 # Wrapper script, to pass DESTDIR to Python setup.py script
 
 # This script could be ran from different folder (like in flatpak-builder case),
