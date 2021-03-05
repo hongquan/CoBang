@@ -1,6 +1,6 @@
 app-id: vn.hoabinh.quan.CoBang
 runtime: org.gnome.Platform
-runtime-version: '3.36'
+runtime-version: '3.38'
 sdk: org.gnome.Sdk
 command: cobang
 finish-args:
@@ -49,15 +49,23 @@ modules:
 
   - flatpak/generated-poetry-sources.yml
 
+  - name: gstreamer
+    buildsystem: meson
+    builddir: true
+    sources:
+      - type: git
+        tag: 1.18.3
+        url: https://github.com/freedesktop/gstreamer.git
+
   - name: gst-python
     buildsystem: meson
     builddir: true
     config-opts:
-      - -Dpygi-overrides-dir=/app/lib/python3.7/site-packages/gi/overrides/
+      - -Dpygi-overrides-dir=/app/lib/python3.8/site-packages/gi/overrides/
       - --libdir=lib
     sources:
       - type: git
-        tag: 1.16.2
+        tag: 1.18.3
         url: https://github.com/freedesktop/gstreamer-gst-python.git
 
   - name: intltool
@@ -172,7 +180,7 @@ modules:
     sources:
       - type: git
         url: https://gitlab.freedesktop.org/NetworkManager/NetworkManager.git
-        tag: 1.24.2
+        tag: 1.26.2
 
   - name: cobang
     builddir: true
