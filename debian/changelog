@@ -2,7 +2,7 @@ cobang (0.6.3-1) groovy; urgency=medium
 
   * Try building with Meson even for Ubuntu.
 
- -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 06 Mar 2021 00:08:09 +0700
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 06 Mar 2021 02:31:31 +0700
 
 cobang (0.6.2-1) groovy; urgency=medium
 
