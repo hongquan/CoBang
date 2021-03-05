@@ -40,12 +40,16 @@
   </kudos>
 
   <releases>
+    <release version="0.6.4" date="2021-03-06" urgency="medium">
+      <description>
+        <p>Fix appdata file.</p>
+      </description>
+    </release>
     <release version="0.6.3" date="2021-03-06" urgency="medium">
       <description>
         <p>Support more languages.</p>
       </description>
     </release>
-  <releases>
     <release version="0.6.0" date="2020-10-26" urgency="medium">
       <description>
         <p>Compatible with GStreamer v1.18.</p>
