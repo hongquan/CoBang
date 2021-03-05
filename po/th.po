@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-21 13:34+0700\n"
+"POT-Creation-Date: 2021-03-05 12:12+0700\n"
 "PO-Revision-Date: 2020-11-21 13:43+0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: th\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: cobang/app.py:118
+#: cobang/app.py:117
 msgid "quit"
 msgstr ""
 
-#: cobang/app.py:121
+#: cobang/app.py:120
 msgid "about"
 msgstr ""
 
-#: cobang/app.py:532
+#: cobang/app.py:531
 #, python-format
 msgid "Unsuported file type %s!"
 msgstr ""

@@ -86,7 +86,7 @@ Users of other distros (Fedora, etc.) can install CoBang from `FlatHub`_.
 
     flatpak install flathub vn.hoabinh.quan.CoBang
 
-The release on FlatHub is lagging behind PPA and AUR because I'm having difficulty include translation files to Faltpak (help needed).
+The release on FlatHub is lagging behind PPA and AUR because I'm having difficulty including translation files to Faltpak (help needed).
 
 
 Compatibility
@@ -167,9 +167,8 @@ Translation
 .. code-block:: sh
 
   pybabel extract -F babel.cfg -o po/cobang.pot .
-  pybabel update -l vi -D cobang -i po/cobang.pot -d po
-  pybabel update -l it -D cobang -i po/cobang.pot -d po
-  pybabel compile -D cobang -d po
+  ./devtool.py update-translation
+  ./devtool.py compile-translation
 
 
 Package for Debian/Ubuntu
@@ -177,12 +176,12 @@ Package for Debian/Ubuntu
 
 This repo is organized in two branches:
 
-- ``master``: Main place for development. Latest code is here.
-- ``packaging/ubuntu``: This branch is based on ``master``, but added *debian* folder, used for building *\*.deb* file.
+- ``main``: Main place for development. Latest code is here.
+- ``packaging/ubuntu``: This branch is based on ``main``, but added *debian* folder, used for building *\*.deb* file.
 
 Follow this step to package:
 
-- Checkout to ``master`` branch, and export source code:
+- Checkout to ``main`` branch, and export source code:
 
   .. code-block:: sh
 
