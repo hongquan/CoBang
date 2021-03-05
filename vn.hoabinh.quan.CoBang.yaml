@@ -179,7 +179,7 @@ modules:
       - -Dwifi=true
     sources:
       - type: git
-        url: https://gitlab.freedesktop.org/NetworkManager/NetworkManager.git
+        url: https://github.com/NetworkManager/NetworkManager.git
         tag: 1.26.2
 
   - name: cobang
