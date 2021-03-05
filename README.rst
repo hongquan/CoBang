@@ -167,9 +167,8 @@ Translation
 .. code-block:: sh
 
   pybabel extract -F babel.cfg -o po/cobang.pot .
-  pybabel update -l vi -D cobang -i po/cobang.pot -d po
-  pybabel update -l it -D cobang -i po/cobang.pot -d po
-  pybabel compile -D cobang -d po
+  ./devtool.py update-translation
+  ./devtool.py compile-translation
 
 
 Package for Debian/Ubuntu
