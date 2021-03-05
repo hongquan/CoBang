@@ -1,3 +1,9 @@
+cobang (0.6.4-1) groovy; urgency=medium
+
+  * Fix appdata file.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 06 Mar 2021 03:12:11 +0700
+
 cobang (0.6.3-1) groovy; urgency=medium
 
   * Try building with Meson even for Ubuntu.
