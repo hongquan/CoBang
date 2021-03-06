@@ -6,17 +6,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-03-05 12:12+0700\n"
-"PO-Revision-Date: 2021-02-16 19:17+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-06 13:15+0100\n"
+"PO-Revision-Date: 2021-03-06 13:15+0100\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
-"Language: nl\n"
 "Language-Team: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.9.0\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: cobang/app.py:117
 msgid "quit"
@@ -26,10 +27,14 @@ msgstr "Afsluiten"
 msgid "about"
 msgstr "Over"
 
-#: cobang/app.py:531
+#: cobang/app.py:533
 #, python-format
 msgid "Unsuported file type %s!"
 msgstr "Niet-ondersteund bestandstype: %s"
+
+#: cobang/app.py:628
+msgid "Copied"
+msgstr "Gekopieerd"
 
 #: cobang/ui.py:57
 msgid "Connected"
@@ -39,23 +44,23 @@ msgstr "Verbonden"
 msgid "Saved"
 msgstr "Opgeslagen"
 
-#: data/main.glade:35
+#: data/main.glade:55
 msgid "Play"
 msgstr "Afspelen"
 
-#: data/main.glade:51
+#: data/main.glade:71
 msgid "Pause"
 msgstr "Pauzeren"
 
-#: data/main.glade:103
+#: data/main.glade:131
 msgid "CoBang"
 msgstr "CoBang"
 
-#: data/main.glade:233
+#: data/main.glade:261
 msgid "Webcam"
 msgstr "Webcam"
 
-#: data/main.glade:297
+#: data/main.glade:319
 msgid ""
 "Please add an image file by one of these methods:\n"
 "\n"
@@ -71,19 +76,19 @@ msgstr ""
 "-Kies via onderstaande knop (werkt niet in Flatpak-uitgaven).\n"
 "Externe afbeeldingen (http://..., sftp://...) zijn toegestaan."
 
-#: data/main.glade:320
+#: data/main.glade:348
 msgid "Image"
 msgstr "Afbeelding"
 
-#: data/main.glade:369
+#: data/main.glade:397
 msgid "Please choose an image file"
 msgstr "Kies een afbeeldingsbestand"
 
-#: data/main.glade:413
+#: data/main.glade:441
 msgid "Result"
 msgstr "Resultaat"
 
-#: data/main.glade:445
+#: data/main.glade:482
 msgid "Raw result"
 msgstr "Resultaat (platte tekst)"
 
@@ -114,4 +119,3 @@ msgstr "Wachtwoord"
 #: data/wifi-display.glade:99
 msgid "Save"
 msgstr "Opslaan"
-

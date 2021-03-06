@@ -1,8 +1,9 @@
 import io
 from fractions import Fraction
-from typing import Sequence, Optional
+from typing import Sequence, Optional, Tuple
 
 import gi
+from logbook import Logger
 
 gi.require_version('Gio', '2.0')
 gi.require_version('GdkPixbuf', '2.0')
@@ -11,6 +12,9 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gio, GdkPixbuf, Rsvg, Gst
 
 from .resources import is_local_real_image, maybe_remote_image
+
+
+logger = Logger(__name__)
 
 
 def choose_first_image(uris: Sequence[str]) -> Optional[Gio.File]:
@@ -26,15 +30,18 @@ def choose_first_image(uris: Sequence[str]) -> Optional[Gio.File]:
             return gfile
 
 
-def get_device_path(device: Gst.Device):
+def get_device_path(device: Gst.Device) -> Tuple[str, str]:
     type_name = device.__class__.__name__
     # GstPipeWireDevice doesn't have dedicated GIR binding yet,
     # so we have to access its "device.path" in general GStreamer way
     if type_name == 'GstPipeWireDevice':
         properties = device.get_properties()
-        return properties['device.path']
+        path = properties['device.path']
+        if not path:
+            path = properties['api.v4l2.path']
+        return path, 'pipewiresrc'
     # Assume GstV4l2Device
-    return device.get_property('device_path')
+    return device.get_property('device_path'), 'v4l2src'
 
 
 def scale_pixbuf(pixbuf: GdkPixbuf.Pixbuf, outer_width: int, outer_height):
