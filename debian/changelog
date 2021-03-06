@@ -1,3 +1,9 @@
+cobang (0.7.0-1) groovy; urgency=medium
+
+  * Add button to copy raw result.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 06 Mar 2021 13:22:18 +0700
+
 cobang (0.6.4-1) groovy; urgency=medium
 
   * Fix appdata file.
