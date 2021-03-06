@@ -187,6 +187,7 @@ class CoBangApplication(Gtk.Application):
         self.infobar = builder.get_object('info-bar')
         box_playpause = builder.get_object('evbox-playpause')
         self.cont_webcam.add_overlay(box_playpause)
+        builder.get_object('cont-raw-text').add_overlay(builder.get_object('evbox-copy'))
         logger.debug('Connect signal handlers')
         builder.connect_signals(handlers)
         self.frame_image.connect('drag-data-received', self.on_frame_image_drag_data_received)
@@ -203,6 +204,7 @@ class CoBangApplication(Gtk.Application):
             'on_evbox_playpause_enter_notify_event': self.on_evbox_playpause_enter_notify_event,
             'on_evbox_playpause_leave_notify_event': self.on_evbox_playpause_leave_notify_event,
             'on_info_bar_response': self.on_info_bar_response,
+            'on_btn_copy_clicked': self.on_btn_copy_clicked,
         }
 
     def discover_webcam(self):
@@ -617,6 +619,15 @@ class CoBangApplication(Gtk.Application):
         child: Gtk.Widget = box.get_child()
         child.set_opacity(0.2)
 
+    def on_btn_copy_clicked(self, button: Gtk.Button):
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        begin = self.raw_result_buffer.get_start_iter()
+        end = self.raw_result_buffer.get_end_iter()
+        self.raw_result_buffer.select_range(begin, end)
+        self.raw_result_buffer.copy_clipboard(clipboard)
+        button.set_tooltip_text(_('Copied'))
+        GLib.timeout_add_seconds(3, remove_tooltip, button)
+
     def on_info_bar_response(self, infobar: Gtk.InfoBar, response_id: int):
         infobar.set_visible(False)
 
@@ -671,3 +682,8 @@ class CoBangApplication(Gtk.Application):
         if self.gst_pipeline:
             self.gst_pipeline.set_state(Gst.State.NULL)
         super().quit()
+
+
+def remove_tooltip(button: Gtk.Button):
+    button.set_has_tooltip(False)
+    return False
