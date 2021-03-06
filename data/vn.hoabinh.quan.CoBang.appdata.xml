@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.8.0" date="2021-03-07" urgency="medium">
+      <description>
+        <p>Let play webcam from PipeWire.</p>
+      </description>
+    </release>
     <release version="0.7.0" date="2021-03-06" urgency="medium">
       <description>
         <p>Add button to copy raw result.</p>

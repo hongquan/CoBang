@@ -121,10 +121,10 @@ class CoBangApplication(Gtk.Application):
         action_about.connect('activate', self.show_about_dialog)
         self.add_action(action_about)
 
-    def build_gstreamer_pipeline(self):
+    def build_gstreamer_pipeline(self, src_type: str = 'v4l2src'):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
         # Try GL backend first
-        command = (f'v4l2src name={self.GST_SOURCE_NAME} ! tee name=t ! '
+        command = (f'{src_type} name={self.GST_SOURCE_NAME} ! tee name=t ! '
                    f'queue ! glsinkbin sink="gtkglsink name={self.SINK_NAME}" name=sink_bin '
                    't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
                    f'appsink name={self.APPSINK_NAME} max_buffers=2 drop=1')
@@ -137,7 +137,7 @@ class CoBangApplication(Gtk.Application):
         if not pipeline:
             logger.info('OpenGL is not available, fallback to normal GtkSink')
             # Fallback to non-GL
-            command = (f'v4l2src name={self.GST_SOURCE_NAME} ! videoconvert ! tee name=t ! '
+            command = (f'{src_type} name={self.GST_SOURCE_NAME} ! videoconvert ! tee name=t ! '
                        f'queue ! gtksink name={self.SINK_NAME} '
                        't. ! queue leaky=1 max-size-buffers=2 ! video/x-raw,format=GRAY8 ! '
                        f'appsink name={self.APPSINK_NAME}')
@@ -216,8 +216,11 @@ class CoBangApplication(Gtk.Application):
             # Device is of private type GstV4l2Device or GstPipeWireDevice
             logger.debug('Found device {}', d.get_path_string())
             cam_name = d.get_display_name()
-            cam_path = get_device_path(d)
-            self.webcam_store.append((cam_path, cam_name))
+            cam_path, src_type = get_device_path(d)
+            if not cam_name:
+                logger.error('Not recognize this device.')
+                continue
+            self.webcam_store.append((cam_path, cam_name, src_type))
         logger.debug('Start device monitoring')
         self.devmonitor.start()
 
@@ -252,6 +255,16 @@ class CoBangApplication(Gtk.Application):
         old_area = self.cont_webcam.get_child()
         logger.debug('To replace {} with {}', old_area, area)
         self.cont_webcam.remove(old_area)
+        self.cont_webcam.add(area)
+        area.show()
+
+    def detach_gstreamer_sink_from_window(self):
+        old_area = self.cont_webcam.get_child()
+        self.cont_webcam.remove(old_area)
+
+    def attach_gstreamer_sink_to_window(self):
+        sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
+        area = sink.get_property('widget')
         self.cont_webcam.add(area)
         area.show()
 
@@ -354,23 +367,23 @@ class CoBangApplication(Gtk.Application):
             if not added_dev:
                 return True
             logger.debug('Added: {}', added_dev)
-            cam_path = get_device_path(added_dev)
+            cam_path, src_type = get_device_path(added_dev)
             cam_name = added_dev.get_display_name()
             # Check if this cam already in the list, add to list if not.
             for row in self.webcam_store:
                 if row[0] == cam_path:
                     break
             else:
-                self.webcam_store.append((cam_path, cam_name))
+                self.webcam_store.append((cam_path, cam_name, src_type))
             return True
         elif message.type == Gst.MessageType.DEVICE_REMOVED:
             removed_dev: Optional[Gst.Device] = message.parse_device_removed()
             if not removed_dev:
                 return True
             logger.debug('Removed: {}', removed_dev)
-            cam_path = get_device_path(removed_dev)
+            cam_path, src_type = get_device_path(removed_dev)
             ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
-            if cam_path == ppl_source.get_property('device'):
+            if cam_path == ppl_source.get_property('device') or cam_path == ppl_source.get_property('path'):
                 self.gst_pipeline.set_state(Gst.State.NULL)
             # Find the entry of just-removed in the list and remove it.
             itr: Optional[Gtk.TreeIter] = None
@@ -391,11 +404,24 @@ class CoBangApplication(Gtk.Application):
         if not liter:
             return
         model = combo.get_model()
-        path, name = model[liter]
-        logger.debug('Picked {} {}', path, name)
+        path, name, source_type = model[liter]
+        logger.debug('Picked {} {} ({})', path, name, source_type)
+        app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
+        app_sink.set_emit_signals(False)
+        self.detach_gstreamer_sink_from_window()
+        self.gst_pipeline.remove(app_sink)
         ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
-        self.gst_pipeline.set_state(Gst.State.NULL)
-        ppl_source.set_property('device', path)
+        ppl_source.set_state(Gst.State.NULL)
+        self.gst_pipeline.remove(ppl_source)
+        self.build_gstreamer_pipeline(source_type)
+        self.attach_gstreamer_sink_to_window()
+        ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
+        if source_type == 'pipewiresrc':
+            logger.debug('Change pipewiresrc path to {}', path)
+            ppl_source.set_property('path', path)
+        else:
+            logger.debug('Change v4l2src device to {}', path)
+            ppl_source.set_property('device', path)
         self.gst_pipeline.set_state(Gst.State.PLAYING)
         app_sink = self.gst_pipeline.get_by_name(self.APPSINK_NAME)
         app_sink.set_emit_signals(True)
