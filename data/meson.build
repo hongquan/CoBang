@@ -23,7 +23,7 @@ install_data('vn.hoabinh.quan.CoBang.svg',
   install_dir: themedir / 'scalable/apps'
 )
 
-appstream_file = 'vn.hoabinh.quan.CoBang.appdata.xml'
+appstream_file = files('vn.hoabinh.quan.CoBang.appdata.xml')
 
 appstream_util = find_program('appstream-util', required: false)
 if appstream_util.found()
