@@ -19,13 +19,14 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 gi.require_version('Gio', '2.0')
 gi.require_version('GdkPixbuf', '2.0')
+gi.require_version('Handy', '1')
 gi.require_version('Rsvg', '2.0')
 gi.require_version('Gst', '1.0')
 gi.require_version('GstBase', '1.0')
 gi.require_version('GstApp', '1.0')
 gi.require_version('NM', '1.0')
 
-from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Rsvg, Gst, GstApp, NM
+from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Handy, Rsvg, Gst, GstApp, NM
 
 from .consts import APP_ID, SHORT_NAME
 from . import __version__
@@ -91,6 +92,7 @@ class CoBangApplication(Gtk.Application):
         )
 
     def do_startup(self):
+        Handy.init()
         Gtk.Application.do_startup(self)
         self.setup_actions()
         self.build_gstreamer_pipeline()
@@ -143,7 +145,7 @@ class CoBangApplication(Gtk.Application):
         return pipeline
 
     def build_main_window(self):
-        source = get_ui_filepath('main.glade')
+        source = get_ui_filepath('cobang-resp.glade')
         builder: Gtk.Builder = Gtk.Builder.new_from_file(str(source))
         handlers = self.signal_handlers_for_glade()
         window: Gtk.Window = builder.get_object('main-window')
