@@ -77,16 +77,22 @@ ArchLinux
 CoBang is available via AUR_.
 
 
+Fedora
+------
+
+CoBang is available via COPR_.
+
+
 Other distros
 -------------
 
-Users of other distros (Fedora, etc.) can install CoBang from `FlatHub`_.
+Users of other distros can install CoBang from `FlatHub`_.
 
 .. code-block:: sh
 
     flatpak install flathub vn.hoabinh.quan.CoBang
 
-The release on FlatHub is lagging behind PPA and AUR because I'm having difficulty including translation files to Faltpak (help needed).
+The release on FlatHub is lagging behind traditional distribution channels (PPA, AUR, COPR) because I often having difficulty building CoBang as Flatpak.
 
 
 Compatibility
@@ -236,6 +242,7 @@ Credit
 .. _PyPI: https://pypi.org/
 .. _PPA: https://launchpad.net/~ng-hong-quan/+archive/ubuntu/ppa
 .. _AUR: https://aur.archlinux.org/packages/cobang/
+.. _COPR: https://copr.fedorainfracloud.org/coprs/xoloitzcuintle/CoBang/
 .. _KDE: https://kde.org/
 .. _Xfce: https://www.xfce.org/
 .. _LxQt: https://lxqt.github.io/
