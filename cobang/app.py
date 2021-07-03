@@ -432,7 +432,10 @@ class CoBangApplication(Gtk.Application):
         elif self.gst_pipeline:
             logger.info('To enable webcam')
             ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
-            if ppl_source.get_property('device'):
+            device = (ppl_source.get_property('path')
+                      if ppl_source.__class__.__name__ == 'GstPipeWireSrc'
+                      else ppl_source.get_property('device'))
+            if device:
                 self.btn_pause.set_active(False)
                 self.gst_pipeline.set_state(Gst.State.PLAYING)
             self.btn_img_chooser.hide()
