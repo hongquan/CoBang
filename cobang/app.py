@@ -1,18 +1,5 @@
 # Copyright © 2020, Nguyễn Hồng Quân <ng.hong.quan@gmail.com>
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#       http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
 import os
 import io
 from gettext import gettext as _
@@ -320,6 +307,7 @@ class CoBangApplication(Gtk.Application):
 
     def display_wifi(self, wifi: WifiInfoMessage):
         box = ui.build_wifi_info_display(wifi, self.nm_client)
+        # FIXME: Often crash at gtk_container_add below
         self.result_display.add(box)
         self.result_display.show_all()
 
@@ -491,6 +479,9 @@ class CoBangApplication(Gtk.Application):
         client.new_finish(res)
         self.nm_client = client
         logger.debug('NM client: {}', client)
+        connections = client.get_connections()
+        wifis = tuple(c for c in connections if c.get_visible() and c.is_type(NM.SETTING_WIRELESS_SETTING_NAME))
+        logger.debug('WiFi connections: {}', [c.get_id() for c in wifis])
 
     def cb_file_read(self, remote_file: Gio.File, res: Gio.AsyncResult, content_type: Optional[str] = None):
         w, h = self.get_preview_size()
