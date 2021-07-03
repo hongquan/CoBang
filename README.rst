@@ -10,9 +10,7 @@ A missing native QR Code scanner application for Linux desktop.
     :width: 400
 
 
-*This work is in progress*.
-
-CoBang can scan from webcam or static image, local or remote.
+CoBang can scan barcode, QR code from webcam or static image, local or remote.
 
 In the future, it will support generating QR code and running on Linux phones.
 
