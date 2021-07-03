@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cobang"
-version = "0.8.0"
+version = "0.8.1"
 description = "QR code scanner for Linux desktop"
 authors = ["Nguyễn Hồng Quân <ng.hong.quan@gmail.com>"]
 license = "GPL-3.0-or-later"
@@ -18,7 +18,6 @@ single-version = "^1.5.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
-PyGObject-stubs = "^0.0.2"
 black = {version = "^19.10b0", allow-prereleases = true}
 BabelGladeExtractor = "^0.7.0"
 click = "^7.1.2"

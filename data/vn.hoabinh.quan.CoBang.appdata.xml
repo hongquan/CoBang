@@ -10,7 +10,7 @@
   <summary>QR code scanner for Linux desktop</summary>
   <description>
     <p>A missing native QR Code scanner application for Linux desktop.</p>
-    <p>CoBang can scan from webcam or from static image.
+    <p>CoBang can scan barcode, QR code from webcam or from static image.
  To be part of Linux desktop modernization, it is set to support Wayland (not XWayland), and only implement native GUI (no web crap).</p>
   </description>
   <screenshots>
@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.8.1" date="2021-07-03" urgency="medium">
+      <description>
+        <p>Fix licensing.</p>
+      </description>
+    </release>
     <release version="0.8.0" date="2021-03-07" urgency="medium">
       <description>
         <p>Let play webcam from PipeWire.</p>

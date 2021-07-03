@@ -1,60 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
+<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkEventBox" id="evbox-copy">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="events">GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK | GDK_STRUCTURE_MASK</property>
-    <property name="halign">end</property>
-    <property name="valign">end</property>
-    <child>
-      <object class="GtkButton" id="btn-copy">
-        <property name="label">gtk-copy</property>
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="receives_default">True</property>
-        <property name="halign">end</property>
-        <property name="valign">end</property>
-        <property name="use_stock">True</property>
-        <property name="always_show_image">True</property>
-        <signal name="clicked" handler="on_btn_copy_clicked" swapped="no"/>
-      </object>
-    </child>
-  </object>
   <object class="GtkEventBox" id="evbox-playpause">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="events">GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK | GDK_STRUCTURE_MASK</property>
     <property name="halign">center</property>
     <property name="valign">end</property>
-    <property name="margin_bottom">8</property>
+    <property name="margin-bottom">8</property>
     <signal name="enter-notify-event" handler="on_evbox_playpause_enter_notify_event" swapped="no"/>
     <signal name="leave-notify-event" handler="on_evbox_playpause_leave_notify_event" swapped="no"/>
     <child>
       <object class="GtkBox" id="box-playpause">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="opacity">0.20000000000000001</property>
+        <property name="can-focus">False</property>
+        <property name="opacity">0.20</property>
         <property name="halign">center</property>
         <property name="valign">end</property>
-        <child>
-          <placeholder/>
-        </child>
         <child type="center">
           <object class="GtkToolbar" id="bar-playpause">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="opacity">0.80000000000000004</property>
-            <property name="show_arrow">False</property>
+            <property name="can-focus">False</property>
+            <property name="opacity">0.80</property>
+            <property name="show-arrow">False</property>
             <child>
               <object class="GtkRadioToolButton" id="btn-play">
                 <property name="name">btn-play</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Play</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-media-play</property>
+                <property name="use-underline">True</property>
+                <property name="icon-name">media-playback-start</property>
                 <property name="active">True</property>
                 <signal name="toggled" handler="on_btn_play_toggled" after="yes" swapped="no"/>
               </object>
@@ -67,10 +44,10 @@
               <object class="GtkRadioToolButton" id="btn-pause">
                 <property name="name">btn-pause</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Pause</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-media-pause</property>
+                <property name="use-underline">True</property>
+                <property name="icon-name">media-playback-pause</property>
                 <property name="group">btn-play</property>
               </object>
               <packing>
@@ -88,6 +65,34 @@
             <property name="position">1</property>
           </packing>
         </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkImage" id="img-btn-copy">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">edit-copy</property>
+  </object>
+  <object class="GtkEventBox" id="evbox-copy">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="events">GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK | GDK_STRUCTURE_MASK</property>
+    <property name="halign">end</property>
+    <property name="valign">end</property>
+    <child>
+      <object class="GtkButton" id="btn-copy">
+        <property name="label" translatable="yes">Copy</property>
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="receives-default">True</property>
+        <property name="halign">end</property>
+        <property name="valign">end</property>
+        <property name="image">img-btn-copy</property>
+        <property name="always-show-image">True</property>
+        <signal name="clicked" handler="on_btn_copy_clicked" swapped="no"/>
       </object>
     </child>
   </object>
@@ -98,18 +103,18 @@
   </object>
   <object class="GtkImage" id="img-preview">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-missing-image</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">image-x-generic</property>
     <property name="icon_size">3</property>
   </object>
   <object class="GtkAdjustment" id="raw-result-adjustment">
     <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkTextBuffer" id="raw-result-buffer"/>
   <object class="GtkPopover" id="top-popover">
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <child>
       <placeholder/>
     </child>
@@ -125,75 +130,39 @@
     </columns>
   </object>
   <object class="GtkApplicationWindow" id="main-window">
-    <property name="can_focus">False</property>
-    <child type="titlebar">
-      <object class="GtkHeaderBar">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="title" translatable="yes">CoBang</property>
-        <property name="show_close_button">True</property>
-        <child>
-          <object class="GtkStackSwitcher" id="stack-sw-im-source">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="icon_size">3</property>
-            <property name="stack">stack-img-source</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkMenuButton" id="main-menubutton">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="focus_on_click">False</property>
-            <property name="receives_default">True</property>
-            <property name="popover">top-popover</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="icon_name">open-menu-symbolic</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="pack_type">end</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-    </child>
+    <property name="can-focus">False</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="margin_left">4</property>
-        <property name="margin_right">4</property>
-        <property name="margin_top">2</property>
-        <property name="margin_bottom">4</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">4</property>
+        <property name="margin-end">4</property>
+        <property name="margin-top">2</property>
+        <property name="margin-bottom">4</property>
         <property name="orientation">vertical</property>
         <property name="spacing">4</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="spacing">8</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkInfoBar" id="info-bar">
-                    <property name="can_focus">False</property>
-                    <property name="show_close_button">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="show-close-button">True</property>
                     <signal name="response" handler="on_info_bar_response" swapped="no"/>
                     <child internal-child="action_area">
                       <object class="GtkButtonBox">
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="spacing">6</property>
-                        <property name="layout_style">end</property>
+                        <property name="layout-style">end</property>
                         <child>
                           <placeholder/>
                         </child>
@@ -206,12 +175,12 @@
                     </child>
                     <child internal-child="content_area">
                       <object class="GtkBox">
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="spacing">16</property>
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -238,20 +207,20 @@
                 </child>
                 <child>
                   <object class="GtkStack" id="stack-img-source">
-                    <property name="width_request">400</property>
-                    <property name="height_request">300</property>
+                    <property name="width-request">400</property>
+                    <property name="height-request">300</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <signal name="notify::visible-child" handler="on_stack_img_source_visible_child_notify" swapped="no"/>
                     <child>
                       <object class="GtkOverlay" id="cont-webcam">
                         <property name="name">cont-webcam</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <child>
                           <object class="GtkDrawingArea" id="area-webcam">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                           </object>
                           <packing>
                             <property name="index">-1</property>
@@ -261,52 +230,42 @@
                       <packing>
                         <property name="name">src_webcam</property>
                         <property name="title" translatable="yes">Webcam</property>
-                        <property name="icon_name">camera-web</property>
+                        <property name="icon-name">camera-web</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkAspectFrame" id="frame-image">
                         <property name="name">frame-image</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label_xalign">0</property>
-                        <property name="shadow_type">none</property>
+                        <property name="can-focus">False</property>
+                        <property name="label-xalign">0</property>
+                        <property name="shadow-type">none</property>
                         <child>
                           <object class="GtkEventBox" id="eventbox">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can-focus">True</property>
                             <property name="events">GDK_KEY_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-                            <property name="visible_window">False</property>
-                            <property name="above_child">True</property>
+                            <property name="visible-window">False</property>
+                            <property name="above-child">True</property>
                             <signal name="key-press-event" handler="on_eventbox_key_press_event" swapped="no"/>
                             <child>
                               <object class="GtkBox" id="box-image-empty">
                                 <property name="name">box-image-empty</property>
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <property name="orientation">vertical</property>
-                                <child>
-                                  <object class="GtkProgressBar" id="progress-bar">
-                                    <property name="can_focus">False</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
                                 <child type="center">
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="orientation">vertical</property>
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkImage">
                                         <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
+                                        <property name="can-focus">False</property>
                                         <property name="pixbuf">wireframe-image-add.svg</property>
-                                        <property name="pixel_size">128</property>
+                                        <property name="pixel-size">128</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -317,7 +276,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
+                                        <property name="can-focus">False</property>
                                         <property name="label" translatable="yes">Please add an image file by one of these methods:
 
 - Drag and drop here.
@@ -325,7 +284,7 @@
 - Choose with button below (non Flatpak).
 
 Remote image (from http://..., sftp://...) is allowed.</property>
-                                        <property name="use_markup">True</property>
+                                        <property name="use-markup">True</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -340,6 +299,16 @@ Remote image (from http://..., sftp://...) is allowed.</property>
                                     <property name="position">1</property>
                                   </packing>
                                 </child>
+                                <child>
+                                  <object class="GtkProgressBar" id="progress-bar">
+                                    <property name="can-focus">False</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -348,7 +317,7 @@ Remote image (from http://..., sftp://...) is allowed.</property>
                       <packing>
                         <property name="name">src_image</property>
                         <property name="title" translatable="yes">Image</property>
-                        <property name="icon_name">insert-image</property>
+                        <property name="icon-name">insert-image</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -362,18 +331,18 @@ Remote image (from http://..., sftp://...) is allowed.</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="valign">end</property>
-                    <property name="margin_top">4</property>
+                    <property name="margin-top">4</property>
                     <property name="hexpand">True</property>
                     <property name="spacing">3</property>
                     <child>
                       <object class="GtkComboBox" id="webcam-combobox">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="model">webcam-list</property>
                         <property name="active">0</property>
-                        <property name="id_column">0</property>
+                        <property name="id-column">0</property>
                         <signal name="changed" handler="on_webcam_combobox_changed" swapped="no"/>
                         <child>
                           <object class="GtkCellRendererText" id="webcam-item-renderer"/>
@@ -390,12 +359,12 @@ Remote image (from http://..., sftp://...) is allowed.</property>
                     </child>
                     <child>
                       <object class="GtkFileChooserButton" id="btn-img-chooser">
-                        <property name="can_focus">False</property>
-                        <property name="create_folders">False</property>
+                        <property name="can-focus">False</property>
+                        <property name="create-folders">False</property>
                         <property name="filter">img-file-filter</property>
-                        <property name="local_only">False</property>
-                        <property name="preview_widget">img-preview</property>
-                        <property name="preview_widget_active">False</property>
+                        <property name="local-only">False</property>
+                        <property name="preview-widget">img-preview</property>
+                        <property name="preview-widget-active">False</property>
                         <property name="title" translatable="yes">Please choose an image file</property>
                         <signal name="file-set" handler="on_btn_img_chooser_file_set" after="yes" swapped="no"/>
                         <signal name="update-preview" handler="on_btn_img_chooser_update_preview" swapped="no"/>
@@ -422,24 +391,24 @@ Remote image (from http://..., sftp://...) is allowed.</property>
             </child>
             <child>
               <object class="GtkBox">
-                <property name="width_request">220</property>
+                <property name="width-request">220</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">8</property>
                 <child>
                   <object class="GtkFrame" id="result-display-frame">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label_xalign">0</property>
-                    <property name="shadow_type">in</property>
+                    <property name="can-focus">False</property>
+                    <property name="label-xalign">0</property>
+                    <property name="shadow-type">in</property>
                     <child>
                       <placeholder/>
                     </child>
                     <child type="label">
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Result</property>
                       </object>
                     </child>
@@ -453,21 +422,21 @@ Remote image (from http://..., sftp://...) is allowed.</property>
                 <child>
                   <object class="GtkExpander" id="raw-result-expander">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="margin_bottom">2</property>
+                    <property name="can-focus">True</property>
+                    <property name="margin-bottom">2</property>
                     <child>
                       <object class="GtkOverlay" id="cont-raw-text">
                         <property name="name">cont-raw-text</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <child>
                           <object class="GtkTextView" id="raw-result-display">
-                            <property name="height_request">100</property>
+                            <property name="height-request">100</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can-focus">True</property>
                             <property name="vadjustment">raw-result-adjustment</property>
                             <property name="editable">False</property>
-                            <property name="wrap_mode">char</property>
+                            <property name="wrap-mode">char</property>
                             <property name="buffer">raw-result-buffer</property>
                             <property name="monospace">True</property>
                           </object>
@@ -480,7 +449,7 @@ Remote image (from http://..., sftp://...) is allowed.</property>
                     <child type="label">
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Raw result</property>
                       </object>
                     </child>
@@ -488,7 +457,7 @@ Remote image (from http://..., sftp://...) is allowed.</property>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="pack_type">end</property>
+                    <property name="pack-type">end</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -504,6 +473,42 @@ Remote image (from http://..., sftp://...) is allowed.</property>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child type="titlebar">
+      <object class="GtkHeaderBar">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="title" translatable="yes">CoBang</property>
+        <property name="show-close-button">True</property>
+        <child>
+          <object class="GtkStackSwitcher" id="stack-sw-im-source">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-size">3</property>
+            <property name="stack">stack-img-source</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkMenuButton" id="main-menubutton">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="focus-on-click">False</property>
+            <property name="receives-default">True</property>
+            <property name="popover">top-popover</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">open-menu-symbolic</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack-type">end</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
