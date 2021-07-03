@@ -8,10 +8,10 @@ Homepage: https://github.com/hongquan/CoBang
 
 Package: cobang
 Architecture: all
-Depends: python3-single-version, python3-logbook, python3-kiss-headers, python3-gst-1.0, gir1.2-gtk-3.0, gir1.2-gst-plugins-base-1.0, gstreamer1.0-plugins-good, gstreamer1.0-gtk3, gir1.2-nm-1.0, python3-zbar, python3-pil, ${misc:Depends}, ${python3:Depends}
+Depends: python3-single-version, python3-logbook, python3-kiss-headers, python3-gi, python3-gst-1.0, gir1.2-gtk-3.0, gir1.2-gst-plugins-base-1.0, gstreamer1.0-plugins-good, gstreamer1.0-gtk3, gir1.2-nm-1.0, python3-zbar, python3-pil, gir1.2-rsvg-2.0, python3-cairo, python-gi-cairo, ${misc:Depends}, ${python3:Depends}
 Description: QR code scanner for Linux desktop
  A missing native QR Code scanner application for Linux desktop.
  .
- CoBang can scan from webcam or static image, local or remote.
+ CoBang can scan barcode, QR code from webcam or static image, local or remote.
  To be part of Linux desktop modernization, it is set to support
  Wayland (not XWayland), and only implement native GUI (no web crap).
