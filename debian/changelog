@@ -1,3 +1,9 @@
+cobang (0.8.1-2) hirsute; urgency=medium
+
+  * Fix dependency name.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Tue, 27 Jul 2021 00:56:20 +0700
+
 cobang (0.8.1-1) hirsute; urgency=medium
 
   * Fix licensing.
