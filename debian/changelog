@@ -1,3 +1,9 @@
+cobang (0.8.2-1) hirsute; urgency=medium
+
+  * Lower down Meson version requirement.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 31 Jul 2021 11:18:28 +0700
+
 cobang (0.8.1-2) hirsute; urgency=medium
 
   * Fix dependency name.
