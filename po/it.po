@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-03-05 12:12+0700\n"
-"PO-Revision-Date: 2020-11-16 20:08+0100\n"
+"PO-Revision-Date: 2021-08-17 23:08+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language: it\n"
 "Language-Team: it <LL@li.org>\n"
@@ -20,11 +20,11 @@ msgstr ""
 
 #: cobang/app.py:117
 msgid "quit"
-msgstr ""
+msgstr "Esci"
 
 #: cobang/app.py:120
 msgid "about"
-msgstr ""
+msgstr "Informazioni"
 
 #: cobang/app.py:531
 #, python-format
@@ -107,7 +107,7 @@ msgstr "SSID"
 
 #: data/wifi-display.glade:51
 msgid "Generous"
-msgstr ""
+msgstr "Generoso"
 
 #: data/wifi-display.glade:66
 msgid "Password"
