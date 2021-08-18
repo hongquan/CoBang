@@ -1,3 +1,9 @@
+cobang (0.8.3-1) hirsute; urgency=medium
+
+  * Update Italian translation.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Wed, 18 Aug 2021 09:40:50 +0700
+
 cobang (0.8.2-1) hirsute; urgency=medium
 
   * Lower down Meson version requirement.
