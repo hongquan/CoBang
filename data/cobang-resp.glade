@@ -227,7 +227,7 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">True</property>
+            <property name="fill">False</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -244,7 +244,6 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="halign">start</property>
-                <property name="valign">start</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -262,8 +261,6 @@
                             <property name="can-focus">False</property>
                             <child>
                               <object class="GtkDrawingArea" id="area-webcam">
-                                <property name="width-request">480</property>
-                                <property name="height-request">360</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                               </object>
@@ -369,7 +366,7 @@ Remote image (from http://..., sftp://...) is allowed.</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="fill">True</property>
+                        <property name="fill">False</property>
                         <property name="position">0</property>
                       </packing>
                     </child>
@@ -422,7 +419,7 @@ Remote image (from http://..., sftp://...) is allowed.</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="fill">True</property>
+                        <property name="fill">False</property>
                         <property name="pack-type">end</property>
                         <property name="position">1</property>
                       </packing>
@@ -435,8 +432,8 @@ Remote image (from http://..., sftp://...) is allowed.</property>
               <object class="GtkFlowBoxChild">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="valign">start</property>
                 <property name="hexpand">True</property>
-                <property name="vexpand">True</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
