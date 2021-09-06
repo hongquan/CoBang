@@ -1,5 +1,5 @@
 project('cobang',
-        version: '0.8.3',
+        version: '0.9.0',
         meson_version: '>= 0.53',
         default_options: [
           'warning_level=2',

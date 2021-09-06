@@ -77,9 +77,10 @@
           <object class="GtkEntry" id="password-value">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="hexpand">True</property>
             <property name="editable">False</property>
+            <property name="max-length">20</property>
             <property name="visibility">False</property>
-            <property name="max-width-chars">40</property>
             <property name="secondary-icon-name">dialog-password-symbolic</property>
             <property name="input-purpose">password</property>
           </object>
@@ -102,6 +103,7 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="halign">center</property>
+        <property name="margin-bottom">4</property>
       </object>
       <packing>
         <property name="expand">False</property>

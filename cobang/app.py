@@ -19,13 +19,14 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 gi.require_version('Gio', '2.0')
 gi.require_version('GdkPixbuf', '2.0')
+gi.require_version('Handy', '1')
 gi.require_version('Rsvg', '2.0')
 gi.require_version('Gst', '1.0')
 gi.require_version('GstBase', '1.0')
 gi.require_version('GstApp', '1.0')
 gi.require_version('NM', '1.0')
 
-from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Rsvg, Gst, GstApp, NM
+from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Handy, Rsvg, Gst, GstApp, NM
 
 from .consts import APP_ID, SHORT_NAME
 from . import __version__
@@ -91,6 +92,7 @@ class CoBangApplication(Gtk.Application):
         )
 
     def do_startup(self):
+        Handy.init()
         Gtk.Application.do_startup(self)
         self.setup_actions()
         self.build_gstreamer_pipeline()
@@ -112,7 +114,9 @@ class CoBangApplication(Gtk.Application):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
         # Try GL backend first
         command = (f'{src_type} name={self.GST_SOURCE_NAME} ! tee name=t ! '
-                   f'queue ! glsinkbin sink="gtkglsink name={self.SINK_NAME}" name=sink_bin '
+                   # FIXME: The produced video screen is wider than expected, with redundant black padding
+                   f'queue ! videoscale ! '
+                   f'glsinkbin sink="gtkglsink name={self.SINK_NAME}" name=sink_bin '
                    't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
                    f'appsink name={self.APPSINK_NAME} max_buffers=2 drop=1')
         logger.debug('To build pipeline: {}', command)
@@ -125,7 +129,7 @@ class CoBangApplication(Gtk.Application):
             logger.info('OpenGL is not available, fallback to normal GtkSink')
             # Fallback to non-GL
             command = (f'{src_type} name={self.GST_SOURCE_NAME} ! videoconvert ! tee name=t ! '
-                       f'queue ! gtksink name={self.SINK_NAME} '
+                       f'queue ! videoscale ! gtksink name={self.SINK_NAME} '
                        't. ! queue leaky=1 max-size-buffers=2 ! video/x-raw,format=GRAY8 ! '
                        f'appsink name={self.APPSINK_NAME}')
             logger.debug('To build pipeline: {}', command)
@@ -143,7 +147,7 @@ class CoBangApplication(Gtk.Application):
         return pipeline
 
     def build_main_window(self):
-        source = get_ui_filepath('main.glade')
+        source = get_ui_filepath('cobang-resp.glade')
         builder: Gtk.Builder = Gtk.Builder.new_from_file(str(source))
         handlers = self.signal_handlers_for_glade()
         window: Gtk.Window = builder.get_object('main-window')
@@ -155,8 +159,6 @@ class CoBangApplication(Gtk.Application):
         self.btn_pause = builder.get_object('btn-pause')
         self.btn_img_chooser = builder.get_object('btn-img-chooser')
         self.cont_webcam = builder.get_object('cont-webcam')
-        if self.gst_pipeline:
-            self.replace_webcam_placeholder_with_gstreamer_sink()
         self.raw_result_buffer = builder.get_object('raw-result-buffer')
         self.raw_result_expander = builder.get_object('raw-result-expander')
         self.webcam_store = builder.get_object('webcam-list')
@@ -231,19 +233,6 @@ class CoBangApplication(Gtk.Application):
             GLib.setenv('G_MESSAGES_DEBUG', ' '.join(displayed_apps), True)
         self.activate()
         return 0
-
-    def replace_webcam_placeholder_with_gstreamer_sink(self):
-        '''
-        In glade file, we put a placeholder to reserve a place for putting webcam screen.
-        Now it is time to replace that widget with which coming with gtksink.
-        '''
-        sink = self.gst_pipeline.get_by_name(self.SINK_NAME)
-        area = sink.get_property('widget')
-        old_area = self.cont_webcam.get_child()
-        logger.debug('To replace {} with {}', old_area, area)
-        self.cont_webcam.remove(old_area)
-        self.cont_webcam.add(area)
-        area.show()
 
     def detach_gstreamer_sink_from_window(self):
         old_area = self.cont_webcam.get_child()
@@ -605,9 +594,15 @@ class CoBangApplication(Gtk.Application):
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
             return Gst.FlowReturn.OK
-        sample: Gst.Sample = appsink.try_pull_sample(0.5)
-        buffer: Gst.Buffer = sample.get_buffer()
-        caps: Gst.Caps = sample.get_caps()
+        sample: Optional[Gst.Sample] = appsink.try_pull_sample(0.5)
+        if not sample:
+            return Gst.FlowReturn.OK
+        buffer: Optional[Gst.Buffer] = sample.get_buffer()
+        if not buffer:
+            return Gst.FlowReturn.OK
+        caps: Optional[Gst.Caps] = sample.get_caps()
+        if not caps:
+            return Gst.FlowReturn.OK
         # This Pythonic usage is thank to python3-gst
         struct: Gst.Structure = caps[0]
         width = struct['width']

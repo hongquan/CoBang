@@ -50,6 +50,7 @@ Screenshots
 .. image:: https://i.imgur.com/ldynPU6.png
 .. image:: https://i.imgur.com/gtmPSpM.png
 .. image:: https://i.imgur.com/MyH9CEC.png
+.. image:: https://i.imgur.com/065FVXb.png
 
 
 Install
