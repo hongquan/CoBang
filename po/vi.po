@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoBang 0.6\n"
 "Report-Msgid-Bugs-To: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
-"POT-Creation-Date: 2021-03-05 12:12+0700\n"
+"POT-Creation-Date: 2021-09-07 09:40+0700\n"
 "PO-Revision-Date: 2020-11-17 17:31+0700\n"
 "Last-Translator: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
 "Language: vi\n"
@@ -18,44 +18,56 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: cobang/app.py:117
+#: cobang/app.py:106
 msgid "quit"
 msgstr "thoát"
 
-#: cobang/app.py:120
+#: cobang/app.py:109
 msgid "about"
 msgstr "giới thiệu"
 
-#: cobang/app.py:531
+#: cobang/app.py:542
 #, python-format
 msgid "Unsuported file type %s!"
 msgstr "Loại tập tin %s không được hỗ trợ!"
+
+#: cobang/app.py:643
+msgid "Copied"
+msgstr ""
 
 #: cobang/ui.py:57
 msgid "Connected"
 msgstr "Đã kết nối"
 
-#: cobang/ui.py:86
+#: cobang/ui.py:87
 msgid "Saved"
 msgstr "Đã lưu"
 
-#: data/main.glade:35
+#: data/cobang-resp.glade:14
+msgid "Copy"
+msgstr ""
+
+#: data/cobang-resp.glade:52
 msgid "Play"
 msgstr "Phát"
 
-#: data/main.glade:51
+#: data/cobang-resp.glade:68
 msgid "Pause"
 msgstr "Chựng"
 
-#: data/main.glade:103
+#: data/cobang-resp.glade:144
 msgid "CoBang"
 msgstr ""
 
-#: data/main.glade:233
+#: data/cobang-resp.glade:145
+msgid "QR scanner for Linux"
+msgstr ""
+
+#: data/cobang-resp.glade:274
 msgid "Webcam"
 msgstr ""
 
-#: data/main.glade:297
+#: data/cobang-resp.glade:328
 msgid ""
 "Please add an image file by one of these methods:\n"
 "\n"
@@ -73,19 +85,19 @@ msgstr ""
 "\n"
 "Có thể dùng hình ảnh trên mạng (qua giao thức http://..., sftp://...)."
 
-#: data/main.glade:320
+#: data/cobang-resp.glade:361
 msgid "Image"
 msgstr "Hình ảnh"
 
-#: data/main.glade:369
+#: data/cobang-resp.glade:409
 msgid "Please choose an image file"
 msgstr "Vui lòng chọn một tập tin hình ảnh"
 
-#: data/main.glade:413
+#: data/cobang-resp.glade:457
 msgid "Result"
 msgstr "Kết quả"
 
-#: data/main.glade:445
+#: data/cobang-resp.glade:497
 msgid "Raw result"
 msgstr "Kết quả thô"
 
@@ -101,19 +113,19 @@ msgstr "nút"
 msgid "Found a wifi configuration"
 msgstr "Bắt gặp một cấu hình wifi"
 
-#: data/wifi-display.glade:38
+#: data/wifi-display.glade:39
 msgid "SSID"
 msgstr ""
 
-#: data/wifi-display.glade:51
+#: data/wifi-display.glade:52
 msgid "Generous"
 msgstr "Phóng khoáng"
 
-#: data/wifi-display.glade:66
+#: data/wifi-display.glade:67
 msgid "Password"
 msgstr "Mật khẩu"
 
-#: data/wifi-display.glade:99
+#: data/wifi-display.glade:101
 msgid "Save"
 msgstr "Lưu"
 

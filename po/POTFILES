@@ -10,6 +10,6 @@ cobang/prep.py
 cobang/resources.py
 cobang/ui.py
 data/about.glade
-data/main.glade
+data/cobang-resp.glade
 data/url-display.glade
 data/wifi-display.glade
