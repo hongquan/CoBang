@@ -221,6 +221,15 @@ You can package as Flatpak from the source.
     flatpak-builder --run _build vn.hoabinh.quan.CoBang.yaml cobang
 
 
+Alternatives
+++++++++++++
+
+These applications were born after CoBang, that is why they are not mentioned in "Motivation" section.
+
+- `Decoder`_: Scan and generate QR code. Built with GTK4 and targeting Flatpak environment.
+- `Megapixels`_: Camera application for Linux phones. The only one can access PinePhone camera. Can read QR code.
+
+
 Credit
 ++++++
 
@@ -250,6 +259,8 @@ Credit
 .. _Pipenv: https://pipenv.pypa.io
 .. _Logbook: https://pypi.org/project/Logbook/
 .. _FlatHub: https://flathub.org/apps/details/vn.hoabinh.quan.CoBang
+.. _Decoder: https://gitlab.gnome.org/World/decoder/
+.. _Megapixels: https://git.sr.ht/~martijnbraam/megapixels
 .. _author: https://quan.hoabinh.vn
 .. _Freepik: https://www.flaticon.com/authors/freepik
 .. _www.flaticon.com: https://www.flaticon.com
