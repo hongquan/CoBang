@@ -7,32 +7,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-06 13:15+0100\n"
+"POT-Creation-Date: 2021-09-09 22:51+0700\n"
 "PO-Revision-Date: 2021-03-06 13:15+0100\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
-"Language-Team: \n"
 "Language: nl\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.9.0\n"
-"X-Generator: Poedit 2.4.2\n"
 
-#: cobang/app.py:117
+#: cobang/app.py:106
 msgid "quit"
 msgstr "Afsluiten"
 
-#: cobang/app.py:120
+#: cobang/app.py:109
 msgid "about"
 msgstr "Over"
 
-#: cobang/app.py:533
+#: cobang/app.py:542
 #, python-format
 msgid "Unsuported file type %s!"
 msgstr "Niet-ondersteund bestandstype: %s"
 
-#: cobang/app.py:628
+#: cobang/app.py:643
 msgid "Copied"
 msgstr "Gekopieerd"
 
@@ -40,27 +39,35 @@ msgstr "Gekopieerd"
 msgid "Connected"
 msgstr "Verbonden"
 
-#: cobang/ui.py:86
+#: cobang/ui.py:87
 msgid "Saved"
 msgstr "Opgeslagen"
 
-#: data/main.glade:55
+#: data/cobang-resp.glade:14
+msgid "Copy"
+msgstr ""
+
+#: data/cobang-resp.glade:52
 msgid "Play"
 msgstr "Afspelen"
 
-#: data/main.glade:71
+#: data/cobang-resp.glade:68
 msgid "Pause"
 msgstr "Pauzeren"
 
-#: data/main.glade:131
+#: data/cobang-resp.glade:145
 msgid "CoBang"
 msgstr "CoBang"
 
-#: data/main.glade:261
+#: data/cobang-resp.glade:146
+msgid "QR scanner for Linux"
+msgstr ""
+
+#: data/cobang-resp.glade:287
 msgid "Webcam"
 msgstr "Webcam"
 
-#: data/main.glade:319
+#: data/cobang-resp.glade:341
 msgid ""
 "Please add an image file by one of these methods:\n"
 "\n"
@@ -76,19 +83,19 @@ msgstr ""
 "-Kies via onderstaande knop (werkt niet in Flatpak-uitgaven).\n"
 "Externe afbeeldingen (http://..., sftp://...) zijn toegestaan."
 
-#: data/main.glade:348
+#: data/cobang-resp.glade:374
 msgid "Image"
 msgstr "Afbeelding"
 
-#: data/main.glade:397
+#: data/cobang-resp.glade:422
 msgid "Please choose an image file"
 msgstr "Kies een afbeeldingsbestand"
 
-#: data/main.glade:441
+#: data/cobang-resp.glade:470
 msgid "Result"
 msgstr "Resultaat"
 
-#: data/main.glade:482
+#: data/cobang-resp.glade:510
 msgid "Raw result"
 msgstr "Resultaat (platte tekst)"
 
@@ -104,18 +111,19 @@ msgstr "Knop"
 msgid "Found a wifi configuration"
 msgstr "Wifi-instellingen aangetroffen"
 
-#: data/wifi-display.glade:38
+#: data/wifi-display.glade:39
 msgid "SSID"
 msgstr "SSID"
 
-#: data/wifi-display.glade:51
+#: data/wifi-display.glade:52
 msgid "Generous"
 msgstr "Genereus"
 
-#: data/wifi-display.glade:66
+#: data/wifi-display.glade:67
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: data/wifi-display.glade:99
+#: data/wifi-display.glade:101
 msgid "Save"
 msgstr "Opslaan"
+

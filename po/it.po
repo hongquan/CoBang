@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-03-05 12:12+0700\n"
+"POT-Creation-Date: 2021-09-09 22:51+0700\n"
 "PO-Revision-Date: 2021-08-17 23:08+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language: it\n"
@@ -18,44 +18,56 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: cobang/app.py:117
+#: cobang/app.py:106
 msgid "quit"
 msgstr "Esci"
 
-#: cobang/app.py:120
+#: cobang/app.py:109
 msgid "about"
 msgstr "Informazioni"
 
-#: cobang/app.py:531
+#: cobang/app.py:542
 #, python-format
 msgid "Unsuported file type %s!"
 msgstr "Tipo di file non supportato %s!"
+
+#: cobang/app.py:643
+msgid "Copied"
+msgstr ""
 
 #: cobang/ui.py:57
 msgid "Connected"
 msgstr "Connesso"
 
-#: cobang/ui.py:86
+#: cobang/ui.py:87
 msgid "Saved"
 msgstr "Salvato"
 
-#: data/main.glade:35
+#: data/cobang-resp.glade:14
+msgid "Copy"
+msgstr ""
+
+#: data/cobang-resp.glade:52
 msgid "Play"
 msgstr "Avvia"
 
-#: data/main.glade:51
+#: data/cobang-resp.glade:68
 msgid "Pause"
 msgstr "Pausa"
 
-#: data/main.glade:103
+#: data/cobang-resp.glade:145
 msgid "CoBang"
 msgstr "CoBang"
 
-#: data/main.glade:233
+#: data/cobang-resp.glade:146
+msgid "QR scanner for Linux"
+msgstr ""
+
+#: data/cobang-resp.glade:287
 msgid "Webcam"
 msgstr "Webcam"
 
-#: data/main.glade:297
+#: data/cobang-resp.glade:341
 msgid ""
 "Please add an image file by one of these methods:\n"
 "\n"
@@ -73,19 +85,19 @@ msgstr ""
 "\n"
 "L'immagine remota (da http:// ..., sftp://...) è consentita."
 
-#: data/main.glade:320
+#: data/cobang-resp.glade:374
 msgid "Image"
 msgstr "Immagine"
 
-#: data/main.glade:369
+#: data/cobang-resp.glade:422
 msgid "Please choose an image file"
 msgstr "Scegli un file immagine"
 
-#: data/main.glade:413
+#: data/cobang-resp.glade:470
 msgid "Result"
 msgstr "Risultato"
 
-#: data/main.glade:445
+#: data/cobang-resp.glade:510
 msgid "Raw result"
 msgstr "Risultato grezzo"
 
@@ -101,19 +113,19 @@ msgstr "pulsante"
 msgid "Found a wifi configuration"
 msgstr "Trovato una configurazione wifi"
 
-#: data/wifi-display.glade:38
+#: data/wifi-display.glade:39
 msgid "SSID"
 msgstr "SSID"
 
-#: data/wifi-display.glade:51
+#: data/wifi-display.glade:52
 msgid "Generous"
 msgstr "Generoso"
 
-#: data/wifi-display.glade:66
+#: data/wifi-display.glade:67
 msgid "Password"
 msgstr "Password"
 
-#: data/wifi-display.glade:99
+#: data/wifi-display.glade:101
 msgid "Save"
 msgstr "Salva"
 
