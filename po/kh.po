@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-09-07 09:40+0700\n"
+"POT-Creation-Date: 2021-09-09 22:51+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: kh\n"
@@ -55,19 +55,19 @@ msgstr ""
 msgid "Pause"
 msgstr ""
 
-#: data/cobang-resp.glade:144
+#: data/cobang-resp.glade:145
 msgid "CoBang"
 msgstr ""
 
-#: data/cobang-resp.glade:145
+#: data/cobang-resp.glade:146
 msgid "QR scanner for Linux"
 msgstr ""
 
-#: data/cobang-resp.glade:274
+#: data/cobang-resp.glade:287
 msgid "Webcam"
 msgstr ""
 
-#: data/cobang-resp.glade:328
+#: data/cobang-resp.glade:341
 msgid ""
 "Please add an image file by one of these methods:\n"
 "\n"
@@ -78,19 +78,19 @@ msgid ""
 "Remote image (from http://..., sftp://...) is allowed."
 msgstr ""
 
-#: data/cobang-resp.glade:361
+#: data/cobang-resp.glade:374
 msgid "Image"
 msgstr ""
 
-#: data/cobang-resp.glade:409
+#: data/cobang-resp.glade:422
 msgid "Please choose an image file"
 msgstr ""
 
-#: data/cobang-resp.glade:457
+#: data/cobang-resp.glade:470
 msgid "Result"
 msgstr ""
 
-#: data/cobang-resp.glade:497
+#: data/cobang-resp.glade:510
 msgid "Raw result"
 msgstr ""
 
