@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.9.1" date="2021-09-09" urgency="medium">
+      <description>
+        <p>Prevent redundant empty space.</p>
+      </description>
+    </release>
     <release version="0.9.0" date="2021-09-07" urgency="medium">
       <description>
         <p>Support mobile view with responsive UI.</p>

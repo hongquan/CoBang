@@ -131,7 +131,8 @@
   </object>
   <object class="HdyApplicationWindow" id="main-window">
     <property name="can-focus">False</property>
-    <property name="default-width">866</property>
+    <property name="default-width">916</property>
+    <property name="default-height">580</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
@@ -232,278 +233,294 @@
           </packing>
         </child>
         <child>
-          <object class="GtkFlowBox">
+          <object class="GtkScrolledWindow">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="vexpand">True</property>
-            <property name="min-children-per-line">1</property>
-            <property name="max-children-per-line">2</property>
-            <property name="selection-mode">none</property>
+            <property name="can-focus">True</property>
+            <property name="shadow-type">in</property>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkViewport">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="halign">start</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkFlowBox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="orientation">vertical</property>
+                    <property name="vexpand">True</property>
+                    <property name="min-children-per-line">1</property>
+                    <property name="max-children-per-line">2</property>
+                    <property name="selection-mode">none</property>
                     <child>
-                      <object class="GtkStack" id="stack-img-source">
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <signal name="notify::visible-child" handler="on_stack_img_source_visible_child_notify" swapped="no"/>
+                        <property name="halign">start</property>
                         <child>
-                          <object class="GtkOverlay" id="cont-webcam">
-                            <property name="name">cont-webcam</property>
+                          <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkDrawingArea" id="area-webcam">
+                              <object class="GtkStack" id="stack-img-source">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                              </object>
-                              <packing>
-                                <property name="index">-1</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="name">src_webcam</property>
-                            <property name="title" translatable="yes">Webcam</property>
-                            <property name="icon-name">camera-web</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkAspectFrame" id="frame-image">
-                            <property name="name">frame-image</property>
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="label-xalign">0</property>
-                            <property name="shadow-type">none</property>
-                            <child>
-                              <object class="GtkEventBox" id="eventbox">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="events">GDK_KEY_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-                                <property name="visible-window">False</property>
-                                <property name="above-child">True</property>
-                                <signal name="key-press-event" handler="on_eventbox_key_press_event" swapped="no"/>
+                                <signal name="notify::visible-child" handler="on_stack_img_source_visible_child_notify" swapped="no"/>
                                 <child>
-                                  <object class="GtkBox" id="box-image-empty">
-                                    <property name="name">box-image-empty</property>
+                                  <object class="GtkOverlay" id="cont-webcam">
+                                    <property name="name">cont-webcam</property>
+                                    <property name="width-request">480</property>
+                                    <property name="height-request">360</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
-                                    <property name="orientation">vertical</property>
-                                    <child type="center">
-                                      <object class="GtkBox">
+                                    <child>
+                                      <object class="GtkDrawingArea" id="area-webcam">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="orientation">vertical</property>
-                                        <property name="spacing">6</property>
+                                      </object>
+                                      <packing>
+                                        <property name="index">-1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="name">src_webcam</property>
+                                    <property name="title" translatable="yes">Webcam</property>
+                                    <property name="icon-name">camera-web</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkAspectFrame" id="frame-image">
+                                    <property name="name">frame-image</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="label-xalign">0</property>
+                                    <property name="shadow-type">none</property>
+                                    <child>
+                                      <object class="GtkEventBox" id="eventbox">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="events">GDK_KEY_PRESS_MASK | GDK_STRUCTURE_MASK</property>
+                                        <property name="visible-window">False</property>
+                                        <property name="above-child">True</property>
+                                        <signal name="key-press-event" handler="on_eventbox_key_press_event" swapped="no"/>
                                         <child>
-                                          <object class="GtkImage">
+                                          <object class="GtkBox" id="box-image-empty">
+                                            <property name="name">box-image-empty</property>
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
-                                            <property name="pixbuf">wireframe-image-add.svg</property>
-                                            <property name="pixel-size">128</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkLabel">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="label" translatable="yes">Please add an image file by one of these methods:
+                                            <property name="orientation">vertical</property>
+                                            <child type="center">
+                                              <object class="GtkBox">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="orientation">vertical</property>
+                                                <property name="spacing">6</property>
+                                                <child>
+                                                  <object class="GtkImage">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="pixbuf">wireframe-image-add.svg</property>
+                                                    <property name="pixel-size">128</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="label" translatable="yes">Please add an image file by one of these methods:
 
 - Drag and drop here.
 - Copy from somewhere and paste (Ctrl+V) here.
 - Choose with button below (non Flatpak).
 
 Remote image (from http://..., sftp://...) is allowed.</property>
-                                            <property name="use-markup">True</property>
+                                                    <property name="use-markup">True</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
+                                                </child>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkProgressBar" id="progress-bar">
+                                                <property name="can-focus">False</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
                                           </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">1</property>
-                                          </packing>
                                         </child>
                                       </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkProgressBar" id="progress-bar">
-                                        <property name="can-focus">False</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
                                     </child>
                                   </object>
+                                  <packing>
+                                    <property name="name">src_image</property>
+                                    <property name="title" translatable="yes">Image</property>
+                                    <property name="icon-name">insert-image</property>
+                                    <property name="position">1</property>
+                                  </packing>
                                 </child>
                               </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">0</property>
+                              </packing>
                             </child>
-                          </object>
-                          <packing>
-                            <property name="name">src_image</property>
-                            <property name="title" translatable="yes">Image</property>
-                            <property name="icon-name">insert-image</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="valign">end</property>
-                        <property name="margin-top">4</property>
-                        <property name="hexpand">True</property>
-                        <property name="spacing">3</property>
-                        <child>
-                          <object class="GtkComboBox" id="webcam-combobox">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="model">webcam-list</property>
-                            <property name="active">0</property>
-                            <property name="id-column">0</property>
-                            <signal name="changed" handler="on_webcam_combobox_changed" swapped="no"/>
                             <child>
-                              <object class="GtkCellRendererText" id="webcam-item-renderer"/>
-                              <attributes>
-                                <attribute name="text">1</attribute>
-                              </attributes>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkFileChooserButton" id="btn-img-chooser">
-                            <property name="can-focus">False</property>
-                            <property name="create-folders">False</property>
-                            <property name="filter">img-file-filter</property>
-                            <property name="local-only">False</property>
-                            <property name="preview-widget">img-preview</property>
-                            <property name="title" translatable="yes">Please choose an image file</property>
-                            <signal name="file-set" handler="on_btn_img_chooser_file_set" swapped="no"/>
-                            <signal name="update-preview" handler="on_btn_img_chooser_update_preview" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">4</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="pack-type">end</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="valign">start</property>
-                <property name="hexpand">True</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">8</property>
-                    <child>
-                      <object class="GtkFrame" id="result-display-frame">
-                        <property name="width-request">212</property>
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label-xalign">0</property>
-                        <property name="shadow-type">in</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child type="label">
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Result</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkExpander" id="raw-result-expander">
-                        <property name="visible">True</property>
-                        <property name="can-focus">True</property>
-                        <property name="margin-bottom">2</property>
-                        <child>
-                          <object class="GtkOverlay" id="cont-raw-text">
-                            <property name="name">cont-raw-text</property>
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <child>
-                              <object class="GtkTextView" id="raw-result-display">
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <property name="vadjustment">raw-result-adjustment</property>
-                                <property name="editable">False</property>
-                                <property name="wrap-mode">char</property>
-                                <property name="buffer">raw-result-buffer</property>
-                                <property name="monospace">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="valign">end</property>
+                                <property name="margin-top">4</property>
+                                <property name="hexpand">True</property>
+                                <property name="spacing">3</property>
+                                <child>
+                                  <object class="GtkComboBox" id="webcam-combobox">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="model">webcam-list</property>
+                                    <property name="active">0</property>
+                                    <property name="id-column">0</property>
+                                    <signal name="changed" handler="on_webcam_combobox_changed" swapped="no"/>
+                                    <child>
+                                      <object class="GtkCellRendererText" id="webcam-item-renderer"/>
+                                      <attributes>
+                                        <attribute name="text">1</attribute>
+                                      </attributes>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkFileChooserButton" id="btn-img-chooser">
+                                    <property name="can-focus">False</property>
+                                    <property name="create-folders">False</property>
+                                    <property name="filter">img-file-filter</property>
+                                    <property name="local-only">False</property>
+                                    <property name="preview-widget">img-preview</property>
+                                    <property name="title" translatable="yes">Please choose an image file</property>
+                                    <signal name="file-set" handler="on_btn_img_chooser_file_set" swapped="no"/>
+                                    <signal name="update-preview" handler="on_btn_img_chooser_update_preview" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">4</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
-                                <property name="index">-1</property>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="pack-type">end</property>
+                                <property name="position">1</property>
                               </packing>
                             </child>
                           </object>
                         </child>
-                        <child type="label">
-                          <object class="GtkLabel">
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="valign">start</property>
+                        <property name="hexpand">True</property>
+                        <child>
+                          <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Raw result</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">8</property>
+                            <child>
+                              <object class="GtkFrame" id="result-display-frame">
+                                <property name="width-request">212</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label-xalign">0</property>
+                                <property name="shadow-type">in</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child type="label">
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="label" translatable="yes">Result</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkExpander" id="raw-result-expander">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="margin-bottom">2</property>
+                                <child>
+                                  <object class="GtkOverlay" id="cont-raw-text">
+                                    <property name="name">cont-raw-text</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <child>
+                                      <object class="GtkTextView" id="raw-result-display">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="vadjustment">raw-result-adjustment</property>
+                                        <property name="editable">False</property>
+                                        <property name="wrap-mode">char</property>
+                                        <property name="buffer">raw-result-buffer</property>
+                                        <property name="monospace">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="index">-1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child type="label">
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="label" translatable="yes">Raw result</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="pack-type">end</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="pack-type">end</property>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
