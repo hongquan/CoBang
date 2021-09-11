@@ -220,9 +220,10 @@ class CoBangApplication(Gtk.Application):
             self.discover_webcam()
         self.window.present()
         logger.debug("Window {} is shown", self.window)
-        # If no webcam is selected, select the first one
+        # If no webcam is selected, select the first V4l2 one
         if not self.webcam_combobox.get_active_iter():
-            self.webcam_combobox.set_active(0)
+            v4l2_idx = next((n for n, r in enumerate(self.webcam_store) if r[2] == 'v4l2src'), 0)
+            self.webcam_combobox.set_active(v4l2_idx)
 
     def do_command_line(self, command_line: Gio.ApplicationCommandLine):
         options = command_line.get_options_dict().end().unpack()

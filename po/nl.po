@@ -7,16 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-09 22:51+0700\n"
-"PO-Revision-Date: 2021-03-06 13:15+0100\n"
-"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
-"Language: nl\n"
+"POT-Creation-Date: 2021-09-09 17:49+0200\n"
+"PO-Revision-Date: 2021-09-09 17:51+0200\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.9.0\n"
+"X-Generator: Poedit 3.0\n"
 
 #: cobang/app.py:106
 msgid "quit"
@@ -45,7 +46,7 @@ msgstr "Opgeslagen"
 
 #: data/cobang-resp.glade:14
 msgid "Copy"
-msgstr ""
+msgstr "Kopiëren"
 
 #: data/cobang-resp.glade:52
 msgid "Play"
@@ -61,7 +62,7 @@ msgstr "CoBang"
 
 #: data/cobang-resp.glade:146
 msgid "QR scanner for Linux"
-msgstr ""
+msgstr "QR-codescanner voor Linux"
 
 #: data/cobang-resp.glade:287
 msgid "Webcam"
@@ -78,10 +79,11 @@ msgid ""
 "Remote image (from http://..., sftp://...) is allowed."
 msgstr ""
 "Voeg een afbeelding toe op één van de volgende manieren:\n"
-"-Sleep een bestand hierheen\n"
-"-Kopieer een bestand en plak het hier (met Ctrl+V).\n"
-"-Kies via onderstaande knop (werkt niet in Flatpak-uitgaven).\n"
-"Externe afbeeldingen (http://..., sftp://...) zijn toegestaan."
+"-Sleep een bestand hierheen;\n"
+"-Kopieer een bestand en plak het hier (met Ctrl+V);\n"
+"-Kies via onderstaande knop (werkt niet in de flatpakversie).\n"
+"\n"
+"Externe afbeeldingen (http://…, sftp://…) zijn toegestaan."
 
 #: data/cobang-resp.glade:374
 msgid "Image"
@@ -109,7 +111,7 @@ msgstr "Knop"
 
 #: data/wifi-display.glade:16
 msgid "Found a wifi configuration"
-msgstr "Wifi-instellingen aangetroffen"
+msgstr "Er zijn wifi-instellingen aangetroffen"
 
 #: data/wifi-display.glade:39
 msgid "SSID"
@@ -126,4 +128,3 @@ msgstr "Wachtwoord"
 #: data/wifi-display.glade:101
 msgid "Save"
 msgstr "Opslaan"
-
