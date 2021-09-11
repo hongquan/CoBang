@@ -1,3 +1,9 @@
+cobang (0.9.2-1) hirsute; urgency=medium
+
+  * Reduce scrolling on mobile screen.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 11 Sep 2021 15:43:05 +0700
+
 cobang (0.9.1-1) hirsute; urgency=medium
 
   * Prevent redundant empty space.
