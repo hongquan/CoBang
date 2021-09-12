@@ -220,6 +220,7 @@ class CoBangApplication(Gtk.Application):
             self.discover_webcam()
         self.window.present()
         logger.debug("Window {} is shown", self.window)
+        ui.resize_to_match_screen(self.window)
         # If no webcam is selected, select the first V4l2 one
         if not self.webcam_combobox.get_active_iter():
             v4l2_idx = next((n for n, r in enumerate(self.webcam_store) if r[2] == 'v4l2src'), 0)
