@@ -1,3 +1,9 @@
+cobang (0.9.3-1) hirsute; urgency=medium
+
+  * Automatically choose the best layout for the screen.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sun, 12 Sep 2021 21:14:10 +0700
+
 cobang (0.9.2-1) hirsute; urgency=medium
 
   * Reduce scrolling on mobile screen.
