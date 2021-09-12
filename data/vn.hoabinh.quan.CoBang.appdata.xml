@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.9.3" date="2021-09-12" urgency="medium">
+      <description>
+        <p>Automatically choose the best layout for the screen.</p>
+      </description>
+    </release>
     <release version="0.9.2" date="2021-09-11" urgency="medium">
       <description>
         <p>Reduce scrolling on mobile screen.</p>

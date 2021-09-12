@@ -20,6 +20,9 @@ from .net import is_connected_same_wifi, add_wifi_connection
 
 logger = Logger(__name__)
 
+BEST_HORIZONTAL_WIDTH = 914
+BEST_VERTICAL_HEIGHT = 654
+
 
 def build_app_menu_model() -> Gio.Menu:
     menu = Gio.Menu()
@@ -86,3 +89,25 @@ def wifi_connect_done(client: NM.Client, res: Gio.AsyncResult, button: Gtk.Butto
     if created:
         button.set_label(_('Saved'))
         button.set_sensitive(False)
+
+
+def get_monitor_screen(window: Gtk.Window):
+    display = window.get_display()
+    logger.debug('Display: {}, {}', display, display.get_name())
+    # FIXME: It returns wrong monitor
+    monitor = display.get_monitor_at_window(window.get_window())
+    geo = monitor.get_geometry()
+    w, h = geo.width, geo.height
+    logger.debug('Monitor size: {}', (w, h))
+    return (w, h)
+
+
+def resize_to_match_screen(window: Gtk.Window):
+    '''Try to detect desktop or mobile screen, and resize to promote the horizontal or vertical layout.'''
+    sw, sh = get_monitor_screen(window)
+    w, h = window.get_size()
+    logger.debug('Current window size: {}', (w, h))
+    if sw > BEST_HORIZONTAL_WIDTH:
+        window.resize(BEST_HORIZONTAL_WIDTH, h)
+    elif sh > BEST_VERTICAL_HEIGHT:
+        window.resize(w, BEST_VERTICAL_HEIGHT)
