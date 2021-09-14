@@ -235,6 +235,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="shadow-type">in</property>
+            <property name="min-content-height">240</property>
             <property name="max-content-width">720</property>
             <property name="propagate-natural-height">True</property>
             <child>
@@ -263,8 +264,8 @@
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkStack" id="stack-img-source">
-                                <property name="width-request">480</property>
-                                <property name="height-request">360</property>
+                                <property name="width-request">320</property>
+                                <property name="height-request">240</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <signal name="notify::visible-child" handler="on_stack_img_source_visible_child_notify" swapped="no"/>

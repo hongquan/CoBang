@@ -104,10 +104,13 @@ def get_monitor_screen(window: Gtk.Window):
 
 def resize_to_match_screen(window: Gtk.Window):
     '''Try to detect desktop or mobile screen, and resize to promote the horizontal or vertical layout.'''
+    scale = window.get_scale_factor()
+    best_horizontal_width = BEST_HORIZONTAL_WIDTH / scale
+    best_vertical_height = BEST_VERTICAL_HEIGHT / scale
     sw, sh = get_monitor_screen(window)
     w, h = window.get_size()
     logger.debug('Current window size: {}', (w, h))
-    if sw > BEST_HORIZONTAL_WIDTH:
-        window.resize(BEST_HORIZONTAL_WIDTH, h)
-    elif sh > BEST_VERTICAL_HEIGHT:
-        window.resize(w, BEST_VERTICAL_HEIGHT)
+    if sw > best_horizontal_width:
+        window.resize(best_horizontal_width, h)
+    elif sh > best_vertical_height:
+        window.resize(w, best_vertical_height)
