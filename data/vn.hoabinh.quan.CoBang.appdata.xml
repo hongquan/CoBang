@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.9.4" date="2021-09-14" urgency="medium">
+      <description>
+        <p>Fix overflow UI in phone screen.</p>
+      </description>
+    </release>
     <release version="0.9.3" date="2021-09-12" urgency="medium">
       <description>
         <p>Automatically choose the best layout for the screen.</p>
