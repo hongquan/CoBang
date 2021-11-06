@@ -298,7 +298,6 @@ class CoBangApplication(Gtk.Application):
 
     def display_wifi(self, wifi: WifiInfoMessage):
         box = ui.build_wifi_info_display(wifi, self.nm_client)
-        # FIXME: Often crash at gtk_container_add below
         self.result_display.add(box)
         self.result_display.show_all()
 
@@ -330,7 +329,8 @@ class CoBangApplication(Gtk.Application):
         try:
             wifi = parse_wifi_message(raw_data)
             logger.debug('To display {}', wifi)
-            self.display_wifi(wifi)
+            # Pass to idle_add to prevent crash
+            GLib.idle_add(self.display_wifi, wifi)
             return
         except ValueError:
             logger.debug('Not a wellknown message')

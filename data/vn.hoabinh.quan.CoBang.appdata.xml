@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.9.5" date="2021-11-06" urgency="medium">
+      <description>
+        <p>Try to fix crash on displaying wifi result.</p>
+      </description>
+    </release>
     <release version="0.9.4" date="2021-09-14" urgency="medium">
       <description>
         <p>Fix overflow UI in phone screen.</p>
