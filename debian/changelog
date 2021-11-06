@@ -1,3 +1,9 @@
+cobang (0.9.5-1) impish; urgency=medium
+
+  * Try to fix crash on displaying wifi result.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 06 Nov 2021 16:06:41 +0700
+
 cobang (0.9.4-1) hirsute; urgency=medium
 
   * Fix overflow UI in phone screen.
