@@ -54,7 +54,7 @@ modules:
     builddir: true
     sources:
       - type: git
-        tag: 1.18.3
+        tag: 1.18.5
         url: https://github.com/freedesktop/gstreamer.git
 
   - name: gst-python
@@ -65,7 +65,7 @@ modules:
       - --libdir=lib
     sources:
       - type: git
-        tag: 1.18.3
+        tag: 1.18.5
         url: https://github.com/freedesktop/gstreamer-gst-python.git
 
   - name: intltool
@@ -81,6 +81,16 @@ modules:
     sources:
       - type: git
         url: https://github.com/libpwquality/libpwquality.git
+
+  - name: libhandy
+    buildsystem: meson
+    builddir: true
+    config-opts:
+      - -Dtests=false
+      - -Dexamples=false
+    sources:
+      - type: git
+        url: https://github.com/GNOME/libhandy.git
 
   - name: libndp
     buildsystem: autotools
@@ -187,4 +197,5 @@ modules:
     buildsystem: meson
     sources:
       - type: git
+        branch: main
         path: .
