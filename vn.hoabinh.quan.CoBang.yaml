@@ -80,6 +80,7 @@ modules:
       - --disable-python-bindings
     sources:
       - type: git
+        tag: libpwquality-1.4.4
         url: https://github.com/libpwquality/libpwquality.git
 
   - name: libhandy
@@ -90,15 +91,15 @@ modules:
       - -Dexamples=false
     sources:
       - type: git
+        tag: 1.5.0
         url: https://github.com/GNOME/libhandy.git
 
   - name: libndp
     buildsystem: autotools
     sources:
       - type: git
-        branch: v1.6
+        tag: v1.8
         url: https://github.com/jpirko/libndp.git
-        commit: 2f721c4ff519f38f46695a60d9f9d88f35bf3c1d
 
   # This depend on linux-pam, but don't know how to include it,
   - name: polkit
@@ -156,7 +157,8 @@ modules:
       - '*.a'
     sources:
       - type: git
-        url: git://github.com/gentoo/eudev.git
+        tag: v3.2.10
+        url: https://github.com/eudev-project/eudev.git
 
   - name: NetworkManager
     buildsystem: meson
