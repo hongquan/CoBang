@@ -6,7 +6,7 @@ CoBang
 
 A missing native QR Code scanner application for Linux desktop.
 
-.. image:: https://image.flaticon.com/icons/svg/376/376345.svg
+.. image:: https://github.com/hongquan/CoBang/blob/main/data/vn.hoabinh.quan.CoBang.svg
     :width: 400
 
 
