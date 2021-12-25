@@ -1,14 +1,14 @@
 # Italian translations for PROJECT.
 # Copyright (C) 2020 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2020.
+# ALBANO BATTISTELLA <albano_battistella@hotmail.com>, 2020,2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-09-09 22:51+0700\n"
-"PO-Revision-Date: 2021-08-17 23:08+0200\n"
+"PO-Revision-Date: 2021-11-26 20:08+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language: it\n"
 "Language-Team: it <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgstr "Tipo di file non supportato %s!"
 
 #: cobang/app.py:643
 msgid "Copied"
-msgstr ""
+msgstr "Copiato"
 
 #: cobang/ui.py:57
 msgid "Connected"
@@ -45,7 +45,7 @@ msgstr "Salvato"
 
 #: data/cobang-resp.glade:14
 msgid "Copy"
-msgstr ""
+msgstr "Copia"
 
 #: data/cobang-resp.glade:52
 msgid "Play"
@@ -61,7 +61,7 @@ msgstr "CoBang"
 
 #: data/cobang-resp.glade:146
 msgid "QR scanner for Linux"
-msgstr ""
+msgstr "Scanner QR per Linux"
 
 #: data/cobang-resp.glade:287
 msgid "Webcam"
