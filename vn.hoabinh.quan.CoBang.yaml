@@ -31,7 +31,7 @@ modules:
     sources:
       - type: git
         url: git://git.linuxtv.org/zbar.git
-        tag: 0.23.1
+        tag: 0.23.92
       - type: script
         dest-filename: autogen.sh
         commands:
@@ -44,8 +44,8 @@ modules:
     ]
     sources:
       - type: file
-        url: https://files.pythonhosted.org/packages/75/28/521c6dc7fef23a68368efefdcd682f5b3d1d58c2b90b06dc1d0b805b51ae/wheel-0.34.2.tar.gz
-        sha256: 8788e9155fe14f54164c1b9eb0a319d98ef02c160725587ad60f14ddc57b6f96
+        url: https://files.pythonhosted.org/packages/c0/6c/9f840c2e55b67b90745af06a540964b73589256cb10cc10057c87ac78fc2/wheel-0.37.1.tar.gz
+        sha256: e9a504e793efbca1b8e0e9cb979a249cf4a0a7b5b8c9e8b65a5e39d49529c1c4
 
   - flatpak/generated-poetry-sources.yml
 
