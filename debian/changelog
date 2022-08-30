@@ -1,3 +1,9 @@
+cobang (0.9.6-1) impish; urgency=medium
+
+  * Fix Flatpak building.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Thu, 09 Dec 2021 00:00:00 +0700
+
 cobang (0.9.5-1) impish; urgency=medium
 
   * Try to fix crash on displaying wifi result.
