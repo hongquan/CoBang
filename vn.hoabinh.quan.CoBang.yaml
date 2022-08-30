@@ -31,7 +31,7 @@ modules:
     sources:
       - type: git
         url: git://git.linuxtv.org/zbar.git
-        tag: 0.23.1
+        tag: 0.23.92
       - type: script
         dest-filename: autogen.sh
         commands:
@@ -44,8 +44,8 @@ modules:
     ]
     sources:
       - type: file
-        url: https://files.pythonhosted.org/packages/75/28/521c6dc7fef23a68368efefdcd682f5b3d1d58c2b90b06dc1d0b805b51ae/wheel-0.34.2.tar.gz
-        sha256: 8788e9155fe14f54164c1b9eb0a319d98ef02c160725587ad60f14ddc57b6f96
+        url: https://files.pythonhosted.org/packages/c0/6c/9f840c2e55b67b90745af06a540964b73589256cb10cc10057c87ac78fc2/wheel-0.37.1.tar.gz
+        sha256: e9a504e793efbca1b8e0e9cb979a249cf4a0a7b5b8c9e8b65a5e39d49529c1c4
 
   - flatpak/generated-poetry-sources.yml
 
@@ -54,7 +54,7 @@ modules:
     builddir: true
     sources:
       - type: git
-        tag: 1.18.3
+        tag: 1.18.5
         url: https://github.com/freedesktop/gstreamer.git
 
   - name: gst-python
@@ -65,7 +65,7 @@ modules:
       - --libdir=lib
     sources:
       - type: git
-        tag: 1.18.3
+        tag: 1.18.5
         url: https://github.com/freedesktop/gstreamer-gst-python.git
 
   - name: intltool
@@ -80,15 +80,26 @@ modules:
       - --disable-python-bindings
     sources:
       - type: git
+        tag: libpwquality-1.4.4
         url: https://github.com/libpwquality/libpwquality.git
+
+  - name: libhandy
+    buildsystem: meson
+    builddir: true
+    config-opts:
+      - -Dtests=false
+      - -Dexamples=false
+    sources:
+      - type: git
+        tag: 1.5.0
+        url: https://github.com/GNOME/libhandy.git
 
   - name: libndp
     buildsystem: autotools
     sources:
       - type: git
-        branch: v1.6
+        tag: v1.8
         url: https://github.com/jpirko/libndp.git
-        commit: 2f721c4ff519f38f46695a60d9f9d88f35bf3c1d
 
   # This depend on linux-pam, but don't know how to include it,
   - name: polkit
@@ -146,7 +157,8 @@ modules:
       - '*.a'
     sources:
       - type: git
-        url: git://github.com/gentoo/eudev.git
+        tag: v3.2.10
+        url: https://github.com/eudev-project/eudev.git
 
   - name: NetworkManager
     buildsystem: meson
@@ -187,4 +199,5 @@ modules:
     buildsystem: meson
     sources:
       - type: git
+        branch: main
         path: .
