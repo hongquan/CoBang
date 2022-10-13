@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.9.8" date="2022-10-13" urgency="medium">
+      <description>
+        <p>Increase displayed wifi password length.</p>
+      </description>
+    </release>
     <release version="0.9.7" date="2022-08-30" urgency="medium">
       <description>
         <p>Add Turkish translation.</p>
