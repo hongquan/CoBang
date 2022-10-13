@@ -1,3 +1,9 @@
+cobang (0.9.8-1) jammy; urgency=medium
+
+  * Increase displayed wifi password length.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Thu, 13 Oct 2022 11:00:16 +0700
+
 cobang (0.9.7-2) jammy; urgency=medium
 
   * Fix uploading to PPA.
