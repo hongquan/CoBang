@@ -7,12 +7,12 @@ finish-args:
   - --share=network
   - --share=ipc
   # Need to access NetworkManager D-Bus API
-  - --socket=session-bus
-  - --socket=system-bus
+  - --system-talk-name=org.freedesktop.NetworkManager.*
   - --socket=wayland
   - --socket=fallback-x11
   # Need to load image files
   - --filesystem=home:ro
+  - --talk-name=org.gtk.vfs.*
   - --filesystem=xdg-run/gvfsd
   # Need to access webcam
   - --device=all
