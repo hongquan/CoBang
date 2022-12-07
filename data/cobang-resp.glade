@@ -287,7 +287,7 @@
                                   <packing>
                                     <property name="name">src_webcam</property>
                                     <property name="title" translatable="yes">Webcam</property>
-                                    <property name="icon-name">camera-web</property>
+                                    <property name="icon-name">camera-web-symbolic</property>
                                   </packing>
                                 </child>
                                 <child>
