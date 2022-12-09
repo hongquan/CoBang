@@ -262,7 +262,7 @@ class CoBangApplication(Gtk.Application):
             child = event_box.get_child()
             logger.debug('Child: {}', child)
         except IndexError:
-            logger.error('{} doesnot have child or grandchild!', pane)
+            logger.error('{} doesn\'t have child or grandchild!', pane)
             return
         if isinstance(child, Gtk.Image):
             child.set_from_pixbuf(pixbuf)
@@ -541,7 +541,7 @@ class CoBangApplication(Gtk.Application):
             return
         logger.debug('Content type: {}', content_type)
         if not content_type.startswith('image/'):
-            self.show_error(_('Unsuported file type %s!') % content_type)
+            self.show_error(_('Unsupported file type %s!') % content_type)
             return
         self.process_passed_image_file(chosen_file, content_type)
         self.grab_focus_on_event_box()
