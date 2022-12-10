@@ -147,7 +147,7 @@
     </release>
     <release version="0.5.2" date="2020-06-22" urgency="medium">
       <description>
-        <p>Able to build Flatpak (sucessfully add NetworkManager dependency).</p>
+        <p>Able to build Flatpak (successfully add NetworkManager dependency).</p>
       </description>
     </release>
     <release version="0.5.1" date="2020-06-20" urgency="medium">
