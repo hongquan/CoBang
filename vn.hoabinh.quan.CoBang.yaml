@@ -1,18 +1,19 @@
 app-id: vn.hoabinh.quan.CoBang
 runtime: org.gnome.Platform
-runtime-version: '3.38'
+runtime-version: '43'
 sdk: org.gnome.Sdk
 command: cobang
 finish-args:
   - --share=network
   - --share=ipc
   # Need to access NetworkManager D-Bus API
-  - --socket=session-bus
-  - --socket=system-bus
+  - --system-talk-name=org.freedesktop.NetworkManager.*
   - --socket=wayland
   - --socket=fallback-x11
   # Need to load image files
   - --filesystem=home:ro
+  - --talk-name=org.gtk.vfs.*
+  - --filesystem=xdg-run/gvfsd
   # Need to access webcam
   - --device=all
 
@@ -30,7 +31,7 @@ modules:
       - --without-dbus
     sources:
       - type: git
-        url: git://git.linuxtv.org/zbar.git
+        url: https://git.linuxtv.org/zbar.git
         tag: 0.23.92
       - type: script
         dest-filename: autogen.sh
@@ -44,8 +45,8 @@ modules:
     ]
     sources:
       - type: file
-        url: https://files.pythonhosted.org/packages/c0/6c/9f840c2e55b67b90745af06a540964b73589256cb10cc10057c87ac78fc2/wheel-0.37.1.tar.gz
-        sha256: e9a504e793efbca1b8e0e9cb979a249cf4a0a7b5b8c9e8b65a5e39d49529c1c4
+        url: https://files.pythonhosted.org/packages/a2/b8/6a06ff0f13a00fc3c3e7d222a995526cbca26c1ad107691b6b1badbbabf1/wheel-0.38.4.tar.gz
+        sha256: 965f5259b566725405b05e7cf774052044b1ed30119b5d586b2703aafe8719ac
 
   - flatpak/generated-poetry-sources.yml
 
@@ -54,25 +55,25 @@ modules:
     builddir: true
     sources:
       - type: git
-        tag: 1.18.5
+        tag: 1.20.4
         url: https://github.com/freedesktop/gstreamer.git
 
   - name: gst-python
     buildsystem: meson
     builddir: true
     config-opts:
-      - -Dpygi-overrides-dir=/app/lib/python3.8/site-packages/gi/overrides/
+      - -Dpygi-overrides-dir=/app/lib/python3.10/site-packages/gi/overrides/
       - --libdir=lib
     sources:
       - type: git
-        tag: 1.18.5
+        tag: 1.19.2
         url: https://github.com/freedesktop/gstreamer-gst-python.git
 
   - name: intltool
     sources:
       - type: archive
         url: https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
-        md5: 12e517cac2b57a0121cda351570f1e63
+        sha256: 67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd
 
   - name: pwquality
     buildsystem: autotools
@@ -82,17 +83,6 @@ modules:
       - type: git
         tag: libpwquality-1.4.4
         url: https://github.com/libpwquality/libpwquality.git
-
-  - name: libhandy
-    buildsystem: meson
-    builddir: true
-    config-opts:
-      - -Dtests=false
-      - -Dexamples=false
-    sources:
-      - type: git
-        tag: 1.5.0
-        url: https://github.com/GNOME/libhandy.git
 
   - name: libndp
     buildsystem: autotools
@@ -168,14 +158,10 @@ modules:
     config-opts:
       - -Dlibaudit=no
       - -Ddbus_conf_dir=/app/etc/dbus-1/system.d
-      - -Ddbus_ifaces_dir=/app/share/dbus-1/interfaces
-      - -Ddbus_sys_dir=/app/share/dbus-1/system.d
       - -Ddnsmasq=/usr/bin/true
       - -Ddocs=false
       - -Dintrospection=true
       - -Diptables=/usr/bin/true
-      - -Djson_validation=false
-      - -Dlibnm_glib=true
       - -Dlibpsl=false
       - -Dmodem_manager=false
       - -Dnmtui=false
@@ -192,7 +178,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/NetworkManager/NetworkManager.git
-        tag: 1.26.2
+        tag: 1.40.2
 
   - name: cobang
     builddir: true
