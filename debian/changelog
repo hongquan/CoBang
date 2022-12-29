@@ -1,3 +1,10 @@
+cobang (0.9.9-1) jammy; urgency=medium
+
+  * Upgrade runtime for Flatpak.
+  * Fix typos.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Thu, 29 Dec 2022 10:01:19 +0700
+
 cobang (0.9.8-1) jammy; urgency=medium
 
   * Increase displayed wifi password length.
