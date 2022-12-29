@@ -40,6 +40,12 @@
   </kudos>
 
   <releases>
+    <release version="0.9.9" date="2022-12-29" urgency="medium">
+      <description>
+        <p>Upgrade runtime for Flatpak.</p>
+        <p>Fix typos</p>
+      </description>
+    </release>
     <release version="0.9.8" date="2022-10-13" urgency="medium">
       <description>
         <p>Increase displayed wifi password length.</p>
