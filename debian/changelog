@@ -1,3 +1,9 @@
+cobang (0.9.10-1) jammy; urgency=medium
+
+  * Use right image of Lepironia articulata.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Thu, 05 Jan 2023 11:57:26 +0700
+
 cobang (0.9.9-1) jammy; urgency=medium
 
   * Upgrade runtime for Flatpak.
