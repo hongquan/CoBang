@@ -18,7 +18,7 @@ In the future, it will support generating QR code and running on Linux phones.
 Name
 ++++
 
-It is "`Cỏ bàng <co_bang_>`_" (Lepironia articulata), in Vietnamese (I failed to find exact icon for this plant).
+It is "`Cỏ bàng <co_bang_>`_" (Lepironia articulata), in Vietnamese. This plant is used for making handicraft which has pattern like QR code.
 
 Motivation
 ++++++++++
@@ -234,7 +234,7 @@ Credit
 ++++++
 
 - Brought to you by `Nguyễn Hồng Quân <author_>`_.
-- Application logo is from `www.flaticon.com`_, made by `Freepik`_.
+- Application logo is from Shadd Gallegos.
 - One icon is composed from ones made by `Good Ware <good_ware_>`_ (allowed by Flaticon license).
 - Some contributors who proposed nicer UI for this app.
 
@@ -262,6 +262,4 @@ Credit
 .. _Decoder: https://gitlab.gnome.org/World/decoder/
 .. _Megapixels: https://git.sr.ht/~martijnbraam/megapixels
 .. _author: https://quan.hoabinh.vn
-.. _Freepik: https://www.flaticon.com/authors/freepik
-.. _www.flaticon.com: https://www.flaticon.com
 .. _good_ware: https://www.flaticon.com/authors/good-ware

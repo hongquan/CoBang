@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.9.10" date="2023-01-05" urgency="medium">
+      <description>
+        <p>Use right image of Lepironia articulata.</p>
+      </description>
+    </release>
     <release version="0.9.9" date="2022-12-29" urgency="medium">
       <description>
         <p>Upgrade runtime for Flatpak.</p>
