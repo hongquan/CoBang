@@ -26,8 +26,8 @@ BEST_VERTICAL_HEIGHT = 654
 
 def build_app_menu_model() -> Gio.Menu:
     menu = Gio.Menu()
-    menu.append('About', 'app.about')
-    menu.append('Quit', 'app.quit')
+    menu.append(_('About'), 'app.about')
+    menu.append(_('Quit'), 'app.quit')
     return menu
 
 
