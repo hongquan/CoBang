@@ -103,10 +103,10 @@ class CoBangApplication(Gtk.Application):
         NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
     def setup_actions(self):
-        action_quit = Gio.SimpleAction.new(_('quit'), None)
+        action_quit = Gio.SimpleAction.new('quit', None)
         action_quit.connect('activate', self.quit_from_action)
         self.add_action(action_quit)
-        action_about = Gio.SimpleAction.new(_('about'), None)
+        action_about = Gio.SimpleAction.new('about', None)
         action_about.connect('activate', self.show_about_dialog)
         self.add_action(action_about)
 
