@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: CoBang 0.6\n"
 "Report-Msgid-Bugs-To: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
 "POT-Creation-Date: 2021-09-09 22:51+0700\n"
-"PO-Revision-Date: 2020-11-17 17:31+0700\n"
+"PO-Revision-Date: 2023-04-15 19:40+0200\n"
 "Last-Translator: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
 "Language: vi\n"
 "Language-Team: AgriConnect\n"
@@ -18,13 +18,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: cobang/app.py:106
-msgid "quit"
-msgstr "thoát"
+#: cobang/ui.py:30
+msgid "Quit"
+msgstr "Thoát"
 
-#: cobang/app.py:109
-msgid "about"
-msgstr "giới thiệu"
+#: cobang/ui.py:29
+msgid "About"
+msgstr "Giới thiệu"
 
 #: cobang/app.py:542
 #, python-format

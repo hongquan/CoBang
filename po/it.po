@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-09-09 22:51+0700\n"
-"PO-Revision-Date: 2021-11-26 20:08+0100\n"
+"PO-Revision-Date: 2023-04-15 19:40+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language: it\n"
 "Language-Team: it <LL@li.org>\n"
@@ -18,12 +18,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.0\n"
 
-#: cobang/app.py:106
-msgid "quit"
+#: cobang/ui.py:30
+msgid "Quit"
 msgstr "Esci"
 
-#: cobang/app.py:109
-msgid "about"
+#: cobang/ui.py:29
+msgid "About"
 msgstr "Informazioni"
 
 #: cobang/app.py:542
