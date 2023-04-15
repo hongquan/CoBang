@@ -634,7 +634,7 @@ class CoBangApplication(Gtk.Application):
 
     def on_evbox_playpause_leave_notify_event(self, box: Gtk.EventBox, event: Gdk.EventCrossing):
         child: Gtk.Widget = box.get_child()
-        child.set_opacity(0.2)
+        child.set_opacity(0.5)
 
     def on_btn_copy_clicked(self, button: Gtk.Button):
         clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
