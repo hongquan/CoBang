@@ -1,14 +1,13 @@
 # Dutch translations for PROJECT.
 # Copyright (C) 2021 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
-#
+# Heimen Stoffels <vistausss@fastmail.com>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-09 17:49+0200\n"
-"PO-Revision-Date: 2021-09-09 17:51+0200\n"
+"PO-Revision-Date: 2023-04-15 19:40+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -19,12 +18,12 @@ msgstr ""
 "Generated-By: Babel 2.9.0\n"
 "X-Generator: Poedit 3.0\n"
 
-#: cobang/app.py:106
-msgid "quit"
+#: cobang/ui.py:30
+msgid "Quit"
 msgstr "Afsluiten"
 
-#: cobang/app.py:109
-msgid "about"
+#: cobang/ui.py:29
+msgid "About"
 msgstr "Over"
 
 #: cobang/app.py:542

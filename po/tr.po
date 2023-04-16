@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the vn.hoabinh.quan.CoBang package
 #
 # Sabri Ünal <libreajans@gmail.com>, 2022
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: vn.hoabinh.quan.CoBang master\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-27 02:46+0300\n"
-"PO-Revision-Date: 2022-08-27 16:16+0300\n"
+"PO-Revision-Date: 2023-04-15 19:40+0200\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -22,13 +21,13 @@ msgstr ""
 "X-Poedit-SearchPath-0: cobang\n"
 "X-Poedit-SearchPath-1: data\n"
 
-#: cobang/app.py:106
-msgid "quit"
-msgstr "çık"
+#: cobang/ui.py:30
+msgid "Quit"
+msgstr "Çık"
 
-#: cobang/app.py:109
-msgid "about"
-msgstr "hakkında"
+#: cobang/ui.py:29
+msgid "About"
+msgstr "Hakkında"
 
 #: cobang/app.py:544
 #, python-format
