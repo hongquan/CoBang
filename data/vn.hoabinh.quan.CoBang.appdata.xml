@@ -40,10 +40,15 @@
   </kudos>
 
   <releases>
+    <release version="0.10.1" date="2023-04-26" urgency="medium">
+      <description>
+        <p>Fix building for Flatpak.</p>
+      </description>
+    </release>
     <release version="0.10.0" date="2023-04-26" urgency="medium">
       <description>
         <p>Add French translation.</p>
-        <p>Increase opacity for Play & Pause buttons.</p>
+        <p>Increase opacity for Play &amp; Pause buttons.</p>
       </description>
     </release>
     <release version="0.9.10" date="2023-01-05" urgency="medium">
