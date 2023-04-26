@@ -56,7 +56,7 @@ modules:
     sources:
       - type: git
         tag: 1.20.4
-        url: https://github.com/freedesktop/gstreamer.git
+        url: https://github.com/GStreamer/gstreamer.git
 
   - name: gst-python
     buildsystem: meson
@@ -67,7 +67,7 @@ modules:
     sources:
       - type: git
         tag: 1.19.2
-        url: https://github.com/freedesktop/gstreamer-gst-python.git
+        url: https://github.com/GStreamer/gst-python.git
 
   - name: intltool
     sources:
