@@ -103,10 +103,10 @@ class CoBangApplication(Gtk.Application):
         NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
     def setup_actions(self):
-        action_quit = Gio.SimpleAction.new(_('quit'), None)
+        action_quit = Gio.SimpleAction.new('quit', None)
         action_quit.connect('activate', self.quit_from_action)
         self.add_action(action_quit)
-        action_about = Gio.SimpleAction.new(_('about'), None)
+        action_about = Gio.SimpleAction.new('about', None)
         action_about.connect('activate', self.show_about_dialog)
         self.add_action(action_about)
 
@@ -634,7 +634,7 @@ class CoBangApplication(Gtk.Application):
 
     def on_evbox_playpause_leave_notify_event(self, box: Gtk.EventBox, event: Gdk.EventCrossing):
         child: Gtk.Widget = box.get_child()
-        child.set_opacity(0.2)
+        child.set_opacity(0.5)
 
     def on_btn_copy_clicked(self, button: Gtk.Button):
         clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
