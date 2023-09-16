@@ -12,7 +12,7 @@ readme = "README.rst"
 python = "^3.7"
 logbook = "^1.5.3"
 Pillow = "^9.3.0"
-requests = "^2.28.1"
+requests = "^2.31.0"
 kiss-headers = "^2.3.1"
 single-version = "^1.5.1"
 
