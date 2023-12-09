@@ -32,6 +32,17 @@ line-length = 120
 target-version = ['py37']
 skip-string-normalization = true
 
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+ignore = [
+    "E402",  # The way to use PyGobject requires to do something before import.
+]
+
+[tool.ruff.format]
+quote-style = "single"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
