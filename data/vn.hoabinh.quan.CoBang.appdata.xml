@@ -40,6 +40,11 @@
   </kudos>
 
   <releases>
+    <release version="0.10.2" date="2023-12-09" urgency="medium">
+      <description>
+        <p>Upgrade Gnome runtime for Flatpak.</p>
+      </description>
+    </release>
     <release version="0.10.1" date="2023-04-26" urgency="medium">
       <description>
         <p>Fix building for Flatpak.</p>
