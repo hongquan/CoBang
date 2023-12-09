@@ -1,6 +1,6 @@
 app-id: vn.hoabinh.quan.CoBang
 runtime: org.gnome.Platform
-runtime-version: '43'
+runtime-version: '44'
 sdk: org.gnome.Sdk
 command: cobang
 finish-args:
