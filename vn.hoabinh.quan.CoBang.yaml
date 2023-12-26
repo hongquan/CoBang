@@ -1,6 +1,6 @@
 app-id: vn.hoabinh.quan.CoBang
 runtime: org.gnome.Platform
-runtime-version: '44'
+runtime-version: '45'
 sdk: org.gnome.Sdk
 command: cobang
 finish-args:
@@ -32,7 +32,7 @@ modules:
     sources:
       - type: git
         url: https://git.linuxtv.org/zbar.git
-        tag: 0.23.92
+        commit: 150df8e19ebf5b13ce25c1e3e0a56446b4389acd
       - type: script
         dest-filename: autogen.sh
         commands:
@@ -45,8 +45,8 @@ modules:
     ]
     sources:
       - type: file
-        url: https://files.pythonhosted.org/packages/a2/b8/6a06ff0f13a00fc3c3e7d222a995526cbca26c1ad107691b6b1badbbabf1/wheel-0.38.4.tar.gz
-        sha256: 965f5259b566725405b05e7cf774052044b1ed30119b5d586b2703aafe8719ac
+        url: https://files.pythonhosted.org/packages/b0/b4/bc2baae3970c282fae6c2cb8e0f179923dceb7eaffb0e76170628f9af97b/wheel-0.42.0.tar.gz
+        sha256: c45be39f7882c9d34243236f2d63cbd58039e360f85d0913425fbd7ceea617a8
 
   - flatpak/generated-poetry-sources.yml
 
@@ -55,19 +55,19 @@ modules:
     builddir: true
     sources:
       - type: git
-        tag: 1.20.4
+        tag: 1.22.8
         url: https://github.com/GStreamer/gstreamer.git
 
-  - name: gst-python
-    buildsystem: meson
-    builddir: true
-    config-opts:
-      - -Dpygi-overrides-dir=/app/lib/python3.10/site-packages/gi/overrides/
-      - --libdir=lib
-    sources:
-      - type: git
-        tag: 1.19.2
-        url: https://github.com/GStreamer/gst-python.git
+  # - name: gst-python
+  #   buildsystem: meson
+  #   builddir: true
+  #   config-opts:
+  #     - -Dpygi-overrides-dir=/app/lib/python3.11/site-packages/gi/overrides/
+  #     - --libdir=lib
+  #   sources:
+  #     - type: git
+  #       tag: 1.19.2
+  #       url: https://github.com/GStreamer/gst-python.git
 
   - name: intltool
     sources:
@@ -81,7 +81,7 @@ modules:
       - --disable-python-bindings
     sources:
       - type: git
-        tag: libpwquality-1.4.4
+        tag: libpwquality-1.4.5
         url: https://github.com/libpwquality/libpwquality.git
 
   - name: libndp
@@ -147,7 +147,7 @@ modules:
       - '*.a'
     sources:
       - type: git
-        tag: v3.2.10
+        tag: v3.2.14
         url: https://github.com/eudev-project/eudev.git
 
   - name: NetworkManager
