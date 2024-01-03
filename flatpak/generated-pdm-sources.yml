@@ -1,0 +1,44 @@
+name: pdm-deps
+buildsystem: simple
+build-commands:
+- python3 -m pip install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
+  certifi charset-normalizer idna kiss-headers logbook pillow requests single-version
+  urllib3
+sources:
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/64/62/428ef076be88fa93716b576e4a01f919d25968913e817077a386fcbe4f42/certifi-2023.11.17-py3-none-any.whl
+  sha256: e036ab49d5b79556f99cfc2d9320b34cfbe5be05c5871b51de9329f0603b0474
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/28/76/e6222113b83e3622caa4bb41032d0b1bf785250607392e1b778aca0b8a7d/charset_normalizer-3.3.2-py3-none-any.whl
+  sha256: 3e4d1f6587322d2788836a99c69062fbb091331ec940e02d12d179c1d53e25fc
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/c2/e7/a82b05cf63a603df6e68d59ae6a68bf5064484a0718ea5033660af4b54a9/idna-3.6-py3-none-any.whl
+  sha256: c05567e9c24a6b9faaa835c4821bad0590fbb9d5779e7caa6e1cc4978e7eb24f
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/f9/3e/9d8f56a758d8259abd6e33417067013a217f7db9e2f37a76d637c5439b9d/kiss_headers-2.4.3-py3-none-any.whl
+  sha256: 9d800b77532068e8748be9f96f30eaeb547cdc5345e4689ddf07b77071256239
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/cc/98/c1d93c1d7593f58515333a6217aa4ae647d9ee9c1aa2dfdf77b28b7bb7c7/Logbook-1.7.0.post0.tar.gz
+  sha256: a5e8016701ca3beea6a390b0ba1541037f663543ca508ccd36cfdc841639cdd7
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/80/d7/c4b258c9098b469c4a4e77b0a99b5f4fd21e359c2e486c977d231f52fc71/Pillow-10.1.0.tar.gz
+  sha256: e6bf8de6c36ed96c86ea3b6e1d5273c53f46ef518a062464cd7ef5dd2cf92e38
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/70/8e/0e2d847013cb52cd35b38c009bb167a1a26b2ce6cd6965bf26b47bc0bf44/requests-2.31.0-py3-none-any.whl
+  sha256: 58cd2187c01e70e6e26505bca751777aa9f2ee0b7f4300988b709f44e013003f
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/61/b5/ffbbc700075f6d07164dea524b81a495689d18a0f6dd44f07c8cdfeb9fb5/single_version-1.6.0-py3-none-any.whl
+  sha256: 67a2734e728b9554750e867b33591f3ad9509ccb851bb3047ced7bfe68429ecd
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/96/94/c31f58c7a7f470d5665935262ebd7455c7e4c7782eb525658d3dbf4b9403/urllib3-2.1.0-py3-none-any.whl
+  sha256: 55901e917a5896a349ff771be919f8bd99aff50b79fe58fec595eb37bbc56bb3
+

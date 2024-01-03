@@ -1,36 +1,42 @@
-[tool.poetry]
+[project]
 name = "cobang"
 version = "0.10.3"
 description = "QR code and barcode scanner for Linux desktop"
-authors = ["Nguyễn Hồng Quân <ng.hong.quan@gmail.com>"]
-license = "GPL-3.0-or-later"
+authors = [
+    {name = "Nguyễn Hồng Quân", email = "ng.hong.quan@gmail.com"},
+]
+dependencies = [
+    "logbook<2.0.0,>=1.5.3",
+    "Pillow<11.0.0,>=10.1.0",
+    "requests<3.0.0,>=2.31.0",
+    "kiss-headers<3.0.0,>=2.3.1",
+    "single-version<2.0.0,>=1.5.1",
+]
+requires-python = ">=3.8,<4.0"
+readme = "README.rst"
+license = {text = "GPL-3.0-or-later"}
+
+[project.urls]
 homepage = "https://github.com/hongquan/CoBang"
 repository = "https://github.com/hongquan/CoBang.git"
-readme = "README.rst"
 
-[tool.poetry.dependencies]
-python = "^3.7"
-logbook = "^1.5.3"
-Pillow = "^9.3.0"
-requests = "^2.31.0"
-kiss-headers = "^2.3.1"
-single-version = "^1.5.1"
+[project.scripts]
+cobang = "cobang.__main__:main"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.2.0"
-black = {version = "^22.6.0", allow-prereleases = true}
-BabelGladeExtractor = "^0.7.0"
-click = "^8.1.3"
-types-click = "^7.1.8"
-typed-ast = "^1.5.4"
+[tool.pdm]
+package-type = "application"
 
-[tool.poetry.scripts]
-cobang = 'cobang.__main__:main'
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest<8.0.0,>=7.2.0",
+    "BabelGladeExtractor<1.0.0,>=0.7.0",
+    "click<9.0.0,>=8.1.3",
+    "types-click<8.0.0,>=7.1.8",
+    "typed-ast<2.0.0,>=1.5.4",
+]
 
-[tool.black]
-line-length = 120
-target-version = ['py37']
-skip-string-normalization = true
+[tool.pdm.build]
+includes = []
 
 [tool.ruff]
 line-length = 120
@@ -43,6 +49,3 @@ ignore = [
 [tool.ruff.format]
 quote-style = "single"
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"

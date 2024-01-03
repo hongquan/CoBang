@@ -48,7 +48,7 @@ modules:
         url: https://files.pythonhosted.org/packages/b0/b4/bc2baae3970c282fae6c2cb8e0f179923dceb7eaffb0e76170628f9af97b/wheel-0.42.0.tar.gz
         sha256: c45be39f7882c9d34243236f2d63cbd58039e360f85d0913425fbd7ceea617a8
 
-  - flatpak/generated-poetry-sources.yml
+  - flatpak/generated-pdm-sources.yml
 
   - name: gstreamer
     buildsystem: meson
