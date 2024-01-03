@@ -27,8 +27,12 @@ class InstallableFile(BaseModel):
         return self.file.endswith('py3-none-any.whl')
 
     @property
+    def is_linux_wheel(self):
+        return self.file.endswith('.whl') and 'linux' in self.file
+
+    @property
     def is_tarball(self):
-        return self.file.endswith('.tar.gz')
+        return self.file.endswith('.tar.gz') or self.file.endswith('.tar.bz2')
 
 
 class Package(BaseModel):
@@ -45,7 +49,7 @@ class PDMLock(BaseModel):
 class FileDigest(BaseModel):
     sha256: str
 
-    
+
 class PyPIReleaseUrl(BaseModel):
     url: str
     digests: FileDigest
@@ -55,30 +59,35 @@ class PyPIRelease(BaseModel):
     urls: list[PyPIReleaseUrl]
 
 
-def convert_to_flatpak_source(package: Package):
-    ifile = next((f for f in package.files if f.is_neutral_wheel), None)
-    if not ifile:
-        ifile = next((f for f in package.files if f.is_tarball), None)
-    if ifile:
+def convert_to_flatpak_sources(package: Package):
+    sources = []
+    installable_files = tuple(f for f in package.files if f.is_neutral_wheel or f.is_linux_wheel or f.is_tarball)
+    # Remove tarball if there is neutral wheel
+    if any(f.is_neutral_wheel for f in installable_files):
+        installable_files = tuple(f for f in installable_files if f.is_neutral_wheel or f.is_linux_wheel)
+    if not installable_files:
+        return []
+    pypi_files = get_pypi_release_files(package)
+    for ifile in installable_files:
         sha256 = ifile.hash.split(':')[1]
-        url = find_file_url(package, sha256)
+        url = next((f for f in pypi_files if f.digests.sha256 == sha256), None)
         if not url:
-            click.secho(f'Failed to find file URL for {package.name}', fg='red', err=True)
-            return
-        return {
+            click.secho(f'Failed to find file URL for {package.name} v{package.version}', fg='red', err=True)
+            continue
+        sources.append({
             'type': 'file',
-            'url': url,
+            'url': url.url,
             'sha256': sha256,
-        }
+        })
+    return sources
 
 
-def find_file_url(package: Package, sha256: str):
+def get_pypi_release_files(package: Package):
     api_url = f'https://pypi.org/pypi/{package.name}/{package.version}/json'
+    click.secho(f'Retrieving {api_url}...', fg='blue', err=True)
     resp = httpx.get(api_url).json()
     release = PyPIRelease.model_validate(resp)
-    for r in release.urls:
-        if r.digests.sha256 == sha256:
-            return r.url
+    return release.urls
 
 
 @click.command()
@@ -93,10 +102,10 @@ def main(lockfile: Path, out_file: Path | None = None):
     sources = deque()
     dependencies = deque()
     for p in prod_packages:
-        source = convert_to_flatpak_source(p)
-        if not source:
+        batch = convert_to_flatpak_sources(p)
+        if not batch:
             continue
-        sources.append(source)
+        sources.extend(batch)
         dependencies.append(p.name)
     out_dict = {
         'name': 'pdm-deps',

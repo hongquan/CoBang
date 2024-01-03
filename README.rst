@@ -146,11 +146,11 @@ On other distros (Fedora, ArchLinux etc.), please try to figure out equivalent p
 3. Install PyPI-hosted Python packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For other Python dependencies, this project is using `Poetry`_ to manage. Please install it, then, inside the created virtual environment, run:
+For other Python dependencies, this project is using `PDM`_ to manage. Please install it, then, inside the created virtual environment, run:
 
 .. code-block:: sh
 
-    poetry install --no-root
+    pdm install --no-self
 
 to install those dependencies.
 
@@ -255,7 +255,7 @@ Credit
 .. _Xfce: https://www.xfce.org/
 .. _LxQt: https://lxqt.github.io/
 .. _virtualenvwrapper: https://pypi.org/project/virtualenvwrapper/
-.. _Poetry: https://python-poetry.org/
+.. _PDM: https://pdm-project.org
 .. _Pipenv: https://pipenv.pypa.io
 .. _Logbook: https://pypi.org/project/Logbook/
 .. _FlatHub: https://flathub.org/apps/details/vn.hoabinh.quan.CoBang
