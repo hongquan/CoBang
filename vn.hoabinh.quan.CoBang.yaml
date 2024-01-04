@@ -56,6 +56,15 @@ modules:
 
   - flatpak/generated-pdm-sources.yml
 
+  # Needed by gst-plugins-good
+  - name: libsoup
+    buildsystem: meson
+    builddir: true
+    sources:
+      - type: archive
+        url: https://github.com/GNOME/libsoup/archive/refs/tags/2.74.3.tar.gz
+        sha256: 2e7a1313c2223c7e70cda90a8c02c679ab2bf3935c07b5bb028a9b5550411b96
+
   - name: gstreamer
     buildsystem: meson
     builddir: true
