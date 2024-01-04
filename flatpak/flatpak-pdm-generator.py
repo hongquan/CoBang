@@ -28,11 +28,12 @@ class InstallableFile(BaseModel):
 
     @property
     def is_linux_wheel(self):
-        return self.file.endswith('.whl') and 'linux' in self.file
+        # FlatHub only supports x86_64 and aarch64
+        return self.file.endswith(('x86_64.whl', 'aarch64.whl')) and 'linux' in self.file
 
     @property
     def is_tarball(self):
-        return self.file.endswith('.tar.gz') or self.file.endswith('.tar.bz2')
+        return self.file.endswith(('.tar.gz', '.tar.bz2', '.tar.xz'))
 
 
 class Package(BaseModel):
@@ -92,9 +93,10 @@ def get_pypi_release_files(package: Package):
 
 @click.command()
 @click.argument('lockfile', type=click.Path(exists=True, path_type=Path))
-@click.option('-o', '--out-file', type=click.Path(writable=True, path_type=Path))
+@click.option('-o', '--out-file', type=click.Path(writable=True, path_type=Path), help='Output file, should have .json or .yml extension. Default to write to standard ouput in YAML format.')
 def main(lockfile: Path, out_file: Path | None = None):
-    """Flatpak PDM generator"""
+    """Generate Flatpak-builder manifest file from PDM lock file."""
+
     with lockfile.open('rb') as f:
         pdm_lock = PDMLock.model_validate(tomllib.load(f))
     packages = pdm_lock.package
@@ -111,7 +113,7 @@ def main(lockfile: Path, out_file: Path | None = None):
         'name': 'pdm-deps',
         'buildsystem': 'simple',
         'build-commands': [
-            'python3 -m pip install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} ' + ' '.join(dependencies)
+            'python3 -m pip install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} --no-build-isolation ' + ' '.join(dependencies)
         ],
         'sources': tuple(sources)
     }
