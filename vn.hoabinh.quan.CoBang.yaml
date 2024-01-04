@@ -38,21 +38,30 @@ modules:
         commands:
           - autoreconf -vfi -W none
 
-  - name: python3-wheel
+  - name: python3-build-tools
     buildsystem: simple
     build-commands: [
-      'python3 -m pip install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} wheel setuptools flit-core'
+      'python3 -m pip install -U --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} wheel setuptools flit-core'
     ]
     sources:
       - type: file
-        url: https://files.pythonhosted.org/packages/fc/c9/b146ca195403e0182a374e0ea4dbc69136bad3cd55bc293df496d625d0f7/setuptools-69.0.3.tar.gz
-        sha256: be1af57fc409f93647f2e8e4573a142ed38724b8cdd389706a867bb4efcf1e78
+        url: https://files.pythonhosted.org/packages/55/3a/5121b58b578a598b269537e09a316ad2a94fdd561a2c6eb75cd68578cc6b/setuptools-69.0.3-py3-none-any.whl
+        sha256: 385eb4edd9c9d5c17540511303e39a147ce2fc04bc55289c322b9e5904fe2c05
       - type: file
-        url: https://files.pythonhosted.org/packages/b0/b4/bc2baae3970c282fae6c2cb8e0f179923dceb7eaffb0e76170628f9af97b/wheel-0.42.0.tar.gz
-        sha256: c45be39f7882c9d34243236f2d63cbd58039e360f85d0913425fbd7ceea617a8
+        url: https://files.pythonhosted.org/packages/c7/c3/55076fc728723ef927521abaa1955213d094933dc36d4a2008d5101e1af5/wheel-0.42.0-py3-none-any.whl
+        sha256: 177f9c9b0d45c47873b619f5b650346d632cdc35fb5e4d25058e09c9e581433d
       - type: file
         url: https://files.pythonhosted.org/packages/38/45/618e84e49a6c51e5dd15565ec2fcd82ab273434f236b8f108f065ded517a/flit_core-3.9.0-py3-none-any.whl
         sha256: 7aada352fb0c7f5538c4fafeddf314d3a6a92ee8e2b1de70482329e42de70301
+      - type: file
+        url: https://files.pythonhosted.org/packages/0d/c7/cb436626760491badd92ac1c8e1a165964b4eb2ceedaaaa90de1e1860be7/Cython-3.0.7-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+        sha256: 22d2a684122dfb531853d57c8c85c1d5d44be709e12466dca99fa6aee7d8054f
+      - type: file
+        url: https://files.pythonhosted.org/packages/3a/94/b5bf32e975e0669c20b5f9831807cb4b550968201e284634d4b2e6e32ecf/Cython-3.0.7-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+        sha256: 0c636c9ab92c7838231a1ba769e519d953af8294612f3f772a54d3a5250ff23f
+      - type: file
+        url: https://files.pythonhosted.org/packages/23/e9/ef8607abfbbbaeb93cb1381c8538a22d38d64524df39759dc2787d4909b0/Cython-3.0.7.tar.gz
+        sha256: fb299acf3a578573c190c858d49e0cf9d75f4bc49c3f24c5a63804997ef09213
 
   - flatpak/generated-pdm-sources.yml
 
