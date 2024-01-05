@@ -1,42 +1,40 @@
 # Turkish translation for vn.hoabinh.quan.CoBang
-# Copyright (C) 2022 vn.hoabinh.quan.CoBang's COPYRIGHT HOLDER
+# Copyright (C) 2022-2024 vn.hoabinh.quan.CoBang's COPYRIGHT HOLDER
 # This file is distributed under the same license as the vn.hoabinh.quan.CoBang package
 #
-# Sabri Ünal <libreajans@gmail.com>, 2022
+# Sabri Ünal <libreajans@gmail.com>, 2022, 2024
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: vn.hoabinh.quan.CoBang master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-27 02:46+0300\n"
-"PO-Revision-Date: 2023-04-15 19:40+0200\n"
+"POT-Creation-Date: 2024-01-05 18:35+0300\n"
+"PO-Revision-Date: 2024-01-05 18:40+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
-"Language-Team: Turkish <gnome-turk@gnome.org>\n"
+"Language-Team: Turkish <takim@gnome.org.tr>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
-"X-Poedit-Basepath: ..\n"
-"X-Poedit-SearchPath-0: cobang\n"
-"X-Poedit-SearchPath-1: data\n"
-
-#: cobang/ui.py:30
-msgid "Quit"
-msgstr "Çık"
-
-#: cobang/ui.py:29
-msgid "About"
-msgstr "Hakkında"
+"X-Generator: Poedit 3.4.2\n"
 
 #: cobang/app.py:544
 #, python-format
-msgid "Unsuported file type %s!"
+msgid "Unsupported file type %s!"
 msgstr "%s dosya türü desteklenmiyor!"
 
 #: cobang/app.py:645
 msgid "Copied"
 msgstr "Kopyalandı"
+
+#: cobang/ui.py:29
+msgid "About"
+msgstr "Hakkında"
+
+#: cobang/ui.py:30
+msgid "Quit"
+msgstr "Çık"
 
 #: cobang/ui.py:59
 msgid "Connected"
@@ -58,8 +56,8 @@ msgstr "Oynat"
 msgid "Pause"
 msgstr "Duraklat"
 
-#: data/cobang-resp.glade:143 data/vn.hoabinh.quan.CoBang.appdata.xml:9
-#: data/vn.hoabinh.quan.CoBang.desktop:5
+#: data/cobang-resp.glade:143 data/vn.hoabinh.quan.CoBang.appdata.xml.in:9
+#: data/vn.hoabinh.quan.CoBang.desktop.in:4
 msgid "CoBang"
 msgstr "CoBang"
 
@@ -113,176 +111,41 @@ msgstr "URL bulundu. Açmak için tıklayın."
 msgid "button"
 msgstr "düğme"
 
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:10
+#: data/vn.hoabinh.quan.CoBang.appdata.xml.in:10
 msgid "QR code scanner for Linux desktop"
 msgstr "Linux masaüstü için QR kod tarayıcı"
 
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:12
+#: data/vn.hoabinh.quan.CoBang.appdata.xml.in:12
 msgid ""
 "A missing native QR Code and barcode scanner application for Linux desktop."
 msgstr "Linux masaüstü için doğal QR Kod ve barkod tarama uygulaması."
 
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:13
+#: data/vn.hoabinh.quan.CoBang.appdata.xml.in:13
 msgid ""
 "CoBang can scan barcode, QR code from webcam or from static image. To be "
 "part of Linux desktop modernization, it is set to support Wayland (not "
 "XWayland), and only implement native GUI (no web crap)."
 msgstr ""
 "CoBang, web kamerasından veya sabit görüntüden barkod veya QR kod "
-"tarayabilir. Linux masaüstü yenileştirmenin bir parçası olmak için "
-"Wayland'ı (XWayland'ı değil) destekleyecek ve yalnızca doğal arayüzü (web "
-"saçmalığı yok) gerçekleştirecek şekilde hazırlanmıştır."
+"tarayabilir. Linux masaüstü yenileştirmenin bir parçası olmak için Wayland'ı "
+"(XWayland'ı değil) destekleyecek ve yalnızca doğal arayüzü (web saçmalığı "
+"yok) gerçekleştirecek şekilde hazırlanmıştır."
 
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:35
+#: data/vn.hoabinh.quan.CoBang.appdata.xml.in:37
 msgid "Nguyễn Hồng Quân"
 msgstr "Nguyễn Hồng Quân"
 
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:45
-msgid "Fix building Flatpak for v0.9+."
-msgstr "v0.9+ için Flatpak inşasını düzelt."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:50
-msgid "Try to fix crash on displaying wifi result."
-msgstr "Kablosuz sonucunu görüntülerken çökme düzeltilmeye çalışıldı."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:55
-msgid "Fix overflow UI in phone screen."
-msgstr "Telefon ekranında kullanıcı arayüzü taşması düzeltildi."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:60
-msgid "Automatically choose the best layout for the screen."
-msgstr "Ekran için en iyi yerleşim düzenini kendiliğinden seç."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:65
-msgid "Reduce scrolling on mobile screen."
-msgstr "Mobil ekranda kaydırmayı azalt."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:70
-msgid "Prevent redundant empty space."
-msgstr "Gereksiiz boş alanı önle."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:75
-msgid "Support mobile view with responsive UI."
-msgstr "Duyarlı kullanıcı arayüzü ile mobil görünüm desteği."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:80
-msgid "Update Italian translation."
-msgstr "İtalyanca çeviri güncellendi."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:85
-msgid "Lower down Meson version requirement."
-msgstr "Meson sürüm gereksinimi düşürüldü."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:90
-msgid "Fix licensing."
-msgstr "Lisanslamayı düzelt."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:95
-msgid "Let play webcam from PipeWire."
-msgstr "PipeWire'dan web kamerası oynatmaya izin ver."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:100
-msgid "Add button to copy raw result."
-msgstr "Ham sonucu kopyalama düğmesi eklendi."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:105
-msgid "Fix appdata file."
-msgstr "Appdata dosyasını düzelt."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:110
-msgid "Support more languages."
-msgstr "Daha fazla dil desteği."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:115
-msgid "Compatible with GStreamer v1.18."
-msgstr "GStreamer v1.18 ile uyumlu."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:120
-msgid "Fix handling HTTP file in some unusual case."
-msgstr "Olağandışı kimi durumda HTTP dosyası işleme sorunu düzeltildi."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:125
-msgid "Fix AppStream data."
-msgstr "AppStream verilerini düzelt."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:130
-msgid "Move Play &amp; Pause buttons to overlay."
-msgstr "Oynat ve Duraklat düğmeleri kaplamaya taşı."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:135
-msgid "Fix missing files when building Flatpak."
-msgstr "Flatpak inşa edilirken eksik dosyalar hatası düzeltildi."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:140
-msgid "Able to build Flatpak (sucessfully add NetworkManager dependency)."
-msgstr "Flatpak inşası (NetworkManager bağımlılığı eklendi)."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:145
-msgid "Fix crash when detecting WiFi content from webcam."
-msgstr ""
-"Web kamerasından kablosuz bağlantı içeriği algılanırken çökme düzeltildi."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:146
-msgid "Fix: Forgot to check SVG in some cases."
-msgstr "Bazı durumlarda eksik SVG denetimi hatası düzeltildi."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:151
-msgid "Display result URL with a link."
-msgstr "Sonuç URL'sini bağlantıyla görüntüle."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:152
-msgid "Display result WiFi info and let save it to NetworkManager."
-msgstr ""
-"Sonuç kablosuz bağlantı bilgisini görüntüle ve NetworkManager'a "
-"kaydetmesine izin verin."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:153
-msgid "Support scanning from SVG file."
-msgstr "SVG dosyadan tarama desteği."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:154
-msgid "Change license to GPL-v3."
-msgstr "Lisans GPL-v3 olarak değiştirildi."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:159
-msgid "Release on FlatHub."
-msgstr "FlatHub'da yayınlandı."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:160
-msgid "Test and verify to work on X11-based DEs like KDE, Xfce, LxQt."
-msgstr ""
-"KDE, Xfce, LxQt gibi X11 tabanlı masaüstü ortamlarında çalıştığı denendi "
-"ve doğrulandı."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:165
-msgid "Fix to work on non-OpenGL environment."
-msgstr "OpenGL dışı ortamda çalışama sorunu düzeltildi."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:166
-msgid "Support PipeWire."
-msgstr "PipeWire desteği."
-
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:171
-msgid "Let drag, drop and paste image"
-msgstr "Görüntüyü sürükleyip bırakmaya ve yapıştırmaya izin ver"
-
-# Cheese burada uygulama adı, çevirmeyin.
-#: data/vn.hoabinh.quan.CoBang.appdata.xml:176
-msgid "Drop Cheese dependency"
-msgstr "Cheese bağımlılığını kaldır"
-
-#: data/vn.hoabinh.quan.CoBang.desktop:6
+#: data/vn.hoabinh.quan.CoBang.desktop.in:5
 msgid "QR code scanner"
 msgstr "QR kod tarayıcı"
 
-#: data/vn.hoabinh.quan.CoBang.desktop:10
+#: data/vn.hoabinh.quan.CoBang.desktop.in:7
 msgid "Scan and decode QR from camera or static image"
 msgstr "QR kodu kameradan veya sait görüntüden tara ve kodunu çöz"
 
-#: data/vn.hoabinh.quan.CoBang.desktop:12
+#: data/vn.hoabinh.quan.CoBang.desktop.in:8
 msgid "qr;code;qr-code;qr-decoder;qr-scanner"
-msgstr ""
-"qr;kod;code;qr-kod;qr-code;qr çözüccü;qr-decoder;qr-scanner;qr tarayıcı;"
+msgstr "qr;kod;qr-kod;qr çözücü;qr tarayıcı;"
 
 #: data/wifi-display.glade:16
 msgid "Found a wifi configuration"
@@ -294,7 +157,7 @@ msgstr "SSID"
 
 #: data/wifi-display.glade:52
 msgid "Generous"
-msgstr "Çömert"
+msgstr "Cömert"
 
 #: data/wifi-display.glade:67
 msgid "Password"
