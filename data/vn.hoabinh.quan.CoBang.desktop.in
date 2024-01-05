@@ -1,13 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
-
 Name=CoBang
 GenericName=QR code scanner
-GenericName[vi]=Máy quét mã QR
 X-GNOME-FullName=CoBang QR code scanner for GTK+ desktop
-X-GNOME-FullName[vi]=Chương trình quét mã QR cho desktop GTK+ CoBang
 Comment=Scan and decode QR from camera or static image
-Comment[vi]=Quét và giải mã QR từ camera hoặc ảnh tĩnh
 Keywords=qr;code;qr-code;qr-decoder;qr-scanner
 Exec=cobang %u
 Terminal=false

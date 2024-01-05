@@ -1,5 +1,3 @@
-cobang/__init__.py
-cobang/__main__.py
 cobang/app.py
 cobang/common.py
 cobang/consts.py
@@ -12,4 +10,6 @@ cobang/ui.py
 data/about.glade
 data/cobang-resp.glade
 data/url-display.glade
+data/vn.hoabinh.quan.CoBang.appdata.xml.in
+data/vn.hoabinh.quan.CoBang.desktop.in
 data/wifi-display.glade
