@@ -1,3 +1,10 @@
+cobang (0.10.5-1) jammy; urgency=medium
+
+  * Update translations.
+  * Try to fix Platpak package.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Fri, 19 Jan 2024 13:31:19 +0700
+
 cobang (0.10.0-1) jammy; urgency=medium
 
   * Add French translation.
