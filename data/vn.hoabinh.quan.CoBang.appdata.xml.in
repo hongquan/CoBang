@@ -43,6 +43,13 @@
   </kudos>
 
   <releases>
+    <release version="0.10.5" date="2024-01-19" urgency="medium">
+      <description translatable="no">
+        <p>Update translation.</p>
+        <p>Fix Gschema file.</p>
+      </description>
+    </release>
+  <releases>
     <release version="0.10.4" date="2024-01-04" urgency="medium">
       <description translatable="no">
         <p>Upgrade Python packages for Flatpak</p>
