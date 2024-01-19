@@ -11,6 +11,7 @@ dependencies = [
     "requests<3.0.0,>=2.31.0",
     "kiss-headers<3.0.0,>=2.3.1",
     "single-version<2.0.0,>=1.5.1",
+    "brotlicffi>=1.1.0.0",
 ]
 requires-python = ">=3.8,<4.0"
 readme = "README.rst"
