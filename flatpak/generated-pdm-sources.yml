@@ -2,13 +2,117 @@ name: pdm-deps
 buildsystem: simple
 build-commands:
 - python3 -m pip install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
-  --no-build-isolation certifi charset-normalizer idna kiss-headers logbook pillow
-  requests single-version urllib3
+  --no-build-isolation brotlicffi certifi cffi charset-normalizer idna kiss-headers
+  logbook pillow pycparser requests single-version urllib3
 sources:
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/d6/e6/a8f46f4a4ee7856fbd6ac0c6fb0dc65ed181ba46cd77875b8d9bbe494d9e/brotlicffi-1.1.0.0-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+  sha256: 19ffc919fa4fc6ace69286e0a23b3789b4219058313cf9b45625016bf7ff996b
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/be/20/201559dff14e83ba345a5ec03335607e47467b6633c210607e693aefac40/brotlicffi-1.1.0.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+  sha256: 9feb210d932ffe7798ee62e6145d3a757eb6233aa9a4e7db78dd3690d7755814
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/54/10/1fd57864449360852c535c2381ee7120ba8f390aa3869df967c44ca7eba1/brotlicffi-1.1.0.0-pp310-pypy310_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+  sha256: 4b7b0033b0d37bb33009fb2fef73310e432e76f688af76c156b3594389d81391
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/e5/95/15aa422aa6450e6556e54a5fd1650ff59f470aed77ac739aa90ab63dc611/brotlicffi-1.1.0.0-pp310-pypy310_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+  sha256: 54a07bb2374a1eba8ebb52b6fafffa2afd3c4df85ddd38fcc0511f2bb387c2a8
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/de/f9/fbb6c16c482ae17a35e2c913e68b8b041c440da64104a3324944bdfa90b9/brotlicffi-1.1.0.0-pp37-pypy37_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+  sha256: cc4bc5d82bc56ebd8b514fb8350cfac4627d6b0743382e46d033976a5f80fab6
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/eb/a4/01c44dbc6fbfc31021ca38850064f097f12d47e5e8d2096a714a0f5446d7/brotlicffi-1.1.0.0-pp37-pypy37_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+  sha256: 37c26ecb14386a44b118ce36e546ce307f4810bc9598a6e6cb4f7fca725ae7e6
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/85/2d/9e8057f9c73c29090ce885fe2a133c17082ce2aa0712c533a52a5aeb042f/brotlicffi-1.1.0.0-pp38-pypy38_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+  sha256: 8557a8559509b61e65083f8782329188a250102372576093c88930c875a69838
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/50/22/62b4bf874a0be46e79bb46db4e52533f757d85107ee0cdfcc800314e865f/brotlicffi-1.1.0.0-pp38-pypy38_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+  sha256: 2a7ae37e5d79c5bdfb5b4b99f2715a6035e6c5bf538c3746abc8e26694f92f33
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/4f/7f/a16534d28386f74781db8b4544a764cf955abae336379a76f50e745bb0ee/brotlicffi-1.1.0.0-pp39-pypy39_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+  sha256: fa8ca0623b26c94fccc3a1fdd895be1743b838f3917300506d04aa3346fd2a14
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/50/2a/699388b5e489726991132441b55aff0691dd73c49105ef220408a5ab98d6/brotlicffi-1.1.0.0-pp39-pypy39_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+  sha256: 3de0cf28a53a3238b252aca9fed1593e9d36c1d116748013339f0949bfc84112
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/95/9d/70caa61192f570fcf0352766331b735afa931b4c6bc9a348a0925cc13288/brotlicffi-1.1.0.0.tar.gz
+  sha256: b77827a689905143f87915310b93b273ab17888fd43ef350d4832c4a71083c13
 - type: file
   url: 
     https://files.pythonhosted.org/packages/64/62/428ef076be88fa93716b576e4a01f919d25968913e817077a386fcbe4f42/certifi-2023.11.17-py3-none-any.whl
   sha256: e036ab49d5b79556f99cfc2d9320b34cfbe5be05c5871b51de9329f0603b0474
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/f0/31/a6503a5c4874fb4d4c2053f73f09a957cb427b6943fab5a43b8e156df397/cffi-1.16.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+  sha256: a72e8961a86d19bdb45851d8f1f08b041ea37d2bd8d4fd19903bc3083d80c896
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/c9/7c/43d81bdd5a915923c3bad5bb4bff401ea00ccc8e28433fb6083d2e3bf58e/cffi-1.16.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+  sha256: e4108df7fe9b707191e55f33efbcb2d81928e10cea45527879a4749cbe472614
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/ee/68/74a2b9f9432b70d97d1184cdabf32d7803124c228adef9481d280864a4a7/cffi-1.16.0-cp310-cp310-musllinux_1_1_x86_64.whl
+  sha256: 673739cb539f8cdaa07d92d02efa93c9ccf87e345b9a0b556e3ecc666718468d
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/b5/23/ea84dd4985649fcc179ba3a6c9390412e924d20b0244dc71a6545788f5a2/cffi-1.16.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+  sha256: d8a9d3ebe49f084ad71f9269834ceccbf398253c9fac910c4fd7053ff1386936
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/9b/89/a31c81e36bbb793581d8bba4406a8aac4ba84b2559301c44eef81f4cf5df/cffi-1.16.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+  sha256: 7b78010e7b97fef4bee1e896df8a4bbb6712b7f05b7ef630f9d1da00f6444d2e
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/47/e3/b6832b1b9a1b6170c585ee2c2d30baf64d0a497c17e6623f42cfeb59c114/cffi-1.16.0-cp311-cp311-musllinux_1_1_x86_64.whl
+  sha256: e09f3ff613345df5e8c3667da1d918f9149bd623cd9070c983c013792a9a62eb
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/e4/c7/c09cc6fd1828ea950e60d44e0ef5ed0b7e3396fbfb856e49ca7d629b1408/cffi-1.16.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+  sha256: 88e2b3c14bdb32e440be531ade29d3c50a1a59cd4e51b1dd8b0865c54ea5d2e2
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/09/d4/8759cc3b2222c159add8ce3af0089912203a31610f4be4c36f98e320b4c6/cffi-1.16.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+  sha256: e715596e683d2ce000574bae5d07bd522c781a822866c20495e52520564f0969
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/4c/00/e17e2a8df0ff5aca2edd9eeebd93e095dd2515f2dd8d591d84a3233518f6/cffi-1.16.0-cp312-cp312-musllinux_1_1_x86_64.whl
+  sha256: 2d92b25dbf6cae33f65005baf472d2c245c050b1ce709cc4588cdcdd5495b520
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/8b/5c/7f9cd1fb80512c9e16c90b29b26fea52977e9ab268321f64b42f4c8488a3/cffi-1.16.0-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+  sha256: e760191dd42581e023a68b758769e2da259b5d52e3103c6060ddc02c9edb8d7b
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/f1/c9/326611aa83e16b13b6db4dbb73b5455c668159a003c4c2f0c3bcb2ddabaf/cffi-1.16.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+  sha256: 6602bc8dc6f3a9e02b6c22c4fc1e47aa50f8f8e6d3f78a5e16ac33ef5fefa324
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/50/bd/17a8f9ac569d328de304e7318d7707fcdb6f028bcc194d80cfc654902007/cffi-1.16.0-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+  sha256: 9cb4a35b3642fc5c005a6755a5d17c6c8b6bcb6981baf81cea8bfbc8903e8ba8
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/ea/ac/e9e77bc385729035143e54cc8c4785bd480eaca9df17565963556b0b7a93/cffi-1.16.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+  sha256: 8f8e709127c6c77446a8c0a8c8bf3c8ee706a06cd44b1e827c3e6a2ee6b8c098
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/8c/54/82aa3c014760d5a6ddfde3253602f0ac1937dd504621d4139746f230a7b5/cffi-1.16.0-cp39-cp39-musllinux_1_1_x86_64.whl
+  sha256: 8895613bcc094d4a1b2dbe179d88d7fb4a15cee43c052e8885783fac397d91fe
+- type: file
+  url: 
+    https://files.pythonhosted.org/packages/68/ce/95b0bae7968c65473e1298efb042e10cafc7bafc14d9e4f154008241c91d/cffi-1.16.0.tar.gz
+  sha256: bcb3ef43e58665bbda2fb198698fcae6776483e0c4a631aa5647806c25e02cc0
 - type: file
   url: 
     https://files.pythonhosted.org/packages/b8/60/e2f67915a51be59d4539ed189eb0a2b0d292bf79270410746becb32bc2c3/charset_normalizer-3.3.2-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
@@ -287,6 +391,10 @@ sources:
   sha256: e6bf8de6c36ed96c86ea3b6e1d5273c53f46ef518a062464cd7ef5dd2cf92e38
 - type: file
   url: 
+    https://files.pythonhosted.org/packages/62/d5/5f610ebe421e85889f2e55e33b7f9a6795bd982198517d912eb1c76e1a53/pycparser-2.21-py2.py3-none-any.whl
+  sha256: 8ee45429555515e1f6b185e78100aea234072576aa43ab53aefcae078162fca9
+- type: file
+  url: 
     https://files.pythonhosted.org/packages/70/8e/0e2d847013cb52cd35b38c009bb167a1a26b2ce6cd6965bf26b47bc0bf44/requests-2.31.0-py3-none-any.whl
   sha256: 58cd2187c01e70e6e26505bca751777aa9f2ee0b7f4300988b709f44e013003f
 - type: file
@@ -297,3 +405,4 @@ sources:
   url: 
     https://files.pythonhosted.org/packages/96/94/c31f58c7a7f470d5665935262ebd7455c7e4c7782eb525658d3dbf4b9403/urllib3-2.1.0-py3-none-any.whl
   sha256: 55901e917a5896a349ff771be919f8bd99aff50b79fe58fec595eb37bbc56bb3
+
