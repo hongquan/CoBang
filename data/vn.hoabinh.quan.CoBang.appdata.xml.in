@@ -33,7 +33,9 @@
   </screenshots>
   <url type="homepage">https://github.com/hongquan/CoBang</url>
   <url type="bugtracker">https://github.com/hongquan/CoBang/issues</url>
+  <!-- This type of URL is not recognized by appstreamcli on Ubuntu 22.04 yet.
   <url type="vcs-browser">https://github.com/hongquan/CoBang</url>
+  -->
   <url type="translate">https://github.com/hongquan/CoBang/tree/main/po</url>
   <developer_name>Nguyễn Hồng Quân</developer_name>
   <update_contact>ng.hong.quan_AT_gmail.com</update_contact>
