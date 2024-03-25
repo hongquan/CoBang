@@ -5,7 +5,7 @@ import io
 from gettext import gettext as _
 from urllib.parse import urlsplit
 from urllib.parse import SplitResult as UrlSplitResult
-from typing import Optional, Tuple, Dict
+from typing import Optional, Tuple, Dict, List, cast
 
 import gi
 import zbar
@@ -82,10 +82,11 @@ class CoBangApplication(Gtk.Application):
     nm_client: Optional[NM.Client] = None
     g_event_sources: Dict[str, int] = {}
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(
-            *args, application_id=APP_ID, flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE, **kwargs
+            application_id=APP_ID, flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
         )
+        Gdk.set_program_class(APP_ID)
         self.add_main_option(
             'verbose', ord('v'), GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
             "More detailed log", None
@@ -200,8 +201,8 @@ class CoBangApplication(Gtk.Application):
         bus: Gst.Bus = self.devmonitor.get_bus()
         logger.debug('Bus: {}', bus)
         bus.add_watch(GLib.PRIORITY_DEFAULT, self.on_device_monitor_message, None)
-        devices = self.devmonitor.get_devices()
-        for d in devices:  # type: Gst.Device
+        devices = cast(List[Gst.Device], self.devmonitor.get_devices())
+        for d in devices:
             # Device is of private type GstV4l2Device or GstPipeWireDevice
             logger.debug('Found device {}', d.get_path_string())
             cam_name = d.get_display_name()

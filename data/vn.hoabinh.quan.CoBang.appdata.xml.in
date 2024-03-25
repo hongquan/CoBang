@@ -45,6 +45,11 @@
   </kudos>
 
   <releases>
+    <release version="0.10.6" date="2024-03-25" urgency="medium">
+      <description translatable="no">
+        <p>Set WM_CLASS for X11.</p>
+      </description>
+    </release>
     <release version="0.10.5" date="2024-01-19" urgency="medium">
       <description translatable="no">
         <p>Update translation.</p>

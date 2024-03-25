@@ -1,6 +1,6 @@
 [project]
 name = "cobang"
-version = "0.10.5"
+version = "0.10.6"
 description = "QR code and barcode scanner for Linux desktop"
 authors = [
     {name = "Nguyễn Hồng Quân", email = "ng.hong.quan@gmail.com"},
@@ -24,9 +24,6 @@ repository = "https://github.com/hongquan/CoBang.git"
 [project.scripts]
 cobang = "cobang.__main__:main"
 
-[tool.pdm]
-package-type = "application"
-
 [tool.pdm.dev-dependencies]
 dev = [
     "pytest<8.0.0,>=7.2.0",
@@ -49,4 +46,3 @@ ignore = [
 
 [tool.ruff.format]
 quote-style = "single"
-
