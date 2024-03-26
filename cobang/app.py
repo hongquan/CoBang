@@ -94,6 +94,8 @@ class CoBangApplication(Gtk.Application):
     def do_startup(self):
         Handy.init()
         Gtk.Application.do_startup(self)
+        # PyGObject doesn't properly set our app_id, so we have to do it ourselves
+        GLib.set_prgname(APP_ID)
         self.setup_actions()
         self.build_gstreamer_pipeline()
         devmonitor = Gst.DeviceMonitor.new()
