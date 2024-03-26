@@ -86,7 +86,6 @@ class CoBangApplication(Gtk.Application):
         super().__init__(
             application_id=APP_ID, flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
         )
-        Gdk.set_program_class(APP_ID)
         self.add_main_option(
             'verbose', ord('v'), GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
             "More detailed log", None

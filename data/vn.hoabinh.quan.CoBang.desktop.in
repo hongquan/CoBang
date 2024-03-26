@@ -9,5 +9,6 @@ Exec=cobang %u
 Terminal=false
 Type=Application
 Icon=vn.hoabinh.quan.CoBang
+StartupWMClass=vn.hoabinh.quan.CoBang
 StartupNotify=true
 Categories=GTK;Office;Graphics;AudioVideo;Video;Scanning;
