@@ -96,6 +96,7 @@ class CoBangApplication(Gtk.Application):
         Gtk.Application.do_startup(self)
         # PyGObject doesn't properly set our app_id, so we have to do it ourselves
         GLib.set_prgname(APP_ID)
+        GLib.set_application_name(_('CoBang: QR scanner for Linux'))
         self.setup_actions()
         self.build_gstreamer_pipeline()
         devmonitor = Gst.DeviceMonitor.new()

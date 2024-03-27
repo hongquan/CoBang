@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=CoBang
 GenericName=QR code scanner
-X-GNOME-FullName=CoBang QR code scanner for GTK+ desktop
+X-GNOME-FullName=CoBang QR code scanner for GTK desktop
 Comment=Scan and decode QR from camera or static image
 Keywords=qr;code;qr-code;qr-decoder;qr-scanner
 Exec=cobang %u
