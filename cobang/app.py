@@ -41,11 +41,8 @@ Gst.init(None)
 CONTROL_MASK = Gdk.ModifierType.CONTROL_MASK
 
 # Some Gstreamer CLI examples
-# gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! waylandsink
-# gst-launch-1.0 playbin3 uri=v4l2:///dev/video0 video-sink=waylandsink
-# Better integration:
-#   gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! gtksink
-#   gst-launch-1.0 v4l2src ! videoconvert ! glsinkbin sink=gtkglsink
+#  gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! gtksink
+#  gst-launch-1.0 v4l2src ! videoconvert ! glsinkbin sink=gtkglsink
 
 
 class CoBangApplication(Gtk.Application):
@@ -84,7 +81,7 @@ class CoBangApplication(Gtk.Application):
 
     def __init__(self, **kwargs):
         super().__init__(
-            application_id=APP_ID, flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
+            application_id=APP_ID, flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
         )
         self.add_main_option(
             'verbose', ord('v'), GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
@@ -228,16 +225,6 @@ class CoBangApplication(Gtk.Application):
         if not self.webcam_combobox.get_active_iter():
             v4l2_idx = next((n for n, r in enumerate(self.webcam_store) if r[2] == 'v4l2src'), 0)
             self.webcam_combobox.set_active(v4l2_idx)
-
-    def do_command_line(self, command_line: Gio.ApplicationCommandLine):
-        options = command_line.get_options_dict().end().unpack()
-        if options.get('verbose'):
-            logger.level = logbook.DEBUG
-            displayed_apps = os.getenv('G_MESSAGES_DEBUG', '').split()
-            displayed_apps.append(SHORT_NAME)
-            GLib.setenv('G_MESSAGES_DEBUG', ' '.join(displayed_apps), True)
-        self.activate()
-        return 0
 
     def detach_gstreamer_sink_from_window(self):
         old_area = self.cont_webcam.get_child()
