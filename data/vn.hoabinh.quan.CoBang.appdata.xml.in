@@ -33,7 +33,9 @@
   </screenshots>
   <url type="homepage">https://github.com/hongquan/CoBang</url>
   <url type="bugtracker">https://github.com/hongquan/CoBang/issues</url>
+  <!-- This type of URL is not recognized by appstreamcli on Ubuntu 22.04 yet.
   <url type="vcs-browser">https://github.com/hongquan/CoBang</url>
+  -->
   <url type="translate">https://github.com/hongquan/CoBang/tree/main/po</url>
   <developer_name>Nguyễn Hồng Quân</developer_name>
   <update_contact>ng.hong.quan_AT_gmail.com</update_contact>
@@ -43,167 +45,192 @@
   </kudos>
 
   <releases>
+    <release version="0.12.0" date="2024-04-30" urgency="medium">
+      <description translate="no">
+        <p>Working with Ubuntu 24.04.</p>
+      </description>
+    </release>
+    <release version="0.10.9" date="2024-03-27" urgency="medium">
+      <description translate="no">
+        <p>Set application name for Wayland.</p>
+      </description>
+    </release>
+    <release version="0.10.8" date="2024-03-26" urgency="medium">
+      <description translate="no">
+        <p>Fix setting Wayland App ID.</p>
+      </description>
+    </release>
+    <release version="0.10.7" date="2024-03-26" urgency="medium">
+      <description translate="no">
+        <p>Another attempt to set WM_CLASS for X11.</p>
+      </description>
+    </release>
+    <release version="0.10.6" date="2024-03-25" urgency="medium">
+      <description translate="no">
+        <p>Set WM_CLASS for X11.</p>
+      </description>
+    </release>
     <release version="0.10.5" date="2024-01-19" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Update translation.</p>
         <p>Fix Gschema file.</p>
       </description>
     </release>
     <release version="0.10.4" date="2024-01-04" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Upgrade Python packages for Flatpak</p>
       </description>
     </release>
     <release version="0.10.3" date="2023-12-27" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Try Gnome v45 for Flatpak.</p>
       </description>
     </release>
     <release version="0.10.2" date="2023-12-09" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Upgrade Gnome runtime for Flatpak.</p>
       </description>
     </release>
     <release version="0.10.1" date="2023-04-26" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Fix building for Flatpak.</p>
       </description>
     </release>
     <release version="0.10.0" date="2023-04-26" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Add French translation.</p>
         <p>Increase opacity for Play &amp; Pause buttons.</p>
       </description>
     </release>
     <release version="0.9.10" date="2023-01-05" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Use right image of Lepironia articulata.</p>
       </description>
     </release>
     <release version="0.9.9" date="2022-12-29" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Upgrade runtime for Flatpak.</p>
         <p>Fix typos</p>
       </description>
     </release>
     <release version="0.9.8" date="2022-10-13" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Increase displayed wifi password length.</p>
       </description>
     </release>
     <release version="0.9.7" date="2022-08-30" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Add Turkish translation.</p>
       </description>
     </release>
     <release version="0.9.6" date="2021-12-08" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Fix building Flatpak for v0.9+.</p>
       </description>
     </release>
     <release version="0.9.5" date="2021-11-06" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Try to fix crash on displaying wifi result.</p>
       </description>
     </release>
     <release version="0.9.4" date="2021-09-14" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Fix overflow UI in phone screen.</p>
       </description>
     </release>
     <release version="0.9.3" date="2021-09-12" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Automatically choose the best layout for the screen.</p>
       </description>
     </release>
     <release version="0.9.2" date="2021-09-11" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Reduce scrolling on mobile screen.</p>
       </description>
     </release>
     <release version="0.9.1" date="2021-09-09" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Prevent redundant empty space.</p>
       </description>
     </release>
     <release version="0.9.0" date="2021-09-07" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Support mobile view with responsive UI.</p>
       </description>
     </release>
     <release version="0.8.3" date="2021-08-18" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Update Italian translation.</p>
       </description>
     </release>
     <release version="0.8.2" date="2021-07-31" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Lower down Meson version requirement.</p>
       </description>
     </release>
     <release version="0.8.1" date="2021-07-03" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Fix licensing.</p>
       </description>
     </release>
     <release version="0.8.0" date="2021-03-07" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Let play webcam from PipeWire.</p>
       </description>
     </release>
     <release version="0.7.0" date="2021-03-06" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Add button to copy raw result.</p>
       </description>
     </release>
     <release version="0.6.4" date="2021-03-06" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Fix appdata file.</p>
       </description>
     </release>
     <release version="0.6.3" date="2021-03-06" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Support more languages.</p>
       </description>
     </release>
     <release version="0.6.0" date="2020-10-26" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Compatible with GStreamer v1.18.</p>
       </description>
     </release>
     <release version="0.5.6" date="2020-06-27" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Fix handling HTTP file in some unusual case.</p>
       </description>
     </release>
     <release version="0.5.5" date="2020-06-24" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Fix AppStream data.</p>
       </description>
     </release>
     <release version="0.5.4" date="2020-06-24" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Move Play &amp; Pause buttons to overlay.</p>
       </description>
     </release>
     <release version="0.5.3" date="2020-06-23" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Fix missing files when building Flatpak.</p>
       </description>
     </release>
     <release version="0.5.2" date="2020-06-22" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Able to build Flatpak (successfully add NetworkManager dependency).</p>
       </description>
     </release>
     <release version="0.5.1" date="2020-06-20" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Fix crash when detecting WiFi content from webcam.</p>
         <p>Fix: Forgot to check SVG in some cases.</p>
       </description>
     </release>
     <release version="0.5.0" date="2020-06-19" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Display result URL with a link.</p>
         <p>Display result WiFi info and let save it to NetworkManager.</p>
         <p>Support scanning from SVG file.</p>
@@ -211,24 +238,24 @@
       </description>
     </release>
     <release version="0.4.0" date="2020-06-07" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Release on FlatHub.</p>
         <p>Test and verify to work on X11-based DEs like KDE, Xfce, LxQt.</p>
       </description>
     </release>
     <release version="0.3.2" date="2020-06-07" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Fix to work on non-OpenGL environment.</p>
         <p>Support PipeWire.</p>
       </description>
     </release>
     <release version="0.3.0" date="2020-06-04" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Let drag, drop and paste image</p>
       </description>
     </release>
     <release version="0.2.0" date="2020-06-01" urgency="medium">
-      <description translatable="no">
+      <description translate="no">
         <p>Drop Cheese dependency</p>
       </description>
     </release>

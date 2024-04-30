@@ -163,7 +163,11 @@ Run from source
     python3 -m cobang
 
 
-Add ``-v`` option to see more detailed log.
+To print debug messages, set environment variable ``G_MESSAGES_DEBUG`` to ``cobang``:
+
+.. code-block:: sh
+
+    G_MESSAGES_DEBUG=cobang python3 -m cobang
 
 
 Translation

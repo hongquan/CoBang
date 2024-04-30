@@ -1,6 +1,6 @@
 app-id: vn.hoabinh.quan.CoBang
 runtime: org.gnome.Platform
-runtime-version: '45'
+runtime-version: '46'
 sdk: org.gnome.Sdk
 command: cobang
 finish-args:
@@ -79,7 +79,7 @@ modules:
     builddir: true
     sources:
       - type: git
-        tag: 1.22.8
+        tag: 1.24.3
         url: https://github.com/GStreamer/gstreamer.git
 
   - name: intltool
@@ -191,7 +191,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/NetworkManager/NetworkManager.git
-        tag: 1.40.2
+        tag: 1.44.4
 
   - name: cobang
     builddir: true

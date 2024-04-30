@@ -5,7 +5,7 @@ import io
 from gettext import gettext as _
 from urllib.parse import urlsplit
 from urllib.parse import SplitResult as UrlSplitResult
-from typing import Optional, Tuple, Dict
+from typing import Optional, Tuple, Dict, List, cast
 
 import gi
 import zbar
@@ -41,11 +41,8 @@ Gst.init(None)
 CONTROL_MASK = Gdk.ModifierType.CONTROL_MASK
 
 # Some Gstreamer CLI examples
-# gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! waylandsink
-# gst-launch-1.0 playbin3 uri=v4l2:///dev/video0 video-sink=waylandsink
-# Better integration:
-#   gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! gtksink
-#   gst-launch-1.0 v4l2src ! videoconvert ! glsinkbin sink=gtkglsink
+#  gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! gtksink
+#  gst-launch-1.0 v4l2src ! videoconvert ! glsinkbin sink=gtkglsink
 
 
 class CoBangApplication(Gtk.Application):
@@ -82,9 +79,9 @@ class CoBangApplication(Gtk.Application):
     nm_client: Optional[NM.Client] = None
     g_event_sources: Dict[str, int] = {}
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(
-            *args, application_id=APP_ID, flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE, **kwargs
+            application_id=APP_ID, flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
         )
         self.add_main_option(
             'verbose', ord('v'), GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
@@ -94,6 +91,9 @@ class CoBangApplication(Gtk.Application):
     def do_startup(self):
         Handy.init()
         Gtk.Application.do_startup(self)
+        # PyGObject doesn't properly set our app_id, so we have to do it ourselves
+        GLib.set_prgname(APP_ID)
+        GLib.set_application_name(_('CoBang: QR scanner for Linux'))
         self.setup_actions()
         self.build_gstreamer_pipeline()
         devmonitor = Gst.DeviceMonitor.new()
@@ -113,7 +113,7 @@ class CoBangApplication(Gtk.Application):
     def build_gstreamer_pipeline(self, src_type: str = 'v4l2src'):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
         # Try GL backend first
-        command = (f'{src_type} name={self.GST_SOURCE_NAME} ! tee name=t ! '
+        command = (f'{src_type} name={self.GST_SOURCE_NAME} ! videoconvert ! tee name=t ! '
                    # FIXME: The produced video screen is wider than expected, with redundant black padding
                    f'queue ! videoscale ! '
                    f'glsinkbin sink="gtkglsink name={self.SINK_NAME}" name=sink_bin '
@@ -200,8 +200,8 @@ class CoBangApplication(Gtk.Application):
         bus: Gst.Bus = self.devmonitor.get_bus()
         logger.debug('Bus: {}', bus)
         bus.add_watch(GLib.PRIORITY_DEFAULT, self.on_device_monitor_message, None)
-        devices = self.devmonitor.get_devices()
-        for d in devices:  # type: Gst.Device
+        devices = cast(List[Gst.Device], self.devmonitor.get_devices())
+        for d in devices:
             # Device is of private type GstV4l2Device or GstPipeWireDevice
             logger.debug('Found device {}', d.get_path_string())
             cam_name = d.get_display_name()
@@ -225,16 +225,6 @@ class CoBangApplication(Gtk.Application):
         if not self.webcam_combobox.get_active_iter():
             v4l2_idx = next((n for n, r in enumerate(self.webcam_store) if r[2] == 'v4l2src'), 0)
             self.webcam_combobox.set_active(v4l2_idx)
-
-    def do_command_line(self, command_line: Gio.ApplicationCommandLine):
-        options = command_line.get_options_dict().end().unpack()
-        if options.get('verbose'):
-            logger.level = logbook.DEBUG
-            displayed_apps = os.getenv('G_MESSAGES_DEBUG', '').split()
-            displayed_apps.append(SHORT_NAME)
-            GLib.setenv('G_MESSAGES_DEBUG', ' '.join(displayed_apps), True)
-        self.activate()
-        return 0
 
     def detach_gstreamer_sink_from_window(self):
         old_area = self.cont_webcam.get_child()
