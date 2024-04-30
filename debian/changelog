@@ -1,3 +1,9 @@
+cobang (0.12.0-1) noble; urgency=medium
+
+  * Compatible with Ubuntu 24.04.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Tue, 30 Apr 2024 17:31:00 +0700
+
 cobang (0.10.5-1) jammy; urgency=medium
 
   * Update translations.
