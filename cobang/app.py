@@ -113,7 +113,7 @@ class CoBangApplication(Gtk.Application):
     def build_gstreamer_pipeline(self, src_type: str = 'v4l2src'):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
         # Try GL backend first
-        command = (f'{src_type} name={self.GST_SOURCE_NAME} ! tee name=t ! '
+        command = (f'{src_type} name={self.GST_SOURCE_NAME} ! videoconvert ! tee name=t ! '
                    # FIXME: The produced video screen is wider than expected, with redundant black padding
                    f'queue ! videoscale ! '
                    f'glsinkbin sink="gtkglsink name={self.SINK_NAME}" name=sink_bin '
