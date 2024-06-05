@@ -40,9 +40,12 @@ def get_device_path(device: Gst.Device) -> Tuple[str, str]:
         if not path:
             path = properties['api.v4l2.path']
         return path, 'pipewiresrc'
-    # Assume GstV4l2Device
-    return device.get_property('device_path'), 'v4l2src'
 
+    if type_name == 'GstV4l2Device':
+        return device.get_property('device_path'), 'v4l2src'
+
+    # GstLibcameraDevice or some other unknown device type
+    return '', type_name
 
 def scale_pixbuf(pixbuf: GdkPixbuf.Pixbuf, outer_width: int, outer_height):
     # Get original size
