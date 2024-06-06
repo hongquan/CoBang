@@ -202,12 +202,12 @@ class CoBangApplication(Gtk.Application):
         bus.add_watch(GLib.PRIORITY_DEFAULT, self.on_device_monitor_message, None)
         devices = cast(List[Gst.Device], self.devmonitor.get_devices())
         for d in devices:
-            # Device is of private type GstV4l2Device or GstPipeWireDevice
+            # Device is of private type GstV4l2Device, GstPipeWireDevice or GstLibcameraDevice (Not supported)
             logger.debug('Found device {}', d.get_path_string())
             cam_name = d.get_display_name()
             cam_path, src_type = get_device_path(d)
-            if not cam_name:
-                logger.error('Not recognize this device.')
+            if not cam_name or len(cam_path) == 0:
+                logger.info('Unsupported device: {} ({})', src_type, d.get_path_string())
                 continue
             self.webcam_store.append((cam_path, cam_name, src_type))
         logger.debug('Start device monitoring')
@@ -338,6 +338,9 @@ class CoBangApplication(Gtk.Application):
             logger.debug('Added: {}', added_dev)
             cam_path, src_type = get_device_path(added_dev)
             cam_name = added_dev.get_display_name()
+            if not cam_path:
+                logger.info('Unsupported device: {} {}', src_type, added_dev.get_path_string())
+                return True
             # Check if this cam already in the list, add to list if not.
             for row in self.webcam_store:
                 if row[0] == cam_path:
