@@ -1,3 +1,10 @@
+cobang (0.13.0-1) noble; urgency=medium
+
+  * Add German and Russian translations.
+  * Handle error with libcamera.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Thu, 06 Jun 2024 17:19:06 +0700
+
 cobang (0.12.0-1) noble; urgency=medium
 
   * Compatible with Ubuntu 24.04.
