@@ -207,7 +207,7 @@ class CoBangApplication(Gtk.Application):
             cam_name = d.get_display_name()
             cam_path, src_type = get_device_path(d)
             if not cam_name or len(cam_path) == 0:
-                logger.error(f'Unsupported device: {cam_name}, {cam_path}, {src_type}, {d.get_path_string()}')
+                logger.info('Unsupported device: {} ({})', src_type, d.get_path_string())
                 continue
             self.webcam_store.append((cam_path, cam_name, src_type))
         logger.debug('Start device monitoring')
@@ -338,6 +338,9 @@ class CoBangApplication(Gtk.Application):
             logger.debug('Added: {}', added_dev)
             cam_path, src_type = get_device_path(added_dev)
             cam_name = added_dev.get_display_name()
+            if not cam_path:
+                logger.info('Unsupported device: {} {}', src_type, added_dev.get_path_string())
+                return True
             # Check if this cam already in the list, add to list if not.
             for row in self.webcam_store:
                 if row[0] == cam_path:
