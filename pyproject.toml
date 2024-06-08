@@ -1,6 +1,6 @@
 [project]
 name = "cobang"
-version = "0.13.0"
+version = "0.13.1"
 description = "QR code and barcode scanner for Linux desktop"
 authors = [
     {name = "Nguyễn Hồng Quân", email = "ng.hong.quan@gmail.com"},

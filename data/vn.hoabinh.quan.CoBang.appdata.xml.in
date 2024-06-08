@@ -45,6 +45,12 @@
   </kudos>
 
   <releases>
+    <release version="0.13.1" date="2024-06-08" urgency="medium">
+      <description translate="no">
+        <p>Update translation.</p>
+        <p>Add 48x48 icon to show in menu.</p>
+      </description>
+    </release>
     <release version="0.13.0" date="2024-06-06" urgency="medium">
       <description translate="no">
         <p>Add German and Russian translations.</p>

@@ -25,6 +25,7 @@ themedir = get_option('datadir') / 'icons/hicolor'
 install_data('vn.hoabinh.quan.CoBang.svg',
   install_dir: themedir / 'scalable/apps'
 )
+subdir('48x48')
 
 appstream_file = i18n.merge_file(
   input: 'vn.hoabinh.quan.CoBang.appdata.xml.in',
