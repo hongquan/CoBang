@@ -79,6 +79,7 @@ modules:
     builddir: true
     sources:
       - type: git
+        disable-submodules: true
         tag: 1.24.3
         url: https://github.com/GStreamer/gstreamer.git
 

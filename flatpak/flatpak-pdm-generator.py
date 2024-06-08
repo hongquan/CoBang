@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
 
-import sys
+# Generate Flatpak-builder manifest file from PDM lock file.
+# Keep:
+# - Linux wheel files which target x86_64 or aarch64, Python 3.10 or later.
+# - Neutral wheel files.
+# - Tarball file, in case the Linux wheel files for the platform is not available.
+# - If neutral wheel file is available, we don't keep tarball file.
+
+import re
 import json
-from pathlib import Path
+from pathlib import Path, PurePath
 from io import StringIO
 from collections import deque
-from typing import TypedDict
 
 import click
 import httpx
+from packaging.tags import parse_tag
 from pydantic import BaseModel
 from ruamel.yaml import YAML
 
@@ -18,22 +25,44 @@ except ImportError:
     import tomli as tomllib
 
 
+REGEX_PY_VERSION = re.compile(r'3(\d+)')
+
+
+def parse_python_version(version: str) -> tuple[int, int] | None:
+    m = REGEX_PY_VERSION.search(version)
+    if not m:
+        return None
+    return (3, int(m.group(1)))
+
+
 class InstallableFile(BaseModel):
     hash: str
-    file: str
+    file: PurePath
 
     @property
     def is_neutral_wheel(self):
-        return self.file.endswith('py3-none-any.whl')
+        return self.file.name.endswith('py3-none-any.whl')
 
     @property
     def is_linux_wheel(self):
         # FlatHub only supports x86_64 and aarch64
-        return self.file.endswith(('x86_64.whl', 'aarch64.whl')) and 'linux' in self.file
+        return self.file.name.endswith(('x86_64.whl', 'aarch64.whl')) and 'linux' in self.file.name
+
+    @property
+    def is_recent_linux_wheel(self):
+        '''Check if the wheel is built for Python 3.10 or later.'''
+        if not self.is_linux_wheel:
+            return False
+        tag_string = self.file.stem.split('-', 2)[-1]
+        tag = next(iter(parse_tag(tag_string)))
+        ver = parse_python_version(tag.interpreter)
+        if not ver:
+            return False
+        return ver >= (3, 10)
 
     @property
     def is_tarball(self):
-        return self.file.endswith(('.tar.gz', '.tar.bz2', '.tar.xz'))
+        return self.file.name.endswith(('.tar.gz', '.tar.bz2', '.tar.xz'))
 
 
 class Package(BaseModel):
@@ -62,7 +91,7 @@ class PyPIRelease(BaseModel):
 
 def convert_to_flatpak_sources(package: Package):
     sources = []
-    installable_files = tuple(f for f in package.files if f.is_neutral_wheel or f.is_linux_wheel or f.is_tarball)
+    installable_files = tuple(f for f in package.files if f.is_neutral_wheel or f.is_recent_linux_wheel or f.is_tarball)
     # Remove tarball if there is neutral wheel
     if any(f.is_neutral_wheel for f in installable_files):
         installable_files = tuple(f for f in installable_files if f.is_neutral_wheel or f.is_linux_wheel)
