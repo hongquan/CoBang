@@ -80,8 +80,12 @@ class CoBangApplication(Gtk.Application):
     g_event_sources: Dict[str, int] = {}
 
     def __init__(self, **kwargs):
+        try:
+            flags = Gio.ApplicationFlags.DEFAULT_FLAGS
+        except AttributeError:
+            flags = Gio.ApplicationFlags.FLAGS_NONE
         super().__init__(
-            application_id=APP_ID, flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
+            application_id=APP_ID, flags=flags,
         )
         self.add_main_option(
             'verbose', ord('v'), GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
