@@ -1,14 +1,14 @@
 # Italian translations for PROJECT.
 # Copyright (C) 2020 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# ALBANO BATTISTELLA <albanobattistella@gmail.com>, 2020,2021,2023.
+# ALBANO BATTISTELLA <albanobattistella@gmail.com>, 2020,2021,2023,2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-03-27 10:09+0700\n"
-"PO-Revision-Date: 2023-04-15 19:40+0200\n"
+"PO-Revision-Date: 2024-06-08 10:40+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language: it\n"
 "Language-Team: it <LL@li.org>\n"
@@ -19,12 +19,10 @@ msgstr ""
 "Generated-By: Babel 2.14.0\n"
 
 #: cobang/app.py:99
-#, fuzzy
 msgid "CoBang: QR scanner for Linux"
-msgstr "Scanner QR per Linux"
+msgstr "CoBang: QR scanner for Linux"
 
 #: cobang/app.py:547
-#, fuzzy, python-format
 msgid "Unsupported file type %s!"
 msgstr "Tipo di file non supportato %s!"
 
@@ -118,17 +116,17 @@ msgstr "pulsante"
 #. GenericName
 #: data/vn.hoabinh.quan.CoBang.desktop.in:4
 msgid "QR code scanner"
-msgstr ""
+msgstr "Scanner di codici QR"
 
 #. Comment
 #: data/vn.hoabinh.quan.CoBang.desktop.in:6
 msgid "Scan and decode QR from camera or static image"
-msgstr ""
+msgstr "Scansiona e decodifica QR dalla fotocamera o da un'immagine statica"
 
 #. Keywords
 #: data/vn.hoabinh.quan.CoBang.desktop.in:7
 msgid "qr;code;qr-code;qr-decoder;qr-scanner"
-msgstr ""
+msgstr "qr;codice;qr-codice;qr-decoder;qr-scanner"
 
 #. Icon
 #: data/vn.hoabinh.quan.CoBang.desktop.in:11
