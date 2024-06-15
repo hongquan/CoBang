@@ -1,6 +1,5 @@
 # Copyright © 2020, Nguyễn Hồng Quân <ng.hong.quan@gmail.com>
 
-import os
 import io
 from gettext import gettext as _
 from urllib.parse import urlsplit
@@ -9,7 +8,6 @@ from typing import Optional, Tuple, Dict, List, cast
 
 import gi
 import zbar
-import logbook
 from logbook import Logger
 from PIL import Image
 
@@ -28,7 +26,7 @@ gi.require_version('NM', '1.0')
 
 from gi.repository import GObject, GLib, Gtk, Gdk, Gio, GdkPixbuf, Handy, Rsvg, Gst, GstApp, NM
 
-from .consts import APP_ID, SHORT_NAME
+from .consts import APP_ID
 from . import __version__
 from . import ui
 from .resources import get_ui_filepath, guess_content_type, cache_http_file
@@ -51,6 +49,7 @@ class CoBangApplication(Gtk.Application):
     STACK_CHILD_NAME_WEBCAM = 'src_webcam'
     STACK_CHILD_NAME_IMAGE = 'src_image'
     GST_SOURCE_NAME = 'webcam_source'
+    GST_FLIP_FILTER_NAME = 'videoflip'
     SIGNAL_QRCODE_DETECTED = 'qrcode-detected'
     window: Optional[Gtk.Window] = None
     main_grid: Optional[Gtk.Grid] = None
@@ -67,6 +66,7 @@ class CoBangApplication(Gtk.Application):
     raw_result_buffer: Optional[Gtk.TextBuffer] = None
     webcam_combobox: Optional[Gtk.ComboBox] = None
     webcam_store: Optional[Gtk.ListStore] = None
+    btn_mirror: Optional[Gtk.ToggleButton] = None
     frame_image: Optional[Gtk.AspectFrame] = None
     # Box holds the emplement to display when no image is chosen
     box_image_empty: Optional[Gtk.Box] = None
@@ -117,7 +117,8 @@ class CoBangApplication(Gtk.Application):
     def build_gstreamer_pipeline(self, src_type: str = 'v4l2src'):
         # https://gstreamer.freedesktop.org/documentation/application-development/advanced/pipeline-manipulation.html?gi-language=c#grabbing-data-with-appsink
         # Try GL backend first
-        command = (f'{src_type} name={self.GST_SOURCE_NAME} ! videoconvert ! tee name=t ! '
+        video_flip_method = 'horizontal-flip' if (self.btn_mirror and self.btn_mirror.get_active()) else 'none'
+        command = (f'{src_type} name={self.GST_SOURCE_NAME} ! videoflip name={self.GST_FLIP_FILTER_NAME} method={video_flip_method} ! videoconvert ! tee name=t ! '
                    # FIXME: The produced video screen is wider than expected, with redundant black padding
                    f'queue ! videoscale ! '
                    f'glsinkbin sink="gtkglsink name={self.SINK_NAME}" name=sink_bin '
@@ -132,7 +133,7 @@ class CoBangApplication(Gtk.Application):
         if not pipeline:
             logger.info('OpenGL is not available, fallback to normal GtkSink')
             # Fallback to non-GL
-            command = (f'{src_type} name={self.GST_SOURCE_NAME} ! videoconvert ! tee name=t ! '
+            command = (f'{src_type} name={self.GST_SOURCE_NAME} ! videoflip name={self.GST_FLIP_FILTER_NAME} method={video_flip_method} ! videoconvert ! tee name=t ! '
                        f'queue ! videoscale ! gtksink name={self.SINK_NAME} '
                        't. ! queue leaky=1 max-size-buffers=2 ! video/x-raw,format=GRAY8 ! '
                        f'appsink name={self.APPSINK_NAME}')
@@ -167,6 +168,7 @@ class CoBangApplication(Gtk.Application):
         self.raw_result_expander = builder.get_object('raw-result-expander')
         self.webcam_store = builder.get_object('webcam-list')
         self.webcam_combobox = builder.get_object('webcam-combobox')
+        self.btn_mirror = builder.get_object('btn-mirror')
         self.frame_image = builder.get_object('frame-image')
         self.box_image_empty = builder.get_object('box-image-empty')
         main_menubutton: Gtk.MenuButton = builder.get_object('main-menubutton')
@@ -198,6 +200,7 @@ class CoBangApplication(Gtk.Application):
             'on_evbox_playpause_leave_notify_event': self.on_evbox_playpause_leave_notify_event,
             'on_info_bar_response': self.on_info_bar_response,
             'on_btn_copy_clicked': self.on_btn_copy_clicked,
+            'on_btn-mirror_toggled': self.on_btn_mirror_toggled,
         }
 
     def discover_webcam(self):
@@ -641,6 +644,16 @@ class CoBangApplication(Gtk.Application):
         self.raw_result_buffer.copy_clipboard(clipboard)
         button.set_tooltip_text(_('Copied'))
         GLib.timeout_add_seconds(3, remove_tooltip, button)
+
+    def on_btn_mirror_toggled(self, button: Gtk.ToggleButton):
+        if not self.gst_pipeline:
+            return
+        ppl_source = self.gst_pipeline.get_by_name(self.GST_SOURCE_NAME)
+        ppl_source.set_state(Gst.State.NULL)
+        self.gst_pipeline.set_state(Gst.State.NULL)
+        mirror = button.get_active()
+        self.gst_pipeline.get_by_name(self.GST_FLIP_FILTER_NAME).set_property('method', 'horizontal-flip' if mirror else 'none')
+        self.gst_pipeline.set_state(Gst.State.PLAYING)
 
     def on_info_bar_response(self, infobar: Gtk.InfoBar, response_id: int):
         infobar.set_visible(False)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-03-27 10:09+0700\n"
+"POT-Creation-Date: 2024-06-15 17:22+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.10.3\n"
 
-#: cobang/app.py:99
+#: cobang/app.py:100
 msgid "CoBang: QR scanner for Linux"
 msgstr ""
 
-#: cobang/app.py:547
+#: cobang/app.py:544
 #, python-format
 msgid "Unsupported file type %s!"
 msgstr ""
 
-#: cobang/app.py:648
+#: cobang/app.py:645
 msgid "Copied"
 msgstr ""
 
@@ -86,20 +86,24 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: data/cobang-resp.glade:424
+#: data/cobang-resp.glade:419
+msgid "Mirror"
+msgstr "Gương"
+
+#: data/cobang-resp.glade:439
 msgid "Please choose an image file"
 msgstr ""
 
-#: data/cobang-resp.glade:472
+#: data/cobang-resp.glade:487
 msgid "Result"
 msgstr ""
 
-#: data/cobang-resp.glade:512
+#: data/cobang-resp.glade:527
 msgid "Raw result"
 msgstr ""
 
 #: data/url-display.glade:16
-msgid "Found an URL. Click to open:"
+msgid "Found a URL. Click to open:"
 msgstr ""
 
 #: data/url-display.glade:26
@@ -145,4 +149,3 @@ msgstr ""
 #: data/wifi-display.glade:101
 msgid "Save"
 msgstr ""
-

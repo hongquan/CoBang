@@ -45,6 +45,11 @@
   </kudos>
 
   <releases>
+    <release version="0.14.0" date="2024-06-15" urgency="medium">
+      <description translate="no">
+        <p>Add mirror mode.</p>
+      </description>
+    </release>
     <release version="0.13.1" date="2024-06-08" urgency="medium">
       <description translate="no">
         <p>Update translation.</p>
