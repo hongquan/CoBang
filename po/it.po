@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-06-15 17:22+0700\n"
-"PO-Revision-Date: 2024-06-08 10:40+0200\n"
+"PO-Revision-Date: 2024-06-15 21:40+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language: it\n"
 "Language-Team: it <LL@li.org>\n"
@@ -96,7 +96,7 @@ msgstr "Immagine"
 
 #: data/cobang-resp.glade:419
 msgid "Mirror"
-msgstr "Gương"
+msgstr "Specchio"
 
 #: data/cobang-resp.glade:439
 msgid "Please choose an image file"
@@ -111,7 +111,6 @@ msgid "Raw result"
 msgstr "Risultato grezzo"
 
 #: data/url-display.glade:16
-#, fuzzy
 msgid "Found a URL. Click to open:"
 msgstr "Trovato un URL. Fare clic per aprire:"
 
