@@ -28,7 +28,7 @@ msgstr "CoBang: Сканер QR-кода для Линукс"
 #: cobang/app.py:544
 #, python-format
 msgid "Unsupported file type %s!"
-msgstr "Тип файла не поддерживается%s!"
+msgstr "Тип файла не поддерживается %s!"
 
 #: cobang/app.py:645
 msgid "Copied"
@@ -56,7 +56,7 @@ msgstr "Копировать"
 
 #: data/cobang-resp.glade:52
 msgid "Play"
-msgstr "Показать видео"
+msgstr "Запуск видео"
 
 #: data/cobang-resp.glade:68
 msgid "Pause"
@@ -89,7 +89,7 @@ msgstr ""
 "\n"
 "- Перетащите сюда.\n"
 "- Скопируйте откуда-нибудь и вставьте (Ctrl+V) сюда.\n"
-"- Выберите с помощью кнопки ниже (кроме Flatpak).\n"
+"- Выберите с помощью кнопки ниже.\n"
 "\n"
 "Допускается удаленное изображение (с http://..., sftp://...)."
 
