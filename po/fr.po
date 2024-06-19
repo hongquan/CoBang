@@ -98,7 +98,7 @@ msgstr "Image"
 
 #: data/cobang-resp.glade:419
 msgid "Mirror"
-msgstr "Gương"
+msgstr "Miroir"
 
 #: data/cobang-resp.glade:439
 msgid "Please choose an image file"
