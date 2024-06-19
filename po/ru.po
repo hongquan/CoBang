@@ -3,13 +3,15 @@
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
 #
+# SPDX-FileCopyrightText: 2024 mva <ma12@rambler.ru>
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-06-15 17:22+0700\n"
-"PO-Revision-Date: 2024-06-03 19:03+0300\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2024-06-16 10:19+0300\n"
+"Last-Translator: mva <ma12@rambler.ru>\n"
+"Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
 "Language-Team: \n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
@@ -17,7 +19,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
+"=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "Generated-By: Babel 2.10.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #: cobang/app.py:100
 msgid "CoBang: QR scanner for Linux"
@@ -26,7 +31,7 @@ msgstr "CoBang: Сканер QR-кода для Линукс"
 #: cobang/app.py:544
 #, python-format
 msgid "Unsupported file type %s!"
-msgstr "Тип файла не поддерживается%s!"
+msgstr "Тип файла не поддерживается %s!"
 
 #: cobang/app.py:645
 msgid "Copied"
@@ -54,7 +59,7 @@ msgstr "Копировать"
 
 #: data/cobang-resp.glade:52
 msgid "Play"
-msgstr "Показать видео"
+msgstr "Запуск видео"
 
 #: data/cobang-resp.glade:68
 msgid "Pause"
@@ -71,7 +76,7 @@ msgstr "Сканер QR-кода для Линукс"
 
 #: data/cobang-resp.glade:289
 msgid "Webcam"
-msgstr "Веб-камера"
+msgstr "Камера"
 
 #: data/cobang-resp.glade:343
 msgid ""
@@ -87,17 +92,17 @@ msgstr ""
 "\n"
 "- Перетащите сюда.\n"
 "- Скопируйте откуда-нибудь и вставьте (Ctrl+V) сюда.\n"
-"- Выберите с помощью кнопки ниже (кроме Flatpak).\n"
+"- Выберите с помощью кнопки ниже.\n"
 "\n"
 "Допускается удаленное изображение (с http://..., sftp://...)."
 
 #: data/cobang-resp.glade:376
 msgid "Image"
-msgstr "Изображение"
+msgstr "Картинка"
 
 #: data/cobang-resp.glade:419
 msgid "Mirror"
-msgstr "Gương"
+msgstr "Зеркально"
 
 #: data/cobang-resp.glade:439
 msgid "Please choose an image file"
@@ -112,9 +117,8 @@ msgid "Raw result"
 msgstr "Raw результат"
 
 #: data/url-display.glade:16
-#, fuzzy
 msgid "Found a URL. Click to open:"
-msgstr "Найден URL-адрес. Нажмите, чтобы открыть:"
+msgstr "Найден URL-адрес:"
 
 #: data/url-display.glade:26
 msgid "button"

@@ -418,6 +418,7 @@ class CoBangApplication(Gtk.Application):
                 self.gst_pipeline.set_state(Gst.State.NULL)
             toolbar.hide()
             self.webcam_combobox.hide()
+            self.btn_mirror.hide()
             self.btn_img_chooser.show()
             self.grab_focus_on_event_box()
         elif self.gst_pipeline:
@@ -431,6 +432,7 @@ class CoBangApplication(Gtk.Application):
                 self.gst_pipeline.set_state(Gst.State.PLAYING)
             self.btn_img_chooser.hide()
             self.webcam_combobox.show()
+            self.btn_mirror.show()
             self.reset_image_placeholder()
             toolbar.show()
 
