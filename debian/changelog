@@ -1,3 +1,11 @@
+cobang (0.14.1-1) noble; urgency=medium
+
+  * Fix copy/paste image.
+  * Update translations.
+  * Hide mirror button when webcam is not used.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Wed, 19 Jun 2024 18:49:28 +0700
+
 cobang (0.14.0-1) noble; urgency=medium
 
   * Add mirror mode.
