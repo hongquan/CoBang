@@ -45,6 +45,13 @@
   </kudos>
 
   <releases>
+    <release version="0.14.1" date="2024-06-19" urgency="medium">
+      <description translate="no">
+        <p>Fix copy/paste image.</p>
+        <p>Update translations.</p>
+        <p>Hide mirror button when webcam is not used.</p>
+      </description>
+    </release>
     <release version="0.14.0" date="2024-06-15" urgency="medium">
       <description translate="no">
         <p>Add mirror mode.</p>
