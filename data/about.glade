@@ -9,8 +9,7 @@
     <property name="copyright">© 2020 Nguyễn Hồng Quân</property>
     <property name="website">https://github.com/hongquan/CoBang</property>
     <property name="authors">Nguyễn Hồng Quân &lt;ng.hong.quan@gmail.com&gt;</property>
-    <property name="artists">Freepik
-Good Ware</property>
+    <property name="artists">Lucide</property>
     <property name="logo">cobang_128.png</property>
     <property name="license-type">gpl-3-0</property>
     <signal name="response" handler="on_dlg-about_response" swapped="no"/>
