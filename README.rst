@@ -239,7 +239,7 @@ Credit
 
 - Brought to you by `Nguyễn Hồng Quân <author_>`_.
 - Application logo is from Shadd Gallegos.
-- One icon is composed from ones made by `Good Ware <good_ware_>`_ (allowed by Flaticon license).
+- Picture icon is modified from `Lucide`_ (available under `ISC license <lucide_license_>`_).
 - Some contributors who proposed nicer UI for this app.
 
 .. [1] Every Electron application brings along a pair of NodeJS + Chromium, which make the package size > 50MB, no matter how small the application code is. To make the situation worse, those NodeJS + Chromium set are not shared. It means that if you installed two Electron apps, you end up having two set of NodeJS & Chromium in your system!
@@ -266,4 +266,5 @@ Credit
 .. _Decoder: https://gitlab.gnome.org/World/decoder/
 .. _Megapixels: https://git.sr.ht/~martijnbraam/megapixels
 .. _author: https://quan.hoabinh.vn
-.. _good_ware: https://www.flaticon.com/authors/good-ware
+.. _lucide: https://lucide.dev/icons/image-plus
+.. _lucide_license: https://lucide.dev/license
