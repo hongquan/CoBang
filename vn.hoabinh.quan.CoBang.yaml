@@ -1,6 +1,6 @@
 app-id: vn.hoabinh.quan.CoBang
 runtime: org.gnome.Platform
-runtime-version: '46'
+runtime-version: '47'
 sdk: org.gnome.Sdk
 command: cobang
 finish-args:
@@ -32,7 +32,7 @@ modules:
     sources:
       - type: git
         url: https://git.linuxtv.org/zbar.git
-        commit: 150df8e19ebf5b13ce25c1e3e0a56446b4389acd
+        tag: 0.23.93
       - type: script
         dest-filename: autogen.sh
         commands:
@@ -91,8 +91,8 @@ modules:
     builddir: true
     sources:
       - type: archive
-        url: https://github.com/GNOME/libsoup/archive/refs/tags/2.74.3.tar.gz
-        sha256: 2e7a1313c2223c7e70cda90a8c02c679ab2bf3935c07b5bb028a9b5550411b96
+        url: https://github.com/GNOME/libsoup/archive/refs/tags/3.4.5.tar.gz
+        sha256: f293f78ad01abfb453c8c71fea81ab5d595c85eb604badce39d12165a10d109c
 
   - name: gstreamer
     buildsystem: meson
@@ -100,7 +100,7 @@ modules:
     sources:
       - type: git
         disable-submodules: true
-        tag: 1.24.3
+        tag: 1.24.10
         url: https://github.com/GStreamer/gstreamer.git
 
   - name: intltool
@@ -125,20 +125,12 @@ modules:
         tag: v1.8
         url: https://github.com/jpirko/libndp.git
 
-  # This depend on linux-pam, but don't know how to include it,
+  # This depend on linux-pam, but don't know how to include it.
+  # Ref: https://gitlab.gnome.org/GNOME/gnome-control-center/-/tree/main/build-aux/flatpak
   - name: polkit
-    buildsystem: autotools
+    buildsystem: meson
     config-opts:
-      - --disable-polkitd
-      - --disable-man-pages
-      - --disable-introspection
-      - --disable-examples
-      - --disable-gtk-doc
-      - --disable-libelogind
-      - --disable-libsystemd-login
-      - --with-systemdsystemunitdir=no
-      - --with-authdb=dummy
-      - --with-authfw=none
+      - -Dauthfw=shadow
     rm-configure: true
     cleanup:
       - /bin/*
@@ -148,14 +140,9 @@ modules:
       - /share/polkit-1
       - /lib/polkit-1
     sources:
-      - type: archive
-        url: https://www.freedesktop.org/software/polkit/releases/polkit-0.116.tar.gz
-        sha256: 88170c9e711e8db305a12fdb8234fac5706c61969b94e084d0f117d8ec5d34b1
-      - type: patch
-        path: flatpak/polkit-build-Add-option-to-build-without-polkitd.patch
-      - type: file
-        path: flatpak/polkit-autogen
-        dest-filename: autogen.sh
+      - type: git
+        url: https://gitlab.freedesktop.org/polkit/polkit.git
+        tag: '124'
 
   - name: udev
     config-opts:
@@ -212,7 +199,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/NetworkManager/NetworkManager.git
-        tag: 1.44.4
+        tag: 1.46.4
 
   - name: cobang
     builddir: true

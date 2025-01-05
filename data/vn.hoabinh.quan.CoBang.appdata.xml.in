@@ -45,6 +45,13 @@
   </kudos>
 
   <releases>
+    <release version="0.14.2" date="2025-01-06" urgency="medium">
+      <description translate="no">
+        <p>Change icons.</p>
+        <p>Drop single-version dependency.</p>
+        <p>Add Spanish translation.</p>
+      </description>
+    </release>
     <release version="0.14.1" date="2024-06-19" urgency="medium">
       <description translate="no">
         <p>Fix copy/paste image.</p>
