@@ -1,5 +1,5 @@
 project('cobang',
-        version: '0.14.1',
+        version: '0.14.2',
         meson_version: '>= 0.61',
         default_options: [
           'warning_level=2',
@@ -32,14 +32,5 @@ install_subdir(
 subdir('data')
 subdir('exe')
 subdir('po')
-
-configure_file(
-  input: 'misc/fallback_version.py.in',
-  output: 'fallback_version.py',
-  configuration: conf,
-  install: true,
-  install_dir: python.get_install_dir() / meson.project_name()
-)
-
 
 meson.add_install_script('flatpak/meson/postinstall.py')

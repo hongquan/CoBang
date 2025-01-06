@@ -1,6 +1,5 @@
 [project]
 name = "cobang"
-version = "0.14.1"
 description = "QR code and barcode scanner for Linux desktop"
 authors = [
     {name = "Nguyễn Hồng Quân", email = "ng.hong.quan@gmail.com"},
@@ -10,12 +9,12 @@ dependencies = [
     "Pillow<11.0.0,>=10.1.0",
     "requests<3.0.0,>=2.31.0",
     "kiss-headers<3.0.0,>=2.3.1",
-    "single-version<2.0.0,>=1.5.1",
     "brotlicffi>=1.1.0.0",
 ]
 requires-python = ">=3.8,<4.0"
 readme = "README.rst"
 license = {text = "GPL-3.0-or-later"}
+dynamic = ["version"]
 
 [project.urls]
 homepage = "https://github.com/hongquan/CoBang"

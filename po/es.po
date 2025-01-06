@@ -1,0 +1,159 @@
+# Translations template for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-06-15 17:22+0700\n"
+"PO-Revision-Date: 2025-01-04 16:11-0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.3\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#: cobang/app.py:100
+msgid "CoBang: QR scanner for Linux"
+msgstr "CoBang: Escáner QR para Linux"
+
+#: cobang/app.py:544
+#, python-format
+msgid "Unsupported file type %s!"
+msgstr "¡Tipo de archivo %s no soportado!"
+
+#: cobang/app.py:645
+msgid "Copied"
+msgstr "Copiado"
+
+#: cobang/ui.py:29
+msgid "About"
+msgstr "Acerca de"
+
+#: cobang/ui.py:30
+msgid "Quit"
+msgstr "Salir"
+
+#: cobang/ui.py:59
+msgid "Connected"
+msgstr "Conectado"
+
+#: cobang/ui.py:89
+msgid "Saved"
+msgstr "Guardado"
+
+#: data/cobang-resp.glade:14
+msgid "Copy"
+msgstr "Copiar"
+
+#: data/cobang-resp.glade:52
+msgid "Play"
+msgstr "Reproducir"
+
+#: data/cobang-resp.glade:68
+msgid "Pause"
+msgstr "Pausar"
+
+#. Name
+#: data/cobang-resp.glade:143 data/vn.hoabinh.quan.CoBang.desktop.in:3
+msgid "CoBang"
+msgstr "CoBang"
+
+#: data/cobang-resp.glade:144
+msgid "QR scanner for Linux"
+msgstr "Escáner QR para Linux"
+
+#: data/cobang-resp.glade:289
+msgid "Webcam"
+msgstr "Cámara web"
+
+#: data/cobang-resp.glade:343
+msgid ""
+"Please add an image file by one of these methods:\n"
+"\n"
+"- Drag and drop here.\n"
+"- Copy from somewhere and paste (Ctrl+V) here.\n"
+"- Choose with button below (non Flatpak).\n"
+"\n"
+"Remote image (from http://..., sftp://...) is allowed."
+msgstr ""
+"Por favor, inserte un archivo de imagen utilizando uno de estos métodos:\n"
+"\n"
+"- Arrástrelo y suéltelo en esta área.\n"
+"- Copiarlo y pegarlo (Ctrl+V) desde algún sitio.\n"
+"- Elija uno haciendo clic en el botón de abajo (no disponible con flatpak).\n"
+"\n"
+"Se permite una imagen remota (de http://..., sftp://...)."
+
+#: data/cobang-resp.glade:376
+msgid "Image"
+msgstr "Imagen"
+
+#: data/cobang-resp.glade:419
+msgid "Mirror"
+msgstr "Espejo"
+
+#: data/cobang-resp.glade:439
+msgid "Please choose an image file"
+msgstr "Seleccione un archivo de imagen"
+
+#: data/cobang-resp.glade:487
+msgid "Result"
+msgstr "Resultado"
+
+#: data/cobang-resp.glade:527
+msgid "Raw result"
+msgstr "Resultado bruto"
+
+#: data/url-display.glade:16
+msgid "Found a URL. Click to open:"
+msgstr "URL encontrada. Haga clic para abrir:"
+
+#: data/url-display.glade:26
+msgid "button"
+msgstr "botón"
+
+#. GenericName
+#: data/vn.hoabinh.quan.CoBang.desktop.in:4
+msgid "QR code scanner"
+msgstr "Escáner de códigos QR"
+
+#. Comment
+#: data/vn.hoabinh.quan.CoBang.desktop.in:6
+msgid "Scan and decode QR from camera or static image"
+msgstr "Escanea y descodifica QR desde una cámara o una imagen estática"
+
+#. Keywords
+#: data/vn.hoabinh.quan.CoBang.desktop.in:7
+msgid "qr;code;qr-code;qr-decoder;qr-scanner"
+msgstr "qr;code;qr-code;qr-decoder;qr-scanner"
+
+#. Icon
+#: data/vn.hoabinh.quan.CoBang.desktop.in:11
+msgid "vn.hoabinh.quan.CoBang"
+msgstr "vn.hoabinh.quan.CoBang"
+
+#: data/wifi-display.glade:16
+msgid "Found a wifi configuration"
+msgstr "Configuración wifi encontrada"
+
+#: data/wifi-display.glade:39
+msgid "SSID"
+msgstr "SSID (Nombre del WiFi)"
+
+#: data/wifi-display.glade:52
+msgid "Generous"
+msgstr "Generoso"
+
+#: data/wifi-display.glade:67
+msgid "Password"
+msgstr "Contraseña"
+
+#: data/wifi-display.glade:101
+msgid "Save"
+msgstr "Guardar"
