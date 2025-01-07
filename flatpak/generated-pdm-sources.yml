@@ -3,250 +3,246 @@ buildsystem: simple
 build-commands:
 - python3 -m pip install --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST}
   --no-build-isolation brotlicffi certifi cffi charset-normalizer idna kiss-headers
-  logbook pillow pycparser requests single-version urllib3
+  logbook pillow pycparser requests urllib3
 sources:
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/54/10/1fd57864449360852c535c2381ee7120ba8f390aa3869df967c44ca7eba1/brotlicffi-1.1.0.0-pp310-pypy310_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
   sha256: 4b7b0033b0d37bb33009fb2fef73310e432e76f688af76c156b3594389d81391
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/e5/95/15aa422aa6450e6556e54a5fd1650ff59f470aed77ac739aa90ab63dc611/brotlicffi-1.1.0.0-pp310-pypy310_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: 54a07bb2374a1eba8ebb52b6fafffa2afd3c4df85ddd38fcc0511f2bb387c2a8
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/95/9d/70caa61192f570fcf0352766331b735afa931b4c6bc9a348a0925cc13288/brotlicffi-1.1.0.0.tar.gz
   sha256: b77827a689905143f87915310b93b273ab17888fd43ef350d4832c4a71083c13
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/64/62/428ef076be88fa93716b576e4a01f919d25968913e817077a386fcbe4f42/certifi-2023.11.17-py3-none-any.whl
   sha256: e036ab49d5b79556f99cfc2d9320b34cfbe5be05c5871b51de9329f0603b0474
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/f0/31/a6503a5c4874fb4d4c2053f73f09a957cb427b6943fab5a43b8e156df397/cffi-1.16.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
   sha256: a72e8961a86d19bdb45851d8f1f08b041ea37d2bd8d4fd19903bc3083d80c896
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/c9/7c/43d81bdd5a915923c3bad5bb4bff401ea00ccc8e28433fb6083d2e3bf58e/cffi-1.16.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: e4108df7fe9b707191e55f33efbcb2d81928e10cea45527879a4749cbe472614
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/ee/68/74a2b9f9432b70d97d1184cdabf32d7803124c228adef9481d280864a4a7/cffi-1.16.0-cp310-cp310-musllinux_1_1_x86_64.whl
   sha256: 673739cb539f8cdaa07d92d02efa93c9ccf87e345b9a0b556e3ecc666718468d
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/b5/23/ea84dd4985649fcc179ba3a6c9390412e924d20b0244dc71a6545788f5a2/cffi-1.16.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
   sha256: d8a9d3ebe49f084ad71f9269834ceccbf398253c9fac910c4fd7053ff1386936
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/9b/89/a31c81e36bbb793581d8bba4406a8aac4ba84b2559301c44eef81f4cf5df/cffi-1.16.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: 7b78010e7b97fef4bee1e896df8a4bbb6712b7f05b7ef630f9d1da00f6444d2e
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/47/e3/b6832b1b9a1b6170c585ee2c2d30baf64d0a497c17e6623f42cfeb59c114/cffi-1.16.0-cp311-cp311-musllinux_1_1_x86_64.whl
   sha256: e09f3ff613345df5e8c3667da1d918f9149bd623cd9070c983c013792a9a62eb
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/e4/c7/c09cc6fd1828ea950e60d44e0ef5ed0b7e3396fbfb856e49ca7d629b1408/cffi-1.16.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
   sha256: 88e2b3c14bdb32e440be531ade29d3c50a1a59cd4e51b1dd8b0865c54ea5d2e2
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/09/d4/8759cc3b2222c159add8ce3af0089912203a31610f4be4c36f98e320b4c6/cffi-1.16.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: e715596e683d2ce000574bae5d07bd522c781a822866c20495e52520564f0969
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/4c/00/e17e2a8df0ff5aca2edd9eeebd93e095dd2515f2dd8d591d84a3233518f6/cffi-1.16.0-cp312-cp312-musllinux_1_1_x86_64.whl
   sha256: 2d92b25dbf6cae33f65005baf472d2c245c050b1ce709cc4588cdcdd5495b520
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/68/ce/95b0bae7968c65473e1298efb042e10cafc7bafc14d9e4f154008241c91d/cffi-1.16.0.tar.gz
   sha256: bcb3ef43e58665bbda2fb198698fcae6776483e0c4a631aa5647806c25e02cc0
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/b8/60/e2f67915a51be59d4539ed189eb0a2b0d292bf79270410746becb32bc2c3/charset_normalizer-3.3.2-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
   sha256: 6897af51655e3691ff853668779c7bad41579facacf5fd7253b0133308cf000d
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/da/f1/3702ba2a7470666a62fd81c58a4c40be00670e5006a67f4d626e57f013ae/charset_normalizer-3.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: 8465322196c8b4d7ab6d1e049e4c5cb460d0394da4a27d23cc242fbf0034b6b5
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/33/c3/3b96a435c5109dd5b6adc8a59ba1d678b302a97938f032e3770cc84cd354/charset_normalizer-3.3.2-cp310-cp310-musllinux_1_1_aarch64.whl
   sha256: beb58fe5cdb101e3a055192ac291b7a21e3b7ef4f67fa1d74e331a7f2124341c
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/a8/31/47d018ef89f95b8aded95c589a77c072c55e94b50a41aa99c0a2008a45a4/charset_normalizer-3.3.2-cp310-cp310-musllinux_1_1_x86_64.whl
   sha256: fd1abc0d89e30cc4e02e4064dc67fcc51bd941eb395c502aac3ec19fab46b519
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/e4/a6/7ee57823d46331ddc37dd00749c95b0edec2c79b15fc0d6e6efb532e89ac/charset_normalizer-3.3.2-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
   sha256: f27273b60488abe721a075bcca6d7f3964f9f6f067c8c4c605743023d7d3944f
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/40/26/f35951c45070edc957ba40a5b1db3cf60a9dbb1b350c2d5bef03e01e61de/charset_normalizer-3.3.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: 753f10e867343b4511128c6ed8c82f7bec3bd026875576dfd88483c5c73b2fd8
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/d8/b5/eb705c313100defa57da79277d9207dc8d8e45931035862fa64b625bfead/charset_normalizer-3.3.2-cp311-cp311-musllinux_1_1_aarch64.whl
   sha256: e537484df0d8f426ce2afb2d0f8e1c3d0b114b83f8850e5f2fbea0e797bd82ae
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/2d/dc/9dacba68c9ac0ae781d40e1a0c0058e26302ea0660e574ddf6797a0347f7/charset_normalizer-3.3.2-cp311-cp311-musllinux_1_1_x86_64.whl
   sha256: 80402cd6ee291dcb72644d6eac93785fe2c8b9cb30893c1af5b8fdd753b9d40f
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/99/b0/9c365f6d79a9f0f3c379ddb40a256a67aa69c59609608fe7feb6235896e1/charset_normalizer-3.3.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
   sha256: 8f4a014bc36d3c57402e2977dada34f9c12300af536839dc38c0beab8878f38a
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/ee/fb/14d30eb4956408ee3ae09ad34299131fb383c47df355ddb428a7331cfa1e/charset_normalizer-3.3.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: 90d558489962fd4918143277a773316e56c72da56ec7aa3dc3dbbe20fdfed15b
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/45/59/3d27019d3b447a88fe7e7d004a1e04be220227760264cc41b405e863891b/charset_normalizer-3.3.2-cp312-cp312-musllinux_1_1_aarch64.whl
   sha256: 7ed9e526742851e8d5cc9e6cf41427dfc6068d4f5a3bb03659444b4cabf6bc26
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/5b/ae/ce2c12fcac59cb3860b2e2d76dc405253a4475436b1861d95fe75bdea520/charset_normalizer-3.3.2-cp312-cp312-musllinux_1_1_x86_64.whl
   sha256: efcb3f6676480691518c177e3b465bcddf57cea040302f9f4e6e191af91174d4
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/28/76/e6222113b83e3622caa4bb41032d0b1bf785250607392e1b778aca0b8a7d/charset_normalizer-3.3.2-py3-none-any.whl
   sha256: 3e4d1f6587322d2788836a99c69062fbb091331ec940e02d12d179c1d53e25fc
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/c2/e7/a82b05cf63a603df6e68d59ae6a68bf5064484a0718ea5033660af4b54a9/idna-3.6-py3-none-any.whl
   sha256: c05567e9c24a6b9faaa835c4821bad0590fbb9d5779e7caa6e1cc4978e7eb24f
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/f9/3e/9d8f56a758d8259abd6e33417067013a217f7db9e2f37a76d637c5439b9d/kiss_headers-2.4.3-py3-none-any.whl
   sha256: 9d800b77532068e8748be9f96f30eaeb547cdc5345e4689ddf07b77071256239
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/56/84/187d854be97e0b4a9fd5fcf93433e0f2e2ffaa4849410c2fb4107a952138/Logbook-1.7.0.post0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: e19e87818430565b84e4fb6c431d7f760fdebc42ad338c8f2f76940c4c2e39c2
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/27/89/3abcea08aa8fe8ff04b736c8081dfc5cd5232b2b4ff67ffec6ee5a314cc6/Logbook-1.7.0.post0-cp310-cp310-musllinux_1_1_x86_64.whl
   sha256: 4813bb9c0c20fee6adee12cff4fe8a2537136f961f7d14989d1b1445227a9c9a
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/7d/ff/cbac05f38deebaa37488160c43f12e184d290de2229c54b731cdf4d4fccc/Logbook-1.7.0.post0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: d64616266dc283d6da78ac09396f8986ff7324230775a686784e8173646a755b
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/e7/24/76ae1d1402703b4d2a3ecdafa35bce150b87ac3ac5300a7e6a3a2d7d6a99/Logbook-1.7.0.post0-cp311-cp311-musllinux_1_1_x86_64.whl
   sha256: 7992c9c17a2b0df02f2583c1048da3df539d44084d8b7ba7781b41b6b814cedf
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/07/d1/0be80be60881e2b5d8747a64558a858c759443ad2d2b7e036272e87cb9f4/Logbook-1.7.0.post0-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: c7d7a39dbfa9c2793569691c719c6f0269a21b01583f33dfcc6052b3312fc5f2
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/38/fa/4c717b80b59496010c9fc5d6a372df0215d0c480548baae1c36f443075db/Logbook-1.7.0.post0-cp312-cp312-musllinux_1_1_x86_64.whl
   sha256: 40a8e1b4fc0d2fdf8e662fabd8a933ba1ce91a355c755ab7a1d13469ec0e590e
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/cc/98/c1d93c1d7593f58515333a6217aa4ae647d9ee9c1aa2dfdf77b28b7bb7c7/Logbook-1.7.0.post0.tar.gz
   sha256: a5e8016701ca3beea6a390b0ba1541037f663543ca508ccd36cfdc841639cdd7
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/07/d1/ffdda319c2f62fb20b3ece231caecedcc8af42fc2c0d4900dca92996c356/Pillow-10.1.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
   sha256: a5f63b5a68daedc54c7c3464508d8c12075e56dcfbd42f8c1bf40169061ae666
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/95/7b/71e2665760b5c33af00fa9bb6d6bca068b51bf021a4ceaeee03e18689f51/Pillow-10.1.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: c0949b55eb607898e28eaccb525ab104b2d86542a85c74baf3a6dc24002edec2
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/a0/f0/446e3568f8365dff2c37efd35411a61ad72aa1b613ba4ac123bbacf0e5ce/Pillow-10.1.0-cp310-cp310-manylinux_2_28_aarch64.whl
   sha256: ae88931f93214777c7a3aa0a8f92a683f83ecde27f65a45f95f22d289a69e593
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/e5/b9/5c6ad3241f1ccca4b781dfeddbab2dac4480f95aedc351a0e60c9f4c8aa9/Pillow-10.1.0-cp310-cp310-manylinux_2_28_x86_64.whl
   sha256: b0eb01ca85b2361b09480784a7931fc648ed8b7836f01fb9241141b968feb1db
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/d2/ce/745220339fed3a5a0052b443c482625ec6c889da1fef0f9791e30d571e19/Pillow-10.1.0-cp310-cp310-musllinux_1_1_aarch64.whl
   sha256: d27b5997bdd2eb9fb199982bb7eb6164db0426904020dc38c10203187ae2ff2f
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/1f/ff/2c4ffdccc9a29d5f010e59abd7d62d172e84472000f32f1d64e177453906/Pillow-10.1.0-cp310-cp310-musllinux_1_1_x86_64.whl
   sha256: 7df5608bc38bd37ef585ae9c38c9cd46d7c81498f086915b0f97255ea60c2818
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/2a/ae/6b7673ae38cbd4821742acdb209e3e52c564dbe8ef8409d64d68ea0f9e6f/Pillow-10.1.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
   sha256: 50d08cd0a2ecd2a8657bd3d82c71efd5a58edb04d9308185d66c3a5a5bed9610
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/cd/fa/87c27a90d97600edc639b06c14c63c8dac709e13e04714eb1dc949788f41/Pillow-10.1.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: 062a1610e3bc258bff2328ec43f34244fcec972ee0717200cb1425214fe5b839
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/5f/0a/8301b9384cbbd8542c2a5540fda1bce18c3203a0cc7becc9073bdee79ccb/Pillow-10.1.0-cp311-cp311-manylinux_2_28_aarch64.whl
   sha256: 61f1a9d247317fa08a308daaa8ee7b3f760ab1809ca2da14ecc88ae4257d6172
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/6f/d8/f31dd84b4363b5f24c71b25a13ec3855f5ff233e07e1c3f1f8e979e12be2/Pillow-10.1.0-cp311-cp311-manylinux_2_28_x86_64.whl
   sha256: a646e48de237d860c36e0db37ecaecaa3619e6f3e9d5319e527ccbc8151df061
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/9d/20/5000e1a9696ee28c18c4bd158aaaed0dd65d3b13b6547c43b29f9851c2cc/Pillow-10.1.0-cp311-cp311-musllinux_1_1_aarch64.whl
   sha256: 47e5bf85b80abc03be7455c95b6d6e4896a62f6541c1f2ce77a7d2bb832af262
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/cf/f7/4c4428d56df4cf7dfc6b9fc9a8b0268cdbca7c6b5130bc090fbf7562b223/Pillow-10.1.0-cp311-cp311-musllinux_1_1_x86_64.whl
   sha256: a92386125e9ee90381c3369f57a2a50fa9e6aa8b1cf1d9c4b200d41a7dd8e992
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/33/c6/1abfffbbdd803a44fb4aa009218502a0e353bfcc96b045a24ad1a194c705/Pillow-10.1.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
   sha256: 3d929a19f5469b3f4df33a3df2983db070ebb2088a1e145e18facbc28cae5b27
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/1f/40/ff02ca10167c3d68c84b61142a5acd28b09ea5f833fffe9a77c4d8d5f96a/Pillow-10.1.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: 9a92109192b360634a4489c0c756364c0c3a2992906752165ecb50544c251312
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/15/57/925008390581a15c024dd57206ca622fd0ea85fbd194169efc3ff48ecda1/Pillow-10.1.0-cp312-cp312-manylinux_2_28_aarch64.whl
   sha256: 0248f86b3ea061e67817c47ecbe82c23f9dd5d5226200eb9090b3873d3ca32de
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/44/ed/a6f7dcd6631ec55b8d26c6a8bca762b04b7025daa3aa67e860a886abed89/Pillow-10.1.0-cp312-cp312-manylinux_2_28_x86_64.whl
   sha256: 9882a7451c680c12f232a422730f986a1fcd808da0fd428f08b671237237d651
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/3f/e7/cf988402f838843362c471ca2a240d4be46adcabc508be4e70ba7721e9ee/Pillow-10.1.0-cp312-cp312-musllinux_1_1_aarch64.whl
   sha256: 1c3ac5423c8c1da5928aa12c6e258921956757d976405e9467c5f39d1d577a4b
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/04/3d/bf353b366d1a39a95ff861129ba3af8499d48e06634d50c10cf4136cbe7d/Pillow-10.1.0-cp312-cp312-musllinux_1_1_x86_64.whl
   sha256: 806abdd8249ba3953c33742506fe414880bad78ac25cc9a9b1c6ae97bedd573f
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/72/69/6ee650d047770ec1ee8844b62b4401b4e4fbac3959a7663af1b62c00fdca/Pillow-10.1.0-pp310-pypy310_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   sha256: b1c25762197144e211efb5f4e8ad656f36c8d214d390585d1d21281f46d556ba
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/1a/09/07957ab28bac4e62d1417a35b3bed2298c1cb4f2869e6ba5f95ae7ccf08d/Pillow-10.1.0-pp310-pypy310_pp73-manylinux_2_28_x86_64.whl
   sha256: afc8eef765d948543a4775f00b7b8c079b3321d6b675dde0d02afa2ee23000b4
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/80/d7/c4b258c9098b469c4a4e77b0a99b5f4fd21e359c2e486c977d231f52fc71/Pillow-10.1.0.tar.gz
   sha256: e6bf8de6c36ed96c86ea3b6e1d5273c53f46ef518a062464cd7ef5dd2cf92e38
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/62/d5/5f610ebe421e85889f2e55e33b7f9a6795bd982198517d912eb1c76e1a53/pycparser-2.21-py2.py3-none-any.whl
   sha256: 8ee45429555515e1f6b185e78100aea234072576aa43ab53aefcae078162fca9
 - type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/70/8e/0e2d847013cb52cd35b38c009bb167a1a26b2ce6cd6965bf26b47bc0bf44/requests-2.31.0-py3-none-any.whl
   sha256: 58cd2187c01e70e6e26505bca751777aa9f2ee0b7f4300988b709f44e013003f
 - type: file
-  url:
-    https://files.pythonhosted.org/packages/61/b5/ffbbc700075f6d07164dea524b81a495689d18a0f6dd44f07c8cdfeb9fb5/single_version-1.6.0-py3-none-any.whl
-  sha256: 67a2734e728b9554750e867b33591f3ad9509ccb851bb3047ced7bfe68429ecd
-- type: file
-  url:
+  url: 
     https://files.pythonhosted.org/packages/96/94/c31f58c7a7f470d5665935262ebd7455c7e4c7782eb525658d3dbf4b9403/urllib3-2.1.0-py3-none-any.whl
   sha256: 55901e917a5896a349ff771be919f8bd99aff50b79fe58fec595eb37bbc56bb3
 
