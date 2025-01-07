@@ -1,3 +1,12 @@
+cobang (0.15.0-1) noble; urgency=medium
+
+  * Replace the unreleased v0.14.2.
+  * Change icons.
+  * Drop single-version dependency.
+  * Add Spanish translation.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Tue, 07 Jan 2025 10:26:08 +0700
+
 cobang (0.14.2-1) noble; urgency=medium
 
   * Change icons.
