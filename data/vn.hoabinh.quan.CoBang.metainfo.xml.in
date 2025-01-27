@@ -34,7 +34,7 @@
   </kudos>
 
   <releases>
-    <release version="1.0.0" date="2025-01-27" urgency="medium">
+    <release version="1.0.0" date="2025-01-28" urgency="medium">
       <description translate="no">
         <p>Finally reach v1.0.</p>
         <p>Port to GTK4 + Adwaita.</p>
