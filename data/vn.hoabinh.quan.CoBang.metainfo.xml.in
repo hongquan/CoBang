@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2020 Nguyễn Hồng Quân <ng.hong.quan@gmail.com> -->
-<component type="desktop">
+<component type="desktop-application">
   <id>vn.hoabinh.quan.CoBang</id>
   <launchable type="desktop-id">vn.hoabinh.quan.CoBang.desktop</launchable>
   <translation type="gettext">cobang</translation>
@@ -16,26 +15,16 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/hongquan/CoBang/main/misc/screenshots/K3TU9bm.png</image>
+      <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v1_1.png</image>
+      <caption>Scan from webcam.</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/hongquan/CoBang/main/misc/screenshots/bIV57cV.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/hongquan/CoBang/main/misc/screenshots/ldynPU6.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/hongquan/CoBang/main/misc/screenshots/aORgQKj.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/hongquan/CoBang/main/misc/screenshots/MyH9CEC.png</image>
+      <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v1_2.png</image>
+      <caption>Scan from image file.</caption>
     </screenshot>
   </screenshots>
   <url type="homepage">https://github.com/hongquan/CoBang</url>
   <url type="bugtracker">https://github.com/hongquan/CoBang/issues</url>
-  <!-- This type of URL is not recognized by appstreamcli on Ubuntu 22.04 yet.
-  <url type="vcs-browser">https://github.com/hongquan/CoBang</url>
-  -->
   <url type="translate">https://github.com/hongquan/CoBang/tree/main/po</url>
   <developer_name>Nguyễn Hồng Quân</developer_name>
   <update_contact>ng.hong.quan_AT_gmail.com</update_contact>
@@ -45,6 +34,13 @@
   </kudos>
 
   <releases>
+    <release version="1.0.0" date="2025-01-27" urgency="medium">
+      <description translate="no">
+        <p>Finally reach v1.0.</p>
+        <p>Port to GTK4 + Adwaita.</p>
+        <p>Fix responsive UI.</>
+      </description>
+    </release>
     <release version="0.15.0" date="2025-01-07" urgency="medium">
       <description translate="no">
         <p>Replace the unreleased v0.14.2</p>

@@ -6,7 +6,7 @@ from logbook.handlers import Handler, StringFormatterHandlerMixin
 
 gi.require_version('GLib', '2.0')
 
-from gi.repository import GLib
+from gi.repository import GLib  # pyright: ignore[reportMissingModuleSource]
 
 from .consts import SHORT_NAME
 

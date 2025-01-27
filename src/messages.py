@@ -1,9 +1,9 @@
-from enum import Enum
+from enum import StrEnum
 from dataclasses import dataclass
-from typing import Optional
+from gettext import gettext as _
 
 
-class WifiAuthType(str, Enum):
+class WifiAuthType(StrEnum):
     WEP = 'WEP'
     WPA = 'WPA'
     WPA2 = 'WPA2'
@@ -13,16 +13,22 @@ class WifiAuthType(str, Enum):
 @dataclass
 class WifiInfoMessage:
     ssid: str = ''
-    password: Optional[str] = None
+    password: str | None = None
     # Value: WEP, WPA, WPA2-EAP, nopass
-    auth_type: Optional[WifiAuthType] = WifiAuthType.WPA
+    auth_type: WifiAuthType | None = WifiAuthType.WPA
     hidden: bool = False
 
 
-def parse_true(value: str):
-    if value.lower() in ('true', 'yes', 't', 'y'):
-        return True
-    return False
+# Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
+IMAGE_GUIDE = _('Please add an image file by one of these methods:\n\n\
+- Drag and drop here.\n\
+- Copy from somewhere and paste (Ctrl+V) here.\n\
+- Choose with button below (non Flatpak).\n\n\
+Remote image (from http://..., sftp://...) is allowed.')
+
+
+def parse_to_boolean(value: str) -> bool:
+    return value.lower() in ('true', 'yes', 't', 'y')
 
 
 # Ref: https://en.wikipedia.org/wiki/QR_code#Joining_a_Wi%E2%80%91Fi_network
@@ -32,11 +38,11 @@ def mecard_unescape(string: str):
 
 
 # Ref: https://github.com/zxing/zxing/wiki/Barcode-Contents#wifi-network-config-android
-def parse_wifi_message(string: str) -> WifiInfoMessage:
+def parse_wifi_message(string: str) -> WifiInfoMessage | None:
     # Example: WIFI:S:Wikipedia;T:WPA;P:Password1!;;
     string = string.strip()
     if not string.startswith('WIFI:'):
-        raise ValueError('Not starts with WIFI:')
+        return None
     parts = string[5:].split(';')
     winfo = WifiInfoMessage()
     for p in parts:
@@ -48,7 +54,7 @@ def parse_wifi_message(string: str) -> WifiInfoMessage:
             auth_type = p[2:]
             winfo.auth_type = WifiAuthType(auth_type) if auth_type != 'nopass' else None
         elif p.startswith('H:'):
-            winfo.hidden = parse_true(p[2:])
+            winfo.hidden = parse_to_boolean(p[2:])
     if not winfo.auth_type:
         winfo.password = None
     return winfo

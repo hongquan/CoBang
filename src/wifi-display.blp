@@ -1,0 +1,60 @@
+using Gtk 4.0;
+
+Box wifi_form {
+  orientation: vertical;
+  spacing: 12;
+
+  Label {
+    label: _("Found a wifi configuration");
+    opacity: 0.8;
+    margin-top: 12;
+  }
+
+  Grid {
+    margin-start: 8;
+    margin-end: 8;
+    margin-top: 8;
+    margin-bottom: 8;
+    column-spacing: 8;
+    Label {
+      label: _("SSID");
+      xalign: 1;
+      layout {
+        row: 0;
+        column: 0;
+      }
+    }
+    Label ssid_value {
+      xalign: 0;
+      layout {
+        row: 0;
+        column: 1;
+      }
+    }
+
+    Label {
+      label: _("Password");
+      xalign: 1;
+      layout {
+        row: 1;
+        column: 0;
+      }
+    }
+
+    Entry password_value {
+      input-purpose: password;
+      editable: false;
+      secondary-icon-name: 'dialog-password-symbolic';
+      visibility: false;
+      layout {
+        row: 1;
+        column: 1;
+      }
+    }
+  }
+
+  Button btn_connect {
+    label: _("Save");
+    halign: center;
+  }
+}

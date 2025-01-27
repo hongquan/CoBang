@@ -1,5 +1,5 @@
-from enum import Enum
-from typing import Optional, Callable, Any
+from enum import StrEnum
+from typing import Callable, Any
 
 import gi
 gi.require_version('NM', '1.0')
@@ -11,7 +11,7 @@ from .consts import BRAND_NAME
 from .messages import WifiInfoMessage
 
 
-class NMWifiKeyMn(str, Enum):
+class NMWifiKeyMn(StrEnum):
     WEP = 'none'
     WPA = 'wpa-psk'
     WPA2 = 'wpa-psk'
@@ -29,7 +29,7 @@ def is_connected_same_wifi(info: WifiInfoMessage, client: NM.Client) -> bool:
     return conn.get_id() == info.ssid
 
 
-def add_wifi_connection(info: WifiInfoMessage, callback: Optional[Callable], btn: Any, nm_client: Optional[NM.Client]):
+def add_wifi_connection(info: WifiInfoMessage, callback: Callable, btn: Any, nm_client: NM.Client):
     conn = NM.RemoteConnection()
     base = NM.SettingConnection.new()
     connection_name = f'{info.ssid} ({BRAND_NAME})'
@@ -43,7 +43,7 @@ def add_wifi_connection(info: WifiInfoMessage, callback: Optional[Callable], btn
     try:
         key_mn = NMWifiKeyMn[info.auth_type.name] if info.auth_type else None
     except KeyError:
-        pass
+        key_mn = None
     if key_mn:
         secure.set_property(NM.SETTING_WIRELESS_SECURITY_KEY_MGMT, key_mn)
     if info.password:
