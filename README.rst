@@ -60,11 +60,11 @@ Ubuntu
 
 CoBang is packaged as *\*.deb* file for Ubuntu and derivatives (Linux Mint etc.). You can install it from `PPA`_:
 
-.. code-block:: sh
+.. code-block:: console
 
-  sudo add-apt-repository ppa:ng-hong-quan/ppa
-  sudo apt update
-  sudo apt install cobang
+  $ sudo add-apt-repository ppa:ng-hong-quan/ppa
+  $ sudo apt update
+  $ sudo apt install cobang
 
 Version 1+ is only available on distros which are as new as Ubuntu v24.10.
 
@@ -86,9 +86,9 @@ Other distros
 
 Users of other distros can install CoBang from `FlatHub`_.
 
-.. code-block:: sh
+.. code-block:: console
 
-  flatpak install flathub vn.hoabinh.quan.CoBang
+  $ flatpak install flathub vn.hoabinh.quan.CoBang
 
 The release on FlatHub is lagging behind traditional distribution channels (PPA, AUR, COPR) because I often having difficulty building CoBang as Flatpak.
 
@@ -113,9 +113,9 @@ Install dependencies
 Though being written in Python, but as a GTK app, most of CoBang's Python dependencies can be only installed from OS package manager.
 They are listed in *deb-packages.txt* file, under the name of Debian packages. On Debian, Ubuntu and derivates, you can quickly install them with this command:
 
-.. code-block:: sh
+.. code-block:: console
 
-  xargs -a deb-packages.txt sudo apt install
+  $ xargs -a deb-packages.txt sudo apt install
 
 On other distros (Fedora, ArchLinux etc.), please try to figure out equivalent package names and install with your favorite package manager.
 
@@ -128,7 +128,7 @@ Run from source
 Due to the dependence on system libraries and GTK ecosystem, CoBang requires a build step and cannot be run directly from source.
 However, you can still try running it in development by:
 
-.. code-block:: sh
+.. code-block:: console
 
   $ meson setup _build --prefix ~/.local/
   $ ninja -C _build
@@ -143,10 +143,10 @@ Translation
 
 Script to extract strings for translation and to update *\*.po* files are written in Nu shell. Please install Nu before running.
 
-.. code-block:: sh
+.. code-block:: console
 
-  ./dev/extract-for-translating.nu
-  ./dev/update-translated.nu
+  $ ./dev/extract-for-translating.nu
+  $ ./dev/update-translated.nu
 
 
 Package for Debian/Ubuntu
@@ -161,10 +161,10 @@ Follow this step to package:
 
 - Checkout to ``main`` branch, and export source code:
 
-  .. code-block:: sh
+  .. code-block:: console
 
-    export VER='0.1.0'  # Change to version you want
-    git archive --format=tar --prefix=cobang-$VER/ HEAD | gzip -c > ../cobang_$VER.orig.tar.gz
+    $ export VER='0.1.0'  # Change to version you want
+    $ git archive --format=tar --prefix=cobang-$VER/ HEAD | gzip -c > ../cobang_$VER.orig.tar.gz
 
 - Move the *\*.orig.tar.gz* file to somewhere, then extract it, as *cobang-0.1.0* for example.
 
@@ -172,15 +172,15 @@ Follow this step to package:
 
 - If you are about to build *deb* file locally, run:
 
-  .. code-block:: sh
+  .. code-block:: console
 
-    debuild -us -uc
+    $ debuild -us -uc
 
 - If you are about to create source package which are suitable to build on Ubuntu's PPA [2]_, run:
 
-  .. code-block:: sh
+  .. code-block:: console
 
-    debuild -S
+    $ debuild -S
 
 
 Package as Flatpak
@@ -188,10 +188,10 @@ Package as Flatpak
 
 You can package as Flatpak from the source.
 
-.. code-block:: sh
+.. code-block:: console
 
-  flatpak-builder _build --force-clean vn.hoabinh.quan.CoBang.yaml
-  flatpak-builder --run _build vn.hoabinh.quan.CoBang.yaml cobang
+  $ flatpak-builder _build --force-clean vn.hoabinh.quan.CoBang.yaml
+  $ flatpak-builder --run _build vn.hoabinh.quan.CoBang.yaml cobang
 
 
 Alternatives
