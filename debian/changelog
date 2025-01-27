@@ -1,3 +1,11 @@
+cobang (1.0.0-1) oracular; urgency=medium
+
+  * Finally reach v1.0.
+  * Port to GTK4 + Adwaita.
+  * Fix responsive UI.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Mon, 27 Jan 2025 21:51:59 +0700
+
 cobang (0.15.0-1) noble; urgency=medium
 
   * Replace the unreleased v0.14.2.

@@ -15,24 +15,14 @@ Files: data/*.xml
 Copyright: 2020, Nguyễn Hồng Quân <ng.hong.quan@gmail.com>
 License: MIT
 
+Files: src/img/wireframe-image-add.svg
+Copyright: Lucide
+License: ISC
+
 Files: data/*.svg
-Copyright: Freepik and Good Ware from www.flaticon.com
-License: Flaticon-Free-license
- Free for personal and commercial purpose with attribution. Allow to use the content:
- .
- - For commercial and personal projects
- .
- - On digital or printed media
- .
- - For an unlimited number of times and perpetually
- .
- - Anywhere in the world
- .
- - To make modifications and derived works
-Comment:
- There seems to be no official name of this license, but it is mentioned in website
- <https://support.flaticon.com/hc/en-us/articles/207248209-Attribution-How-when-and-where->
- and the terms aboved are listed in any page of a free icon <https://www.flaticon.com/free-icon/reed_376345>.
+Copyright: Shadd Gallegos
+License: MIT
+
 
 License: GPL-3+
  This program is free software: you can redistribute it and/or modify it under
@@ -91,3 +81,17 @@ License: MIT
  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+License: ISC
+ Permission to use, copy, modify, and/or distribute this software for
+ any purpose with or without fee is hereby granted, provided that the
+ above copyright notice and this permission notice appear in all copies.
+ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
+ WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
+ AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+ DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+ PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+ THIS SOFTWARE.
