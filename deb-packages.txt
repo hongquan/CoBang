@@ -1,9 +1,7 @@
 python3-gst-1.0
-gir1.2-gtk-3.0
+gir1.2-xdpgtk4-1.0
 gir1.2-gst-plugins-base-1.0
 gstreamer1.0-plugins-good
-gstreamer1.0-gtk3
+gstreamer1.0-gtk4
 gir1.2-nm-1.0
 python3-pil
-python3-cairo-dev
-python3-babel

@@ -4,7 +4,7 @@ CoBang
 
 .. image:: https://madewithlove.now.sh/vn?heart=true&colorA=%23ffcd00&colorB=%23da251d
 
-A missing native QR Code and barcode scanner application for Linux desktop.
+A native QR Code and barcode scanner application for Linux desktop.
 
 .. image:: https://github.com/hongquan/CoBang/blob/main/data/vn.hoabinh.quan.CoBang.svg
     :width: 400
@@ -45,18 +45,15 @@ So I decide to build *CoBang*, a new, native Linux application for scanning QR c
 Screenshots
 +++++++++++
 
-.. image:: https://i.imgur.com/K3TU9bm.png
-.. image:: https://i.imgur.com/bIV57cV.png
-.. image:: https://i.imgur.com/ldynPU6.png
-.. image:: https://i.imgur.com/gtmPSpM.png
-.. image:: https://i.imgur.com/MyH9CEC.png
-.. image:: https://i.imgur.com/065FVXb.png
+.. image:: https://i.imgur.com/tbWUfkn.png
+.. image:: https://i.imgur.com/AigLax4.png
 
 
 Install
 +++++++
 
-For now, there is no way to install with Python standard tools (``pip``, Poetry) because we cannot tell them to install desktop-integration files (icons, \*.desktop etc.) to correct places for a desktop app. You have to install it with OS package manager.
+Due to dependence on GObject, GTK libraries and being a desktop app with extra desktop-integration files (icons, \*.desktop etc.),
+CoBang cannot be installed from `PyPI`_. You have to install it with OS package manager.
 
 Ubuntu
 ------
@@ -65,9 +62,11 @@ CoBang is packaged as *\*.deb* file for Ubuntu and derivatives (Linux Mint etc.)
 
 .. code-block:: sh
 
-    sudo add-apt-repository ppa:ng-hong-quan/ppa
-    sudo apt update
-    sudo apt install cobang
+  sudo add-apt-repository ppa:ng-hong-quan/ppa
+  sudo apt update
+  sudo apt install cobang
+
+Version 1+ is only available on distros which are as new as Ubuntu v24.10.
 
 
 ArchLinux
@@ -89,7 +88,7 @@ Users of other distros can install CoBang from `FlatHub`_.
 
 .. code-block:: sh
 
-    flatpak install flathub vn.hoabinh.quan.CoBang
+  flatpak install flathub vn.hoabinh.quan.CoBang
 
 The release on FlatHub is lagging behind traditional distribution channels (PPA, AUR, COPR) because I often having difficulty building CoBang as Flatpak.
 
@@ -98,8 +97,6 @@ Compatibility
 -------------
 
 Though being targeted at Wayland, this app can still work in X11 desktop environments, like `KDE`_ (in Kubuntu), `Xfce`_ (in Xubuntu), `LxQt`_ (in Lubuntu). But due to a gap between GTK and Qt, the app gets some minor quirky issue when running in Qt-based DEs like KDE and LxQt. CoBang should not be tried in VirtualBox virtual machine, because of poor graphics stack VirtualBox provides.
-
-There is an known issue with file chooser button when running from Flatpak. Hope that it can be solved in the future.
 
 
 Development
@@ -113,71 +110,43 @@ CoBang is written in Python, using `GTK+ <gtk_>`_ for UI, `GStreamer`_ for webca
 Install dependencies
 --------------------
 
-1. Create Python virtual environment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Because Python binding of many GObject-based libraries (like GTK+, GStreamer) are not distributable via `PyPI`_, you have to create a Python virtual environment with ``--system-site-packages`` flag,
-so that the project can access those system-installed Python libraries.
-
-My recommended tool is `virtualenvwrapper`_. Because of the requirement of ``--system-site-packages`` flag, you cannot use more modern tool, like `Poetry`_, for this task yet.
-
-Example:
+Though being written in Python, but as a GTK app, most of CoBang's Python dependencies can be only installed from OS package manager.
+They are listed in *deb-packages.txt* file, under the name of Debian packages. On Debian, Ubuntu and derivates, you can quickly install them with this command:
 
 .. code-block:: sh
 
-    $ mkvirtualenv cobang --system-site-packages
-
-    $ workon cobang
-
-
-2. Install GObject-based Python packages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The GObject-based dependencies are listed in *deb-packages.txt* file, under the name of Debian packages. On Debian, Ubuntu and derivates, you can quickly install them with this command:
-
-.. code-block:: sh
-
-    xargs -a deb-packages.txt sudo apt install
-
+  xargs -a deb-packages.txt sudo apt install
 
 On other distros (Fedora, ArchLinux etc.), please try to figure out equivalent package names and install with your favorite package manager.
 
-
-3. Install PyPI-hosted Python packages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-For other Python dependencies, this project is using `PDM`_ to manage. Please install it, then, inside the created virtual environment, run:
-
-.. code-block:: sh
-
-    pdm install --no-self
-
-to install those dependencies.
+Some Python packages which aid development can be installed with `pip`, and listed in *requirements-dev.txt*. If you want to install them to a virtual environment, remember to create it with ``--system-site-packages`` flag.
 
 
 Run from source
 ---------------
 
-.. code-block:: sh
-
-    python3 -m cobang
-
-
-To print debug messages, set environment variable ``G_MESSAGES_DEBUG`` to ``cobang``:
+Due to the dependence on system libraries and GTK ecosystem, CoBang requires a build step and cannot be run directly from source.
+However, you can still try running it in development by:
 
 .. code-block:: sh
 
-    G_MESSAGES_DEBUG=cobang python3 -m cobang
+  $ meson setup _build --prefix ~/.local/
+  $ ninja -C _build
+  $ meson install -C _build
+  $ G_MESSAGES_DEBUG=cobang cobang
+
+These steps will install CoBang to *~/.local/*. Everytime we modify source code, we only need to run the ``meson install`` step again.
 
 
 Translation
 -----------
 
+Script to extract strings for translation and to update *\*.po* files are written in Nu shell. Please install Nu before running.
+
 .. code-block:: sh
 
-  pybabel extract -F babel.cfg -o po/cobang.pot .
-  ./devtool.py update-translation
-  ./devtool.py compile-translation
+  ./dev/extract-for-translating.nu
+  ./dev/update-translated.nu
 
 
 Package for Debian/Ubuntu
@@ -221,8 +190,8 @@ You can package as Flatpak from the source.
 
 .. code-block:: sh
 
-    flatpak-builder _build --force-clean vn.hoabinh.quan.CoBang.yaml
-    flatpak-builder --run _build vn.hoabinh.quan.CoBang.yaml cobang
+  flatpak-builder _build --force-clean vn.hoabinh.quan.CoBang.yaml
+  flatpak-builder --run _build vn.hoabinh.quan.CoBang.yaml cobang
 
 
 Alternatives
@@ -258,9 +227,6 @@ Credit
 .. _KDE: https://kde.org/
 .. _Xfce: https://www.xfce.org/
 .. _LxQt: https://lxqt.github.io/
-.. _virtualenvwrapper: https://pypi.org/project/virtualenvwrapper/
-.. _PDM: https://pdm-project.org
-.. _Pipenv: https://pipenv.pypa.io
 .. _Logbook: https://pypi.org/project/Logbook/
 .. _FlatHub: https://flathub.org/apps/details/vn.hoabinh.quan.CoBang
 .. _Decoder: https://gitlab.gnome.org/World/decoder/

@@ -7,78 +7,139 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-06-15 17:22+0700\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-27 20:44+0700\n"
 "PO-Revision-Date: 2024-06-16 10:19+0300\n"
 "Last-Translator: mva <ma12@rambler.ru>\n"
-"Language-Team: Russian <kde-russian@lists.kde.ru>\n"
-"Language: ru\n"
 "Language-Team: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
-"=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "Generated-By: Babel 2.10.3\n"
 "X-Generator: Lokalize 23.08.4\n"
 
-#: cobang/app.py:100
-msgid "CoBang: QR scanner for Linux"
-msgstr "CoBang: Сканер QR-кода для Линукс"
+#: src/help-overlay.blp:11
+#, fuzzy
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Щедрый"
 
-#: cobang/app.py:544
-#, python-format
-msgid "Unsupported file type %s!"
-msgstr "Тип файла не поддерживается %s!"
+#: src/help-overlay.blp:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr ""
 
-#: cobang/app.py:645
-msgid "Copied"
-msgstr "Скопировано"
-
-#: cobang/ui.py:29
-msgid "About"
-msgstr "О программе"
-
-#: cobang/ui.py:30
+#: src/help-overlay.blp:19
+#, fuzzy
+msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Выйти"
 
-#: cobang/ui.py:59
-msgid "Connected"
-msgstr "Связанный"
+#: src/url-display.blp:8
+msgid "Found a URL. Click to open:"
+msgstr "Найден URL-адрес:"
 
-#: cobang/ui.py:89
-msgid "Saved"
-msgstr "Сохранить"
+#: src/wifi-display.blp:8
+msgid "Found a wifi configuration"
+msgstr "Найдена конфигурация Wi-Fi"
 
-#: data/cobang-resp.glade:14
-msgid "Copy"
-msgstr "Копировать"
-
-#: data/cobang-resp.glade:52
-msgid "Play"
-msgstr "Запуск видео"
-
-#: data/cobang-resp.glade:68
-msgid "Pause"
-msgstr "Пауза"
-
-#. Name
-#: data/cobang-resp.glade:143 data/vn.hoabinh.quan.CoBang.desktop.in:3
-msgid "CoBang"
+#: src/wifi-display.blp:20
+msgid "SSID"
 msgstr ""
 
-#: data/cobang-resp.glade:144
-msgid "QR scanner for Linux"
-msgstr "Сканер QR-кода для Линукс"
+#: src/wifi-display.blp:36
+msgid "Password"
+msgstr "Пароль"
 
-#: data/cobang-resp.glade:289
+#: src/wifi-display.blp:57
+msgid "Save"
+msgstr "Сохранить"
+
+#: src/window.blp:5
+msgid "CoBang: QR scanner for Linux"
+msgstr "CoBang: Сканер QR-кода для Линукс"
+
+#: src/window.blp:43 src/window.blp:79
+msgid "Scanner"
+msgstr ""
+
+#: src/window.blp:50 src/window.blp:302 src/window.blp:306
+#, fuzzy
+msgid "Generator"
+msgstr "Щедрый"
+
+#: src/window.blp:61
+msgid "Main Menu"
+msgstr ""
+
+#: src/window.blp:96
 msgid "Webcam"
 msgstr "Камера"
 
-#: data/cobang-resp.glade:343
+#: src/window.blp:126
+msgid "Play"
+msgstr "Запуск видео"
+
+#: src/window.blp:136
+msgid "Pause"
+msgstr "Пауза"
+
+#: src/window.blp:154
+msgid "Mirror"
+msgstr "Зеркально"
+
+#: src/window.blp:167
+msgid "Image"
+msgstr "Картинка"
+
+#: src/window.blp:231
+#, fuzzy
+msgid "Choose an image"
+msgstr "Выберите файл изображения"
+
+#: src/window.blp:261
+msgid "Result"
+msgstr "Результат"
+
+#: src/window.blp:270
+msgid "Raw result"
+msgstr "Raw результат"
+
+#: src/window.blp:276
+msgid "Copy"
+msgstr "Копировать"
+
+#: src/window.blp:307
+msgid "Will be available in next versions..."
+msgstr ""
+
+#: src/window.blp:318
+msgid "_Keyboard Shortcuts"
+msgstr ""
+
+#: src/window.blp:323
+#, fuzzy
+msgid "_About"
+msgstr "О программе"
+
+#: src/app.py:48
+msgid "Support the developer"
+msgstr ""
+
+#: src/app.py:49
+#, python-format
+msgid ""
+"QR code / barcode scanner for Linux.\n"
+"%(donate_link)s"
+msgstr ""
+
+#. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
+#: src/messages.py:23
 msgid ""
 "Please add an image file by one of these methods:\n"
 "\n"
@@ -96,71 +157,32 @@ msgstr ""
 "\n"
 "Допускается удаленное изображение (с http://..., sftp://...)."
 
-#: data/cobang-resp.glade:376
-msgid "Image"
-msgstr "Картинка"
+#: src/ui.py:28
+msgid "Connected"
+msgstr "Связанный"
 
-#: data/cobang-resp.glade:419
-msgid "Mirror"
-msgstr "Зеркально"
-
-#: data/cobang-resp.glade:439
-msgid "Please choose an image file"
-msgstr "Выберите файл изображения"
-
-#: data/cobang-resp.glade:487
-msgid "Result"
-msgstr "Результат"
-
-#: data/cobang-resp.glade:527
-msgid "Raw result"
-msgstr "Raw результат"
-
-#: data/url-display.glade:16
-msgid "Found a URL. Click to open:"
-msgstr "Найден URL-адрес:"
-
-#: data/url-display.glade:26
-msgid "button"
-msgstr "кнопка"
-
-#. GenericName
-#: data/vn.hoabinh.quan.CoBang.desktop.in:4
-msgid "QR code scanner"
-msgstr "Сканер QR-кода"
-
-#. Comment
-#: data/vn.hoabinh.quan.CoBang.desktop.in:6
-msgid "Scan and decode QR from camera or static image"
-msgstr "Сканируйте и декодируйте QR-код с камеры или статического изображения"
-
-#. Keywords
-#: data/vn.hoabinh.quan.CoBang.desktop.in:7
-msgid "qr;code;qr-code;qr-decoder;qr-scanner"
-msgstr ""
-
-#. Icon
-#: data/vn.hoabinh.quan.CoBang.desktop.in:11
-msgid "vn.hoabinh.quan.CoBang"
-msgstr ""
-
-#: data/wifi-display.glade:16
-msgid "Found a wifi configuration"
-msgstr "Найдена конфигурация Wi-Fi"
-
-#: data/wifi-display.glade:39
-msgid "SSID"
-msgstr ""
-
-#: data/wifi-display.glade:52
-msgid "Generous"
-msgstr "Щедрый"
-
-#: data/wifi-display.glade:67
-msgid "Password"
-msgstr "Пароль"
-
-#: data/wifi-display.glade:101
-msgid "Save"
+#: src/ui.py:60
+msgid "Saved"
 msgstr "Сохранить"
 
+#: src/window.py:175
+#, fuzzy
+msgid "Copied!"
+msgstr "Скопировано"
+
+#, python-format
+#~ msgid "Unsupported file type %s!"
+#~ msgstr "Тип файла не поддерживается %s!"
+
+#~ msgid "QR scanner for Linux"
+#~ msgstr "Сканер QR-кода для Линукс"
+
+#~ msgid "button"
+#~ msgstr "кнопка"
+
+#~ msgid "QR code scanner"
+#~ msgstr "Сканер QR-кода"
+
+#~ msgid "Scan and decode QR from camera or static image"
+#~ msgstr ""
+#~ "Сканируйте и декодируйте QR-код с камеры или статического изображения"

@@ -1,0 +1,337 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $CoBangWindow: Adw.ApplicationWindow {
+  title: _("CoBang: QR scanner for Linux");
+  show => $on_shown();
+
+  Adw.Breakpoint {
+    condition ('max-width: 550sp')
+
+    setters {
+      job_switcher.visible: false;
+      job_toggler_box.visible: true;
+      toolbarview_scanner.hexpand: false;
+      scanner_page.orientation: vertical;
+    }
+  }
+
+  content: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar header_bar {
+      [start]
+      Box {
+        orientation: horizontal;
+
+        Adw.ViewSwitcher job_switcher {
+          name: 'function-switcher';
+          policy: wide;
+          stack: job_viewstack;
+        }
+
+        Box job_toggler_box {
+          orientation: horizontal;
+          halign: center;
+          visible: false;
+
+          styles [
+            'linked',
+          ]
+
+          ToggleButton toggle_scanner {
+            icon-name: 'seeing-symbolic';
+            tooltip-text: _("Scanner");
+            active: bind $in_scanner_mode(job_viewstack.visible-child-name) as <bool>;
+            toggled => $switch_to_scanner();
+          }
+
+          ToggleButton toggle_generator {
+            icon-name: 'mail-outbox-symbolic';
+            tooltip-text: _("Generator");
+            active: bind toggle_scanner.active inverted;
+            group: toggle_scanner;
+          }
+        }
+      }
+
+      [end]
+      MenuButton {
+        primary: true;
+        icon-name: 'open-menu-symbolic';
+        tooltip-text: _("Main Menu");
+        menu-model: primary_menu;
+      }
+    }
+
+    content: ScrolledWindow {
+      height-request: 400;
+
+      Adw.ViewStack job_viewstack {
+        name: 'job-viewstack';
+        vexpand: true;
+        margin-start: 4;
+        margin-end: 4;
+        margin-bottom: 4;
+        notify::visible-child => $on_job_viewstack_visible_child_changed();
+
+        Adw.ViewStackPage stackpage_scanner {
+          name: 'scanner';
+          title: _("Scanner");
+          icon-name: 'seeing-symbolic';
+
+          child: Box scanner_page {
+            orientation: horizontal;
+            spacing: 4;
+
+            Adw.ToolbarView toolbarview_scanner {
+              hexpand: true;
+
+              content: Adw.ViewStack scan_source_viewstack {
+                name: 'scan-source-viewstack';
+                vexpand: true;
+                notify::visible-child => $on_scan_source_viewstack_visible_child_changed();
+
+                Adw.ViewStackPage stackpage_webcam {
+                  name: 'webcam';
+                  title: _("Webcam");
+                  icon-name: 'camera-web-symbolic';
+
+                  child: Box webcam_page {
+                    orientation: vertical;
+                    spacing: 4;
+
+                    Image {
+                      icon-name: 'camera-web-symbolic';
+                      pixel-size: 256;
+                      visible: bind $is_empty(webcam_display.paintable) as <bool>;
+                    }
+
+                    Overlay {
+                      visible: bind $has_some(webcam_display.paintable) as <bool>;
+
+                      Picture webcam_display {
+                        width-request: 360;
+                        height-request: 240;
+                      }
+
+                      [overlay]
+                      Box box_playpause {
+                        orientation: horizontal;
+                        halign: center;
+                        valign: end;
+                        spacing: 2;
+
+                        ToggleButton btn_play {
+                          icon-name: 'media-playback-start-symbolic';
+                          tooltip-text: _("Play");
+                          active: true;
+
+                          styles [
+                            'osd',
+                          ]
+                        }
+
+                        ToggleButton btn_pause {
+                          icon-name: 'media-playback-pause-symbolic';
+                          tooltip-text: _("Pause");
+                          group: btn_play;
+
+                          styles [
+                            'osd',
+                          ]
+
+                          toggled => $on_btn_pause_toggled();
+                        }
+                      }
+                    }
+
+                    Box {
+                      orientation: horizontal;
+                      spacing: 4;
+                      visible: bind $has_some(webcam_display.paintable) as <bool>;
+
+                      Label {
+                        label: _("Mirror");
+                      }
+
+                      Switch mirror_switch {
+                        active: true;
+                        notify::active => $on_mirror_switch_toggled();
+                      }
+                    }
+                  };
+                }
+
+                Adw.ViewStackPage {
+                  name: 'image';
+                  title: _("Image");
+                  icon-name: 'image-x-generic-symbolic';
+
+                  child: Box {
+                    orientation: vertical;
+                    spacing: 4;
+
+                    AspectFrame frame_image {
+                      focusable: true;
+
+                      child: Box box_image_empty {
+                        orientation: vertical;
+
+                        Picture pasted_image {
+                          visible: false;
+                        }
+
+                        Box {
+                          orientation: vertical;
+                          spacing: 6;
+                          visible: bind pasted_image.visible inverted;
+
+                          Label {}
+
+                          Image {
+                            resource: '/vn/hoabinh/quan/CoBang/img/wireframe-image-add.svg';
+                            pixel-size: 128;
+                          }
+
+                          Label image_guide {
+                            label: '';
+                            selectable: true;
+                          }
+                        }
+                      };
+
+                      ShortcutController {
+                        Shortcut {
+                          trigger: '<Control>v';
+                          action: 'action(win.paste-image)';
+                        }
+                      }
+
+                      styles [
+                        'frame',
+                      ]
+                    }
+
+                    Box {
+                      orientation: horizontal;
+                      spacing: 4;
+
+                      Button btn_filechooser {
+                        clicked => $on_btn_filechooser_clicked();
+
+                        Box {
+                          orientation: horizontal;
+                          spacing: 4;
+
+                          Image {
+                            icon-name: 'document-open-symbolic';
+                          }
+
+                          Label {
+                            label: _("Choose an image");
+                          }
+                        }
+                      }
+
+                      Label label_chosen_file {
+                        label: '';
+                        ellipsize: middle;
+                        visible: bind $has_some(label_chosen_file.label) as <bool>;
+
+                        styles [
+                          'dim-label',
+                        ]
+                      }
+                    }
+                  };
+                }
+              };
+
+              [bottom]
+              Adw.ViewSwitcherBar scan_source_switcher_bar {
+                stack: scan_source_viewstack;
+                reveal: true;
+              }
+            }
+
+            Box {
+              orientation: vertical;
+
+              Frame result_display_frame {
+                label: _("Result");
+                width-request: 212;
+                vexpand: true;
+              }
+
+              Expander raw_result_expander {
+                margin-bottom: 2;
+                vexpand: false;
+                valign: end;
+                label: _("Raw result");
+
+                Overlay {
+                  [overlay]
+                  Button btn_copy {
+                    icon-name: 'edit-copy-symbolic';
+                    tooltip-text: _("Copy");
+                    halign: end;
+                    valign: end;
+                    margin-bottom: 2;
+                    clicked => $on_btn_copy_clicked();
+                  }
+
+                  ScrolledWindow {
+                    height-request: 80;
+
+                    TextView raw_result_display {
+                      monospace: true;
+                      editable: false;
+                      wrap-mode: char;
+
+                      vadjustment: Adjustment {};
+                    }
+                  }
+                }
+              }
+            }
+          };
+        }
+
+        Adw.ViewStackPage stackpage_generator {
+          name: 'generator';
+          title: _("Generator");
+          icon-name: 'mail-outbox-symbolic';
+
+          child: Adw.StatusPage generator_page {
+            title: _("Generator");
+            description: _("Will be available in next versions...");
+          };
+        }
+      }
+    };
+  };
+}
+
+menu primary_menu {
+  section {
+    item {
+      label: _("_Keyboard Shortcuts");
+      action: 'win.show-help-overlay';
+    }
+
+    item {
+      label: _("_About");
+      action: 'app.about';
+    }
+  }
+}
+
+FileFilter file_filter {
+  mime-types [
+    'image/svg+xml',
+    'image/png',
+    'image/jpeg',
+    'image/webp',
+    'image/gif',
+  ]
+}
