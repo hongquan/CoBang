@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=vn.hoabinh.quan.CoBang
+Exec=@bindir@/cobang --gapplication-service

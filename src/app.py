@@ -17,6 +17,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import sys
+from datetime import datetime
 
 import gi
 import zbar
@@ -80,6 +81,7 @@ class CoBangApplication(Adw.Application):
         if win := self.props.active_window:
             win.btn_pause.set_active(True)
         version = self.get_version() or '0.0'
+        year = datetime.now().year
         about = Adw.AboutDialog(
             application_name=BRAND_NAME,
             application_icon=APP_ID,
@@ -88,13 +90,13 @@ class CoBangApplication(Adw.Application):
             developers=DEVELOPPERS,
             artists=ARTISTS,
             license_type=Gtk.License.GPL_3_0,
-            copyright='© 2025 Nguyễn Hồng Quân',
+            copyright=f'© 2020 - {year} Nguyễn Hồng Quân',
             website='https://github.com/hongquan/CoBang',
             issue_url='https://github.com/hongquan/CoBang/issues',
             comments=COMMENTS,
         )
         # Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
-        about.set_translator_credits(_('translator-credits'))
+        # about.set_translator_credits(_('translator-credits'))
         about.present(self.props.active_window)
 
     def create_action(self, name, callback, shortcuts=None):

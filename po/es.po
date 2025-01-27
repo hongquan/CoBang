@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-06-15 17:22+0700\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-27 20:44+0700\n"
 "PO-Revision-Date: 2025-01-04 16:11-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,61 +18,123 @@ msgstr ""
 "Generated-By: Babel 2.10.3\n"
 "X-Generator: Poedit 3.4.4\n"
 
-#: cobang/app.py:100
-msgid "CoBang: QR scanner for Linux"
-msgstr "CoBang: Escáner QR para Linux"
+#: src/help-overlay.blp:11
+#, fuzzy
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Generoso"
 
-#: cobang/app.py:544
-#, python-format
-msgid "Unsupported file type %s!"
-msgstr "¡Tipo de archivo %s no soportado!"
+#: src/help-overlay.blp:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr ""
 
-#: cobang/app.py:645
-msgid "Copied"
-msgstr "Copiado"
-
-#: cobang/ui.py:29
-msgid "About"
-msgstr "Acerca de"
-
-#: cobang/ui.py:30
+#: src/help-overlay.blp:19
+#, fuzzy
+msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Salir"
 
-#: cobang/ui.py:59
-msgid "Connected"
-msgstr "Conectado"
+#: src/url-display.blp:8
+msgid "Found a URL. Click to open:"
+msgstr "URL encontrada. Haga clic para abrir:"
 
-#: cobang/ui.py:89
-msgid "Saved"
-msgstr "Guardado"
+#: src/wifi-display.blp:8
+msgid "Found a wifi configuration"
+msgstr "Configuración wifi encontrada"
 
-#: data/cobang-resp.glade:14
-msgid "Copy"
-msgstr "Copiar"
+#: src/wifi-display.blp:20
+msgid "SSID"
+msgstr "SSID (Nombre del WiFi)"
 
-#: data/cobang-resp.glade:52
-msgid "Play"
-msgstr "Reproducir"
+#: src/wifi-display.blp:36
+msgid "Password"
+msgstr "Contraseña"
 
-#: data/cobang-resp.glade:68
-msgid "Pause"
-msgstr "Pausar"
+#: src/wifi-display.blp:57
+msgid "Save"
+msgstr "Guardar"
 
-#. Name
-#: data/cobang-resp.glade:143 data/vn.hoabinh.quan.CoBang.desktop.in:3
-msgid "CoBang"
-msgstr "CoBang"
+#: src/window.blp:5
+msgid "CoBang: QR scanner for Linux"
+msgstr "CoBang: Escáner QR para Linux"
 
-#: data/cobang-resp.glade:144
-msgid "QR scanner for Linux"
-msgstr "Escáner QR para Linux"
+#: src/window.blp:43 src/window.blp:79
+msgid "Scanner"
+msgstr ""
 
-#: data/cobang-resp.glade:289
+#: src/window.blp:50 src/window.blp:302 src/window.blp:306
+#, fuzzy
+msgid "Generator"
+msgstr "Generoso"
+
+#: src/window.blp:61
+msgid "Main Menu"
+msgstr ""
+
+#: src/window.blp:96
 msgid "Webcam"
 msgstr "Cámara web"
 
-#: data/cobang-resp.glade:343
+#: src/window.blp:126
+msgid "Play"
+msgstr "Reproducir"
+
+#: src/window.blp:136
+msgid "Pause"
+msgstr "Pausar"
+
+#: src/window.blp:154
+msgid "Mirror"
+msgstr "Espejo"
+
+#: src/window.blp:167
+msgid "Image"
+msgstr "Imagen"
+
+#: src/window.blp:231
+#, fuzzy
+msgid "Choose an image"
+msgstr "Seleccione un archivo de imagen"
+
+#: src/window.blp:261
+msgid "Result"
+msgstr "Resultado"
+
+#: src/window.blp:270
+msgid "Raw result"
+msgstr "Resultado bruto"
+
+#: src/window.blp:276
+msgid "Copy"
+msgstr "Copiar"
+
+#: src/window.blp:307
+msgid "Will be available in next versions..."
+msgstr ""
+
+#: src/window.blp:318
+msgid "_Keyboard Shortcuts"
+msgstr ""
+
+#: src/window.blp:323
+#, fuzzy
+msgid "_About"
+msgstr "Acerca de"
+
+#: src/app.py:48
+msgid "Support the developer"
+msgstr ""
+
+#: src/app.py:49
+#, python-format
+msgid ""
+"QR code / barcode scanner for Linux.\n"
+"%(donate_link)s"
+msgstr ""
+
+#. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
+#: src/messages.py:23
 msgid ""
 "Please add an image file by one of these methods:\n"
 "\n"
@@ -90,70 +152,40 @@ msgstr ""
 "\n"
 "Se permite una imagen remota (de http://..., sftp://...)."
 
-#: data/cobang-resp.glade:376
-msgid "Image"
-msgstr "Imagen"
+#: src/ui.py:28
+msgid "Connected"
+msgstr "Conectado"
 
-#: data/cobang-resp.glade:419
-msgid "Mirror"
-msgstr "Espejo"
+#: src/ui.py:60
+msgid "Saved"
+msgstr "Guardado"
 
-#: data/cobang-resp.glade:439
-msgid "Please choose an image file"
-msgstr "Seleccione un archivo de imagen"
+#: src/window.py:175
+#, fuzzy
+msgid "Copied!"
+msgstr "Copiado"
 
-#: data/cobang-resp.glade:487
-msgid "Result"
-msgstr "Resultado"
+#, python-format
+#~ msgid "Unsupported file type %s!"
+#~ msgstr "¡Tipo de archivo %s no soportado!"
 
-#: data/cobang-resp.glade:527
-msgid "Raw result"
-msgstr "Resultado bruto"
+#~ msgid "CoBang"
+#~ msgstr "CoBang"
 
-#: data/url-display.glade:16
-msgid "Found a URL. Click to open:"
-msgstr "URL encontrada. Haga clic para abrir:"
+#~ msgid "QR scanner for Linux"
+#~ msgstr "Escáner QR para Linux"
 
-#: data/url-display.glade:26
-msgid "button"
-msgstr "botón"
+#~ msgid "button"
+#~ msgstr "botón"
 
-#. GenericName
-#: data/vn.hoabinh.quan.CoBang.desktop.in:4
-msgid "QR code scanner"
-msgstr "Escáner de códigos QR"
+#~ msgid "QR code scanner"
+#~ msgstr "Escáner de códigos QR"
 
-#. Comment
-#: data/vn.hoabinh.quan.CoBang.desktop.in:6
-msgid "Scan and decode QR from camera or static image"
-msgstr "Escanea y descodifica QR desde una cámara o una imagen estática"
+#~ msgid "Scan and decode QR from camera or static image"
+#~ msgstr "Escanea y descodifica QR desde una cámara o una imagen estática"
 
-#. Keywords
-#: data/vn.hoabinh.quan.CoBang.desktop.in:7
-msgid "qr;code;qr-code;qr-decoder;qr-scanner"
-msgstr "qr;code;qr-code;qr-decoder;qr-scanner"
+#~ msgid "qr;code;qr-code;qr-decoder;qr-scanner"
+#~ msgstr "qr;code;qr-code;qr-decoder;qr-scanner"
 
-#. Icon
-#: data/vn.hoabinh.quan.CoBang.desktop.in:11
-msgid "vn.hoabinh.quan.CoBang"
-msgstr "vn.hoabinh.quan.CoBang"
-
-#: data/wifi-display.glade:16
-msgid "Found a wifi configuration"
-msgstr "Configuración wifi encontrada"
-
-#: data/wifi-display.glade:39
-msgid "SSID"
-msgstr "SSID (Nombre del WiFi)"
-
-#: data/wifi-display.glade:52
-msgid "Generous"
-msgstr "Generoso"
-
-#: data/wifi-display.glade:67
-msgid "Password"
-msgstr "Contraseña"
-
-#: data/wifi-display.glade:101
-msgid "Save"
-msgstr "Guardar"
+#~ msgid "vn.hoabinh.quan.CoBang"
+#~ msgstr "vn.hoabinh.quan.CoBang"

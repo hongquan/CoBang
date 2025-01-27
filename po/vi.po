@@ -1,78 +1,134 @@
 # Vietnamese translations for CoBang.
 # Copyright (C) 2020 ORGANIZATION
 # This file is distributed under the same license as the CoBang project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
 # Nguyễn Hồng Quân <ng.hong.quan@gmail.com>, 2020.
 msgid ""
 msgstr ""
-"Project-Id-Version: CoBang 0.6\n"
-"Report-Msgid-Bugs-To: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
-"POT-Creation-Date: 2024-06-15 17:22+0700\n"
+"Project-Id-Version: CoBang 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-27 20:44+0700\n"
 "PO-Revision-Date: 2023-04-15 19:40+0200\n"
 "Last-Translator: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
+"Language-Team: Vietnamese Team\n"
 "Language: vi\n"
-"Language-Team: AgriConnect\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.10.3\n"
 
-#: cobang/app.py:100
-msgid "CoBang: QR scanner for Linux"
-msgstr "CoBang: Trình quét mã QR cho Linux"
+#: src/help-overlay.blp:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Tổng quát"
 
-#: cobang/app.py:544
-#, python-format
-msgid "Unsupported file type %s!"
-msgstr "Loại tập tin %s không được hỗ trợ!"
+#: src/help-overlay.blp:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Xem phím tắt"
 
-#: cobang/app.py:645
-msgid "Copied"
-msgstr ""
-
-#: cobang/ui.py:29
-msgid "About"
-msgstr "Giới thiệu"
-
-#: cobang/ui.py:30
+#: src/help-overlay.blp:19
+msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Thoát"
 
-#: cobang/ui.py:59
-msgid "Connected"
-msgstr "Đã kết nối"
+#: src/url-display.blp:8
+msgid "Found a URL. Click to open:"
+msgstr "Bắt gặp một URL. Bấm vào để mở:"
 
-#: cobang/ui.py:89
-msgid "Saved"
-msgstr "Đã lưu"
+#: src/wifi-display.blp:8
+msgid "Found a wifi configuration"
+msgstr "Bắt gặp một cấu hình wifi"
 
-#: data/cobang-resp.glade:14
-msgid "Copy"
+#: src/wifi-display.blp:20
+msgid "SSID"
 msgstr ""
 
-#: data/cobang-resp.glade:52
+#: src/wifi-display.blp:36
+msgid "Password"
+msgstr "Mật khẩu"
+
+#: src/wifi-display.blp:57
+msgid "Save"
+msgstr "Lưu"
+
+#: src/window.blp:5
+msgid "CoBang: QR scanner for Linux"
+msgstr "CoBang: Trình quét mã QR cho Linux"
+
+#: src/window.blp:43 src/window.blp:79
+msgid "Scanner"
+msgstr "Quét mã"
+
+#: src/window.blp:50 src/window.blp:302 src/window.blp:306
+msgid "Generator"
+msgstr "Tạo mã"
+
+#: src/window.blp:61
+msgid "Main Menu"
+msgstr "Trình đơn chính"
+
+#: src/window.blp:96
+msgid "Webcam"
+msgstr "Webcam"
+
+#: src/window.blp:126
 msgid "Play"
 msgstr "Phát"
 
-#: data/cobang-resp.glade:68
+#: src/window.blp:136
 msgid "Pause"
 msgstr "Chựng"
 
-#. Name
-#: data/cobang-resp.glade:143 data/vn.hoabinh.quan.CoBang.desktop.in:3
-msgid "CoBang"
-msgstr ""
+#: src/window.blp:154
+msgid "Mirror"
+msgstr "Gương"
 
-#: data/cobang-resp.glade:144
-msgid "QR scanner for Linux"
-msgstr ""
+#: src/window.blp:167
+msgid "Image"
+msgstr "Hình ảnh"
 
-#: data/cobang-resp.glade:289
-msgid "Webcam"
-msgstr ""
+#: src/window.blp:231
+msgid "Choose an image"
+msgstr "Vui lòng chọn một hình ảnh"
 
-#: data/cobang-resp.glade:343
+#: src/window.blp:261
+msgid "Result"
+msgstr "Kết quả"
+
+#: src/window.blp:270
+msgid "Raw result"
+msgstr "Kết quả thô"
+
+#: src/window.blp:276
+msgid "Copy"
+msgstr "Sao chép"
+
+#: src/window.blp:307
+msgid "Will be available in next versions..."
+msgstr "Sẽ có trong các phiên bản sau..."
+
+#: src/window.blp:318
+msgid "_Keyboard Shortcuts"
+msgstr "Phím _tắt"
+
+#: src/window.blp:323
+msgid "_About"
+msgstr "_Giới thiệu"
+
+#: src/app.py:48
+msgid "Support the developer"
+msgstr "Tài trợ nhà phát triển"
+
+#: src/app.py:49
+#, python-format
+msgid ""
+"QR code / barcode scanner for Linux.\n"
+"%(donate_link)s"
+msgstr "Trình quét mã QR / mã vạch cho Linux.\n%(donate_link)s"
+
+#. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
+#: src/messages.py:23
 msgid ""
 "Please add an image file by one of these methods:\n"
 "\n"
@@ -90,70 +146,21 @@ msgstr ""
 "\n"
 "Có thể dùng hình ảnh trên mạng (qua giao thức http://..., sftp://...)."
 
-#: data/cobang-resp.glade:376
-msgid "Image"
-msgstr "Hình ảnh"
+#: src/ui.py:28
+msgid "Connected"
+msgstr "Đã kết nối"
 
-#: data/cobang-resp.glade:419
-msgid "Mirror"
-msgstr "Gương"
+#: src/ui.py:60
+msgid "Saved"
+msgstr "Đã lưu"
 
-#: data/cobang-resp.glade:439
-msgid "Please choose an image file"
-msgstr "Vui lòng chọn một tập tin hình ảnh"
+#: src/window.py:175
+msgid "Copied!"
+msgstr "Đã sao chép!"
 
-#: data/cobang-resp.glade:487
-msgid "Result"
-msgstr "Kết quả"
+#, python-format
+#~ msgid "Unsupported file type %s!"
+#~ msgstr "Loại tập tin %s không được hỗ trợ!"
 
-#: data/cobang-resp.glade:527
-msgid "Raw result"
-msgstr "Kết quả thô"
-
-#: data/url-display.glade:16
-msgid "Found a URL. Click to open:"
-msgstr "Bắt gặp một URL. Bấm vào để mở:"
-
-#: data/url-display.glade:26
-msgid "button"
-msgstr "nút"
-
-#. GenericName
-#: data/vn.hoabinh.quan.CoBang.desktop.in:4
-msgid "QR code scanner"
-msgstr ""
-
-#. Comment
-#: data/vn.hoabinh.quan.CoBang.desktop.in:6
-msgid "Scan and decode QR from camera or static image"
-msgstr ""
-
-#. Keywords
-#: data/vn.hoabinh.quan.CoBang.desktop.in:7
-msgid "qr;code;qr-code;qr-decoder;qr-scanner"
-msgstr ""
-
-#. Icon
-#: data/vn.hoabinh.quan.CoBang.desktop.in:11
-msgid "vn.hoabinh.quan.CoBang"
-msgstr ""
-
-#: data/wifi-display.glade:16
-msgid "Found a wifi configuration"
-msgstr "Bắt gặp một cấu hình wifi"
-
-#: data/wifi-display.glade:39
-msgid "SSID"
-msgstr ""
-
-#: data/wifi-display.glade:52
-msgid "Generous"
-msgstr "Phóng khoáng"
-
-#: data/wifi-display.glade:67
-msgid "Password"
-msgstr "Mật khẩu"
-
-#: data/wifi-display.glade:101
-msgid "Save"
-msgstr "Lưu"
+#~ msgid "button"
+#~ msgstr "nút"

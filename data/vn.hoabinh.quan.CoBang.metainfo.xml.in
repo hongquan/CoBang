@@ -38,7 +38,7 @@
       <description translate="no">
         <p>Finally reach v1.0.</p>
         <p>Port to GTK4 + Adwaita.</p>
-        <p>Fix responsive UI.</>
+        <p>Fix responsive UI.</p>
       </description>
     </release>
     <release version="0.15.0" date="2025-01-07" urgency="medium">
