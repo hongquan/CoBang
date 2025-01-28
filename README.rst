@@ -31,6 +31,12 @@ QR codes are more and more widely used in daily life, even in developing countri
   + Its integration of other library is not good: cannot embed webcam video into its window.
   + Depend on X Window System.
 
+- `zbarcam`_:
+
+  + Command-line tool, it creates a very basic window with only video display, no control buttons, no result display, no label.
+  + Users have to come back to Terminal to see the result, and the result are just raw text, no decoding for structured data like WiFi info, URL etc.
+  + Depend on X Window System.
+
 - Some Electron-based programs in GitHub:
 
   + Using Electron stack, which is unnecessary fat [1]_.
@@ -219,6 +225,7 @@ Credit
 .. _Gtk: https://www.gtk.org/
 .. _GStreamer: https://gstreamer.freedesktop.org/
 .. _ZBar: https://github.com/mchehab/zbar
+.. _zbarcam: https://github.com/mchehab/zbar
 .. _QtQR: https://launchpad.net/qr-tools
 .. _PyPI: https://pypi.org/
 .. _PPA: https://launchpad.net/~ng-hong-quan/+archive/ubuntu/ppa
