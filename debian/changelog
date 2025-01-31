@@ -1,3 +1,11 @@
+cobang (1.1.0-1) oracular; urgency=medium
+
+  * Add explanation text for "Save" button.
+  * Show the status of webcam being not available.
+  * Clean code.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Fri, 31 Jan 2025 18:24:44 +0700
+
 cobang (1.0.0-1) oracular; urgency=medium
 
   * Finally reach v1.0.
