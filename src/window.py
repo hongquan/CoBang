@@ -28,7 +28,7 @@ from PIL import Image
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Gst, GstApp, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
 from gi.repository import XdpGtk4  # pyright: ignore[reportMissingModuleSource]
 
-from .consts import JobName, ScanSourceName, GST_SOURCE_NAME, GST_FLIP_FILTER_NAME, GST_SINK_NAME, GST_APP_SINK_NAME
+from .consts import JobName, ScanSourceName, WebcamPageLayoutName, GST_SOURCE_NAME, GST_FLIP_FILTER_NAME, GST_SINK_NAME, GST_APP_SINK_NAME
 from .messages import WifiInfoMessage, IMAGE_GUIDE, parse_wifi_message
 from .ui import build_wifi_info_display, build_url_display
 from .prep import guess_mimetype
@@ -47,6 +47,7 @@ class CoBangWindow(Adw.ApplicationWindow):
     scan_source_viewstack: Adw.ViewStack = Gtk.Template.Child()
     toggle_scanner: Gtk.ToggleButton = Gtk.Template.Child()
     toggle_generator: Gtk.ToggleButton = Gtk.Template.Child()
+    webcam_multilayout: Adw.MultiLayoutView = Gtk.Template.Child()
     webcam_display: Gtk.Picture = Gtk.Template.Child()
     box_playpause: Gtk.Box = Gtk.Template.Child()
     btn_pause: Gtk.ToggleButton = Gtk.Template.Child()
@@ -65,6 +66,7 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.REQUESTING)
         self.image_guide.set_label(IMAGE_GUIDE)
         self.portal_parent = XdpGtk4.parent_new_gtk(self)
         action = Gio.SimpleAction.new('paste-image', None)
@@ -179,7 +181,7 @@ class CoBangWindow(Adw.ApplicationWindow):
         dlg = Gtk.FileDialog(default_filter=self.file_filter, modal=True)
         dlg.open(self, None, self.cb_file_dialog)
 
-    def on_camera_access_request(self, portal: Xdp.Portal, result: Gio.AsyncResult):
+    def cb_camera_access_request(self, portal: Xdp.Portal, result: Gio.AsyncResult):
         # When testing with Ghostty terminal, the app lost focus and the portal request is denied.
         try:
             success = portal.access_camera_finish(result)
@@ -188,6 +190,7 @@ class CoBangWindow(Adw.ApplicationWindow):
             return
         log.info('Allowed to access camera: {}', success)
         if not success:
+            self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.UNAVAILABLE)
             return
         # Ref: https://github.com/workbenchdev/demos/blob/main/src/Camera/main.py#L33
         video_fd = portal.open_pipewire_remote_for_camera()
@@ -207,13 +210,17 @@ class CoBangWindow(Adw.ApplicationWindow):
     def request_camera_access(self):
         has_camera = self.portal.is_camera_present()
         log.info('Is webcam available: {}', has_camera)
+        if not has_camera:
+            self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.UNAVAILABLE)
+            return
+        self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.AVAILABLE)
         # TODO: Show banner to tell user that camera is not available.
         # Ref: https://lazka.github.io/pgi-docs/#Xdp-1.0/classes/Portal.html#Xdp.Portal.access_camera
         self.portal.access_camera(
             self.portal_parent,
             Xdp.CameraFlags.NONE,
             None,
-            self.on_camera_access_request,
+            self.cb_camera_access_request,
         )
 
     def build_gstreamer_pipeline(self, webcam_fd: int) -> Gst.Pipeline | None:
