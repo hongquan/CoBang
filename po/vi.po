@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoBang 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 20:44+0700\n"
+"POT-Creation-Date: 2025-01-31 13:04+0700\n"
 "PO-Revision-Date: 2023-04-15 19:40+0200\n"
 "Last-Translator: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
 "Language-Team: Vietnamese Team\n"
@@ -52,6 +52,10 @@ msgstr "Mật khẩu"
 msgid "Save"
 msgstr "Lưu"
 
+#: src/wifi-display.blp:62
+msgid "After saved, NetworkManager will connect automatically if in range."
+msgstr "Sau khi lưu, NetworkManager sẽ tự động kết nối nếu trong tầm."
+
 #: src/window.blp:5
 msgid "CoBang: QR scanner for Linux"
 msgstr "CoBang: Trình quét mã QR cho Linux"
@@ -60,7 +64,7 @@ msgstr "CoBang: Trình quét mã QR cho Linux"
 msgid "Scanner"
 msgstr "Quét mã"
 
-#: src/window.blp:50 src/window.blp:302 src/window.blp:306
+#: src/window.blp:50 src/window.blp:331 src/window.blp:335
 msgid "Generator"
 msgstr "Tạo mã"
 
@@ -68,51 +72,55 @@ msgstr "Tạo mã"
 msgid "Main Menu"
 msgstr "Trình đơn chính"
 
-#: src/window.blp:96
+#: src/window.blp:96 src/window.blp:114
 msgid "Webcam"
 msgstr "Webcam"
 
-#: src/window.blp:126
+#: src/window.blp:116
+msgid "No webcam detected."
+msgstr "Không tìm thấy webcam."
+
+#: src/window.blp:151
 msgid "Play"
 msgstr "Phát"
 
-#: src/window.blp:136
+#: src/window.blp:161
 msgid "Pause"
 msgstr "Chựng"
 
-#: src/window.blp:154
+#: src/window.blp:179
 msgid "Mirror"
 msgstr "Gương"
 
-#: src/window.blp:167
+#: src/window.blp:194
 msgid "Image"
 msgstr "Hình ảnh"
 
-#: src/window.blp:231
+#: src/window.blp:259
 msgid "Choose an image"
 msgstr "Vui lòng chọn một hình ảnh"
 
-#: src/window.blp:261
+#: src/window.blp:290
 msgid "Result"
 msgstr "Kết quả"
 
-#: src/window.blp:270
+#: src/window.blp:299
 msgid "Raw result"
 msgstr "Kết quả thô"
 
-#: src/window.blp:276
+#: src/window.blp:305
 msgid "Copy"
 msgstr "Sao chép"
 
-#: src/window.blp:307
+#: src/window.blp:336
 msgid "Will be available in next versions..."
 msgstr "Sẽ có trong các phiên bản sau..."
 
-#: src/window.blp:318
+#: src/window.blp:347
 msgid "_Keyboard Shortcuts"
 msgstr "Phím _tắt"
 
-#: src/window.blp:323
+#: src/window.blp:352
 msgid "_About"
 msgstr "_Giới thiệu"
 
@@ -125,7 +133,9 @@ msgstr "Tài trợ nhà phát triển"
 msgid ""
 "QR code / barcode scanner for Linux.\n"
 "%(donate_link)s"
-msgstr "Trình quét mã QR / mã vạch cho Linux.\n%(donate_link)s"
+msgstr ""
+"Trình quét mã QR / mã vạch cho Linux.\n"
+"%(donate_link)s"
 
 #. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
 #: src/messages.py:23
@@ -154,7 +164,7 @@ msgstr "Đã kết nối"
 msgid "Saved"
 msgstr "Đã lưu"
 
-#: src/window.py:175
+#: src/window.py:176
 msgid "Copied!"
 msgstr "Đã sao chép!"
 

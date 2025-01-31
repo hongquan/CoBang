@@ -1,22 +1,10 @@
 import io
 
 from logbook import Logger
-from gi.repository import Gio, GdkPixbuf, Rsvg  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import Gio  # pyright: ignore[reportMissingModuleSource]
 
 
 log = Logger(__name__)
-
-
-def export_svg(svg: Rsvg.Handle) -> io.BytesIO:
-    stream = io.BytesIO()
-    pix: GdkPixbuf.Pixbuf = svg.get_pixbuf()
-
-    def write(buf: bytes, size, user_data=None):
-        stream.write(buf)
-        return True, None
-    pix.save_to_callbackv(write, None, 'bmp', [], [])
-    stream.seek(0)
-    return stream
 
 
 def guess_mimetype(file: Gio.File) -> str:

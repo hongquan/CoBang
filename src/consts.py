@@ -16,6 +16,12 @@ class ScanSourceName(StrEnum):
     IMAGE = 'image'
 
 
+class WebcamPageLayoutName(StrEnum):
+    REQUESTING = 'webcam-requesting'
+    AVAILABLE = 'webcam-available'
+    UNAVAILABLE = 'webcam-unavailable'
+
+
 GST_SOURCE_NAME = 'webcam_source'
 GST_FLIP_FILTER_NAME = 'videoflip'
 GST_SINK_NAME = 'widget_sink'

@@ -57,4 +57,12 @@ Box wifi_form {
     label: _("Save");
     halign: center;
   }
+
+  Label {
+    label: _("After saved, NetworkManager will connect automatically if in range.");
+    margin-start: 8;
+    margin-end: 8;
+    // Note: .dimmed will be available in Adwaita 1.7.
+    styles ['dimmed', 'dim-label', 'text-xs']
+  }
 }

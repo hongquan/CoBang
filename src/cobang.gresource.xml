@@ -6,5 +6,6 @@
     <file preprocess="xml-stripblanks">gtk/wifi-display.ui</file>
     <file preprocess="xml-stripblanks">gtk/url-display.ui</file>
     <file preprocess="xml-stripblanks">img/wireframe-image-add.svg</file>
+    <file>style.css</file>
   </gresource>
 </gresources>

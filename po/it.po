@@ -1,14 +1,14 @@
 # Italian translations for PROJECT.
 # Copyright (C) 2020 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# ALBANO BATTISTELLA <albanobattistella@gmail.com>, 2020,2021,2023,2024.
+# ALBANO BATTISTELLA <albanobattistella@gmail.com>, 2020,2021,2023,2024,2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 20:44+0700\n"
-"PO-Revision-Date: 2024-06-15 21:40+0200\n"
+"PO-Revision-Date: 2025-01-30 11:10+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: it <LL@li.org>\n"
 "Language: it\n"
@@ -19,18 +19,16 @@ msgstr ""
 "Generated-By: Babel 2.10.3\n"
 
 #: src/help-overlay.blp:11
-#, fuzzy
 msgctxt "shortcut window"
 msgid "General"
-msgstr "Generoso"
+msgstr "Generale"
 
 #: src/help-overlay.blp:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
-msgstr ""
+msgstr "Mostra scorciatoie"
 
 #: src/help-overlay.blp:19
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Esci"
@@ -55,6 +53,10 @@ msgstr "Password"
 msgid "Save"
 msgstr "Salva"
 
+#: src/wifi-display.blp:62
+msgid "After saved, NetworkManager will connect automatically if in range."
+msgstr ""
+
 #: src/window.blp:5
 msgid "CoBang: QR scanner for Linux"
 msgstr "CoBang: QR scanner for Linux"
@@ -63,68 +65,69 @@ msgstr "CoBang: QR scanner for Linux"
 msgid "Scanner"
 msgstr ""
 
-#: src/window.blp:50 src/window.blp:302 src/window.blp:306
-#, fuzzy
+#: src/window.blp:50 src/window.blp:331 src/window.blp:335
 msgid "Generator"
-msgstr "Generoso"
+msgstr "Generatore"
 
 #: src/window.blp:61
 msgid "Main Menu"
-msgstr ""
+msgstr "Menu principale"
 
-#: src/window.blp:96
+#: src/window.blp:96 src/window.blp:114
 msgid "Webcam"
 msgstr "Webcam"
 
-#: src/window.blp:126
+#: src/window.blp:116
+msgid "No webcam detected."
+msgstr ""
+
+#: src/window.blp:151
 msgid "Play"
 msgstr "Avvia"
 
-#: src/window.blp:136
+#: src/window.blp:161
 msgid "Pause"
 msgstr "Pausa"
 
-#: src/window.blp:154
+#: src/window.blp:179
 msgid "Mirror"
 msgstr "Specchio"
 
-#: src/window.blp:167
+#: src/window.blp:194
 msgid "Image"
 msgstr "Immagine"
 
-#: src/window.blp:231
-#, fuzzy
+#: src/window.blp:259
 msgid "Choose an image"
-msgstr "Scegli un file immagine"
+msgstr "Scegli un'immagine"
 
-#: src/window.blp:261
+#: src/window.blp:290
 msgid "Result"
 msgstr "Risultato"
 
-#: src/window.blp:270
+#: src/window.blp:299
 msgid "Raw result"
 msgstr "Risultato grezzo"
 
-#: src/window.blp:276
+#: src/window.blp:305
 msgid "Copy"
 msgstr "Copia"
 
-#: src/window.blp:307
+#: src/window.blp:336
 msgid "Will be available in next versions..."
-msgstr ""
+msgstr "Sarà disponibile nelle prossime versioni..."
 
-#: src/window.blp:318
+#: src/window.blp:347
 msgid "_Keyboard Shortcuts"
-msgstr ""
+msgstr "_Scorciatoie da tastiera"
 
-#: src/window.blp:323
-#, fuzzy
+#: src/window.blp:352
 msgid "_About"
-msgstr "Informazioni"
+msgstr "_Informazioni"
 
 #: src/app.py:48
 msgid "Support the developer"
-msgstr ""
+msgstr "Supporta lo sviluppatore"
 
 #: src/app.py:49
 #, python-format
@@ -132,6 +135,8 @@ msgid ""
 "QR code / barcode scanner for Linux.\n"
 "%(donate_link)s"
 msgstr ""
+"Scanner per codici QR/codici a barre per Linux.\n"
+"%(donate_link)s"
 
 #. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
 #: src/messages.py:23
@@ -160,10 +165,9 @@ msgstr "Connesso"
 msgid "Saved"
 msgstr "Salvato"
 
-#: src/window.py:175
-#, fuzzy
+#: src/window.py:176
 msgid "Copied!"
-msgstr "Copiato"
+msgstr "Copiato!"
 
 #, python-format
 #~ msgid "Unsupported file type %s!"

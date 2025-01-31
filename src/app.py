@@ -56,7 +56,7 @@ class CoBangApplication(Adw.Application):
 
     def __init__(self):
         super().__init__(
-            application_id='vn.hoabinh.quan.CoBang',
+            application_id=APP_ID,
             flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
         )
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])

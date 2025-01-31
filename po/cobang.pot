@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 20:44+0700\n"
+"POT-Creation-Date: 2025-01-31 13:04+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,6 +52,10 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+#: src/wifi-display.blp:62
+msgid "After saved, NetworkManager will connect automatically if in range."
+msgstr ""
+
 #: src/window.blp:5
 msgid "CoBang: QR scanner for Linux"
 msgstr ""
@@ -60,7 +64,7 @@ msgstr ""
 msgid "Scanner"
 msgstr ""
 
-#: src/window.blp:50 src/window.blp:302 src/window.blp:306
+#: src/window.blp:50 src/window.blp:331 src/window.blp:335
 msgid "Generator"
 msgstr ""
 
@@ -68,51 +72,55 @@ msgstr ""
 msgid "Main Menu"
 msgstr ""
 
-#: src/window.blp:96
+#: src/window.blp:96 src/window.blp:114
 msgid "Webcam"
 msgstr ""
 
-#: src/window.blp:126
+#: src/window.blp:116
+msgid "No webcam detected."
+msgstr ""
+
+#: src/window.blp:151
 msgid "Play"
 msgstr ""
 
-#: src/window.blp:136
+#: src/window.blp:161
 msgid "Pause"
 msgstr ""
 
-#: src/window.blp:154
+#: src/window.blp:179
 msgid "Mirror"
 msgstr ""
 
-#: src/window.blp:167
+#: src/window.blp:194
 msgid "Image"
 msgstr ""
 
-#: src/window.blp:231
+#: src/window.blp:259
 msgid "Choose an image"
 msgstr ""
 
-#: src/window.blp:261
+#: src/window.blp:290
 msgid "Result"
 msgstr ""
 
-#: src/window.blp:270
+#: src/window.blp:299
 msgid "Raw result"
 msgstr ""
 
-#: src/window.blp:276
+#: src/window.blp:305
 msgid "Copy"
 msgstr ""
 
-#: src/window.blp:307
+#: src/window.blp:336
 msgid "Will be available in next versions..."
 msgstr ""
 
-#: src/window.blp:318
+#: src/window.blp:347
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/window.blp:323
+#: src/window.blp:352
 msgid "_About"
 msgstr ""
 
@@ -147,6 +155,6 @@ msgstr ""
 msgid "Saved"
 msgstr ""
 
-#: src/window.py:175
+#: src/window.py:176
 msgid "Copied!"
 msgstr ""
