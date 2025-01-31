@@ -27,12 +27,11 @@ from logbook import Logger
 from PIL import Image
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Gst, GstApp, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
 from gi.repository import XdpGtk4  # pyright: ignore[reportMissingModuleSource]
-from gi.repository import Rsvg  # pyright: ignore[reportMissingModuleSource]
 
 from .consts import JobName, ScanSourceName, GST_SOURCE_NAME, GST_FLIP_FILTER_NAME, GST_SINK_NAME, GST_APP_SINK_NAME
 from .messages import WifiInfoMessage, IMAGE_GUIDE, parse_wifi_message
 from .ui import build_wifi_info_display, build_url_display
-from .prep import export_svg, guess_mimetype
+from .prep import guess_mimetype
 
 
 log = Logger(__name__)

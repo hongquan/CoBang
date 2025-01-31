@@ -27,6 +27,7 @@ MANIFEST
 .flatpak/
 .flatpak-builder/
 _build/
+__build/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
