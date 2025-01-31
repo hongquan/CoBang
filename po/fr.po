@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 20:44+0700\n"
+"POT-Creation-Date: 2025-01-31 13:04+0700\n"
 "PO-Revision-Date: 2023-04-14 19:26+0200\n"
 "Last-Translator: Miquel Lionel <lionel@les-miquelots.net>\n"
 "Language-Team: fr <LL@li.org>\n"
@@ -56,6 +56,10 @@ msgstr "Mot de passe"
 msgid "Save"
 msgstr "Sauvegarder"
 
+#: src/wifi-display.blp:62
+msgid "After saved, NetworkManager will connect automatically if in range."
+msgstr ""
+
 #: src/window.blp:5
 #, fuzzy
 msgid "CoBang: QR scanner for Linux"
@@ -65,7 +69,7 @@ msgstr "Scanneur de code QR pour Linux"
 msgid "Scanner"
 msgstr ""
 
-#: src/window.blp:50 src/window.blp:302 src/window.blp:306
+#: src/window.blp:50 src/window.blp:331 src/window.blp:335
 #, fuzzy
 msgid "Generator"
 msgstr "Généreux"
@@ -74,52 +78,56 @@ msgstr "Généreux"
 msgid "Main Menu"
 msgstr ""
 
-#: src/window.blp:96
+#: src/window.blp:96 src/window.blp:114
 msgid "Webcam"
 msgstr "Webcam"
 
-#: src/window.blp:126
+#: src/window.blp:116
+msgid "No webcam detected."
+msgstr ""
+
+#: src/window.blp:151
 msgid "Play"
 msgstr "Lire"
 
-#: src/window.blp:136
+#: src/window.blp:161
 msgid "Pause"
 msgstr "Pause"
 
-#: src/window.blp:154
+#: src/window.blp:179
 msgid "Mirror"
 msgstr "Miroir"
 
-#: src/window.blp:167
+#: src/window.blp:194
 msgid "Image"
 msgstr "Image"
 
-#: src/window.blp:231
+#: src/window.blp:259
 #, fuzzy
 msgid "Choose an image"
 msgstr "Veuillez choisir un fichier image"
 
-#: src/window.blp:261
+#: src/window.blp:290
 msgid "Result"
 msgstr "Résultat"
 
-#: src/window.blp:270
+#: src/window.blp:299
 msgid "Raw result"
 msgstr "Résultat brut"
 
-#: src/window.blp:276
+#: src/window.blp:305
 msgid "Copy"
 msgstr "Copier"
 
-#: src/window.blp:307
+#: src/window.blp:336
 msgid "Will be available in next versions..."
 msgstr ""
 
-#: src/window.blp:318
+#: src/window.blp:347
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/window.blp:323
+#: src/window.blp:352
 #, fuzzy
 msgid "_About"
 msgstr "À propos"
@@ -163,7 +171,7 @@ msgstr "Connecté"
 msgid "Saved"
 msgstr "Sauvegardé"
 
-#: src/window.py:175
+#: src/window.py:176
 #, fuzzy
 msgid "Copied!"
 msgstr "Copié"

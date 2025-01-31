@@ -214,7 +214,6 @@ class CoBangWindow(Adw.ApplicationWindow):
             self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.UNAVAILABLE)
             return
         self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.AVAILABLE)
-        # TODO: Show banner to tell user that camera is not available.
         # Ref: https://lazka.github.io/pgi-docs/#Xdp-1.0/classes/Portal.html#Xdp.Portal.access_camera
         self.portal.access_camera(
             self.portal_parent,

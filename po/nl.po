@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 20:44+0700\n"
+"POT-Creation-Date: 2025-01-31 13:04+0700\n"
 "PO-Revision-Date: 2023-04-15 19:40+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -55,6 +55,10 @@ msgstr "Wachtwoord"
 msgid "Save"
 msgstr "Opslaan"
 
+#: src/wifi-display.blp:62
+msgid "After saved, NetworkManager will connect automatically if in range."
+msgstr ""
+
 #: src/window.blp:5
 #, fuzzy
 msgid "CoBang: QR scanner for Linux"
@@ -64,7 +68,7 @@ msgstr "QR-codescanner voor Linux"
 msgid "Scanner"
 msgstr ""
 
-#: src/window.blp:50 src/window.blp:302 src/window.blp:306
+#: src/window.blp:50 src/window.blp:331 src/window.blp:335
 #, fuzzy
 msgid "Generator"
 msgstr "Genereus"
@@ -73,52 +77,56 @@ msgstr "Genereus"
 msgid "Main Menu"
 msgstr ""
 
-#: src/window.blp:96
+#: src/window.blp:96 src/window.blp:114
 msgid "Webcam"
 msgstr "Webcam"
 
-#: src/window.blp:126
+#: src/window.blp:116
+msgid "No webcam detected."
+msgstr ""
+
+#: src/window.blp:151
 msgid "Play"
 msgstr "Afspelen"
 
-#: src/window.blp:136
+#: src/window.blp:161
 msgid "Pause"
 msgstr "Pauzeren"
 
-#: src/window.blp:154
+#: src/window.blp:179
 msgid "Mirror"
 msgstr "Spiegel"
 
-#: src/window.blp:167
+#: src/window.blp:194
 msgid "Image"
 msgstr "Afbeelding"
 
-#: src/window.blp:231
+#: src/window.blp:259
 #, fuzzy
 msgid "Choose an image"
 msgstr "Kies een afbeeldingsbestand"
 
-#: src/window.blp:261
+#: src/window.blp:290
 msgid "Result"
 msgstr "Resultaat"
 
-#: src/window.blp:270
+#: src/window.blp:299
 msgid "Raw result"
 msgstr "Resultaat (platte tekst)"
 
-#: src/window.blp:276
+#: src/window.blp:305
 msgid "Copy"
 msgstr "Kopiëren"
 
-#: src/window.blp:307
+#: src/window.blp:336
 msgid "Will be available in next versions..."
 msgstr ""
 
-#: src/window.blp:318
+#: src/window.blp:347
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/window.blp:323
+#: src/window.blp:352
 #, fuzzy
 msgid "_About"
 msgstr "Over"
@@ -160,7 +168,7 @@ msgstr "Verbonden"
 msgid "Saved"
 msgstr "Opgeslagen"
 
-#: src/window.py:175
+#: src/window.py:176
 #, fuzzy
 msgid "Copied!"
 msgstr "Gekopieerd"

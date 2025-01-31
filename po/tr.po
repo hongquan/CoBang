@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vn.hoabinh.quan.CoBang master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 20:44+0700\n"
+"POT-Creation-Date: 2025-01-31 13:04+0700\n"
 "PO-Revision-Date: 2024-01-05 18:40+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <takim@gnome.org.tr>\n"
@@ -57,6 +57,10 @@ msgstr "Parola"
 msgid "Save"
 msgstr "Kaydet"
 
+#: src/wifi-display.blp:62
+msgid "After saved, NetworkManager will connect automatically if in range."
+msgstr ""
+
 #: src/window.blp:5
 #, fuzzy
 msgid "CoBang: QR scanner for Linux"
@@ -66,7 +70,7 @@ msgstr "Linux için QR tarayıcı"
 msgid "Scanner"
 msgstr ""
 
-#: src/window.blp:50 src/window.blp:302 src/window.blp:306
+#: src/window.blp:50 src/window.blp:331 src/window.blp:335
 #, fuzzy
 msgid "Generator"
 msgstr "Cömert"
@@ -75,52 +79,56 @@ msgstr "Cömert"
 msgid "Main Menu"
 msgstr ""
 
-#: src/window.blp:96
+#: src/window.blp:96 src/window.blp:114
 msgid "Webcam"
 msgstr "Web Kamerası"
 
-#: src/window.blp:126
+#: src/window.blp:116
+msgid "No webcam detected."
+msgstr ""
+
+#: src/window.blp:151
 msgid "Play"
 msgstr "Oynat"
 
-#: src/window.blp:136
+#: src/window.blp:161
 msgid "Pause"
 msgstr "Duraklat"
 
-#: src/window.blp:154
+#: src/window.blp:179
 msgid "Mirror"
 msgstr "Ayna"
 
-#: src/window.blp:167
+#: src/window.blp:194
 msgid "Image"
 msgstr "Görüntü"
 
-#: src/window.blp:231
+#: src/window.blp:259
 #, fuzzy
 msgid "Choose an image"
 msgstr "Lütfen görüntü dosyası seçin"
 
-#: src/window.blp:261
+#: src/window.blp:290
 msgid "Result"
 msgstr "Sonuç"
 
-#: src/window.blp:270
+#: src/window.blp:299
 msgid "Raw result"
 msgstr "Ham sonuç"
 
-#: src/window.blp:276
+#: src/window.blp:305
 msgid "Copy"
 msgstr "Kopyala"
 
-#: src/window.blp:307
+#: src/window.blp:336
 msgid "Will be available in next versions..."
 msgstr ""
 
-#: src/window.blp:318
+#: src/window.blp:347
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/window.blp:323
+#: src/window.blp:352
 #, fuzzy
 msgid "_About"
 msgstr "Hakkında"
@@ -163,7 +171,7 @@ msgstr "Bağlı"
 msgid "Saved"
 msgstr "Kaydedildi"
 
-#: src/window.py:175
+#: src/window.py:176
 #, fuzzy
 msgid "Copied!"
 msgstr "Kopyalandı"
