@@ -34,6 +34,13 @@
   </kudos>
 
   <releases>
+    <release version="1.1.0" date="2025-01-31" urgency="medium">
+      <description translate="no">
+        <p>Add explanation text for "Save" button.</p>
+        <p>Show the status of webcam being not available.</p>
+        <p>Clean code.</p>
+      </description>
+    </release>
     <release version="1.0.0" date="2025-01-28" urgency="medium">
       <description translate="no">
         <p>Finally reach v1.0.</p>
