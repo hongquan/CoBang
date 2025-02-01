@@ -1,3 +1,9 @@
+cobang (1.2.0-1) oracular; urgency=medium
+
+  * Improve UI for mobile screen.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 01 Feb 2025 15:15:28 +0700
+
 cobang (1.1.0-1) oracular; urgency=medium
 
   * Add explanation text for "Save" button.
