@@ -12,11 +12,13 @@ template $CoBangWindow: Adw.ApplicationWindow {
       job_switcher.visible: false;
       job_toggler_box.visible: true;
       toolbarview_scanner.hexpand: false;
-      scanner_page.orientation: vertical;
+      scanner_page_multilayout.layout-name: 'bottom-sheet';
     }
   }
 
   content: Adw.ToolbarView {
+    margin-bottom: 4;
+
     [top]
     Adw.HeaderBar header_bar {
       [start]
@@ -79,10 +81,47 @@ template $CoBangWindow: Adw.ApplicationWindow {
           title: _("Scanner");
           icon-name: 'seeing-symbolic';
 
-          child: Box scanner_page {
-            orientation: horizontal;
-            spacing: 4;
+          child: Adw.MultiLayoutView scanner_page_multilayout {
+            Adw.Layout {
+              name: 'sidebar';
+              content: Adw.OverlaySplitView {
+                sidebar-position: end;
+                Adw.LayoutSlot {
+                  id: 'primary';
+                }
+                [sidebar]
+                Adw.LayoutSlot {
+                  id: 'secondary';
+                }
+              };
+            }
 
+            Adw.Layout {
+              name: 'bottom-sheet';
+              content: Adw.BottomSheet scanner_bottom_sheet {
+                open: true;
+                Adw.LayoutSlot {
+                  id: 'primary';
+                  margin-bottom: bind scanner_bottom_sheet.bottom-bar-height as <int>;
+                }
+                [sheet]
+                Adw.LayoutSlot {
+                  id: 'secondary';
+                }
+                [bottom-bar]
+                Button btn_show_result {
+                  label: _("Show result");
+                  halign: center;
+                  margin-top: 8;
+                  margin-bottom: 8;
+                  visible: bind $has_some(result_display_frame.child) as <bool>;
+                  clicked => $on_btn_show_result_clicked();
+                }
+              };
+
+            }
+
+            [primary]
             Adw.ToolbarView toolbarview_scanner {
               hexpand: true;
 
@@ -283,8 +322,11 @@ template $CoBangWindow: Adw.ApplicationWindow {
               }
             }
 
+            [secondary]
             Box {
               orientation: vertical;
+              spacing: 4;
+              margin-start: 4;
 
               Frame result_display_frame {
                 label: _("Result");
@@ -293,7 +335,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
               }
 
               Expander raw_result_expander {
-                margin-bottom: 2;
+                margin-bottom: 4;
                 vexpand: false;
                 valign: end;
                 label: _("Raw result");

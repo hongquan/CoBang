@@ -58,6 +58,8 @@ class CoBangWindow(Adw.ApplicationWindow):
     btn_filechooser: Gtk.Button = Gtk.Template.Child()
     file_filter: Gtk.FileFilter = Gtk.Template.Child()
     label_chosen_file: Gtk.Label = Gtk.Template.Child()
+    scanner_page_multilayout: Adw.MultiLayoutView = Gtk.Template.Child()
+    scanner_bottom_sheet: Adw.BottomSheet = Gtk.Template.Child()
     result_display_frame: Gtk.Frame = Gtk.Template.Child()
     raw_result_display: Gtk.TextView = Gtk.Template.Child()
     raw_result_expander: Gtk.Expander = Gtk.Template.Child()
@@ -165,6 +167,10 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.play_webcam()
         app_sink = self.gst_pipeline.get_by_name(GST_APP_SINK_NAME)
         app_sink.set_emit_signals(True)
+
+    @Gtk.Template.Callback()
+    def on_btn_show_result_clicked(self, button: Gtk.Button):
+        self.scanner_bottom_sheet.set_open(True)
 
     @Gtk.Template.Callback()
     def on_btn_copy_clicked(self, button: Gtk.Button):
@@ -416,16 +422,19 @@ class CoBangWindow(Adw.ApplicationWindow):
             if url.scheme and url.netloc:
                 log.info('Parsed URL: {}', url)
                 self.display_url(url)
+                self.scanner_bottom_sheet.set_open(True)
                 return
         except ValueError:
             pass
         if wifi := parse_wifi_message(raw_data):
             log.info('Parsed wifi message: {}', wifi)
             self.display_wifi(wifi)
+            self.scanner_bottom_sheet.set_open(True)
             return
         # Non-welknown QR code. Just display the raw data.
         log.info('Unknown QR code. Display raw data.')
         self.raw_result_expander.set_expanded(True)
+        self.scanner_bottom_sheet.set_open(True)
 
     def display_wifi(self, wifi: WifiInfoMessage):
         log.debug('Displaying wifi info: {}', wifi)

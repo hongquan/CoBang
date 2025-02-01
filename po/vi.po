@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoBang 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-31 13:04+0700\n"
+"POT-Creation-Date: 2025-02-01 15:12+0700\n"
 "PO-Revision-Date: 2023-04-15 19:40+0200\n"
 "Last-Translator: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
 "Language-Team: Vietnamese Team\n"
@@ -40,19 +40,19 @@ msgstr "Bắt gặp một URL. Bấm vào để mở:"
 msgid "Found a wifi configuration"
 msgstr "Bắt gặp một cấu hình wifi"
 
-#: src/wifi-display.blp:20
+#: src/wifi-display.blp:21
 msgid "SSID"
 msgstr ""
 
-#: src/wifi-display.blp:36
+#: src/wifi-display.blp:38
 msgid "Password"
 msgstr "Mật khẩu"
 
-#: src/wifi-display.blp:57
+#: src/wifi-display.blp:59
 msgid "Save"
 msgstr "Lưu"
 
-#: src/wifi-display.blp:62
+#: src/wifi-display.blp:64
 msgid "After saved, NetworkManager will connect automatically if in range."
 msgstr "Sau khi lưu, NetworkManager sẽ tự động kết nối nếu trong tầm."
 
@@ -60,67 +60,71 @@ msgstr "Sau khi lưu, NetworkManager sẽ tự động kết nối nếu trong t
 msgid "CoBang: QR scanner for Linux"
 msgstr "CoBang: Trình quét mã QR cho Linux"
 
-#: src/window.blp:43 src/window.blp:79
+#: src/window.blp:45 src/window.blp:81
 msgid "Scanner"
 msgstr "Quét mã"
 
-#: src/window.blp:50 src/window.blp:331 src/window.blp:335
+#: src/window.blp:52 src/window.blp:373 src/window.blp:377
 msgid "Generator"
 msgstr "Tạo mã"
 
-#: src/window.blp:61
+#: src/window.blp:63
 msgid "Main Menu"
 msgstr "Trình đơn chính"
 
-#: src/window.blp:96 src/window.blp:114
+#: src/window.blp:113
+msgid "Show result"
+msgstr "Xem kết quả"
+
+#: src/window.blp:135 src/window.blp:153
 msgid "Webcam"
 msgstr "Webcam"
 
-#: src/window.blp:116
+#: src/window.blp:155
 msgid "No webcam detected."
 msgstr "Không tìm thấy webcam."
 
-#: src/window.blp:151
+#: src/window.blp:190
 msgid "Play"
 msgstr "Phát"
 
-#: src/window.blp:161
+#: src/window.blp:200
 msgid "Pause"
 msgstr "Chựng"
 
-#: src/window.blp:179
+#: src/window.blp:218
 msgid "Mirror"
 msgstr "Gương"
 
-#: src/window.blp:194
+#: src/window.blp:233
 msgid "Image"
 msgstr "Hình ảnh"
 
-#: src/window.blp:259
+#: src/window.blp:298
 msgid "Choose an image"
 msgstr "Vui lòng chọn một hình ảnh"
 
-#: src/window.blp:290
+#: src/window.blp:332
 msgid "Result"
 msgstr "Kết quả"
 
-#: src/window.blp:299
+#: src/window.blp:341
 msgid "Raw result"
 msgstr "Kết quả thô"
 
-#: src/window.blp:305
+#: src/window.blp:347
 msgid "Copy"
 msgstr "Sao chép"
 
-#: src/window.blp:336
+#: src/window.blp:378
 msgid "Will be available in next versions..."
 msgstr "Sẽ có trong các phiên bản sau..."
 
-#: src/window.blp:347
+#: src/window.blp:389
 msgid "_Keyboard Shortcuts"
 msgstr "Phím _tắt"
 
-#: src/window.blp:352
+#: src/window.blp:394
 msgid "_About"
 msgstr "_Giới thiệu"
 
@@ -164,7 +168,7 @@ msgstr "Đã kết nối"
 msgid "Saved"
 msgstr "Đã lưu"
 
-#: src/window.py:176
+#: src/window.py:182
 msgid "Copied!"
 msgstr "Đã sao chép!"
 

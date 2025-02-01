@@ -34,9 +34,9 @@ modules:
   - --disable-video
   - --without-dbus
   sources:
-  - type: git
-    url: https://git.linuxtv.org/zbar.git
-    tag: 0.23.93
+  - type: archive
+    url: https://github.com/mchehab/zbar/archive/refs/tags/0.23.93.tar.gz
+    sha256: 212dfab527894b8bcbcc7cd1d43d63f5604a07473d31a5f02889e372614ebe28
   - type: script
     dest-filename: autogen.sh
     commands:
@@ -136,6 +136,7 @@ modules:
   buildsystem: meson
   config-opts:
     - -Dauthfw=shadow
+    - -Dlibs-only=true
   rm-configure: true
   cleanup:
     - /bin/*
@@ -145,9 +146,9 @@ modules:
     - /share/polkit-1
     - /lib/polkit-1
   sources:
-    - type: git
-      url: https://gitlab.freedesktop.org/polkit/polkit.git
-      tag: '124'
+    - type: archive
+      url: https://github.com/polkit-org/polkit/archive/refs/tags/126.tar.gz
+      sha256: 2814a7281989f6baa9e57bd33bbc5e148827e2721ccef22aaf28ab2b376068e8
 
 - name: udev
   config-opts:
@@ -172,9 +173,9 @@ modules:
     - '*.la'
     - '*.a'
   sources:
-    - type: git
-      tag: v3.2.14
-      url: https://github.com/eudev-project/eudev.git
+    - type: archive
+      url: https://github.com/eudev-project/eudev/archive/refs/tags/v3.2.14.tar.gz
+      sha256: c340e6c51dfc5531ac0c0fa84a34b72162acf525f9023eb9cf4931b782c8f177
 
 - name: NetworkManager
   buildsystem: meson
@@ -202,9 +203,9 @@ modules:
     - -Dvapi=false
     - -Dwifi=true
   sources:
-    - type: git
-      url: https://github.com/NetworkManager/NetworkManager.git
-      tag: 1.46.4
+    - type: archive
+      url: https://github.com/NetworkManager/NetworkManager/archive/refs/tags/1.46.6.tar.gz
+      sha256: 1486f5cf313c41f9dcc63c062d72be4a736633c9e25fb8213f2f4263c19aaa8a
 
 - name: blueprint-compiler
   buildsystem: meson

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 20:44+0700\n"
+"POT-Creation-Date: 2025-02-01 15:12+0700\n"
 "PO-Revision-Date: 2025-01-30 11:10+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: it <LL@li.org>\n"
@@ -41,19 +41,19 @@ msgstr "Trovato un URL. Fare clic per aprire:"
 msgid "Found a wifi configuration"
 msgstr "Trovato una configurazione wifi"
 
-#: src/wifi-display.blp:20
+#: src/wifi-display.blp:21
 msgid "SSID"
 msgstr "SSID"
 
-#: src/wifi-display.blp:36
+#: src/wifi-display.blp:38
 msgid "Password"
 msgstr "Password"
 
-#: src/wifi-display.blp:57
+#: src/wifi-display.blp:59
 msgid "Save"
 msgstr "Salva"
 
-#: src/wifi-display.blp:62
+#: src/wifi-display.blp:64
 msgid "After saved, NetworkManager will connect automatically if in range."
 msgstr ""
 
@@ -61,67 +61,72 @@ msgstr ""
 msgid "CoBang: QR scanner for Linux"
 msgstr "CoBang: QR scanner for Linux"
 
-#: src/window.blp:43 src/window.blp:79
+#: src/window.blp:45 src/window.blp:81
 msgid "Scanner"
 msgstr ""
 
-#: src/window.blp:50 src/window.blp:331 src/window.blp:335
+#: src/window.blp:52 src/window.blp:373 src/window.blp:377
 msgid "Generator"
 msgstr "Generatore"
 
-#: src/window.blp:61
+#: src/window.blp:63
 msgid "Main Menu"
 msgstr "Menu principale"
 
-#: src/window.blp:96 src/window.blp:114
+#: src/window.blp:113
+#, fuzzy
+msgid "Show result"
+msgstr "Risultato grezzo"
+
+#: src/window.blp:135 src/window.blp:153
 msgid "Webcam"
 msgstr "Webcam"
 
-#: src/window.blp:116
+#: src/window.blp:155
 msgid "No webcam detected."
 msgstr ""
 
-#: src/window.blp:151
+#: src/window.blp:190
 msgid "Play"
 msgstr "Avvia"
 
-#: src/window.blp:161
+#: src/window.blp:200
 msgid "Pause"
 msgstr "Pausa"
 
-#: src/window.blp:179
+#: src/window.blp:218
 msgid "Mirror"
 msgstr "Specchio"
 
-#: src/window.blp:194
+#: src/window.blp:233
 msgid "Image"
 msgstr "Immagine"
 
-#: src/window.blp:259
+#: src/window.blp:298
 msgid "Choose an image"
 msgstr "Scegli un'immagine"
 
-#: src/window.blp:290
+#: src/window.blp:332
 msgid "Result"
 msgstr "Risultato"
 
-#: src/window.blp:299
+#: src/window.blp:341
 msgid "Raw result"
 msgstr "Risultato grezzo"
 
-#: src/window.blp:305
+#: src/window.blp:347
 msgid "Copy"
 msgstr "Copia"
 
-#: src/window.blp:336
+#: src/window.blp:378
 msgid "Will be available in next versions..."
 msgstr "Sarà disponibile nelle prossime versioni..."
 
-#: src/window.blp:347
+#: src/window.blp:389
 msgid "_Keyboard Shortcuts"
 msgstr "_Scorciatoie da tastiera"
 
-#: src/window.blp:352
+#: src/window.blp:394
 msgid "_About"
 msgstr "_Informazioni"
 
@@ -165,7 +170,7 @@ msgstr "Connesso"
 msgid "Saved"
 msgstr "Salvato"
 
-#: src/window.py:176
+#: src/window.py:182
 msgid "Copied!"
 msgstr "Copiato!"
 
