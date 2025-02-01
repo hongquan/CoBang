@@ -53,6 +53,7 @@ Screenshots
 
 .. image:: https://i.imgur.com/tbWUfkn.png
 .. image:: https://i.imgur.com/AigLax4.png
+.. image:: https://i.imgur.com/Q9xwcep.png
 
 
 Install

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-31 13:04+0700\n"
+"POT-Creation-Date: 2025-02-01 15:12+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,19 +40,19 @@ msgstr ""
 msgid "Found a wifi configuration"
 msgstr ""
 
-#: src/wifi-display.blp:20
+#: src/wifi-display.blp:21
 msgid "SSID"
 msgstr ""
 
-#: src/wifi-display.blp:36
+#: src/wifi-display.blp:38
 msgid "Password"
 msgstr ""
 
-#: src/wifi-display.blp:57
+#: src/wifi-display.blp:59
 msgid "Save"
 msgstr ""
 
-#: src/wifi-display.blp:62
+#: src/wifi-display.blp:64
 msgid "After saved, NetworkManager will connect automatically if in range."
 msgstr ""
 
@@ -60,67 +60,71 @@ msgstr ""
 msgid "CoBang: QR scanner for Linux"
 msgstr ""
 
-#: src/window.blp:43 src/window.blp:79
+#: src/window.blp:45 src/window.blp:81
 msgid "Scanner"
 msgstr ""
 
-#: src/window.blp:50 src/window.blp:331 src/window.blp:335
+#: src/window.blp:52 src/window.blp:373 src/window.blp:377
 msgid "Generator"
 msgstr ""
 
-#: src/window.blp:61
+#: src/window.blp:63
 msgid "Main Menu"
 msgstr ""
 
-#: src/window.blp:96 src/window.blp:114
+#: src/window.blp:113
+msgid "Show result"
+msgstr ""
+
+#: src/window.blp:135 src/window.blp:153
 msgid "Webcam"
 msgstr ""
 
-#: src/window.blp:116
+#: src/window.blp:155
 msgid "No webcam detected."
 msgstr ""
 
-#: src/window.blp:151
+#: src/window.blp:190
 msgid "Play"
 msgstr ""
 
-#: src/window.blp:161
+#: src/window.blp:200
 msgid "Pause"
 msgstr ""
 
-#: src/window.blp:179
+#: src/window.blp:218
 msgid "Mirror"
 msgstr ""
 
-#: src/window.blp:194
+#: src/window.blp:233
 msgid "Image"
 msgstr ""
 
-#: src/window.blp:259
+#: src/window.blp:298
 msgid "Choose an image"
 msgstr ""
 
-#: src/window.blp:290
+#: src/window.blp:332
 msgid "Result"
 msgstr ""
 
-#: src/window.blp:299
+#: src/window.blp:341
 msgid "Raw result"
 msgstr ""
 
-#: src/window.blp:305
+#: src/window.blp:347
 msgid "Copy"
 msgstr ""
 
-#: src/window.blp:336
+#: src/window.blp:378
 msgid "Will be available in next versions..."
 msgstr ""
 
-#: src/window.blp:347
+#: src/window.blp:389
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/window.blp:352
+#: src/window.blp:394
 msgid "_About"
 msgstr ""
 
@@ -155,6 +159,6 @@ msgstr ""
 msgid "Saved"
 msgstr ""
 
-#: src/window.py:176
+#: src/window.py:182
 msgid "Copied!"
 msgstr ""

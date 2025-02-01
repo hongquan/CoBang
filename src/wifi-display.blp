@@ -16,6 +16,7 @@ Box wifi_form {
     margin-top: 8;
     margin-bottom: 8;
     column-spacing: 8;
+    row-spacing: 8;
     Label {
       label: _("SSID");
       xalign: 1;
@@ -26,6 +27,7 @@ Box wifi_form {
     }
     Label ssid_value {
       xalign: 0;
+      selectable: true;
       layout {
         row: 0;
         column: 1;
@@ -60,6 +62,7 @@ Box wifi_form {
 
   Label {
     label: _("After saved, NetworkManager will connect automatically if in range.");
+    wrap: true;
     margin-start: 8;
     margin-end: 8;
     // Note: .dimmed will be available in Adwaita 1.7.

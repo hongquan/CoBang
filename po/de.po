@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-31 13:04+0700\n"
+"POT-Creation-Date: 2025-02-01 15:12+0700\n"
 "PO-Revision-Date: 2024-05-26 20:50+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -44,19 +44,19 @@ msgstr "URL gefunden. Zum Öffnen klicken:"
 msgid "Found a wifi configuration"
 msgstr "Wifi-Konfiguration gefunden"
 
-#: src/wifi-display.blp:20
+#: src/wifi-display.blp:21
 msgid "SSID"
 msgstr "SSID"
 
-#: src/wifi-display.blp:36
+#: src/wifi-display.blp:38
 msgid "Password"
 msgstr "Passwort"
 
-#: src/wifi-display.blp:57
+#: src/wifi-display.blp:59
 msgid "Save"
 msgstr "Speichern"
 
-#: src/wifi-display.blp:62
+#: src/wifi-display.blp:64
 msgid "After saved, NetworkManager will connect automatically if in range."
 msgstr ""
 
@@ -64,69 +64,74 @@ msgstr ""
 msgid "CoBang: QR scanner for Linux"
 msgstr "CoBang: QR-Scanner für Linux"
 
-#: src/window.blp:43 src/window.blp:79
+#: src/window.blp:45 src/window.blp:81
 msgid "Scanner"
 msgstr ""
 
-#: src/window.blp:50 src/window.blp:331 src/window.blp:335
+#: src/window.blp:52 src/window.blp:373 src/window.blp:377
 #, fuzzy
 msgid "Generator"
 msgstr "Großzügig"
 
-#: src/window.blp:61
+#: src/window.blp:63
 msgid "Main Menu"
 msgstr ""
 
-#: src/window.blp:96 src/window.blp:114
+#: src/window.blp:113
+#, fuzzy
+msgid "Show result"
+msgstr "Unbearbeitetes Ergebnis"
+
+#: src/window.blp:135 src/window.blp:153
 msgid "Webcam"
 msgstr "Webcam"
 
-#: src/window.blp:116
+#: src/window.blp:155
 msgid "No webcam detected."
 msgstr ""
 
-#: src/window.blp:151
+#: src/window.blp:190
 msgid "Play"
 msgstr "Abspielen"
 
-#: src/window.blp:161
+#: src/window.blp:200
 msgid "Pause"
 msgstr "Pausieren"
 
-#: src/window.blp:179
+#: src/window.blp:218
 msgid "Mirror"
 msgstr "Spiegel"
 
-#: src/window.blp:194
+#: src/window.blp:233
 msgid "Image"
 msgstr "Bild"
 
-#: src/window.blp:259
+#: src/window.blp:298
 #, fuzzy
 msgid "Choose an image"
 msgstr "Bitte Bild auswählen"
 
-#: src/window.blp:290
+#: src/window.blp:332
 msgid "Result"
 msgstr "Ergebnis"
 
-#: src/window.blp:299
+#: src/window.blp:341
 msgid "Raw result"
 msgstr "Unbearbeitetes Ergebnis"
 
-#: src/window.blp:305
+#: src/window.blp:347
 msgid "Copy"
 msgstr "Kopieren"
 
-#: src/window.blp:336
+#: src/window.blp:378
 msgid "Will be available in next versions..."
 msgstr ""
 
-#: src/window.blp:347
+#: src/window.blp:389
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/window.blp:352
+#: src/window.blp:394
 #, fuzzy
 msgid "_About"
 msgstr "Über"
@@ -169,7 +174,7 @@ msgstr "Verbunden"
 msgid "Saved"
 msgstr "Gespeichert"
 
-#: src/window.py:176
+#: src/window.py:182
 #, fuzzy
 msgid "Copied!"
 msgstr "Kopiert"
