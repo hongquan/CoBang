@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-01 15:12+0700\n"
-"PO-Revision-Date: 2025-01-30 11:10+0200\n"
+"PO-Revision-Date: 2025-02-01 14:10+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: it <LL@li.org>\n"
 "Language: it\n"
@@ -55,7 +55,7 @@ msgstr "Salva"
 
 #: src/wifi-display.blp:64
 msgid "After saved, NetworkManager will connect automatically if in range."
-msgstr ""
+msgstr "Dopo il salvataggio, NetworkManager si connetterà automaticamente se si trova nel raggio d'azione."
 
 #: src/window.blp:5
 msgid "CoBang: QR scanner for Linux"
@@ -74,9 +74,8 @@ msgid "Main Menu"
 msgstr "Menu principale"
 
 #: src/window.blp:113
-#, fuzzy
 msgid "Show result"
-msgstr "Risultato grezzo"
+msgstr "Mostra risultato"
 
 #: src/window.blp:135 src/window.blp:153
 msgid "Webcam"
@@ -84,7 +83,7 @@ msgstr "Webcam"
 
 #: src/window.blp:155
 msgid "No webcam detected."
-msgstr ""
+msgstr "Nessuna webcam rilevata."
 
 #: src/window.blp:190
 msgid "Play"
@@ -194,4 +193,4 @@ msgstr "Copiato!"
 #~ msgstr "Scansiona e decodifica QR dalla fotocamera o da un'immagine statica"
 
 #~ msgid "qr;code;qr-code;qr-decoder;qr-scanner"
-#~ msgstr "qr;codice;qr-codice;qr-decoder;qr-scanner"
+#~ msgstr "qr;codice;codice-qr;qr-decoder;scanner-qr"

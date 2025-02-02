@@ -38,6 +38,11 @@
   </kudos>
 
   <releases>
+    <release version="1.2.1" date="2025-02-02" urgency="medium">
+      <description translate="no">
+        <p>Don't use SpinnerPaintale.</p>
+      </description>
+    </release>
     <release version="1.2.0" date="2025-02-01" urgency="medium">
       <description translate="no">
         <p>Improve UI for mobile screen.</p>
