@@ -1,1 +1,1 @@
-pygobject-stubs --config-settings=config=Gtk4,Adw1,Gst1,NM1
+pygobject-stubs

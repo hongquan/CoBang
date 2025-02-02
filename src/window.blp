@@ -139,10 +139,14 @@ template $CoBangWindow: Adw.ApplicationWindow {
 
                     Adw.Layout {
                       name: 'webcam-requesting';
-                      content: Adw.StatusPage status_page_webcam_requesting {
-                        paintable: Adw.SpinnerPaintable {
-                          widget: status_page_webcam_requesting;
-                        };
+                      content: Box status_page_webcam_requesting {
+                        orientation: vertical;
+                        Image {
+                          icon-name: 'edit-find-symbolic';
+                          pixel-size: 128;
+                          vexpand: true;
+                          valign: center;
+                        }
                       };
                     }
 
