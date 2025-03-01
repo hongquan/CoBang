@@ -126,6 +126,10 @@ class CoBangWindow(Adw.ApplicationWindow):
         return bool(value)
 
     @Gtk.Template.Callback()
+    def passed_image_name(self, wd: Self, file: Gio.File | None) -> str:
+        return file.get_basename() if file else ''
+
+    @Gtk.Template.Callback()
     def switch_to_scanner(self, button: Gtk.ToggleButton):
         name = JobName.SCANNER if button.get_active() else JobName.GENERATOR
         self.job_viewstack.set_visible_child_name(name)
@@ -146,7 +150,11 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.reset_result()
         visible_child_name = viewstack.get_visible_child_name()
         if visible_child_name == ScanSourceName.WEBCAM:
-            self.play_webcam()
+            if not self.gst_pipeline:
+                self.request_camera_access()
+                return
+            if not self.btn_pause.get_active():
+                self.play_webcam()
             return
         self.stop_webcam()
 
@@ -377,13 +385,9 @@ class CoBangWindow(Adw.ApplicationWindow):
         if not mime_type or not mime_type.startswith('image/'):
             log.info('Not an image. Ignore.')
             return
-        basename = file.get_basename()
-        self.label_chosen_file.set_text(basename or '')
         self.process_passed_image_file(file, mime_type)
 
     def process_file_from_commandline(self, file: Gio.File, mime_type: str):
-        basename = file.get_basename()
-        self.label_chosen_file.set_text(basename or '')
         self.process_passed_image_file(file, mime_type)
 
     def process_passed_image_file(self, chosen_file: Gio.File, content_type: str):
