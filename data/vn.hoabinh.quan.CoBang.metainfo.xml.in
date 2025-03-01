@@ -38,6 +38,11 @@
   </kudos>
 
   <releases>
+    <release version="1.3.0" date="2025-03-02" urgency="medium">
+      <description translate="no">
+        <p>Let open app with file chosen.</p>
+      </description>
+    </release>
     <release version="1.2.1" date="2025-02-02" urgency="medium">
       <description translate="no">
         <p>Don't use SpinnerPaintale.</p>

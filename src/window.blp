@@ -305,7 +305,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
                       }
 
                       Label label_chosen_file {
-                        label: '';
+                        label: bind $passed_image_name(pasted_image.file) as <string>;
                         ellipsize: middle;
                         visible: bind $has_some(label_chosen_file.label) as <bool>;
 

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-01 15:12+0700\n"
-"PO-Revision-Date: 2023-04-15 19:40+0200\n"
+"PO-Revision-Date: 2025-02-05 20:49+0100\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -16,26 +16,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.10.3\n"
+"X-Generator: Poedit 3.5\n"
 
 #: src/help-overlay.blp:11
-#, fuzzy
 msgctxt "shortcut window"
 msgid "General"
-msgstr "Genereus"
+msgstr "Algemeen"
 
 #: src/help-overlay.blp:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
-msgstr ""
+msgstr "Sneltoetsen tonen"
 
 #: src/help-overlay.blp:19
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Afsluiten"
 
 #: src/url-display.blp:8
-#, fuzzy
 msgid "Found a URL. Click to open:"
 msgstr "Er is er een url aangetroffen - klik om te openen:"
 
@@ -57,30 +55,27 @@ msgstr "Opslaan"
 
 #: src/wifi-display.blp:64
 msgid "After saved, NetworkManager will connect automatically if in range."
-msgstr ""
+msgstr "Na het opslaan zal NetworkManager automatisch verbinding maken, indien binnen bereik."
 
 #: src/window.blp:5
-#, fuzzy
 msgid "CoBang: QR scanner for Linux"
-msgstr "QR-codescanner voor Linux"
+msgstr "CoBang: een QR-codescanner voor Linux"
 
 #: src/window.blp:45 src/window.blp:81
 msgid "Scanner"
-msgstr ""
+msgstr "Scanner"
 
 #: src/window.blp:52 src/window.blp:373 src/window.blp:377
-#, fuzzy
 msgid "Generator"
-msgstr "Genereus"
+msgstr "Generator"
 
 #: src/window.blp:63
 msgid "Main Menu"
-msgstr ""
+msgstr "Hoofdmenu"
 
 #: src/window.blp:113
-#, fuzzy
 msgid "Show result"
-msgstr "Resultaat (platte tekst)"
+msgstr "Resultaat tonen"
 
 #: src/window.blp:135 src/window.blp:153
 msgid "Webcam"
@@ -88,7 +83,7 @@ msgstr "Webcam"
 
 #: src/window.blp:155
 msgid "No webcam detected."
-msgstr ""
+msgstr "Er is geen webcam aangetroffen."
 
 #: src/window.blp:190
 msgid "Play"
@@ -100,14 +95,13 @@ msgstr "Pauzeren"
 
 #: src/window.blp:218
 msgid "Mirror"
-msgstr "Spiegel"
+msgstr "Spiegelen"
 
 #: src/window.blp:233
 msgid "Image"
 msgstr "Afbeelding"
 
 #: src/window.blp:298
-#, fuzzy
 msgid "Choose an image"
 msgstr "Kies een afbeeldingsbestand"
 
@@ -125,20 +119,19 @@ msgstr "Kopiëren"
 
 #: src/window.blp:378
 msgid "Will be available in next versions..."
-msgstr ""
+msgstr "Dit zal in een toekomstige versie beschikbaar zijn…"
 
 #: src/window.blp:389
 msgid "_Keyboard Shortcuts"
-msgstr ""
+msgstr "_Sneltoetsen"
 
 #: src/window.blp:394
-#, fuzzy
 msgid "_About"
-msgstr "Over"
+msgstr "_Over"
 
 #: src/app.py:48
 msgid "Support the developer"
-msgstr ""
+msgstr "Doneren aan ontwikkelaar"
 
 #: src/app.py:49
 #, python-format
@@ -146,6 +139,8 @@ msgid ""
 "QR code / barcode scanner for Linux.\n"
 "%(donate_link)s"
 msgstr ""
+"Een QR- en barcodescanner voor Linux.\n"
+"%(donate_link)s"
 
 #. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
 #: src/messages.py:23
@@ -158,12 +153,12 @@ msgid ""
 "\n"
 "Remote image (from http://..., sftp://...) is allowed."
 msgstr ""
-"Voeg een afbeelding toe op één van de volgende manieren:\n"
+"Voeg een afbeelding toe op een van de volgende wijzen:\n"
 "-Sleep een bestand hierheen;\n"
 "-Kopieer een bestand en plak het hier (met Ctrl+V);\n"
 "-Kies via onderstaande knop (werkt niet in de flatpakversie).\n"
 "\n"
-"Externe afbeeldingen (http://…, sftp://…) zijn toegestaan."
+"Externe afbeeldingen (http://, sftp://…) zijn toegestaan."
 
 #: src/ui.py:28
 msgid "Connected"
@@ -174,9 +169,8 @@ msgid "Saved"
 msgstr "Opgeslagen"
 
 #: src/window.py:182
-#, fuzzy
 msgid "Copied!"
-msgstr "Gekopieerd"
+msgstr "Gekopieerd!"
 
 #, fuzzy, python-format
 #~ msgid "Unsupported file type %s!"
