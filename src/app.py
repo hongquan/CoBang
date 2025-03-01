@@ -38,9 +38,10 @@ from gettext import gettext as _
 from logbook import Logger
 from gi.repository import Adw, Gio, Gtk, Gst, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
 
-from .consts import BRAND_NAME, APP_ID
+from .consts import BRAND_NAME, APP_ID, JobName, ScanSourceName
 from .window import CoBangWindow
 from .logging import GLibLogHandler
+from .prep import guess_mimetype
 
 
 DEVELOPPERS = ('Nguyễn Hồng Quân <ng.hong.quan@gmail.com>',)
@@ -57,12 +58,17 @@ class CoBangApplication(Adw.Application):
     def __init__(self):
         super().__init__(
             application_id=APP_ID,
-            flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
+            # CoBang can be activated by context menu in file manager
+            flags=Gio.ApplicationFlags.HANDLES_OPEN,
         )
+
+    def do_startup(self):
+        Adw.Application.do_startup(self)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
         self.portal = Xdp.Portal()
         self.zbar_scanner = zbar.ImageScanner()
+        NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
     def do_activate(self):
         """Called when the application is activated.
@@ -73,7 +79,26 @@ class CoBangApplication(Adw.Application):
         win = self.props.active_window
         if not win:
             win = CoBangWindow(application=self)
-        NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
+        win.present()
+
+    def do_open(self, files: list[Gio.File], n_file: int, hint: str):
+        """Called when the application is opened with files."""
+        if not n_file:
+            return
+        # We only handle the first file
+        file = files[0]
+        log.debug('Opening file: {}', file)
+        mime_type = guess_mimetype(file)
+        log.info('MIME type: {}', mime_type)
+        if not mime_type or not mime_type.startswith('image/'):
+            log.info('Not an image. Ignore.')
+            return
+        win = self.props.active_window
+        if not win:
+            win = CoBangWindow(application=self)
+        win.job_viewstack.set_visible_child_name(JobName.SCANNER)
+        win.scan_source_viewstack.set_visible_child_name(ScanSourceName.IMAGE)
+        win.process_file_from_commandline(file, mime_type)
         win.present()
 
     def on_about_action(self, *args):

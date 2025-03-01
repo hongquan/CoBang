@@ -211,6 +211,10 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_shown(self, *args):
+        scan_source = self.scan_source_viewstack.get_visible_child_name()
+        log.info('Scan source: {}', scan_source)
+        if scan_source != ScanSourceName.WEBCAM:
+            return
         GLib.timeout_add_seconds(1, self.request_camera_access)
 
     def request_camera_access(self):
@@ -373,6 +377,11 @@ class CoBangWindow(Adw.ApplicationWindow):
         if not mime_type or not mime_type.startswith('image/'):
             log.info('Not an image. Ignore.')
             return
+        basename = file.get_basename()
+        self.label_chosen_file.set_text(basename or '')
+        self.process_passed_image_file(file, mime_type)
+
+    def process_file_from_commandline(self, file: Gio.File, mime_type: str):
         basename = file.get_basename()
         self.label_chosen_file.set_text(basename or '')
         self.process_passed_image_file(file, mime_type)
