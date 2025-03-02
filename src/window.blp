@@ -278,6 +278,13 @@ template $CoBangWindow: Adw.ApplicationWindow {
                         }
                       }
 
+                      DropTargetAsync image_drop_target {
+                        formats: 'GFile';
+                        actions: copy;
+                        accept => $on_image_drop_target_accept();
+                        drop => $on_image_dropped();
+                      }
+
                       styles [
                         'frame',
                       ]

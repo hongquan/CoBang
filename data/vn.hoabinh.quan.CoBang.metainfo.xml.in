@@ -38,6 +38,12 @@
   </kudos>
 
   <releases>
+    <release version="1.4.0" date="2025-03-02" urgency="medium">
+      <description translate="no">
+        <p>Restore drag-n-drop feature.</p>
+        <p>Fix handling of image with transparency.</p>
+      </description>
+    </release>
     <release version="1.3.0" date="2025-03-02" urgency="medium">
       <description translate="no">
         <p>Let open app with file chosen.</p>

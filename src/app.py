@@ -38,7 +38,7 @@ from gettext import gettext as _
 from logbook import Logger
 from gi.repository import Adw, Gio, Gtk, Gst, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
 
-from .consts import BRAND_NAME, APP_ID, JobName, ScanSourceName
+from .consts import BRAND_NAME, APP_ID
 from .window import CoBangWindow
 from .logging import GLibLogHandler
 from .prep import guess_mimetype
@@ -96,8 +96,6 @@ class CoBangApplication(Adw.Application):
         win = self.props.active_window
         if not win:
             win = CoBangWindow(application=self)
-        win.job_viewstack.set_visible_child_name(JobName.SCANNER)
-        win.scan_source_viewstack.set_visible_child_name(ScanSourceName.IMAGE)
         win.process_file_from_commandline(file, mime_type)
         win.present()
 

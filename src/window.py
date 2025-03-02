@@ -55,6 +55,7 @@ class CoBangWindow(Adw.ApplicationWindow):
     frame_image: Gtk.AspectFrame = Gtk.Template.Child()
     image_guide: Gtk.Label = Gtk.Template.Child()
     pasted_image: Gtk.Picture = Gtk.Template.Child()
+    image_drop_target: Gtk.DropTargetAsync = Gtk.Template.Child()
     btn_filechooser: Gtk.Button = Gtk.Template.Child()
     file_filter: Gtk.FileFilter = Gtk.Template.Child()
     label_chosen_file: Gtk.Label = Gtk.Template.Child()
@@ -195,6 +196,25 @@ class CoBangWindow(Adw.ApplicationWindow):
         dlg = Gtk.FileDialog(default_filter=self.file_filter, modal=True)
         dlg.open(self, None, self.cb_file_dialog)
 
+    @Gtk.Template.Callback()
+    def on_shown(self, *args):
+        scan_source = self.scan_source_viewstack.get_visible_child_name()
+        log.info('Scan source: {}', scan_source)
+        if scan_source != ScanSourceName.WEBCAM:
+            return
+        GLib.timeout_add_seconds(1, self.request_camera_access)
+
+    @Gtk.Template.Callback()
+    def on_image_drop_target_accept(self, target: Gtk.DropTargetAsync, drop: Gdk.Drop):
+        fmt = drop.get_formats()
+        log.info('Drop formats: {}', fmt.to_string())
+        return fmt.contain_gtype(Gio.File)
+
+    @Gtk.Template.Callback()
+    def on_image_dropped(self, target: Gtk.DropTargetAsync, drop: Gdk.Drop, x: float, y: float):
+        drop.read_value_async(Gio.File, GObject.PRIORITY_DEFAULT_IDLE, None, self.cb_file_read_from_drag_n_drop)
+        return True
+
     def cb_camera_access_request(self, portal: Xdp.Portal, result: Gio.AsyncResult):
         # When testing with Ghostty terminal, the app lost focus and the portal request is denied.
         try:
@@ -216,14 +236,6 @@ class CoBangWindow(Adw.ApplicationWindow):
         if not self.btn_pause.get_active():
             self.play_webcam()
         self.enable_webcam_consumption(pipeline)
-
-    @Gtk.Template.Callback()
-    def on_shown(self, *args):
-        scan_source = self.scan_source_viewstack.get_visible_child_name()
-        log.info('Scan source: {}', scan_source)
-        if scan_source != ScanSourceName.WEBCAM:
-            return
-        GLib.timeout_add_seconds(1, self.request_camera_access)
 
     def request_camera_access(self):
         has_camera = self.portal.is_camera_present()
@@ -371,6 +383,24 @@ class CoBangWindow(Adw.ApplicationWindow):
         except GLib.Error:
             log.debug('No file in clipboard')
 
+    def cb_file_read_from_drag_n_drop(self, drop: Gdk.Drop, result: Gio.AsyncResult):
+        try:
+            file = drop.read_value_finish(result)
+        except GLib.Error as e:
+            log.info('Failed to read file from drop: {}', e)
+            return
+        finally:
+            drop.finish(Gdk.DragAction.COPY)
+        if not file:
+            log.info('No file chosen.')
+            return
+        mime_type = guess_mimetype(file)
+        log.info('MIME type: {}', mime_type)
+        if not mime_type or not mime_type.startswith('image/'):
+            log.info('Not an image. Ignore.')
+            return
+        self.process_passed_image_file(file, mime_type)
+
     def cb_file_dialog(self, dialog: Gtk.FileDialog, result: Gio.AsyncResult):
         try:
             file = dialog.open_finish(result)
@@ -388,6 +418,8 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.process_passed_image_file(file, mime_type)
 
     def process_file_from_commandline(self, file: Gio.File, mime_type: str):
+        self.job_viewstack.set_visible_child_name(JobName.SCANNER)
+        self.scan_source_viewstack.set_visible_child_name(ScanSourceName.IMAGE)
         self.process_passed_image_file(file, mime_type)
 
     def process_passed_image_file(self, chosen_file: Gio.File, content_type: str):
@@ -409,9 +441,14 @@ class CoBangWindow(Adw.ApplicationWindow):
             return
         img_file = io.BytesIO(img_bytes)
         rgb_img = Image.open(img_file)
-        # ZBar needs grayscale image
-        grayscale = rgb_img.convert('L')
-        zimg = zbar.Image(w, h, 'Y800', grayscale.tobytes())
+        # ZBar needs grayscale image, the Gdk.Paintable is RGBA, 
+        # we need to convert it to grayscale, replacing transparency with white.
+        # Because the source image can have alpha channel, we need to convert it to LA.
+        grayscale = rgb_img.convert('LA')
+        # Create an all-white image as background.
+        canvas = Image.new('LA', (w, h), (255, 255))
+        canvas.paste(grayscale, mask=grayscale)
+        zimg = zbar.Image(w, h, 'Y800', canvas.convert('L').tobytes())
         n = self.zbar_scanner.scan(zimg)
         log.debug('Any QR code?: {}', n)
         if not n:
