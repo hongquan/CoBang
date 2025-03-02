@@ -418,6 +418,8 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.process_passed_image_file(file, mime_type)
 
     def process_file_from_commandline(self, file: Gio.File, mime_type: str):
+        self.job_viewstack.set_visible_child_name(JobName.SCANNER)
+        self.scan_source_viewstack.set_visible_child_name(ScanSourceName.IMAGE)
         self.process_passed_image_file(file, mime_type)
 
     def process_passed_image_file(self, chosen_file: Gio.File, content_type: str):
@@ -439,9 +441,14 @@ class CoBangWindow(Adw.ApplicationWindow):
             return
         img_file = io.BytesIO(img_bytes)
         rgb_img = Image.open(img_file)
-        # ZBar needs grayscale image
-        grayscale = rgb_img.convert('L')
-        zimg = zbar.Image(w, h, 'Y800', grayscale.tobytes())
+        # ZBar needs grayscale image, the Gdk.Paintable is RGBA, 
+        # we need to convert it to grayscale, replacing transparency with white.
+        # Because the source image can have alpha channel, we need to convert it to LA.
+        grayscale = rgb_img.convert('LA')
+        # Create an all-white image as background.
+        canvas = Image.new('LA', (w, h), (255, 255))
+        canvas.paste(grayscale, mask=grayscale)
+        zimg = zbar.Image(w, h, 'Y800', canvas.convert('L').tobytes())
         n = self.zbar_scanner.scan(zimg)
         log.debug('Any QR code?: {}', n)
         if not n:
