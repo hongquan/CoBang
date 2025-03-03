@@ -56,17 +56,20 @@ class CoBangApplication(Adw.Application):
     nm_client: NM.Client | None = None
 
     def __init__(self):
+        portal = Xdp.Portal()
+        # CoBang can be activated by context menu in file manager.
+        # But it crashes in Flatpak sandbox, so we disable it.
+        flags = Gio.ApplicationFlags.DEFAULT_FLAGS if portal.running_under_flatpak() else Gio.ApplicationFlags.HANDLES_OPEN
         super().__init__(
             application_id=APP_ID,
-            # CoBang can be activated by context menu in file manager
-            flags=Gio.ApplicationFlags.HANDLES_OPEN,
+            flags=flags,
         )
+        self.portal = portal
 
     def do_startup(self):
         Adw.Application.do_startup(self)
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
-        self.portal = Xdp.Portal()
         self.zbar_scanner = zbar.ImageScanner()
         NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
