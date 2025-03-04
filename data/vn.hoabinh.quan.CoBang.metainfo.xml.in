@@ -40,6 +40,11 @@
   <releases>
     <release version="1.4.2" date="2025-03-04" urgency="medium">
       <description translate="no">
+        <p>Fix desktop file.</p>
+      </description>
+    </release>
+    <release version="1.4.2" date="2025-03-04" urgency="medium">
+      <description translate="no">
         <p>Fix Python libraries version for Flatpak.</p>
       </description>
     </release>
