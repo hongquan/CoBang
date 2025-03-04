@@ -38,6 +38,21 @@
   </kudos>
 
   <releases>
+    <release version="1.4.2" date="2025-03-04" urgency="medium">
+      <description translate="no">
+        <p>Fix desktop file.</p>
+      </description>
+    </release>
+    <release version="1.4.2" date="2025-03-04" urgency="medium">
+      <description translate="no">
+        <p>Fix Python libraries version for Flatpak.</p>
+      </description>
+    </release>
+    <release version="1.4.1" date="2025-03-04" urgency="medium">
+      <description translate="no">
+        <p>Disable "open file" feature in Flatpak.</p>
+      </description>
+    </release>
     <release version="1.4.0" date="2025-03-02" urgency="medium">
       <description translate="no">
         <p>Restore drag-n-drop feature.</p>
