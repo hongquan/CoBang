@@ -1,3 +1,9 @@
+cobang (1.4.3-1) oracular; urgency=medium
+
+  * Fix desktop file.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Tue, 04 Mar 2025 17:12:52 +0700
+
 cobang (1.4.0-1) oracular; urgency=medium
 
   * Restore drag-n-drop feature.
