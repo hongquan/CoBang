@@ -1,6 +1,6 @@
 project(
   'cobang',
-  version: '1.4.1',
+  version: '1.4.2',
   meson_version: '>= 1.0.0',
   default_options: [
     'warning_level=2',
