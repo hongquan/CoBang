@@ -98,15 +98,15 @@ msgstr "Vui lòng chọn một hình ảnh"
 
 #: src/window.blp:351
 msgid "Please open webcam or choose an image."
-msgstr ""
+msgstr "Hãy mở webcam hay chọn một hình ảnh"
 
 #: src/window.blp:364
 msgid "Scanning..."
-msgstr ""
+msgstr "Đang quét..."
 
 #: src/window.blp:373
 msgid "No result found."
-msgstr ""
+msgstr "Không có kết quả."
 
 #: src/window.blp:395
 msgid "Raw result"
@@ -178,11 +178,11 @@ msgstr "Bắt gặp một URL. Bấm vào để mở:"
 
 #: src/window.py:154
 msgid "Found unrecognized text."
-msgstr ""
+msgstr "Bắt gặp văn bản không nhận dạng được."
 
 #: src/window.py:155
 msgid "Unknown"
-msgstr ""
+msgstr "Không biết"
 
 #: src/window.py:220
 msgid "Copied!"
