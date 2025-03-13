@@ -124,9 +124,13 @@ They are listed in *deb-packages.txt* file, under the name of Debian packages. O
 
   $ xargs -a deb-packages.txt sudo apt install
 
+.. code-block:: nu
+
+  > open --raw deb-packages.txt | lines | sudo apt install ...$in
+
 On other distros (Fedora, ArchLinux etc.), please try to figure out equivalent package names and install with your favorite package manager.
 
-Some Python packages which aid development can be installed with `pip`, and listed in *requirements-dev.txt*. If you want to install them to a virtual environment, remember to create it with ``--system-site-packages`` flag.
+Some Python packages which aid development can be installed with ``pip``, and listed in *requirements-dev.txt*. If you want to install them to a virtual environment, remember to create it with ``--system-site-packages`` flag.
 
 
 Run from source
@@ -154,12 +158,12 @@ To uninstall, do:
 Translation
 -----------
 
-Script to extract strings for translation and to update *\*.po* files are written in Nu shell. Please install Nu before running.
+Script to extract strings for translation and to update *\*.po* files are written in Nu shell. Please install `Nu`_ before running.
 
-.. code-block:: console
+.. code-block:: nu
 
-  $ ./dev/extract-for-translating.nu
-  $ ./dev/update-translated.nu
+  > ./dev/extract-for-translating.nu
+  > ./dev/update-translated.nu
 
 
 Package for Debian/Ubuntu
@@ -248,3 +252,4 @@ Credit
 .. _author: https://quan.hoabinh.vn
 .. _lucide: https://lucide.dev/icons/image-plus
 .. _lucide_license: https://lucide.dev/license
+.. _nu: https://www.nushell.sh/

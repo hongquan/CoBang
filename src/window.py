@@ -28,7 +28,7 @@ from PIL import Image
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Gst, GstApp, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
 from gi.repository import XdpGtk4  # pyright: ignore[reportMissingModuleSource]
 
-from .consts import JobName, ScanSourceName, WebcamPageLayoutName, GST_SOURCE_NAME, GST_FLIP_FILTER_NAME, GST_SINK_NAME, GST_APP_SINK_NAME
+from .consts import JobName, ScanSourceName, WebcamPageLayoutName, ScannerState, GST_SOURCE_NAME, GST_FLIP_FILTER_NAME, GST_SINK_NAME, GST_APP_SINK_NAME
 from .messages import WifiInfoMessage, IMAGE_GUIDE, parse_wifi_message
 from .ui import build_wifi_info_display, build_url_display
 from .prep import guess_mimetype
@@ -41,6 +41,7 @@ log = Logger(__name__)
 @Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/window.ui')
 class CoBangWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'CoBangWindow'
+    scanner_state = GObject.Property(type=int, default=0, nick='scanner-state')
 
     job_viewstack: Adw.ViewStack = Gtk.Template.Child()
     stackpage_scanner: Adw.ViewStackPage = Gtk.Template.Child()
@@ -62,6 +63,7 @@ class CoBangWindow(Adw.ApplicationWindow):
     scanner_page_multilayout: Adw.MultiLayoutView = Gtk.Template.Child()
     scanner_bottom_sheet: Adw.BottomSheet = Gtk.Template.Child()
     result_display_frame: Gtk.Frame = Gtk.Template.Child()
+    result_bin: Adw.Bin = Gtk.Template.Child()
     raw_result_display: Gtk.TextView = Gtk.Template.Child()
     raw_result_expander: Gtk.Expander = Gtk.Template.Child()
     portal_parent: Xdp.Parent
@@ -125,6 +127,32 @@ class CoBangWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback()
     def has_some(self, wd: Self, value: Any) -> bool:
         return bool(value)
+    
+    @Gtk.Template.Callback()
+    def is_idle(self, wd: Self, value: int) -> bool:
+        return value == ScannerState.IDLE
+    
+    @Gtk.Template.Callback()
+    def is_scanning(self, wd: Self, value: int) -> bool:
+        return value == ScannerState.SCANNING
+    
+    @Gtk.Template.Callback()
+    def is_no_result(self, wd: Self, value: int) -> bool:
+        return value == ScannerState.NO_RESULT
+    
+    @Gtk.Template.Callback()
+    def has_scanning_result(self, wd: Self, value: int) -> bool:
+        return value > ScannerState.NO_RESULT
+    
+    @Gtk.Template.Callback()
+    def scanning_result_title(self, wd: Self, value: int) -> str:
+        if value == ScannerState.WIFI_FOUND:
+            return _('Found a wifi configuration')
+        if value == ScannerState.URL_FOUND:
+            return _('Found a URL. Click to open:')
+        if value == ScannerState.TEXT_FOUND:
+            return _('Found unrecognized text.')
+        return _('Unknown')
 
     @Gtk.Template.Callback()
     def passed_image_name(self, wd: Self, file: Gio.File | None) -> str:
@@ -161,9 +189,10 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_btn_pause_toggled(self, button: Gtk.ToggleButton):
+        to_pause = button.get_active()
+        self.scanner_state = ScannerState.IDLE if to_pause else ScannerState.SCANNING
         if not self.gst_pipeline:
             return
-        to_pause = button.get_active()
         if to_pause:
             app_sink = self.gst_pipeline.get_by_name(GST_APP_SINK_NAME)
             app_sink.set_emit_signals(False)
@@ -235,6 +264,7 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.attach_gstreamer_sink_to_window(pipeline)
         if not self.btn_pause.get_active():
             self.play_webcam()
+            self.scanner_state = ScannerState.SCANNING
         self.enable_webcam_consumption(pipeline)
 
     def request_camera_access(self):
@@ -286,9 +316,11 @@ class CoBangWindow(Adw.ApplicationWindow):
         log.info('Playing webcam')
         if self.gst_pipeline:
             self.gst_pipeline.set_state(Gst.State.PLAYING)
+            self.scanner_state = ScannerState.SCANNING
 
     def stop_webcam(self):
         log.info('Stopping webcam')
+        self.scanner_state = ScannerState.IDLE
         if self.gst_pipeline:
             self.gst_pipeline.set_state(Gst.State.NULL)
 
@@ -483,23 +515,27 @@ class CoBangWindow(Adw.ApplicationWindow):
             return
         # Non-welknown QR code. Just display the raw data.
         log.info('Unknown QR code. Display raw data.')
+        self.scanner_state = ScannerState.TEXT_FOUND
         self.raw_result_expander.set_expanded(True)
         self.scanner_bottom_sheet.set_open(True)
 
     def display_wifi(self, wifi: WifiInfoMessage):
         log.debug('Displaying wifi info: {}', wifi)
         box = build_wifi_info_display(wifi, self.nm_client)
-        self.result_display_frame.set_child(box)
+        self.result_bin.set_child(box)
+        self.scanner_state = ScannerState.WIFI_FOUND
 
     def display_url(self, url: SplitResult):
         log.debug('Displaying URL: {}', url)
         box = build_url_display(url)
-        self.result_display_frame.set_child(box)
+        self.result_bin.set_child(box)
+        self.scanner_state = ScannerState.URL_FOUND
 
     def reset_result(self):
         log.info('Reset result display')
+        self.scanner_state = ScannerState.IDLE
         buffer = self.raw_result_display.get_buffer()
         buffer.set_text('')
-        self.result_display_frame.set_child(None)
+        self.result_bin.set_child(None)
         self.pasted_image.set_visible(False)
         self.pasted_image.set_file(None)
