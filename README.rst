@@ -183,6 +183,11 @@ Follow this step to package:
     $ export VER='0.1.0'  # Change to version you want
     $ git archive --format=tar --prefix=cobang-$VER/ HEAD | gzip -c > ../cobang_$VER.orig.tar.gz
 
+  .. code-block:: nu
+
+    > let VER = '0.1.0'  # Change to version you want
+    > git archive --format=tar --prefix=cobang-($VER)/ HEAD | gzip -c o> ../cobang_($VER).orig.tar.gz
+
 - Move the *\*.orig.tar.gz* file to somewhere, then extract it, as *cobang-0.1.0* for example.
 
 - Checkout to ``packaging/ubuntu`` branch, copy *debian* folder and *setup.py* file, putting to just-extracted *cobang-0.1.0* folder.

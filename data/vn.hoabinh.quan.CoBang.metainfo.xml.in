@@ -38,7 +38,12 @@
   </kudos>
 
   <releases>
-    <release version="1.4.2" date="2025-03-04" urgency="medium">
+    <release version="1.5.0" date="2025-03-13" urgency="medium">
+      <description translate="no">
+        <p>Show scanning states.</p>
+      </description>
+    </release>
+    <release version="1.4.3" date="2025-03-04" urgency="medium">
       <description translate="no">
         <p>Fix desktop file.</p>
       </description>
