@@ -41,7 +41,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
           ]
 
           ToggleButton toggle_scanner {
-            icon-name: 'seeing-symbolic';
+            icon-name: 'view-reveal-symbolic';
             tooltip-text: _("Scanner");
             active: bind $in_scanner_mode(job_viewstack.visible-child-name) as <bool>;
             toggled => $switch_to_scanner();
