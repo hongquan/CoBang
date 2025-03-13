@@ -1,3 +1,9 @@
+cobang (1.5.0-1) oracular; urgency=medium
+
+  * Show scanning states.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Thu, 13 Mar 2025 23:27:43 +0700
+
 cobang (1.4.3-1) oracular; urgency=medium
 
   * Fix desktop file.
