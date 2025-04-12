@@ -1,3 +1,9 @@
+cobang (1.6.0-3) oracular; urgency=medium
+
+  * Missing gir1.2-xdpgtk4-1.0 in dependency list.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 12 Apr 2025 16:07:40 +0700
+
 cobang (1.6.0-2) oracular; urgency=medium
 
   * Missing gir1.2-xdp-1.0 in dependency list.
