@@ -29,7 +29,7 @@ from PIL import Image
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Gst, GstApp, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
 from gi.repository import XdpGtk4  # pyright: ignore[reportMissingModuleSource]
 
-from .consts import JobName, ScanSourceName, WebcamPageLayoutName, ScannerState, GST_SOURCE_NAME, GST_FLIP_FILTER_NAME, GST_SINK_NAME, GST_APP_SINK_NAME, SUPPORTED_DEVICE_SOURCES
+from .consts import JobName, ScanSourceName, WebcamPageLayoutName, ScannerState, ENV_EMULATE_SANDBOX, GST_SOURCE_NAME, GST_FLIP_FILTER_NAME, GST_SINK_NAME, GST_APP_SINK_NAME, SUPPORTED_DEVICE_SOURCES
 from .custom_types import WebcamDeviceInfo
 from .messages import WifiInfoMessage, IMAGE_GUIDE, parse_wifi_message
 from .ui import build_wifi_info_display, build_url_display
@@ -97,7 +97,7 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     @property
     def is_outside_sandbox(self) -> bool:
-        return not self.portal.running_under_sandbox() and not os.getenv('COBANG_LIKE_IN_SANDBOX')
+        return not self.portal.running_under_sandbox() and not os.getenv(ENV_EMULATE_SANDBOX)
 
     @property
     def zbar_scanner(self) -> zbar.ImageScanner:
@@ -214,7 +214,8 @@ class CoBangWindow(Adw.ApplicationWindow):
             return
         # There is issue with the pipewiresrc when changing from PAUSED to PLAYING.
         # So we stop the video and play again.
-        self.stop_webcam()
+        if not self.is_outside_sandbox:
+            self.stop_webcam()
         self.play_webcam()
         app_sink = self.gst_pipeline.get_by_name(GST_APP_SINK_NAME)
         app_sink.set_emit_signals(True)

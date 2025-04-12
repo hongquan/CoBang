@@ -5,6 +5,8 @@ SHORT_NAME = 'cobang'
 BRAND_NAME = 'CoBang'
 APP_ID = 'vn.hoabinh.quan.CoBang'
 
+ENV_EMULATE_SANDBOX = 'COBANG_LIKE_IN_SANDBOX'
+
 
 class JobName(StrEnum):
     SCANNER = 'scanner'
