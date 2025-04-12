@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-13 22:54+0700\n"
+"POT-Creation-Date: 2025-04-12 16:12+0700\n"
 "PO-Revision-Date: 2024-06-16 10:19+0300\n"
 "Last-Translator: mva <ma12@rambler.ru>\n"
 "Language-Team: \n"
@@ -56,95 +56,95 @@ msgstr "Сохранить"
 msgid "After saved, NetworkManager will connect automatically if in range."
 msgstr ""
 
-#: src/window.blp:5
+#: src/window.blp:6
 msgid "CoBang: QR scanner for Linux"
 msgstr "CoBang: Сканер QR-кода для Линукс"
 
-#: src/window.blp:45 src/window.blp:81
+#: src/window.blp:52 src/window.blp:88
 msgid "Scanner"
 msgstr ""
 
-#: src/window.blp:52 src/window.blp:427 src/window.blp:431
+#: src/window.blp:59 src/window.blp:484 src/window.blp:488
 #, fuzzy
 msgid "Generator"
 msgstr "Щедрый"
 
-#: src/window.blp:63
+#: src/window.blp:70
 msgid "Main Menu"
 msgstr ""
 
-#: src/window.blp:113
+#: src/window.blp:127
 #, fuzzy
 msgid "Show result"
 msgstr "Raw результат"
 
-#: src/window.blp:135 src/window.blp:157
+#: src/window.blp:148 src/window.blp:171 src/window.blp:243
 msgid "Webcam"
 msgstr "Камера"
 
-#: src/window.blp:159
+#: src/window.blp:173
 msgid "No webcam detected."
 msgstr ""
 
-#: src/window.blp:194
+#: src/window.blp:208
 msgid "Play"
 msgstr "Запуск видео"
 
-#: src/window.blp:204
+#: src/window.blp:218
 msgid "Pause"
 msgstr "Пауза"
 
-#: src/window.blp:222
+#: src/window.blp:275
 msgid "Mirror"
 msgstr "Зеркально"
 
-#: src/window.blp:237
+#: src/window.blp:292
 msgid "Image"
 msgstr "Картинка"
 
-#: src/window.blp:309
+#: src/window.blp:364
 #, fuzzy
 msgid "Choose an image"
 msgstr "Выберите файл изображения"
 
-#: src/window.blp:351
+#: src/window.blp:406
 msgid "Please open webcam or choose an image."
 msgstr ""
 
-#: src/window.blp:364
+#: src/window.blp:420
 msgid "Scanning..."
 msgstr ""
 
-#: src/window.blp:373
+#: src/window.blp:430
 msgid "No result found."
 msgstr ""
 
-#: src/window.blp:395
+#: src/window.blp:452
 msgid "Raw result"
 msgstr "Raw результат"
 
-#: src/window.blp:401
+#: src/window.blp:458
 msgid "Copy"
 msgstr "Копировать"
 
-#: src/window.blp:432
+#: src/window.blp:489
 msgid "Will be available in next versions..."
 msgstr ""
 
-#: src/window.blp:443
+#: src/window.blp:500
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/window.blp:448
+#: src/window.blp:505
 #, fuzzy
 msgid "_About"
 msgstr "О программе"
 
-#: src/app.py:49
+#: src/app.py:51
 msgid "Support the developer"
 msgstr ""
 
-#: src/app.py:50
+#: src/app.py:52
 #, python-format
 msgid ""
 "QR code / barcode scanner for Linux.\n"
@@ -178,23 +178,23 @@ msgstr "Связанный"
 msgid "Saved"
 msgstr "Сохранить"
 
-#: src/window.py:150
+#: src/window.py:163
 msgid "Found a wifi configuration"
 msgstr "Найдена конфигурация Wi-Fi"
 
-#: src/window.py:152
+#: src/window.py:165
 msgid "Found a URL. Click to open:"
 msgstr "Найден URL-адрес:"
 
-#: src/window.py:154
+#: src/window.py:167
 msgid "Found unrecognized text."
 msgstr ""
 
-#: src/window.py:155
+#: src/window.py:168
 msgid "Unknown"
 msgstr ""
 
-#: src/window.py:220
+#: src/window.py:234
 #, fuzzy
 msgid "Copied!"
 msgstr "Скопировано"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-13 22:54+0700\n"
+"POT-Creation-Date: 2025-04-12 16:12+0700\n"
 "PO-Revision-Date: 2025-02-05 20:49+0100\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -51,91 +51,91 @@ msgstr ""
 "Na het opslaan zal NetworkManager automatisch verbinding maken, indien "
 "binnen bereik."
 
-#: src/window.blp:5
+#: src/window.blp:6
 msgid "CoBang: QR scanner for Linux"
 msgstr "CoBang: een QR-codescanner voor Linux"
 
-#: src/window.blp:45 src/window.blp:81
+#: src/window.blp:52 src/window.blp:88
 msgid "Scanner"
 msgstr "Scanner"
 
-#: src/window.blp:52 src/window.blp:427 src/window.blp:431
+#: src/window.blp:59 src/window.blp:484 src/window.blp:488
 msgid "Generator"
 msgstr "Generator"
 
-#: src/window.blp:63
+#: src/window.blp:70
 msgid "Main Menu"
 msgstr "Hoofdmenu"
 
-#: src/window.blp:113
+#: src/window.blp:127
 msgid "Show result"
 msgstr "Resultaat tonen"
 
-#: src/window.blp:135 src/window.blp:157
+#: src/window.blp:148 src/window.blp:171 src/window.blp:243
 msgid "Webcam"
 msgstr "Webcam"
 
-#: src/window.blp:159
+#: src/window.blp:173
 msgid "No webcam detected."
 msgstr "Er is geen webcam aangetroffen."
 
-#: src/window.blp:194
+#: src/window.blp:208
 msgid "Play"
 msgstr "Afspelen"
 
-#: src/window.blp:204
+#: src/window.blp:218
 msgid "Pause"
 msgstr "Pauzeren"
 
-#: src/window.blp:222
+#: src/window.blp:275
 msgid "Mirror"
 msgstr "Spiegelen"
 
-#: src/window.blp:237
+#: src/window.blp:292
 msgid "Image"
 msgstr "Afbeelding"
 
-#: src/window.blp:309
+#: src/window.blp:364
 msgid "Choose an image"
 msgstr "Kies een afbeeldingsbestand"
 
-#: src/window.blp:351
+#: src/window.blp:406
 msgid "Please open webcam or choose an image."
 msgstr ""
 
-#: src/window.blp:364
+#: src/window.blp:420
 msgid "Scanning..."
 msgstr ""
 
-#: src/window.blp:373
+#: src/window.blp:430
 msgid "No result found."
 msgstr ""
 
-#: src/window.blp:395
+#: src/window.blp:452
 msgid "Raw result"
 msgstr "Resultaat (platte tekst)"
 
-#: src/window.blp:401
+#: src/window.blp:458
 msgid "Copy"
 msgstr "Kopiëren"
 
-#: src/window.blp:432
+#: src/window.blp:489
 msgid "Will be available in next versions..."
 msgstr "Dit zal in een toekomstige versie beschikbaar zijn…"
 
-#: src/window.blp:443
+#: src/window.blp:500
 msgid "_Keyboard Shortcuts"
 msgstr "_Sneltoetsen"
 
-#: src/window.blp:448
+#: src/window.blp:505
 msgid "_About"
 msgstr "_Over"
 
-#: src/app.py:49
+#: src/app.py:51
 msgid "Support the developer"
 msgstr "Doneren aan ontwikkelaar"
 
-#: src/app.py:50
+#: src/app.py:52
 #, python-format
 msgid ""
 "QR code / barcode scanner for Linux.\n"
@@ -170,23 +170,23 @@ msgstr "Verbonden"
 msgid "Saved"
 msgstr "Opgeslagen"
 
-#: src/window.py:150
+#: src/window.py:163
 msgid "Found a wifi configuration"
 msgstr "Er zijn wifi-instellingen aangetroffen"
 
-#: src/window.py:152
+#: src/window.py:165
 msgid "Found a URL. Click to open:"
 msgstr "Er is er een url aangetroffen - klik om te openen:"
 
-#: src/window.py:154
+#: src/window.py:167
 msgid "Found unrecognized text."
 msgstr ""
 
-#: src/window.py:155
+#: src/window.py:168
 msgid "Unknown"
 msgstr ""
 
-#: src/window.py:220
+#: src/window.py:234
 msgid "Copied!"
 msgstr "Gekopieerd!"
 
