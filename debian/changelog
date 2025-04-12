@@ -1,3 +1,9 @@
+cobang (1.6.1-1) oracular; urgency=medium
+
+  * Try fixing pt_BR locale.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 12 Apr 2025 16:16:05 +0700
+
 cobang (1.6.0-3) oracular; urgency=medium
 
   * Missing gir1.2-xdpgtk4-1.0 in dependency list.
