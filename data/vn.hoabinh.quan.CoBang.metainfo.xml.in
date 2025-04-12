@@ -15,16 +15,20 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v1_1.png</image>
+      <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v1_4.png</image>
       <caption>Scan from webcam.</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v1_2.png</image>
+      <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v1_5.png</image>
       <caption>Scan from image file.</caption>
     </screenshot>
     <screenshot>
+      <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v1_6.png</image>
+      <caption>Scan from image file (mobile view).</caption>
+    </screenshot>
+    <screenshot>
       <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v1_3.png</image>
-      <caption>Scan from image file.</caption>
+      <caption>Scan from webcam (mobile view, dark theme).</caption>
     </screenshot>
   </screenshots>
   <url type="homepage">https://github.com/hongquan/CoBang</url>
@@ -38,6 +42,11 @@
   </kudos>
 
   <releases>
+    <release version="1.6.0" date="2025-04-12" urgency="medium">
+      <description translate="no">
+        <p>Access webcam directly when running outside sandbox.</p>
+      </description>
+    </release>
     <release version="1.5.0" date="2025-03-13" urgency="medium">
       <description translate="no">
         <p>Show scanning states.</p>
