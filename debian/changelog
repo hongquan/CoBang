@@ -1,3 +1,9 @@
+cobang (1.6.0-1) oracular; urgency=medium
+
+  * Access webcam directly when running outside sandbox.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 12 Apr 2025 15:21:07 +0700
+
 cobang (1.5.0-1) oracular; urgency=medium
 
   * Show scanning states.
