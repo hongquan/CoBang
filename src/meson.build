@@ -48,6 +48,7 @@ cobang_sources = [
   'prep.py',
   'ui.py',
   'window.py',
+  'custom_types.py',
 ]
 
 install_data(cobang_sources, install_dir: moduledir)

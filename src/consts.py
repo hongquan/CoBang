@@ -29,9 +29,11 @@ class ScannerState(IntEnum):
     WIFI_FOUND = 3
     URL_FOUND = 4
     TEXT_FOUND = 5
-    
+
 
 GST_SOURCE_NAME = 'webcam_source'
 GST_FLIP_FILTER_NAME = 'videoflip'
 GST_SINK_NAME = 'widget_sink'
 GST_APP_SINK_NAME = 'app_sink'
+
+SUPPORTED_DEVICE_SOURCES = ('v4l2src',)
