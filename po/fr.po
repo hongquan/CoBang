@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-01 15:12+0700\n"
+"POT-Creation-Date: 2025-03-13 22:54+0700\n"
 "PO-Revision-Date: 2023-04-14 19:26+0200\n"
 "Last-Translator: Miquel Lionel <lionel@les-miquelots.net>\n"
 "Language-Team: fr <LL@li.org>\n"
@@ -35,28 +35,19 @@ msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Quitter"
 
-#: src/url-display.blp:8
-#, fuzzy
-msgid "Found a URL. Click to open:"
-msgstr "URL trouvée. Cliquez pour ouvrir:"
-
-#: src/wifi-display.blp:8
-msgid "Found a wifi configuration"
-msgstr "Configuration wifi trouvée"
-
-#: src/wifi-display.blp:21
+#: src/wifi-display.blp:15
 msgid "SSID"
 msgstr "Nom du WiFi"
 
-#: src/wifi-display.blp:38
+#: src/wifi-display.blp:32
 msgid "Password"
 msgstr "Mot de passe"
 
-#: src/wifi-display.blp:59
+#: src/wifi-display.blp:53
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: src/wifi-display.blp:64
+#: src/wifi-display.blp:58
 msgid "After saved, NetworkManager will connect automatically if in range."
 msgstr ""
 
@@ -69,7 +60,7 @@ msgstr "Scanneur de code QR pour Linux"
 msgid "Scanner"
 msgstr ""
 
-#: src/window.blp:52 src/window.blp:373 src/window.blp:377
+#: src/window.blp:52 src/window.blp:427 src/window.blp:431
 #, fuzzy
 msgid "Generator"
 msgstr "Généreux"
@@ -83,65 +74,73 @@ msgstr ""
 msgid "Show result"
 msgstr "Résultat brut"
 
-#: src/window.blp:135 src/window.blp:153
+#: src/window.blp:135 src/window.blp:157
 msgid "Webcam"
 msgstr "Webcam"
 
-#: src/window.blp:155
+#: src/window.blp:159
 msgid "No webcam detected."
 msgstr ""
 
-#: src/window.blp:190
+#: src/window.blp:194
 msgid "Play"
 msgstr "Lire"
 
-#: src/window.blp:200
+#: src/window.blp:204
 msgid "Pause"
 msgstr "Pause"
 
-#: src/window.blp:218
+#: src/window.blp:222
 msgid "Mirror"
 msgstr "Miroir"
 
-#: src/window.blp:233
+#: src/window.blp:237
 msgid "Image"
 msgstr "Image"
 
-#: src/window.blp:298
+#: src/window.blp:309
 #, fuzzy
 msgid "Choose an image"
 msgstr "Veuillez choisir un fichier image"
 
-#: src/window.blp:332
-msgid "Result"
-msgstr "Résultat"
+#: src/window.blp:351
+msgid "Please open webcam or choose an image."
+msgstr ""
 
-#: src/window.blp:341
+#: src/window.blp:364
+msgid "Scanning..."
+msgstr ""
+
+#: src/window.blp:373
+msgid "No result found."
+msgstr ""
+
+#: src/window.blp:395
 msgid "Raw result"
 msgstr "Résultat brut"
 
-#: src/window.blp:347
+#: src/window.blp:401
 msgid "Copy"
 msgstr "Copier"
 
-#: src/window.blp:378
+#: src/window.blp:432
 msgid "Will be available in next versions..."
 msgstr ""
 
-#: src/window.blp:389
+#: src/window.blp:443
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/window.blp:394
+#: src/window.blp:448
 #, fuzzy
 msgid "_About"
 msgstr "À propos"
 
-#: src/app.py:48
+#: src/app.py:49
 msgid "Support the developer"
 msgstr ""
 
-#: src/app.py:49
+#: src/app.py:50
 #, python-format
 msgid ""
 "QR code / barcode scanner for Linux.\n"
@@ -176,10 +175,30 @@ msgstr "Connecté"
 msgid "Saved"
 msgstr "Sauvegardé"
 
-#: src/window.py:182
+#: src/window.py:150
+msgid "Found a wifi configuration"
+msgstr "Configuration wifi trouvée"
+
+#: src/window.py:152
+#, fuzzy
+msgid "Found a URL. Click to open:"
+msgstr "URL trouvée. Cliquez pour ouvrir:"
+
+#: src/window.py:154
+msgid "Found unrecognized text."
+msgstr ""
+
+#: src/window.py:155
+msgid "Unknown"
+msgstr ""
+
+#: src/window.py:220
 #, fuzzy
 msgid "Copied!"
 msgstr "Copié"
+
+#~ msgid "Result"
+#~ msgstr "Résultat"
 
 #, python-format
 #~ msgid "Unsupported file type %s!"

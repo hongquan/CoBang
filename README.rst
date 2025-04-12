@@ -51,7 +51,7 @@ So I decide to build *CoBang*, a new, native Linux application for scanning QR c
 Screenshots
 +++++++++++
 
-.. image:: https://i.imgur.com/tbWUfkn.png
+.. image:: https://i.imgur.com/a4KoZCg.png
 .. image:: https://i.imgur.com/AigLax4.png
 .. image:: https://i.imgur.com/Q9xwcep.png
 
@@ -103,7 +103,14 @@ The release on FlatHub is lagging behind traditional distribution channels (PPA,
 Compatibility
 -------------
 
-Though being targeted at Wayland, this app can still work in X11 desktop environments, like `KDE`_ (in Kubuntu), `Xfce`_ (in Xubuntu), `LxQt`_ (in Lubuntu). But due to a gap between GTK and Qt, the app gets some minor quirky issue when running in Qt-based DEs like KDE and LxQt. CoBang should not be tried in VirtualBox virtual machine, because of poor graphics stack VirtualBox provides.
+Though being targeted at Wayland, this app can still work in X11 desktop environments, like `KDE`_ (in Kubuntu), `Xfce`_ (in Xubuntu), `LxQt`_ (in Lubuntu). 
+But due to a gap between GTK and Qt, the app gets some minor quirky issue when running in Qt-based DEs like KDE and LxQt. 
+CoBang should not be tried in VirtualBox virtual machine, because of poor graphics stack VirtualBox provides.
+
+Since v1.6, CoBang has different webcam access methods, depending on whether it runs inside sandbox (Flatpak) or not. Outside sandbox, it tries to access webcam directly as V4L2 device.
+Inside sandbox, it accesses indirectly via `xdg-desktop-portal`_, and depending on how much the portal supports, CoBang may not see your webcam.
+
+From v1.0 to v1.5, CoBang only accessed webcam via `xdg-desktop-portal`_.
 
 
 Development
@@ -124,9 +131,13 @@ They are listed in *deb-packages.txt* file, under the name of Debian packages. O
 
   $ xargs -a deb-packages.txt sudo apt install
 
+.. code-block:: nu
+
+  > open --raw deb-packages.txt | lines | sudo apt install ...$in
+
 On other distros (Fedora, ArchLinux etc.), please try to figure out equivalent package names and install with your favorite package manager.
 
-Some Python packages which aid development can be installed with `pip`, and listed in *requirements-dev.txt*. If you want to install them to a virtual environment, remember to create it with ``--system-site-packages`` flag.
+Some Python packages which aid development can be installed with ``pip``, and listed in *requirements-dev.txt*. If you want to install them to a virtual environment, remember to create it with ``--system-site-packages`` flag.
 
 
 Run from source
@@ -154,12 +165,12 @@ To uninstall, do:
 Translation
 -----------
 
-Script to extract strings for translation and to update *\*.po* files are written in Nu shell. Please install Nu before running.
+Script to extract strings for translation and to update *\*.po* files are written in Nu shell. Please install `Nu`_ before running.
 
-.. code-block:: console
+.. code-block:: nu
 
-  $ ./dev/extract-for-translating.nu
-  $ ./dev/update-translated.nu
+  > ./dev/extract-for-translating.nu
+  > ./dev/update-translated.nu
 
 
 Package for Debian/Ubuntu
@@ -178,6 +189,11 @@ Follow this step to package:
 
     $ export VER='0.1.0'  # Change to version you want
     $ git archive --format=tar --prefix=cobang-$VER/ HEAD | gzip -c > ../cobang_$VER.orig.tar.gz
+
+  .. code-block:: nu
+
+    > let VER = '0.1.0'  # Change to version you want
+    > git archive --format=tar --prefix=cobang-($VER)/ HEAD | gzip -c o> ../cobang_($VER).orig.tar.gz
 
 - Move the *\*.orig.tar.gz* file to somewhere, then extract it, as *cobang-0.1.0* for example.
 
@@ -248,3 +264,5 @@ Credit
 .. _author: https://quan.hoabinh.vn
 .. _lucide: https://lucide.dev/icons/image-plus
 .. _lucide_license: https://lucide.dev/license
+.. _nu: https://www.nushell.sh/
+.. _xdg-desktop-portal: https://flatpak.github.io/xdg-desktop-portal/

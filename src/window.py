@@ -18,6 +18,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import io
+import os
 from gettext import gettext as _
 from urllib.parse import urlsplit, SplitResult
 from typing import TYPE_CHECKING, Self, Any, cast
@@ -28,10 +29,11 @@ from PIL import Image
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Gst, GstApp, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
 from gi.repository import XdpGtk4  # pyright: ignore[reportMissingModuleSource]
 
-from .consts import JobName, ScanSourceName, WebcamPageLayoutName, GST_SOURCE_NAME, GST_FLIP_FILTER_NAME, GST_SINK_NAME, GST_APP_SINK_NAME
+from .consts import JobName, ScanSourceName, WebcamPageLayoutName, ScannerState, ENV_EMULATE_SANDBOX, GST_SOURCE_NAME, GST_FLIP_FILTER_NAME, GST_SINK_NAME, GST_APP_SINK_NAME, SUPPORTED_DEVICE_SOURCES
+from .custom_types import WebcamDeviceInfo
 from .messages import WifiInfoMessage, IMAGE_GUIDE, parse_wifi_message
 from .ui import build_wifi_info_display, build_url_display
-from .prep import guess_mimetype
+from .prep import guess_mimetype, get_device_path
 
 
 log = Logger(__name__)
@@ -41,6 +43,7 @@ log = Logger(__name__)
 @Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/window.ui')
 class CoBangWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'CoBangWindow'
+    scanner_state = GObject.Property(type=int, default=0, nick='scanner-state')
 
     job_viewstack: Adw.ViewStack = Gtk.Template.Child()
     stackpage_scanner: Adw.ViewStackPage = Gtk.Template.Child()
@@ -62,10 +65,14 @@ class CoBangWindow(Adw.ApplicationWindow):
     scanner_page_multilayout: Adw.MultiLayoutView = Gtk.Template.Child()
     scanner_bottom_sheet: Adw.BottomSheet = Gtk.Template.Child()
     result_display_frame: Gtk.Frame = Gtk.Template.Child()
+    result_bin: Adw.Bin = Gtk.Template.Child()
     raw_result_display: Gtk.TextView = Gtk.Template.Child()
     raw_result_expander: Gtk.Expander = Gtk.Template.Child()
     portal_parent: Xdp.Parent
     gst_pipeline: Gst.Pipeline | None = None
+    dev_monitor: Gst.DeviceMonitor | None = None
+    webcam_store: Gio.ListStore = Gtk.Template.Child()
+    webcam_dropdown: Gtk.DropDown = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -75,6 +82,10 @@ class CoBangWindow(Adw.ApplicationWindow):
         action = Gio.SimpleAction.new('paste-image', None)
         self.add_action(action)
         action.connect('activate', self.on_paste_image)
+        if self.is_outside_sandbox:
+            self.dev_monitor = Gst.DeviceMonitor.new()
+            self.dev_monitor.add_filter('Video/Source', Gst.Caps.from_string('video/x-raw'))
+            log.debug('Device monitor: {}', self.dev_monitor)
 
     @property
     def portal(self) -> Xdp.Portal:
@@ -83,6 +94,10 @@ class CoBangWindow(Adw.ApplicationWindow):
         app = self.get_application()
         assert app is not None
         return cast('CoBangApplication', app).portal
+
+    @property
+    def is_outside_sandbox(self) -> bool:
+        return not self.portal.running_under_sandbox() and not os.getenv(ENV_EMULATE_SANDBOX)
 
     @property
     def zbar_scanner(self) -> zbar.ImageScanner:
@@ -127,6 +142,32 @@ class CoBangWindow(Adw.ApplicationWindow):
         return bool(value)
 
     @Gtk.Template.Callback()
+    def is_idle(self, wd: Self, value: int) -> bool:
+        return value == ScannerState.IDLE
+
+    @Gtk.Template.Callback()
+    def is_scanning(self, wd: Self, value: int) -> bool:
+        return value == ScannerState.SCANNING
+
+    @Gtk.Template.Callback()
+    def is_no_result(self, wd: Self, value: int) -> bool:
+        return value == ScannerState.NO_RESULT
+
+    @Gtk.Template.Callback()
+    def has_scanning_result(self, wd: Self, value: int) -> bool:
+        return value > ScannerState.NO_RESULT
+
+    @Gtk.Template.Callback()
+    def scanning_result_title(self, wd: Self, value: int) -> str:
+        if value == ScannerState.WIFI_FOUND:
+            return _('Found a wifi configuration')
+        if value == ScannerState.URL_FOUND:
+            return _('Found a URL. Click to open:')
+        if value == ScannerState.TEXT_FOUND:
+            return _('Found unrecognized text.')
+        return _('Unknown')
+
+    @Gtk.Template.Callback()
     def passed_image_name(self, wd: Self, file: Gio.File | None) -> str:
         return file.get_basename() if file else ''
 
@@ -161,9 +202,10 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_btn_pause_toggled(self, button: Gtk.ToggleButton):
+        to_pause = button.get_active()
+        self.scanner_state = ScannerState.IDLE if to_pause else ScannerState.SCANNING
         if not self.gst_pipeline:
             return
-        to_pause = button.get_active()
         if to_pause:
             app_sink = self.gst_pipeline.get_by_name(GST_APP_SINK_NAME)
             app_sink.set_emit_signals(False)
@@ -172,7 +214,8 @@ class CoBangWindow(Adw.ApplicationWindow):
             return
         # There is issue with the pipewiresrc when changing from PAUSED to PLAYING.
         # So we stop the video and play again.
-        self.stop_webcam()
+        if not self.is_outside_sandbox:
+            self.stop_webcam()
         self.play_webcam()
         app_sink = self.gst_pipeline.get_by_name(GST_APP_SINK_NAME)
         app_sink.set_emit_signals(True)
@@ -197,12 +240,46 @@ class CoBangWindow(Adw.ApplicationWindow):
         dlg.open(self, None, self.cb_file_dialog)
 
     @Gtk.Template.Callback()
+    def on_webcam_device_selected(self, dropdown: Gtk.DropDown, *args):
+        log.debug('Args: {}', args)
+        item = dropdown.get_selected_item()
+        assert isinstance(item, WebcamDeviceInfo)
+        log.info('Selected device: {}', item)
+        if self.scan_source_viewstack.get_visible_child_name() != ScanSourceName.WEBCAM:
+            return
+        if not self.gst_pipeline:
+            pipeline = self.build_gstreamer_pipeline_direct_access(item.path)
+            if not pipeline:
+                return
+            self.attach_gstreamer_sink_to_window(pipeline)
+            if not self.btn_pause.get_active():
+                self.play_webcam()
+                self.scanner_state = ScannerState.SCANNING
+            self.enable_webcam_consumption(pipeline)
+        if not self.gst_pipeline:
+            return
+        # Stop the pipeline before changing the device.
+        self.disable_webcam_consumption(self.gst_pipeline)
+        self.stop_webcam()
+        # Set the new device path.
+        source = self.gst_pipeline.get_by_name(GST_SOURCE_NAME)
+        source.set_property('device', item.path)
+        # Restart the pipeline.
+        self.play_webcam()
+        self.enable_webcam_consumption(self.gst_pipeline)
+
+    @Gtk.Template.Callback()
     def on_shown(self, *args):
         scan_source = self.scan_source_viewstack.get_visible_child_name()
         log.info('Scan source: {}', scan_source)
         if scan_source != ScanSourceName.WEBCAM:
             return
-        GLib.timeout_add_seconds(1, self.request_camera_access)
+        if not self.is_outside_sandbox:
+            # In sandbox, we need to request camera access.
+            self.request_camera_access()
+        # Outside sandbox, we can access the webcam directly.
+        else:
+            self.discover_webcam()
 
     @Gtk.Template.Callback()
     def on_image_drop_target_accept(self, target: Gtk.DropTargetAsync, drop: Gdk.Drop):
@@ -235,6 +312,7 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.attach_gstreamer_sink_to_window(pipeline)
         if not self.btn_pause.get_active():
             self.play_webcam()
+            self.scanner_state = ScannerState.SCANNING
         self.enable_webcam_consumption(pipeline)
 
     def request_camera_access(self):
@@ -251,6 +329,27 @@ class CoBangWindow(Adw.ApplicationWindow):
             None,
             self.cb_camera_access_request,
         )
+
+    def discover_webcam(self):
+        devices = self.dev_monitor.get_devices() or []
+        for d in devices:
+            log.debug('Found device {}', d.get_path_string())
+            device_path, src_type = get_device_path(d)
+            device_name = d.get_display_name()
+            if not device_name or src_type not in SUPPORTED_DEVICE_SOURCES:
+                log.info('Unsupported device: {} {}', src_type, d.get_path_string())
+                continue
+            self.webcam_store.append(WebcamDeviceInfo(path=device_path, name=device_name))
+            log.debug('Added device {}', device_path)
+        # If found any device, set the first one as selected.
+        if next(iter(self.webcam_store), None):
+            self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.AVAILABLE)
+            self.webcam_dropdown.set_selected(0)
+        # Continue to monitor for new devices.
+        bus = self.dev_monitor.get_bus()
+        bus.add_watch(GLib.PRIORITY_DEFAULT, self.on_device_monitor_message, None)
+        log.debug('Start device monitoring')
+        self.dev_monitor.start()
 
     def build_gstreamer_pipeline(self, webcam_fd: int) -> Gst.Pipeline | None:
         # Note: Setting custom name for gtk4paintablesink does not work.
@@ -271,6 +370,24 @@ class CoBangWindow(Adw.ApplicationWindow):
         log.debug('Pipeline built: {}', pipeline)
         return pipeline
 
+    def build_gstreamer_pipeline_direct_access(self, video_path: str) -> Gst.Pipeline | None:
+        """Build GStreamer Pipeline to access webcam directly (via V4L2), when running outside sandbox."""
+        flip_method = 'horizontal-flip' if self.mirror_switch.get_active() else 'none'
+        cmd = (f'v4l2src name={GST_SOURCE_NAME} device={video_path} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
+               'queue ! videoscale ! '
+               f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin '
+               't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
+               f'appsink name={GST_APP_SINK_NAME} max_buffers=2 drop=1')
+        log.info('To build pipeline: {}', cmd)
+        try:
+            pipeline = cast(Gst.Pipeline, Gst.parse_launch(cmd))
+        except GLib.Error as e:
+            log.error('Failed to build pipeline: {}', e)
+            self.gst_pipeline = None
+            return None
+        log.debug('Pipeline built: {}', pipeline)
+        return pipeline
+
     def attach_gstreamer_sink_to_window(self, pipeline: Gst.Pipeline):
         sinkbin = pipeline.get_by_name('sink_bin')
         if not sinkbin:
@@ -286,9 +403,11 @@ class CoBangWindow(Adw.ApplicationWindow):
         log.info('Playing webcam')
         if self.gst_pipeline:
             self.gst_pipeline.set_state(Gst.State.PLAYING)
+            self.scanner_state = ScannerState.SCANNING
 
     def stop_webcam(self):
         log.info('Stopping webcam')
+        self.scanner_state = ScannerState.IDLE
         if self.gst_pipeline:
             self.gst_pipeline.set_state(Gst.State.NULL)
 
@@ -357,6 +476,35 @@ class CoBangWindow(Adw.ApplicationWindow):
         log.debug('Clipboard formats: {}', fmt.get_gtypes())
         # Try reading texture first.
         clipboard.read_texture_async(None, self.cb_texture_read_from_clipboard)
+
+    def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data: Any) -> bool:
+        # A private GstV4l2Device or GstPipeWireDevice type
+        if message.type == Gst.MessageType.DEVICE_ADDED:
+            added_dev = message.parse_device_added()
+            log.debug('Added: {}', added_dev)
+            cam_path, src_type = get_device_path(added_dev)
+            cam_name = added_dev.get_display_name()
+            if not cam_path or src_type not in SUPPORTED_DEVICE_SOURCES:
+                log.info('Unsupported device: {} {}', src_type, added_dev.get_path_string())
+                return True
+            # Check if this cam already in the list, add to list if not.
+            found, _pos = self.webcam_store.find_with_equal_func_full(None, lambda i, _j: i[0] == cam_path)
+            if not found:
+                self.webcam_store.append(WebcamDeviceInfo(path=cam_path, name=cam_name))
+            return True
+        elif message.type == Gst.MessageType.DEVICE_REMOVED:
+            removed_dev = message.parse_device_removed()
+            log.debug('Removed: {}', removed_dev)
+            cam_path, src_type = get_device_path(removed_dev)
+            ppl_source = self.gst_pipeline.get_by_name(GST_SOURCE_NAME)
+            if cam_path == ppl_source.get_property('device') or cam_path == ppl_source.get_property('path'):
+                self.gst_pipeline.set_state(Gst.State.NULL)
+            # Find the entry of just-removed in the list and remove it.
+            found, pos = self.webcam_store.find_with_equal_func_full(None, lambda i, _j: i[0] == cam_path)
+            if found:
+                log.debug('To remove {} from list', cam_path)
+                self.webcam_store.remove(pos)
+        return True
 
     def cb_texture_read_from_clipboard(self, clipboard: Gdk.Clipboard, result: Gio.AsyncResult):
         try:
@@ -441,7 +589,7 @@ class CoBangWindow(Adw.ApplicationWindow):
             return
         img_file = io.BytesIO(img_bytes)
         rgb_img = Image.open(img_file)
-        # ZBar needs grayscale image, the Gdk.Paintable is RGBA, 
+        # ZBar needs grayscale image, the Gdk.Paintable is RGBA,
         # we need to convert it to grayscale, replacing transparency with white.
         # Because the source image can have alpha channel, we need to convert it to LA.
         grayscale = rgb_img.convert('LA')
@@ -483,23 +631,27 @@ class CoBangWindow(Adw.ApplicationWindow):
             return
         # Non-welknown QR code. Just display the raw data.
         log.info('Unknown QR code. Display raw data.')
+        self.scanner_state = ScannerState.TEXT_FOUND
         self.raw_result_expander.set_expanded(True)
         self.scanner_bottom_sheet.set_open(True)
 
     def display_wifi(self, wifi: WifiInfoMessage):
         log.debug('Displaying wifi info: {}', wifi)
         box = build_wifi_info_display(wifi, self.nm_client)
-        self.result_display_frame.set_child(box)
+        self.result_bin.set_child(box)
+        self.scanner_state = ScannerState.WIFI_FOUND
 
     def display_url(self, url: SplitResult):
         log.debug('Displaying URL: {}', url)
         box = build_url_display(url)
-        self.result_display_frame.set_child(box)
+        self.result_bin.set_child(box)
+        self.scanner_state = ScannerState.URL_FOUND
 
     def reset_result(self):
         log.info('Reset result display')
+        self.scanner_state = ScannerState.IDLE
         buffer = self.raw_result_display.get_buffer()
         buffer.set_text('')
-        self.result_display_frame.set_child(None)
+        self.result_bin.set_child(None)
         self.pasted_image.set_visible(False)
         self.pasted_image.set_file(None)

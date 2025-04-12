@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using Adw 1;
+using Gio 2.0;
 
 template $CoBangWindow: Adw.ApplicationWindow {
   title: _("CoBang: QR scanner for Linux");
@@ -13,6 +14,12 @@ template $CoBangWindow: Adw.ApplicationWindow {
       job_toggler_box.visible: true;
       toolbarview_scanner.hexpand: false;
       scanner_page_multilayout.layout-name: 'bottom-sheet';
+      box_webcam_settings.orientation: vertical;
+      box_mirror.halign: fill;
+      box_mirror.valign: start;
+      box_webcam_selector.halign: fill;
+      box_webcam_selector.hexpand: false;
+      label_webcam_selector.hexpand: true;
     }
   }
 
@@ -41,7 +48,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
           ]
 
           ToggleButton toggle_scanner {
-            icon-name: 'seeing-symbolic';
+            icon-name: 'view-reveal-symbolic';
             tooltip-text: _("Scanner");
             active: bind $in_scanner_mode(job_viewstack.visible-child-name) as <bool>;
             toggled => $switch_to_scanner();
@@ -84,11 +91,14 @@ template $CoBangWindow: Adw.ApplicationWindow {
           child: Adw.MultiLayoutView scanner_page_multilayout {
             Adw.Layout {
               name: 'sidebar';
+
               content: Adw.OverlaySplitView {
                 sidebar-position: end;
+
                 Adw.LayoutSlot {
                   id: 'primary';
                 }
+
                 [sidebar]
                 Adw.LayoutSlot {
                   id: 'secondary';
@@ -98,16 +108,20 @@ template $CoBangWindow: Adw.ApplicationWindow {
 
             Adw.Layout {
               name: 'bottom-sheet';
+
               content: Adw.BottomSheet scanner_bottom_sheet {
                 open: true;
+
                 Adw.LayoutSlot {
                   id: 'primary';
                   margin-bottom: bind scanner_bottom_sheet.bottom-bar-height as <int>;
                 }
+
                 [sheet]
                 Adw.LayoutSlot {
                   id: 'secondary';
                 }
+
                 [bottom-bar]
                 Button btn_show_result {
                   label: _("Show result");
@@ -118,7 +132,6 @@ template $CoBangWindow: Adw.ApplicationWindow {
                   clicked => $on_btn_show_result_clicked();
                 }
               };
-
             }
 
             [primary]
@@ -136,11 +149,12 @@ template $CoBangWindow: Adw.ApplicationWindow {
                   icon-name: 'camera-web-symbolic';
 
                   child: Adw.MultiLayoutView webcam_multilayout {
-
                     Adw.Layout {
                       name: 'webcam-requesting';
+
                       content: Box status_page_webcam_requesting {
                         orientation: vertical;
+
                         Image {
                           icon-name: 'edit-find-symbolic';
                           pixel-size: 128;
@@ -165,7 +179,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
 
                       content: Box webcam_page {
                         orientation: vertical;
-                        spacing: 4;
+                        spacing: 8;
 
                         Image {
                           icon-name: 'camera-web-symbolic';
@@ -213,18 +227,59 @@ template $CoBangWindow: Adw.ApplicationWindow {
                           }
                         }
 
-                        Box {
+                        Box box_webcam_settings {
                           orientation: horizontal;
                           spacing: 4;
-                          visible: bind $has_some(webcam_display.paintable) as <bool>;
+                          margin-start: 4;
+                          margin-end: 4;
 
-                          Label {
-                            label: _("Mirror");
+                          Box box_webcam_selector {
+                            orientation: horizontal;
+                            visible: bind $has_some(webcam_store.n-items) as <bool>;
+                            hexpand: true;
+                            spacing: 4;
+
+                            Label label_webcam_selector {
+                              label: _("Webcam");
+                              halign: start;
+                            }
+
+                            DropDown webcam_dropdown {
+                              margin-bottom: 4;
+
+                              model: SingleSelection {
+                                model: webcam_store;
+                              };
+
+                              factory: BuilderListItemFactory {
+                                template ListItem {
+                                  child: Label {
+                                    label: bind template.item as <$WebcamDeviceInfo>.name;
+                                    ellipsize: middle;
+                                  };
+                                }
+                              };
+
+                              notify::selected => $on_webcam_device_selected();
+                            }
                           }
 
-                          Switch mirror_switch {
-                            active: true;
-                            notify::active => $on_mirror_switch_toggled();
+                          Box box_mirror {
+                            orientation: horizontal;
+                            spacing: 4;
+                            valign: center;
+                            halign: end;
+                            visible: bind $has_some(webcam_display.paintable) as <bool>;
+
+                            Label label_mirror {
+                              label: _("Mirror");
+                              halign: start;
+                            }
+
+                            Switch mirror_switch {
+                              active: true;
+                              notify::active => $on_mirror_switch_toggled();
+                            }
                           }
                         }
                       };
@@ -340,9 +395,54 @@ template $CoBangWindow: Adw.ApplicationWindow {
               margin-start: 4;
 
               Frame result_display_frame {
-                label: _("Result");
                 width-request: 212;
                 vexpand: true;
+
+                Box {
+                  orientation: vertical;
+                  margin-top: 12;
+
+                  Label {
+                    label: _("Please open webcam or choose an image.");
+                    selectable: true;
+                    wrap: true;
+                    margin-start: 4;
+                    margin-end: 4;
+                    visible: bind $is_idle(template.scanner-state) as <bool>;
+                  }
+
+                  Box {
+                    orientation: vertical;
+                    spacing: 4;
+                    visible: bind $is_scanning(template.scanner-state) as <bool>;
+
+                    Label {
+                      label: _("Scanning...");
+                    }
+
+                    Image {
+                      icon-name: 'system-search-symbolic';
+                      pixel-size: 64;
+                    }
+                  }
+
+                  Label {
+                    label: _("No result found.");
+                    selectable: true;
+                    visible: bind $is_no_result(template.scanner-state) as <bool>;
+                  }
+
+                  Label {
+                    label: bind $scanning_result_title(template.scanner-state) as <string>;
+                    selectable: true;
+                    opacity: 0.8;
+                    visible: bind $has_scanning_result(template.scanner-state) as <bool>;
+                  }
+
+                  Adw.Bin result_bin {
+                    visible: bind $has_scanning_result(template.scanner-state) as <bool>;
+                  }
+                }
               }
 
               Expander raw_result_expander {
@@ -416,4 +516,8 @@ FileFilter file_filter {
     'image/webp',
     'image/gif',
   ]
+}
+
+Gio.ListStore webcam_store {
+  item-type: typeof<$WebcamDeviceInfo>;
 }
