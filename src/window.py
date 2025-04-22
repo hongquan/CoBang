@@ -19,7 +19,7 @@
 
 import io
 import os
-from gettext import gettext as _
+import gettext
 from urllib.parse import urlsplit, SplitResult
 from typing import TYPE_CHECKING, Self, Any, cast
 
