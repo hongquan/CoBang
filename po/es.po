@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-12 16:12+0700\n"
-"PO-Revision-Date: 2025-01-04 16:11-0300\n"
+"PO-Revision-Date: 2025-04-21 23:49-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -19,18 +19,16 @@ msgstr ""
 "X-Generator: Poedit 3.4.4\n"
 
 #: src/help-overlay.blp:11
-#, fuzzy
 msgctxt "shortcut window"
 msgid "General"
-msgstr "Generoso"
+msgstr "General"
 
 #: src/help-overlay.blp:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
-msgstr ""
+msgstr "Mostrar accesos directos"
 
 #: src/help-overlay.blp:19
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Salir"
@@ -49,7 +47,7 @@ msgstr "Guardar"
 
 #: src/wifi-display.blp:58
 msgid "After saved, NetworkManager will connect automatically if in range."
-msgstr ""
+msgstr "Una vez guardado, NetworkManager se conectará automáticamente si está dentro del alcance."
 
 #: src/window.blp:6
 msgid "CoBang: QR scanner for Linux"
@@ -57,21 +55,19 @@ msgstr "CoBang: Escáner QR para Linux"
 
 #: src/window.blp:52 src/window.blp:88
 msgid "Scanner"
-msgstr ""
+msgstr "Escáner"
 
 #: src/window.blp:59 src/window.blp:484 src/window.blp:488
-#, fuzzy
 msgid "Generator"
-msgstr "Generoso"
+msgstr "Generador"
 
 #: src/window.blp:70
 msgid "Main Menu"
-msgstr ""
+msgstr "Menú principal"
 
 #: src/window.blp:127
-#, fuzzy
 msgid "Show result"
-msgstr "Resultado bruto"
+msgstr "Mostrar resultado"
 
 #: src/window.blp:148 src/window.blp:171 src/window.blp:243
 msgid "Webcam"
@@ -79,7 +75,7 @@ msgstr "Cámara web"
 
 #: src/window.blp:173
 msgid "No webcam detected."
-msgstr ""
+msgstr "No se ha detectado ninguna cámara web."
 
 #: src/window.blp:208
 msgid "Play"
@@ -98,21 +94,20 @@ msgid "Image"
 msgstr "Imagen"
 
 #: src/window.blp:364
-#, fuzzy
 msgid "Choose an image"
-msgstr "Seleccione un archivo de imagen"
+msgstr "Seleccione una imagen"
 
 #: src/window.blp:406
 msgid "Please open webcam or choose an image."
-msgstr ""
+msgstr "Por favor, abra la webcam o elija una imagen."
 
 #: src/window.blp:420
 msgid "Scanning..."
-msgstr ""
+msgstr "Escaneando..."
 
 #: src/window.blp:430
 msgid "No result found."
-msgstr ""
+msgstr "No se ha encontrado ningún resultado."
 
 #: src/window.blp:452
 msgid "Raw result"
@@ -124,20 +119,19 @@ msgstr "Copiar"
 
 #: src/window.blp:489
 msgid "Will be available in next versions..."
-msgstr ""
+msgstr "Estará disponible en próximas versiones..."
 
 #: src/window.blp:500
 msgid "_Keyboard Shortcuts"
-msgstr ""
+msgstr "_Atajos de teclado"
 
 #: src/window.blp:505
-#, fuzzy
 msgid "_About"
-msgstr "Acerca de"
+msgstr "_Acerca de"
 
 #: src/app.py:51
 msgid "Support the developer"
-msgstr ""
+msgstr "Apoyar al desarrollador"
 
 #: src/app.py:52
 #, python-format
@@ -145,6 +139,8 @@ msgid ""
 "QR code / barcode scanner for Linux.\n"
 "%(donate_link)s"
 msgstr ""
+"Código QR / escáner de código de barras para Linux.\n"
+"%(donate_link)s"
 
 #. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
 #: src/messages.py:23
@@ -183,16 +179,15 @@ msgstr "URL encontrada. Haga clic para abrir:"
 
 #: src/window.py:167
 msgid "Found unrecognized text."
-msgstr ""
+msgstr "Se ha encontrado un texto no reconocido."
 
 #: src/window.py:168
 msgid "Unknown"
-msgstr ""
+msgstr "Desconocido"
 
 #: src/window.py:234
-#, fuzzy
 msgid "Copied!"
-msgstr "Copiado"
+msgstr "¡Copiado!"
 
 #~ msgid "Result"
 #~ msgstr "Resultado"
