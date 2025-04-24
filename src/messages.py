@@ -1,6 +1,6 @@
 from enum import StrEnum
 from dataclasses import dataclass
-import gettext
+from gettext import gettext as _
 
 
 class WifiAuthType(StrEnum):
