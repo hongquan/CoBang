@@ -266,3 +266,4 @@ Credit
 .. _lucide_license: https://lucide.dev/license
 .. _nu: https://www.nushell.sh/
 .. _xdg-desktop-portal: https://flatpak.github.io/xdg-desktop-portal/
+.. 
