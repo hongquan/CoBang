@@ -33,7 +33,6 @@ sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 locale.bindtextdomain('cobang', localedir)
 locale.textdomain('cobang')
-gettext.install('cobang', localedir)
 
 if __name__ == '__main__':
     import gi

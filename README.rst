@@ -253,7 +253,7 @@ Credit
 .. _PyPI: https://pypi.org/
 .. _PPA: https://launchpad.net/~ng-hong-quan/+archive/ubuntu/ppa
 .. _AUR: https://aur.archlinux.org/packages/cobang/
-.. _COPR: https://copr.fedorainfracloud.org/coprs/xoloitzcuintle/CoBang/
+.. _COPR: https://copr.fedorainfracloud.org/coprs/nunodias/CoBang/
 .. _KDE: https://kde.org/
 .. _Xfce: https://www.xfce.org/
 .. _LxQt: https://lxqt.github.io/
@@ -266,3 +266,4 @@ Credit
 .. _lucide_license: https://lucide.dev/license
 .. _nu: https://www.nushell.sh/
 .. _xdg-desktop-portal: https://flatpak.github.io/xdg-desktop-portal/
+.. 
