@@ -372,7 +372,7 @@ class CoBangWindow(Adw.ApplicationWindow):
         source_desc_parts = [
             src_type,
             f'name={GST_SOURCE_NAME}',
-            f'device={video_path}' if src_type == DeviceSourceType.V4L2 else 'target-object={video_path}',
+            f'device={video_path}' if src_type == DeviceSourceType.V4L2 else f'target-object={video_path}',
         ]
         source_desc = ' '.join(source_desc_parts)
         cmd = (f'{source_desc} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
