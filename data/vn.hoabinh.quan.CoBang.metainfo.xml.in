@@ -42,6 +42,11 @@
   </kudos>
 
   <releases>
+    <release version="1.7.0" date="2025-05-24" urgency="medium">
+      <description translate="no">
+        <p>Support Pipewire Source device for direct access.</p>
+      </description>
+    </release>
     <release version="1.6.2" date="2025-04-25" urgency="medium">
       <description translate="no">
         <p>Fix: Some translations were not loaded.</p>

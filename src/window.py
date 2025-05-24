@@ -29,7 +29,7 @@ from PIL import Image
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Gst, GstApp, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
 from gi.repository import XdpGtk4  # pyright: ignore[reportMissingModuleSource]
 
-from .consts import JobName, ScanSourceName, WebcamPageLayoutName, ScannerState, ENV_EMULATE_SANDBOX, GST_SOURCE_NAME, GST_FLIP_FILTER_NAME, GST_SINK_NAME, GST_APP_SINK_NAME, SUPPORTED_DEVICE_SOURCES
+from .consts import JobName, ScanSourceName, WebcamPageLayoutName, ScannerState, DeviceSourceType, ENV_EMULATE_SANDBOX, GST_SOURCE_NAME, GST_FLIP_FILTER_NAME, GST_SINK_NAME, GST_APP_SINK_NAME
 from .custom_types import WebcamDeviceInfo
 from .messages import WifiInfoMessage, IMAGE_GUIDE, parse_wifi_message
 from .ui import build_wifi_info_display, build_url_display
@@ -241,32 +241,25 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_webcam_device_selected(self, dropdown: Gtk.DropDown, *args):
-        log.debug('Args: {}', args)
+        log.debug('on_webcam_device_selected args: {}', args)
         item = dropdown.get_selected_item()
         assert isinstance(item, WebcamDeviceInfo)
         log.info('Selected device: {}', item)
         if self.scan_source_viewstack.get_visible_child_name() != ScanSourceName.WEBCAM:
             return
-        if not self.gst_pipeline:
-            pipeline = self.build_gstreamer_pipeline_direct_access(item.path)
-            if not pipeline:
-                return
-            self.attach_gstreamer_sink_to_window(pipeline)
-            if not self.btn_pause.get_active():
-                self.play_webcam()
-                self.scanner_state = ScannerState.SCANNING
-            self.enable_webcam_consumption(pipeline)
-        if not self.gst_pipeline:
+        # Destroy the old pipeline if any.
+        if self.gst_pipeline:
+            self.gst_pipeline.set_state(Gst.State.NULL)
+            self.gst_pipeline = None
+        # Build a new pipeline.
+        pipeline = self.build_gstreamer_pipeline_direct_access(item.source_type, item.path)
+        if not pipeline:
             return
-        # Stop the pipeline before changing the device.
-        self.disable_webcam_consumption(self.gst_pipeline)
-        self.stop_webcam()
-        # Set the new device path.
-        source = self.gst_pipeline.get_by_name(GST_SOURCE_NAME)
-        source.set_property('device', item.path)
-        # Restart the pipeline.
-        self.play_webcam()
-        self.enable_webcam_consumption(self.gst_pipeline)
+        self.attach_gstreamer_sink_to_window(pipeline)
+        if not self.btn_pause.get_active():
+            self.play_webcam()
+            self.scanner_state = ScannerState.SCANNING
+        self.enable_webcam_consumption(pipeline)
 
     @Gtk.Template.Callback()
     def on_shown(self, *args):
@@ -336,10 +329,10 @@ class CoBangWindow(Adw.ApplicationWindow):
             log.debug('Found device {}', d.get_path_string())
             device_path, src_type = get_device_path(d)
             device_name = d.get_display_name()
-            if not device_name or src_type not in SUPPORTED_DEVICE_SOURCES:
+            if not device_name or src_type not in DeviceSourceType:
                 log.info('Unsupported device: {} {}', src_type, d.get_path_string())
                 continue
-            self.webcam_store.append(WebcamDeviceInfo(path=device_path, name=device_name))
+            self.webcam_store.append(WebcamDeviceInfo(source_type=src_type, path=device_path, name=device_name))
             log.debug('Added device {}', device_path)
         # If found any device, set the first one as selected.
         if next(iter(self.webcam_store), None):
@@ -370,10 +363,19 @@ class CoBangWindow(Adw.ApplicationWindow):
         log.debug('Pipeline built: {}', pipeline)
         return pipeline
 
-    def build_gstreamer_pipeline_direct_access(self, video_path: str) -> Gst.Pipeline | None:
+    # Ref:
+    # - For pipewiresrc: https://github.com/PipeWire/pipewire/blob/1.2.4/src/gst/gstpipewiresrc.c
+    # - gstpipewiredeviceprovider: https://github.com/PipeWire/pipewire/blob/1.2.4/src/gst/gstpipewiredeviceprovider.c
+    def build_gstreamer_pipeline_direct_access(self, src_type: DeviceSourceType, video_path: str) -> Gst.Pipeline | None:
         """Build GStreamer Pipeline to access webcam directly (via V4L2), when running outside sandbox."""
         flip_method = 'horizontal-flip' if self.mirror_switch.get_active() else 'none'
-        cmd = (f'v4l2src name={GST_SOURCE_NAME} device={video_path} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
+        source_desc_parts = [
+            src_type,
+            f'name={GST_SOURCE_NAME}',
+            f'device={video_path}' if src_type == DeviceSourceType.V4L2 else 'target-object={video_path}',
+        ]
+        source_desc = ' '.join(source_desc_parts)
+        cmd = (f'{source_desc} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
                'queue ! videoscale ! '
                f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin '
                't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
@@ -481,29 +483,35 @@ class CoBangWindow(Adw.ApplicationWindow):
         # A private GstV4l2Device or GstPipeWireDevice type
         if message.type == Gst.MessageType.DEVICE_ADDED:
             added_dev = message.parse_device_added()
-            log.debug('Added: {}', added_dev)
+            log.debug('Detected device: {}', added_dev)
             cam_path, src_type = get_device_path(added_dev)
             cam_name = added_dev.get_display_name()
-            if not cam_path or src_type not in SUPPORTED_DEVICE_SOURCES:
+            if not cam_path or src_type not in DeviceSourceType:
                 log.info('Unsupported device: {} {}', src_type, added_dev.get_path_string())
                 return True
             # Check if this cam already in the list, add to list if not.
-            found, _pos = self.webcam_store.find_with_equal_func_full(None, lambda i, _j: i[0] == cam_path)
+            found = any(True for d in self.webcam_store if d.path == cam_path)
             if not found:
-                self.webcam_store.append(WebcamDeviceInfo(path=cam_path, name=cam_name))
+                self.webcam_store.append(WebcamDeviceInfo(source_type=src_type, path=cam_path, name=cam_name))
+                log.debug('{} was not in the store. Added.', cam_path)
             return True
         elif message.type == Gst.MessageType.DEVICE_REMOVED:
             removed_dev = message.parse_device_removed()
             log.debug('Removed: {}', removed_dev)
             cam_path, src_type = get_device_path(removed_dev)
+            if not cam_path or src_type not in DeviceSourceType:
+                log.info('Unsupported device: {} {}', src_type, removed_dev.get_path_string())
+                return True
             ppl_source = self.gst_pipeline.get_by_name(GST_SOURCE_NAME)
-            if cam_path == ppl_source.get_property('device') or cam_path == ppl_source.get_property('path'):
+            if cam_path == ppl_source.get_property('device') or cam_path == ppl_source.get_property('target-object'):
                 self.gst_pipeline.set_state(Gst.State.NULL)
             # Find the entry of just-removed in the list and remove it.
-            found, pos = self.webcam_store.find_with_equal_func_full(None, lambda i, _j: i[0] == cam_path)
-            if found:
+            try:
+                pos = next(i for i, d in enumerate(self.webcam_store) if d.path == cam_path)
                 log.debug('To remove {} from list', cam_path)
                 self.webcam_store.remove(pos)
+            except StopIteration:
+                pass
         return True
 
     def cb_texture_read_from_clipboard(self, clipboard: Gdk.Clipboard, result: Gio.AsyncResult):
