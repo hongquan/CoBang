@@ -1,3 +1,9 @@
+cobang (1.7.0-1) oracular; urgency=medium
+
+  * Support Pipewire Source device for direct access.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 24 May 2025 16:59:02 +0700
+
 cobang (1.6.2-1) oracular; urgency=medium
 
   * Fix: Some translations were not loaded.
