@@ -1,4 +1,3 @@
-import io
 
 from logbook import Logger
 from gi.repository import Gio, Gst  # pyright: ignore[reportMissingModuleSource]
@@ -22,10 +21,10 @@ def get_device_path(device: Gst.Device) -> tuple[str, str]:
     # so we have to access its "device.path" in general GStreamer way
     if type_name == 'GstPipeWireDevice':
         properties = device.get_properties()
-        path = properties['device.path']
-        if not path:
-            path = properties['api.v4l2.path']
-        return path, 'pipewiresrc'
+        log.info('GstPipeWireDevice properties: {}', properties)
+        serial = device.get_property('serial')
+        log.info('GstPipeWireDevice serial: {}', serial)
+        return str(serial), 'pipewiresrc'
 
     if type_name == 'GstV4l2Device':
         return device.get_property('device_path'), 'v4l2src'
