@@ -29,7 +29,18 @@ from PIL import Image
 from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Gst, GstApp, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
 from gi.repository import XdpGtk4  # pyright: ignore[reportMissingModuleSource]
 
-from .consts import JobName, ScanSourceName, WebcamPageLayoutName, ScannerState, DeviceSourceType, ENV_EMULATE_SANDBOX, GST_SOURCE_NAME, GST_FLIP_FILTER_NAME, GST_SINK_NAME, GST_APP_SINK_NAME
+from .consts import (
+    JobName,
+    ScanSourceName,
+    WebcamPageLayoutName,
+    ScannerState,
+    DeviceSourceType,
+    ENV_EMULATE_SANDBOX,
+    GST_SOURCE_NAME,
+    GST_FLIP_FILTER_NAME,
+    GST_SINK_NAME,
+    GST_APP_SINK_NAME,
+)
 from .custom_types import WebcamDeviceInfo
 from .messages import WifiInfoMessage, IMAGE_GUIDE, parse_wifi_message
 from .ui import build_wifi_info_display, build_url_display
@@ -125,7 +136,10 @@ class CoBangWindow(Adw.ApplicationWindow):
         if not self.gst_pipeline:
             self.request_camera_access()
             return
-        if not self.btn_pause.get_active() and self.scan_source_viewstack.get_visible_child_name() == ScanSourceName.WEBCAM:
+        if (
+            not self.btn_pause.get_active()
+            and self.scan_source_viewstack.get_visible_child_name() == ScanSourceName.WEBCAM
+        ):
             self.play_webcam()
 
     @Gtk.Template.Callback()
@@ -214,7 +228,8 @@ class CoBangWindow(Adw.ApplicationWindow):
             return
         # There is issue with the pipewiresrc when changing from PAUSED to PLAYING.
         # So we stop the video and play again.
-        if not self.is_outside_sandbox:
+        source = self.gst_pipeline.get_by_name(GST_SOURCE_NAME)
+        if source and source.__class__.__name__ == 'GstPipeWireSrc':
             self.stop_webcam()
         self.play_webcam()
         app_sink = self.gst_pipeline.get_by_name(GST_APP_SINK_NAME)
@@ -241,7 +256,7 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_webcam_device_selected(self, dropdown: Gtk.DropDown, *args):
-        log.debug('on_webcam_device_selected args: {}', args)
+        log.debug('Extra args for camera_dropdown callback: {}', args)
         item = dropdown.get_selected_item()
         assert isinstance(item, WebcamDeviceInfo)
         log.info('Selected device: {}', item)
@@ -250,16 +265,21 @@ class CoBangWindow(Adw.ApplicationWindow):
         # Destroy the old pipeline if any.
         if self.gst_pipeline:
             self.gst_pipeline.set_state(Gst.State.NULL)
+            self.detach_gstreamer_sink()
             self.gst_pipeline = None
         # Build a new pipeline.
-        pipeline = self.build_gstreamer_pipeline_direct_access(item.source_type, item.path)
+        pipeline = self.build_gstreamer_pipeline(item.source_type, item.path)
         if not pipeline:
             return
         self.attach_gstreamer_sink_to_window(pipeline)
-        if not self.btn_pause.get_active():
-            self.play_webcam()
-            self.scanner_state = ScannerState.SCANNING
-        self.enable_webcam_consumption(pipeline)
+        if item.source_type == DeviceSourceType.PIPEWIRE:
+            self.stop_webcam()
+            GLib.idle_add(self.play_webcam_and_enable_consumption_late, priority=GLib.PRIORITY_LOW)
+        else:
+            if not self.btn_pause.get_active():
+                self.play_webcam()
+                self.scanner_state = ScannerState.SCANNING
+            self.enable_webcam_consumption(pipeline)
 
     @Gtk.Template.Callback()
     def on_shown(self, *args):
@@ -282,7 +302,12 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_image_dropped(self, target: Gtk.DropTargetAsync, drop: Gdk.Drop, x: float, y: float):
-        drop.read_value_async(Gio.File, GObject.PRIORITY_DEFAULT_IDLE, None, self.cb_file_read_from_drag_n_drop)
+        drop.read_value_async(
+            Gio.File,
+            GObject.PRIORITY_DEFAULT_IDLE,
+            None,
+            self.cb_file_read_from_drag_n_drop,
+        )
         return True
 
     def cb_camera_access_request(self, portal: Xdp.Portal, result: Gio.AsyncResult):
@@ -299,7 +324,7 @@ class CoBangWindow(Adw.ApplicationWindow):
         # Ref: https://github.com/workbenchdev/demos/blob/main/src/Camera/main.py#L33
         video_fd = portal.open_pipewire_remote_for_camera()
         log.info('Pipewire remote fd: {}', video_fd)
-        pipeline = self.build_gstreamer_pipeline(video_fd)
+        pipeline = self.build_gstreamer_pipeline_in_sandbox(video_fd)
         if not pipeline:
             return
         self.attach_gstreamer_sink_to_window(pipeline)
@@ -333,7 +358,7 @@ class CoBangWindow(Adw.ApplicationWindow):
                 log.info('Unsupported device: {} {}', src_type, d.get_path_string())
                 continue
             self.webcam_store.append(WebcamDeviceInfo(source_type=src_type, path=device_path, name=device_name))
-            log.debug('Added device {}', device_path)
+            log.debug('Added {} ({}) to webcam_store.', src_type, device_path)
         # If found any device, set the first one as selected.
         if next(iter(self.webcam_store), None):
             self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.AVAILABLE)
@@ -341,17 +366,19 @@ class CoBangWindow(Adw.ApplicationWindow):
         # Continue to monitor for new devices.
         bus = self.dev_monitor.get_bus()
         bus.add_watch(GLib.PRIORITY_DEFAULT, self.on_device_monitor_message, None)
-        log.debug('Start device monitoring')
+        log.debug('Start device monitoring...')
         self.dev_monitor.start()
 
-    def build_gstreamer_pipeline(self, webcam_fd: int) -> Gst.Pipeline | None:
+    def build_gstreamer_pipeline_in_sandbox(self, webcam_fd: int) -> Gst.Pipeline | None:
         # Note: Setting custom name for gtk4paintablesink does not work.
         flip_method = 'horizontal-flip' if self.mirror_switch.get_active() else 'none'
-        cmd = (f'pipewiresrc name={GST_SOURCE_NAME} fd={webcam_fd} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
-               'queue ! videoscale ! '
-               f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin '
-               't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
-               f'appsink name={GST_APP_SINK_NAME} max_buffers=2 drop=1')
+        cmd = (
+            f'pipewiresrc name={GST_SOURCE_NAME} fd={webcam_fd} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
+            'queue ! videoscale ! '
+            f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin '
+            't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
+            f'appsink name={GST_APP_SINK_NAME} max_buffers=2 drop=1'
+        )
         log.info('To build pipeline: {}', cmd)
         try:
             pipeline = cast(Gst.Pipeline, Gst.parse_launch(cmd))
@@ -364,9 +391,9 @@ class CoBangWindow(Adw.ApplicationWindow):
         return pipeline
 
     # Ref:
-    # - For pipewiresrc: https://github.com/PipeWire/pipewire/blob/1.2.4/src/gst/gstpipewiresrc.c
-    # - gstpipewiredeviceprovider: https://github.com/PipeWire/pipewire/blob/1.2.4/src/gst/gstpipewiredeviceprovider.c
-    def build_gstreamer_pipeline_direct_access(self, src_type: DeviceSourceType, video_path: str) -> Gst.Pipeline | None:
+    # - For pipewiresrc: https://github.com/PipeWire/pipewire/blob/1.2.7/src/gst/gstpipewiresrc.c
+    # - gstpipewiredeviceprovider: https://github.com/PipeWire/pipewire/blob/1.2.7/src/gst/gstpipewiredeviceprovider.c
+    def build_gstreamer_pipeline(self, src_type: DeviceSourceType, video_path: str) -> Gst.Pipeline | None:
         """Build GStreamer Pipeline to access webcam directly (via V4L2), when running outside sandbox."""
         flip_method = 'horizontal-flip' if self.mirror_switch.get_active() else 'none'
         source_desc_parts = [
@@ -375,11 +402,13 @@ class CoBangWindow(Adw.ApplicationWindow):
             f'device={video_path}' if src_type == DeviceSourceType.V4L2 else f'target-object={video_path}',
         ]
         source_desc = ' '.join(source_desc_parts)
-        cmd = (f'{source_desc} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
-               'queue ! videoscale ! '
-               f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin '
-               't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
-               f'appsink name={GST_APP_SINK_NAME} max_buffers=2 drop=1')
+        cmd = (
+            f'{source_desc} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
+            'queue ! videoscale ! '
+            f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin '
+            't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
+            f'appsink name={GST_APP_SINK_NAME} max_buffers=2 drop=1'
+        )
         log.info('To build pipeline: {}', cmd)
         try:
             pipeline = cast(Gst.Pipeline, Gst.parse_launch(cmd))
@@ -400,6 +429,9 @@ class CoBangWindow(Adw.ApplicationWindow):
         paintable = gtk4_sink.get_property('paintable')
         self.webcam_display.set_paintable(paintable)
         self.gst_pipeline = pipeline
+
+    def detach_gstreamer_sink(self):
+        self.webcam_display.set_paintable(None)
 
     def play_webcam(self):
         log.info('Playing webcam')
@@ -428,6 +460,12 @@ class CoBangWindow(Adw.ApplicationWindow):
             app_sink.disconnect_by_func(self.on_new_webcam_sample)
         else:
             log.warning('Appsink not found in pipeline')
+
+    def play_webcam_and_enable_consumption_late(self):
+        if not self.btn_pause.get_active():
+            self.play_webcam()
+            self.scanner_state = ScannerState.SCANNING
+        self.enable_webcam_consumption(self.gst_pipeline)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
@@ -524,7 +562,12 @@ class CoBangWindow(Adw.ApplicationWindow):
         except GLib.Error:
             log.debug('No texture in clipboard')
         # If there is no texture, try reading file.
-        clipboard.read_value_async(Gio.File, GObject.PRIORITY_DEFAULT_IDLE, None, self.cb_file_read_from_clipboard)
+        clipboard.read_value_async(
+            Gio.File,
+            GObject.PRIORITY_DEFAULT_IDLE,
+            None,
+            self.cb_file_read_from_clipboard,
+        )
 
     def cb_file_read_from_clipboard(self, clipboard: Gdk.Clipboard, result: Gio.AsyncResult):
         try:
