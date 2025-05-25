@@ -30,4 +30,6 @@ def get_device_path(device: Gst.Device) -> tuple[str, str]:
         return device.get_property('device_path'), 'v4l2src'
 
     # GstLibcameraDevice or some other unknown device type
+    properties = device.get_properties()
+    log.info('Unsupported GstDevice properties: {}', properties)
     return '', type_name
