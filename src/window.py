@@ -226,7 +226,8 @@ class CoBangWindow(Adw.ApplicationWindow):
             source = self.gst_pipeline.get_by_name(GST_SOURCE_NAME)
             source.set_state(Gst.State.PAUSED)
             return
-        # There is issue with the pipewiresrc when changing from PAUSED to PLAYING.
+        # There is issue with the pipewiresrc when changing from PAUSED to PLAYING, an error is thrown:
+        # "gst_caps_intersect_full: assertion 'GST_IS_CAPS (caps2)' failed".
         # So we stop the video and play again.
         source = self.gst_pipeline.get_by_name(GST_SOURCE_NAME)
         if source and source.__class__.__name__ == 'GstPipeWireSrc':
@@ -272,14 +273,12 @@ class CoBangWindow(Adw.ApplicationWindow):
         if not pipeline:
             return
         self.attach_gstreamer_sink_to_window(pipeline)
-        if item.source_type == DeviceSourceType.PIPEWIRE:
-            self.stop_webcam()
-            GLib.idle_add(self.play_webcam_and_enable_consumption_late, priority=GLib.PRIORITY_LOW)
-        else:
-            if not self.btn_pause.get_active():
-                self.play_webcam()
-                self.scanner_state = ScannerState.SCANNING
-            self.enable_webcam_consumption(pipeline)
+        # Let GTK prepare the UI fully for painting video. Without this, the video from pipewiresrc may not be displayed.
+        GLib.main_context_default().iteration()
+        if not self.btn_pause.get_active():
+            self.play_webcam()
+            self.scanner_state = ScannerState.SCANNING
+        self.enable_webcam_consumption(pipeline)
 
     @Gtk.Template.Callback()
     def on_shown(self, *args):
@@ -460,12 +459,6 @@ class CoBangWindow(Adw.ApplicationWindow):
             app_sink.disconnect_by_func(self.on_new_webcam_sample)
         else:
             log.warning('Appsink not found in pipeline')
-
-    def play_webcam_and_enable_consumption_late(self):
-        if not self.btn_pause.get_active():
-            self.play_webcam()
-            self.scanner_state = ScannerState.SCANNING
-        self.enable_webcam_consumption(self.gst_pipeline)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
