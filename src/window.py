@@ -191,14 +191,15 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.job_viewstack.set_visible_child_name(name)
 
     @Gtk.Template.Callback()
-    def on_mirror_switch_toggled(self, switch: Gtk.Switch, active: bool):
+    def on_mirror_switch_toggled(self, switch: Gtk.Switch, *args):
         if not self.gst_pipeline:
             return
         if source := self.gst_pipeline.get_by_name(GST_SOURCE_NAME):
             source.set_state(Gst.State.NULL)
         self.gst_pipeline.set_state(Gst.State.NULL)
         if flip_filter := self.gst_pipeline.get_by_name(GST_FLIP_FILTER_NAME):
-            flip_filter.set_property('method', 'none' if active else 'horizontal-flip')
+            new_method = 'none' if switch.get_active() else 'horizontal-flip'
+            flip_filter.set_property('method', new_method)
         self.gst_pipeline.set_state(Gst.State.PLAYING)
 
     @Gtk.Template.Callback()
