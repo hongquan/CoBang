@@ -4,13 +4,13 @@ gnome = import('gnome')
 
 blueprints = custom_target('blueprints',
   input: files(
-    'help-overlay.blp',
-    'window.blp',
-    'wifi-display.blp',
-    'url-display.blp',
+    'ui/help-overlay.blp',
+    'ui/window.blp',
+    'ui/wifi-display.blp',
+    'ui/url-display.blp',
   ),
   output: 'gtk',
-  command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],
+  command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@/ui', '@INPUT@'],
 )
 
 gnome.compile_resources('cobang',
