@@ -274,11 +274,10 @@ class CoBangWindow(Adw.ApplicationWindow):
             return
         self.attach_gstreamer_sink_to_window(pipeline)
         # Let GTK prepare the UI fully for painting video. Without this, the video from pipewiresrc may not be displayed.
-        GLib.main_context_default().iteration()
-        if not self.btn_pause.get_active():
-            self.play_webcam()
-            self.scanner_state = ScannerState.SCANNING
-        self.enable_webcam_consumption(pipeline)
+        if item.source_type == DeviceSourceType.PIPEWIRE:
+            GLib.idle_add(self.play_webcam_and_enable_consumption)
+        else:
+            self.play_webcam_and_enable_consumption()
 
     @Gtk.Template.Callback()
     def on_shown(self, *args):
@@ -459,6 +458,12 @@ class CoBangWindow(Adw.ApplicationWindow):
             app_sink.disconnect_by_func(self.on_new_webcam_sample)
         else:
             log.warning('Appsink not found in pipeline')
+
+    def play_webcam_and_enable_consumption(self):
+        if not self.btn_pause.get_active():
+            self.play_webcam()
+            self.scanner_state = ScannerState.SCANNING
+        self.enable_webcam_consumption(self.gst_pipeline)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
