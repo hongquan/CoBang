@@ -42,6 +42,11 @@
   </kudos>
 
   <releases>
+    <release version="1.7.2" date="2025-06-02" urgency="medium">
+      <description translate="no">
+        <p>Fix logic of mirror button.</p>
+      </description>
+    </release>
     <release version="1.7.1" date="2025-05-25" urgency="medium">
       <description translate="no">
         <p>Fix all green video on Ubuntu 25.04.</p>
