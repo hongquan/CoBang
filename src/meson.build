@@ -8,6 +8,7 @@ blueprints = custom_target('blueprints',
     'ui/window.blp',
     'ui/wifi-display.blp',
     'ui/url-display.blp',
+    'ui/generator-page.blp',
   ),
   output: 'gtk',
   command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@/ui', '@INPUT@'],
@@ -52,3 +53,5 @@ cobang_sources = [
 ]
 
 install_data(cobang_sources, install_dir: moduledir)
+
+subdir('pages')

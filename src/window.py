@@ -45,6 +45,7 @@ from .custom_types import WebcamDeviceInfo
 from .messages import WifiInfoMessage, IMAGE_GUIDE, parse_wifi_message
 from .ui import build_wifi_info_display, build_url_display
 from .prep import guess_mimetype, get_device_path
+from .pages.generator import GeneratorPage
 
 
 log = Logger(__name__)
@@ -54,6 +55,7 @@ log = Logger(__name__)
 @Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/window.ui')
 class CoBangWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'CoBangWindow'
+    in_mobile_screen = GObject.Property(type=bool, default=False, nick='in-mobile-screen')
     scanner_state = GObject.Property(type=int, default=0, nick='scanner-state')
 
     job_viewstack: Adw.ViewStack = Gtk.Template.Child()
@@ -154,6 +156,26 @@ class CoBangWindow(Adw.ApplicationWindow):
     @Gtk.Template.Callback()
     def has_some(self, wd: Self, value: Any) -> bool:
         return bool(value)
+
+    @Gtk.Template.Callback()
+    def vertical_in_mobile_screen(self, wd: Self, is_mobile: bool) -> Gtk.Orientation:
+        return Gtk.Orientation.VERTICAL if is_mobile else Gtk.Orientation.HORIZONTAL
+
+    @Gtk.Template.Callback()
+    def box_mirror_halign(self, wd: Self, is_mobile: bool) -> Gtk.Align:
+        return Gtk.Align.FILL if is_mobile else Gtk.Align.END
+
+    @Gtk.Template.Callback()
+    def box_mirror_valign(self, wd: Self, is_mobile: bool) -> Gtk.Align:
+        return Gtk.Align.FILL if is_mobile else Gtk.Align.CENTER
+
+    @Gtk.Template.Callback()
+    def box_webcam_selector_halign(self, wd: Self, is_mobile: bool) -> Gtk.Align:
+        return Gtk.Align.FILL if is_mobile else Gtk.Align.END
+
+    @Gtk.Template.Callback()
+    def scanner_page_layout_name(self, wd: Self, is_mobile: bool) -> str:
+        return 'bottom-sheet' if is_mobile else 'sidebar'
 
     @Gtk.Template.Callback()
     def is_idle(self, wd: Self, value: int) -> bool:
