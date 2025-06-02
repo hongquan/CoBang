@@ -222,7 +222,10 @@ class CoBangWindow(Adw.ApplicationWindow):
         if flip_filter := self.gst_pipeline.get_by_name(GST_FLIP_FILTER_NAME):
             new_method = 'none' if switch.get_active() else 'horizontal-flip'
             flip_filter.set_property('method', new_method)
-        self.gst_pipeline.set_state(Gst.State.PLAYING)
+        if self.btn_pause.get_active():
+            self.gst_pipeline.set_state(Gst.State.PAUSED)
+        else:
+            self.gst_pipeline.set_state(Gst.State.PLAYING)
 
     @Gtk.Template.Callback()
     def on_scan_source_viewstack_visible_child_changed(self, viewstack: Adw.ViewStack, *args):
