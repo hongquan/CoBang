@@ -10,16 +10,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
     condition ('max-width: 550sp')
 
     setters {
-      job_switcher.visible: false;
-      job_toggler_box.visible: true;
-      toolbarview_scanner.hexpand: false;
-      scanner_page_multilayout.layout-name: 'bottom-sheet';
-      box_webcam_settings.orientation: vertical;
-      box_mirror.halign: fill;
-      box_mirror.valign: start;
-      box_webcam_selector.halign: fill;
-      box_webcam_selector.hexpand: false;
-      label_webcam_selector.hexpand: true;
+      template.in_mobile_screen: true;
     }
   }
 
@@ -35,13 +26,14 @@ template $CoBangWindow: Adw.ApplicationWindow {
         Adw.ViewSwitcher job_switcher {
           name: 'function-switcher';
           policy: wide;
+          visible: bind template.in_mobile_screen inverted;
           stack: job_viewstack;
         }
 
         Box job_toggler_box {
           orientation: horizontal;
           halign: center;
-          visible: false;
+          visible: bind template.in_mobile_screen as <bool>;
 
           styles [
             'linked',
@@ -89,6 +81,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
           icon-name: 'seeing-symbolic';
 
           child: Adw.MultiLayoutView scanner_page_multilayout {
+            layout-name: bind $scanner_page_layout_name(template.in_mobile_screen) as <string>;
             Adw.Layout {
               name: 'sidebar';
 
@@ -136,7 +129,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
 
             [primary]
             Adw.ToolbarView toolbarview_scanner {
-              hexpand: true;
+              hexpand: bind template.in_mobile_screen inverted;
 
               content: Adw.ViewStack scan_source_viewstack {
                 name: 'scan-source-viewstack';
@@ -228,7 +221,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
                         }
 
                         Box box_webcam_settings {
-                          orientation: horizontal;
+                          orientation: bind $vertical_in_mobile_screen(template.in_mobile_screen) as <Orientation>;
                           spacing: 4;
                           margin-start: 4;
                           margin-end: 4;
@@ -236,12 +229,14 @@ template $CoBangWindow: Adw.ApplicationWindow {
                           Box box_webcam_selector {
                             orientation: horizontal;
                             visible: bind $has_some(webcam_store.n-items) as <bool>;
-                            hexpand: true;
+                            hexpand: bind template.in_mobile_screen inverted;
+                            halign: bind $box_webcam_selector_halign(template.in_mobile_screen) as <Align>;
                             spacing: 4;
 
                             Label label_webcam_selector {
                               label: _("Webcam");
                               halign: start;
+                              hexpand: bind template.in_mobile_screen as <bool>;
                             }
 
                             DropDown webcam_dropdown {
@@ -267,8 +262,8 @@ template $CoBangWindow: Adw.ApplicationWindow {
                           Box box_mirror {
                             orientation: horizontal;
                             spacing: 4;
-                            valign: center;
-                            halign: end;
+                            valign: bind $box_mirror_valign(template.in_mobile_screen) as <Align>;
+                            halign: bind $box_mirror_halign(template.in_mobile_screen) as <Align>;
                             visible: bind $has_some(webcam_display.paintable) as <bool>;
 
                             Label label_mirror {
@@ -484,10 +479,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
           title: _("Generator");
           icon-name: 'mail-outbox-symbolic';
 
-          child: Adw.StatusPage generator_page {
-            title: _("Generator");
-            description: _("Will be available in next versions...");
-          };
+          child: $GeneratorPage generator_page {};
         }
       }
     };

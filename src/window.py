@@ -45,6 +45,7 @@ from .custom_types import WebcamDeviceInfo
 from .messages import WifiInfoMessage, IMAGE_GUIDE, parse_wifi_message
 from .ui import build_wifi_info_display, build_url_display
 from .prep import guess_mimetype, get_device_path
+from .pages.generator import GeneratorPage
 
 
 log = Logger(__name__)
@@ -54,6 +55,7 @@ log = Logger(__name__)
 @Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/window.ui')
 class CoBangWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'CoBangWindow'
+    in_mobile_screen = GObject.Property(type=bool, default=False, nick='in-mobile-screen')
     scanner_state = GObject.Property(type=int, default=0, nick='scanner-state')
 
     job_viewstack: Adw.ViewStack = Gtk.Template.Child()
@@ -156,6 +158,26 @@ class CoBangWindow(Adw.ApplicationWindow):
         return bool(value)
 
     @Gtk.Template.Callback()
+    def vertical_in_mobile_screen(self, wd: Self, is_mobile: bool) -> Gtk.Orientation:
+        return Gtk.Orientation.VERTICAL if is_mobile else Gtk.Orientation.HORIZONTAL
+
+    @Gtk.Template.Callback()
+    def box_mirror_halign(self, wd: Self, is_mobile: bool) -> Gtk.Align:
+        return Gtk.Align.FILL if is_mobile else Gtk.Align.END
+
+    @Gtk.Template.Callback()
+    def box_mirror_valign(self, wd: Self, is_mobile: bool) -> Gtk.Align:
+        return Gtk.Align.FILL if is_mobile else Gtk.Align.CENTER
+
+    @Gtk.Template.Callback()
+    def box_webcam_selector_halign(self, wd: Self, is_mobile: bool) -> Gtk.Align:
+        return Gtk.Align.FILL if is_mobile else Gtk.Align.END
+
+    @Gtk.Template.Callback()
+    def scanner_page_layout_name(self, wd: Self, is_mobile: bool) -> str:
+        return 'bottom-sheet' if is_mobile else 'sidebar'
+
+    @Gtk.Template.Callback()
     def is_idle(self, wd: Self, value: int) -> bool:
         return value == ScannerState.IDLE
 
@@ -191,15 +213,19 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.job_viewstack.set_visible_child_name(name)
 
     @Gtk.Template.Callback()
-    def on_mirror_switch_toggled(self, switch: Gtk.Switch, active: bool):
+    def on_mirror_switch_toggled(self, switch: Gtk.Switch, *args):
         if not self.gst_pipeline:
             return
         if source := self.gst_pipeline.get_by_name(GST_SOURCE_NAME):
             source.set_state(Gst.State.NULL)
         self.gst_pipeline.set_state(Gst.State.NULL)
         if flip_filter := self.gst_pipeline.get_by_name(GST_FLIP_FILTER_NAME):
-            flip_filter.set_property('method', 'none' if active else 'horizontal-flip')
-        self.gst_pipeline.set_state(Gst.State.PLAYING)
+            new_method = 'none' if switch.get_active() else 'horizontal-flip'
+            flip_filter.set_property('method', new_method)
+        if self.btn_pause.get_active():
+            self.gst_pipeline.set_state(Gst.State.PAUSED)
+        else:
+            self.gst_pipeline.set_state(Gst.State.PLAYING)
 
     @Gtk.Template.Callback()
     def on_scan_source_viewstack_visible_child_changed(self, viewstack: Adw.ViewStack, *args):
@@ -226,7 +252,8 @@ class CoBangWindow(Adw.ApplicationWindow):
             source = self.gst_pipeline.get_by_name(GST_SOURCE_NAME)
             source.set_state(Gst.State.PAUSED)
             return
-        # There is issue with the pipewiresrc when changing from PAUSED to PLAYING.
+        # There is issue with the pipewiresrc when changing from PAUSED to PLAYING, an error is thrown:
+        # "gst_caps_intersect_full: assertion 'GST_IS_CAPS (caps2)' failed".
         # So we stop the video and play again.
         source = self.gst_pipeline.get_by_name(GST_SOURCE_NAME)
         if source and source.__class__.__name__ == 'GstPipeWireSrc':
@@ -272,14 +299,11 @@ class CoBangWindow(Adw.ApplicationWindow):
         if not pipeline:
             return
         self.attach_gstreamer_sink_to_window(pipeline)
+        # Let GTK prepare the UI fully for painting video. Without this, the video from pipewiresrc may not be displayed.
         if item.source_type == DeviceSourceType.PIPEWIRE:
-            self.stop_webcam()
-            GLib.idle_add(self.play_webcam_and_enable_consumption_late, priority=GLib.PRIORITY_LOW)
+            GLib.idle_add(self.play_webcam_and_enable_consumption)
         else:
-            if not self.btn_pause.get_active():
-                self.play_webcam()
-                self.scanner_state = ScannerState.SCANNING
-            self.enable_webcam_consumption(pipeline)
+            self.play_webcam_and_enable_consumption()
 
     @Gtk.Template.Callback()
     def on_shown(self, *args):
@@ -461,7 +485,7 @@ class CoBangWindow(Adw.ApplicationWindow):
         else:
             log.warning('Appsink not found in pipeline')
 
-    def play_webcam_and_enable_consumption_late(self):
+    def play_webcam_and_enable_consumption(self):
         if not self.btn_pause.get_active():
             self.play_webcam()
             self.scanner_state = ScannerState.SCANNING
