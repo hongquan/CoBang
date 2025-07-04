@@ -42,6 +42,11 @@
   </kudos>
 
   <releases>
+    <release version="1.7.3" date="2025-07-04" urgency="medium">
+      <description translate="no">
+        <p>Fix handling pasted image from other apps.</p>
+      </description>
+    </release>
     <release version="1.7.2" date="2025-06-02" urgency="medium">
       <description translate="no">
         <p>Fix logic of mirror button.</p>
