@@ -1,3 +1,9 @@
+cobang (1.7.3-1) oracular; urgency=medium
+
+  * Fix handling pasted image from other apps.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Fri, 04 Jul 2025 22:32:03 +0700
+
 cobang (1.7.2-1) oracular; urgency=medium
 
   * Fix logic of mirror button.
