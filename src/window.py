@@ -580,8 +580,11 @@ class CoBangWindow(Adw.ApplicationWindow):
         try:
             texture = clipboard.read_texture_finish(result)
             log.info('Texture: {}', texture)
+            if not texture:
+                return
             self.pasted_image.set_paintable(texture)
             self.pasted_image.set_visible(True)
+            self.decode_from_texture(texture)
             return
         except GLib.Error:
             log.debug('No texture in clipboard')
@@ -656,11 +659,15 @@ class CoBangWindow(Adw.ApplicationWindow):
         if not paintable:
             log.debug('No paintable. Ignore.')
             return
-        w = paintable.get_width()
-        h = paintable.get_height()
-        log.info('Paintable size: {}x{}', w, h)
-        img_bytes = paintable.save_to_png_bytes().get_data()
+        self.decode_from_texture(paintable)
+
+    def decode_from_texture(self, texture: Gdk.Texture):
+        w = texture.get_width()
+        h = texture.get_height()
+        log.info('Texture size: {}x{}', w, h)
+        img_bytes = texture.save_to_png_bytes().get_data()
         if not img_bytes:
+            log.debug('No image data in texture. Ignore.')
             return
         img_file = io.BytesIO(img_bytes)
         rgb_img = Image.open(img_file)
@@ -675,6 +682,8 @@ class CoBangWindow(Adw.ApplicationWindow):
         n = self.zbar_scanner.scan(zimg)
         log.debug('Any QR code?: {}', n)
         if not n:
+            log.info('No QR code found in texture.')
+            self.scanner_state = ScannerState.NO_RESULT
             return
         GLib.idle_add(self.display_result, zimg.symbols)
 
