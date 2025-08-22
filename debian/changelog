@@ -1,3 +1,9 @@
+cobang (1.8.0-2) plucky; urgency=medium
+
+  * Switch to plucky to meet PPA requirement.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Fri, 22 Aug 2025 22:56:34 +0700
+
 cobang (1.8.0-1) oracular; urgency=medium
 
   * Support inverted image.
