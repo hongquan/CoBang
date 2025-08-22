@@ -44,7 +44,7 @@ from .consts import (
 from .custom_types import WebcamDeviceInfo
 from .messages import WifiInfoMessage, IMAGE_GUIDE, parse_wifi_message
 from .ui import build_wifi_info_display, build_url_display
-from .prep import guess_mimetype, get_device_path
+from .prep import guess_mimetype, get_device_path, make_grayscale, invert_and_make_grayscale, is_image_almost_black_white
 from .pages.generator import GeneratorPage
 
 
@@ -670,17 +670,19 @@ class CoBangWindow(Adw.ApplicationWindow):
             log.debug('No image data in texture. Ignore.')
             return
         img_file = io.BytesIO(img_bytes)
-        rgb_img = Image.open(img_file)
+        rgba_img = Image.open(img_file)
         # ZBar needs grayscale image, the Gdk.Paintable is RGBA,
         # we need to convert it to grayscale, replacing transparency with white.
         # Because the source image can have alpha channel, we need to convert it to LA.
-        grayscale = rgb_img.convert('LA')
-        # Create an all-white image as background.
-        canvas = Image.new('LA', (w, h), (255, 255))
-        canvas.paste(grayscale, mask=grayscale)
-        zimg = zbar.Image(w, h, 'Y800', canvas.convert('L').tobytes())
+        grayscale = make_grayscale(rgba_img, w, h)
+        zimg = zbar.Image(w, h, 'Y800', grayscale.tobytes())
         n = self.zbar_scanner.scan(zimg)
         log.debug('Any QR code?: {}', n)
+        if not n and is_image_almost_black_white(rgba_img):
+            # Invert and try again
+            grayscale = invert_and_make_grayscale(rgba_img, w, h)
+            zimg = zbar.Image(w, h, 'Y800', grayscale.tobytes())
+            n = self.zbar_scanner.scan(zimg)
         if not n:
             log.info('No QR code found in texture.')
             self.scanner_state = ScannerState.NO_RESULT

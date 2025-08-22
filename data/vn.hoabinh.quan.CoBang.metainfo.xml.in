@@ -42,6 +42,12 @@
   </kudos>
 
   <releases>
+    <release version="1.8.0" date="2025-08-22" urgency="medium">
+      <description translate="no">
+        <p>Support inverted image.</p>
+        <p>Provide icon of 24x24 size.</p>
+      </description>
+    </release>
     <release version="1.7.3" date="2025-07-04" urgency="medium">
       <description translate="no">
         <p>Fix handling pasted image from other apps.</p>

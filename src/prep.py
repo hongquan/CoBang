@@ -1,5 +1,6 @@
 
 from logbook import Logger
+from PIL import Image, ImageOps
 from gi.repository import Gio, Gst  # pyright: ignore[reportMissingModuleSource]
 
 
@@ -33,3 +34,33 @@ def get_device_path(device: Gst.Device) -> tuple[str, str]:
     properties = device.get_properties()
     log.info('Unsupported GstDevice properties: {}', properties)
     return '', type_name
+
+
+def make_grayscale(rgba_img: Image.Image, width: int, height: int) -> Image.Image:
+    """Convert RGBA image to grayscale image which is ready to pass to ZBar."""
+    # ZBar doesn't accept transparency, so we need to convert alpha channel to white.
+    grayscale = rgba_img.convert('LA')
+    # Create an all-white image as background.
+    canvas = Image.new('LA', (width, height), (255, 255))
+    canvas.paste(grayscale, mask=grayscale)
+    return canvas.convert('L')
+
+
+def is_image_almost_black_white(rgba_img: Image.Image):
+    total_pixel = rgba_img.width * rgba_img.height
+    # Get histogram
+    htg = rgba_img.histogram()
+    # Count pixels at the left most and right most of each RGB channel
+    polar_red = sum(htg[:10] + htg[256 - 10: 256])
+    polar_green = sum(htg[256 : 256 + 10] + htg[512 - 10 : 512])
+    polar_blue = sum(htg[512 : 512 + 10] + htg[768 - 10 : 768])
+    # Image is almost black-white if most of the pixels gather at the two ends of histogram.
+    return (polar_red / total_pixel > 0.9) and (polar_green / total_pixel > 0.9) and (polar_blue / total_pixel > 0.9)
+
+
+def invert_and_make_grayscale(rgba_img: Image.Image, width: int, height: int) -> Image.Image:
+    """Invert and convert RGBA image to grayscale image which is ready to pass to ZBar."""
+    gray_scale = make_grayscale(rgba_img, width, height)
+    # invert() only accepts RGB
+    iv_image = ImageOps.invert(gray_scale.convert('RGB'))
+    return iv_image.convert('L')
