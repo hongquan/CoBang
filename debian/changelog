@@ -1,3 +1,10 @@
+cobang (1.8.0-1) oracular; urgency=medium
+
+  * Support inverted image.
+  * Provide icon of 24x24 size.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Fri, 22 Aug 2025 22:49:23 +0700
+
 cobang (1.7.3-1) oracular; urgency=medium
 
   * Fix handling pasted image from other apps.
