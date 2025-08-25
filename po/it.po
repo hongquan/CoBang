@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-12 16:12+0700\n"
-"PO-Revision-Date: 2025-02-01 14:10+0200\n"
+"PO-Revision-Date: 2025-08-26 00:10+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: it <LL@li.org>\n"
 "Language: it\n"
@@ -101,15 +101,15 @@ msgstr "Scegli un'immagine"
 
 #: src/window.blp:406
 msgid "Please open webcam or choose an image."
-msgstr ""
+msgstr "Apri la webcam o scegli un'immagine."
 
 #: src/window.blp:420
 msgid "Scanning..."
-msgstr ""
+msgstr "Scansione in corso..."
 
 #: src/window.blp:430
 msgid "No result found."
-msgstr ""
+msgstr "Nessun risultato trovato."
 
 #: src/window.blp:452
 msgid "Raw result"
@@ -181,11 +181,11 @@ msgstr "Trovato un URL. Fare clic per aprire:"
 
 #: src/window.py:167
 msgid "Found unrecognized text."
-msgstr ""
+msgstr "È stato trovato del testo non riconosciuto."
 
 #: src/window.py:168
 msgid "Unknown"
-msgstr ""
+msgstr "Sconosciuto"
 
 #: src/window.py:234
 msgid "Copied!"
