@@ -4,219 +4,219 @@ runtime-version: '47'
 sdk: org.gnome.Sdk
 command: cobang
 finish-args:
-- --share=network
-- --share=ipc
-# Need to access NetworkManager D-Bus API
-- --system-talk-name=org.freedesktop.NetworkManager.*
-- --socket=wayland
-- --socket=fallback-x11
-- --device=dri
+  - --share=network
+  - --share=ipc
+  # Need to access NetworkManager D-Bus API
+  - --system-talk-name=org.freedesktop.NetworkManager.*
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
 cleanup:
-- /include
-- /lib/pkgconfig
-- /man
-- /share/doc
-- /share/gtk-doc
-- /share/man
-- /share/pkgconfig
-- '*.la'
-- '*.a'
+  - /include
+  - /lib/pkgconfig
+  - /man
+  - /share/doc
+  - /share/gtk-doc
+  - /share/man
+  - /share/pkgconfig
+  - '*.la'
+  - '*.a'
 modules:
 
-- name: libzbar
-  # Ref: https://gitlab.gnome.org/World/Authenticator
-  config-opts:
-  - --without-java
-  - --without-qt
-  - --without-gtk
-  - --without-xv
-  - --without-imagemagick
-  - --disable-video
-  - --without-dbus
-  sources:
-  - type: archive
-    url: https://github.com/mchehab/zbar/archive/refs/tags/0.23.93.tar.gz
-    sha256: 212dfab527894b8bcbcc7cd1d43d63f5604a07473d31a5f02889e372614ebe28
-  - type: script
-    dest-filename: autogen.sh
-    commands:
-    - autoreconf -vfi -W none
+  - name: libzbar
+    # Ref: https://gitlab.gnome.org/World/Authenticator
+    config-opts:
+      - --without-java
+      - --without-qt
+      - --without-gtk
+      - --without-xv
+      - --without-imagemagick
+      - --disable-video
+      - --without-dbus
+    sources:
+      - type: archive
+        url: https://github.com/mchehab/zbar/archive/refs/tags/0.23.93.tar.gz
+        sha256: 212dfab527894b8bcbcc7cd1d43d63f5604a07473d31a5f02889e372614ebe28
+      - type: script
+        dest-filename: autogen.sh
+        commands:
+          - autoreconf -vfi -W none
 
-- name: python3-build-tools
-  buildsystem: simple
-  build-commands: [ 'python3 -m pip install -U --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} wheel setuptools flit-core cffi gitlint' ]
-  sources:
-  - type: file
-    url: https://files.pythonhosted.org/packages/55/3a/5121b58b578a598b269537e09a316ad2a94fdd561a2c6eb75cd68578cc6b/setuptools-69.0.3-py3-none-any.whl
-    sha256: 385eb4edd9c9d5c17540511303e39a147ce2fc04bc55289c322b9e5904fe2c05
-  - type: file
-    url: https://files.pythonhosted.org/packages/c7/c3/55076fc728723ef927521abaa1955213d094933dc36d4a2008d5101e1af5/wheel-0.42.0-py3-none-any.whl
-    sha256: 177f9c9b0d45c47873b619f5b650346d632cdc35fb5e4d25058e09c9e581433d
-  - type: file
-    url: https://files.pythonhosted.org/packages/38/45/618e84e49a6c51e5dd15565ec2fcd82ab273434f236b8f108f065ded517a/flit_core-3.9.0-py3-none-any.whl
-    sha256: 7aada352fb0c7f5538c4fafeddf314d3a6a92ee8e2b1de70482329e42de70301
-  - type: file
-    url: https://files.pythonhosted.org/packages/0d/72/743730d7c46b4c85abefb93187cbbcb7aae8de288d7722b990db3d13499e/Cython-3.0.12-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-    sha256: 0faa5e39e5c8cdf6f9c3b1c3f24972826e45911e7f5b99cf99453fca5432f45e
-  - type: file
-    url: https://files.pythonhosted.org/packages/ee/ab/adfeb22c85491de18ae10932165edd5b6f01e4c5e3e363638759d1235015/Cython-3.0.12-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
-    sha256: a7fec4f052b8fe173fe70eae75091389955b9a23d5cec3d576d21c5913b49d47
-  - type: file
-    url: https://files.pythonhosted.org/packages/5a/25/886e197c97a4b8e254173002cdc141441e878ff29aaa7d9ba560cd6e4866/cython-3.0.12.tar.gz
-    sha256: b988bb297ce76c671e28c97d017b95411010f7c77fa6623dd0bb47eed1aee1bc
-  - type: file
-    url: https://files.pythonhosted.org/packages/b2/d5/da47df7004cb17e4955df6a43d14b3b4ae77737dff8bf7f8f333196717bf/cffi-1.17.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-    sha256: b62ce867176a75d03a665bad002af8e6d54644fad99a3c70905c543130e39d93
-  - type: file
-    url: https://files.pythonhosted.org/packages/1a/df/f8d151540d8c200eb1c6fba8cd0dfd40904f1b0682ea705c36e6c2e97ab3/cffi-1.17.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
-    sha256: da95af8214998d77a98cc14e3a3bd00aa191526343078b530ceb0bd710fb48a5
-  - type: file
-    url: https://files.pythonhosted.org/packages/fc/97/c783634659c2920c3fc70419e3af40972dbaf758daa229a7d6ea6135c90d/cffi-1.17.1.tar.gz
-    sha256: 1c39c6016c32bc48dd54561950ebd6836e1670f2ae46128f67cf49e789c52824
-  - type: file
-    url: https://files.pythonhosted.org/packages/13/a3/a812df4e2dd5696d1f351d58b8fe16a405b234ad2886a0dab9183fb78109/pycparser-2.22-py3-none-any.whl
-    sha256: c3702b6d3dd8c7abc1afa565d7e63d53a1d0bd86cdc24edd75470f4de499cfcc
-  - type: file
-    url: https://files.pythonhosted.org/packages/b0/57/dea471da24ceac6de8c3dc5d37e4ddde57a5c340d6bac90010898734de34/gitlint_core-0.19.1-py3-none-any.whl
-    sha256: f41effd1dcbc06ffbfc56b6888cce72241796f517b46bd9fd4ab1b145056988c
-  - type: file
-    url: https://files.pythonhosted.org/packages/67/67/4bca5a595e2f89bff271724ddb1098e6c9e16f7f3d018d120255e3c30313/arrow-1.2.3-py3-none-any.whl
-    sha256: 5a49ab92e3b7b71d96cd6bfcc4df14efefc9dfa96ea19045815914a6ab6b1fe2
-  - type: file
-    url: https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl
-    sha256: a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427
-  - type: file
-    url: https://files.pythonhosted.org/packages/c2/f1/df59e28c642d583f7dacffb1e0965d0e00b218e0186d7858ac5233dce840/click-8.1.3-py3-none-any.whl
-    sha256: bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48
-  - type: file
-    url: https://files.pythonhosted.org/packages/b7/09/89c28aaf2a49f226fef8587c90c6386bd2cc03a0295bc4ff7fc6ee43c01d/sh-1.14.3.tar.gz
-    sha256: e4045b6c732d9ce75d571c79f5ac2234edd9ae4f5fa9d59b09705082bdca18c7
-  - type: file
-    url: https://files.pythonhosted.org/packages/84/90/8b6a29ddceb51272a054399d4864eefd28083530349f5735e0bb979c5f0f/gitlint-0.19.1-py3-none-any.whl
-    sha256: 26bb085959148d99fbbc178b4e56fda6c3edd7646b7c2a24d8ee1f8e036ed85d
+  - name: python3-build-tools
+    buildsystem: simple
+    build-commands: ['python3 -m pip install -U --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} wheel setuptools flit-core cffi gitlint']
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/55/3a/5121b58b578a598b269537e09a316ad2a94fdd561a2c6eb75cd68578cc6b/setuptools-69.0.3-py3-none-any.whl
+        sha256: 385eb4edd9c9d5c17540511303e39a147ce2fc04bc55289c322b9e5904fe2c05
+      - type: file
+        url: https://files.pythonhosted.org/packages/c7/c3/55076fc728723ef927521abaa1955213d094933dc36d4a2008d5101e1af5/wheel-0.42.0-py3-none-any.whl
+        sha256: 177f9c9b0d45c47873b619f5b650346d632cdc35fb5e4d25058e09c9e581433d
+      - type: file
+        url: https://files.pythonhosted.org/packages/38/45/618e84e49a6c51e5dd15565ec2fcd82ab273434f236b8f108f065ded517a/flit_core-3.9.0-py3-none-any.whl
+        sha256: 7aada352fb0c7f5538c4fafeddf314d3a6a92ee8e2b1de70482329e42de70301
+      - type: file
+        url: https://files.pythonhosted.org/packages/0d/72/743730d7c46b4c85abefb93187cbbcb7aae8de288d7722b990db3d13499e/Cython-3.0.12-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+        sha256: 0faa5e39e5c8cdf6f9c3b1c3f24972826e45911e7f5b99cf99453fca5432f45e
+      - type: file
+        url: https://files.pythonhosted.org/packages/ee/ab/adfeb22c85491de18ae10932165edd5b6f01e4c5e3e363638759d1235015/Cython-3.0.12-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+        sha256: a7fec4f052b8fe173fe70eae75091389955b9a23d5cec3d576d21c5913b49d47
+      - type: file
+        url: https://files.pythonhosted.org/packages/5a/25/886e197c97a4b8e254173002cdc141441e878ff29aaa7d9ba560cd6e4866/cython-3.0.12.tar.gz
+        sha256: b988bb297ce76c671e28c97d017b95411010f7c77fa6623dd0bb47eed1aee1bc
+      - type: file
+        url: https://files.pythonhosted.org/packages/b2/d5/da47df7004cb17e4955df6a43d14b3b4ae77737dff8bf7f8f333196717bf/cffi-1.17.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+        sha256: b62ce867176a75d03a665bad002af8e6d54644fad99a3c70905c543130e39d93
+      - type: file
+        url: https://files.pythonhosted.org/packages/1a/df/f8d151540d8c200eb1c6fba8cd0dfd40904f1b0682ea705c36e6c2e97ab3/cffi-1.17.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+        sha256: da95af8214998d77a98cc14e3a3bd00aa191526343078b530ceb0bd710fb48a5
+      - type: file
+        url: https://files.pythonhosted.org/packages/fc/97/c783634659c2920c3fc70419e3af40972dbaf758daa229a7d6ea6135c90d/cffi-1.17.1.tar.gz
+        sha256: 1c39c6016c32bc48dd54561950ebd6836e1670f2ae46128f67cf49e789c52824
+      - type: file
+        url: https://files.pythonhosted.org/packages/13/a3/a812df4e2dd5696d1f351d58b8fe16a405b234ad2886a0dab9183fb78109/pycparser-2.22-py3-none-any.whl
+        sha256: c3702b6d3dd8c7abc1afa565d7e63d53a1d0bd86cdc24edd75470f4de499cfcc
+      - type: file
+        url: https://files.pythonhosted.org/packages/b0/57/dea471da24ceac6de8c3dc5d37e4ddde57a5c340d6bac90010898734de34/gitlint_core-0.19.1-py3-none-any.whl
+        sha256: f41effd1dcbc06ffbfc56b6888cce72241796f517b46bd9fd4ab1b145056988c
+      - type: file
+        url: https://files.pythonhosted.org/packages/67/67/4bca5a595e2f89bff271724ddb1098e6c9e16f7f3d018d120255e3c30313/arrow-1.2.3-py3-none-any.whl
+        sha256: 5a49ab92e3b7b71d96cd6bfcc4df14efefc9dfa96ea19045815914a6ab6b1fe2
+      - type: file
+        url: https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl
+        sha256: a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427
+      - type: file
+        url: https://files.pythonhosted.org/packages/c2/f1/df59e28c642d583f7dacffb1e0965d0e00b218e0186d7858ac5233dce840/click-8.1.3-py3-none-any.whl
+        sha256: bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48
+      - type: file
+        url: https://files.pythonhosted.org/packages/b7/09/89c28aaf2a49f226fef8587c90c6386bd2cc03a0295bc4ff7fc6ee43c01d/sh-1.14.3.tar.gz
+        sha256: e4045b6c732d9ce75d571c79f5ac2234edd9ae4f5fa9d59b09705082bdca18c7
+      - type: file
+        url: https://files.pythonhosted.org/packages/84/90/8b6a29ddceb51272a054399d4864eefd28083530349f5735e0bb979c5f0f/gitlint-0.19.1-py3-none-any.whl
+        sha256: 26bb085959148d99fbbc178b4e56fda6c3edd7646b7c2a24d8ee1f8e036ed85d
 
-- flatpak/generated-sources.yml
+  - flatpak/generated-sources.yml
 
-# We don't build GStreamer because org.gnome.Platform 47 already provides it
+  # We don't build GStreamer because org.gnome.Platform 47 already provides it
 
-- name: libportal
-  buildsystem: meson
-  sources:
-  - type: archive
-    url: https://github.com/flatpak/libportal/archive/refs/tags/0.9.0.tar.gz
-    sha256: 0fdf42ca371eeb1213ed25ab0c5681cd51750eb9a3e04adcd6a8dc2af4f4d440
+  - name: libportal
+    buildsystem: meson
+    sources:
+      - type: archive
+        url: https://github.com/flatpak/libportal/archive/refs/tags/0.9.0.tar.gz
+        sha256: 0fdf42ca371eeb1213ed25ab0c5681cd51750eb9a3e04adcd6a8dc2af4f4d440
 
-- name: intltool
-  sources:
-  - type: archive
-    url: https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
-    sha256: 67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd
+  - name: intltool
+    sources:
+      - type: archive
+        url: https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
+        sha256: 67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd
 
-- name: pwquality
-  buildsystem: autotools
-  config-opts:
-  - --disable-python-bindings
-  sources:
-  - type: git
-    tag: libpwquality-1.4.5
-    url: https://github.com/libpwquality/libpwquality.git
+  - name: pwquality
+    buildsystem: autotools
+    config-opts:
+      - --disable-python-bindings
+    sources:
+      - type: git
+        tag: libpwquality-1.4.5
+        url: https://github.com/libpwquality/libpwquality.git
 
-- name: libndp
-  buildsystem: autotools
-  sources:
-  - type: git
-    tag: v1.8
-    url: https://github.com/jpirko/libndp.git
+  - name: libndp
+    buildsystem: autotools
+    sources:
+      - type: git
+        tag: v1.8
+        url: https://github.com/jpirko/libndp.git
 
-# Ref: https://gitlab.gnome.org/GNOME/gnome-control-center/-/tree/main/build-aux/flatpak
-- name: polkit
-  buildsystem: meson
-  config-opts:
-    - -Dauthfw=shadow
-    - -Dlibs-only=true
-  rm-configure: true
-  cleanup:
-    - /bin/*
-    - /etc/pam.d
-    - /etc/dbus-1
-    - /share/dbus-1/system-services/*
-    - /share/polkit-1
-    - /lib/polkit-1
-  sources:
-    - type: archive
-      url: https://github.com/polkit-org/polkit/archive/refs/tags/126.tar.gz
-      sha256: 2814a7281989f6baa9e57bd33bbc5e148827e2721ccef22aaf28ab2b376068e8
+  # Ref: https://gitlab.gnome.org/GNOME/gnome-control-center/-/tree/main/build-aux/flatpak
+  - name: polkit
+    buildsystem: meson
+    config-opts:
+      - -Dauthfw=shadow
+      - -Dlibs-only=true
+    rm-configure: true
+    cleanup:
+      - /bin/*
+      - /etc/pam.d
+      - /etc/dbus-1
+      - /share/dbus-1/system-services/*
+      - /share/polkit-1
+      - /lib/polkit-1
+    sources:
+      - type: archive
+        url: https://github.com/polkit-org/polkit/archive/refs/tags/126.tar.gz
+        sha256: 2814a7281989f6baa9e57bd33bbc5e148827e2721ccef22aaf28ab2b376068e8
 
-- name: udev
-  config-opts:
-    - --disable-hwdb
-    - --disable-logging
-    - --disable-gudev
-    - --disable-introspection
-    - --disable-keymap
-    - --disable-mtd_probe
-  cleanup:
-    - /include
-    - /etc
-    - /libexec
-    - /sbin
-    - /lib/pkgconfig
-    - /man
-    - /share/aclocal
-    - /share/doc
-    - /share/gtk-doc
-    - /share/man
-    - /share/pkgconfig
-    - '*.la'
-    - '*.a'
-  sources:
-    - type: archive
-      url: https://github.com/eudev-project/eudev/archive/refs/tags/v3.2.14.tar.gz
-      sha256: c340e6c51dfc5531ac0c0fa84a34b72162acf525f9023eb9cf4931b782c8f177
+  - name: udev
+    config-opts:
+      - --disable-hwdb
+      - --disable-logging
+      - --disable-gudev
+      - --disable-introspection
+      - --disable-keymap
+      - --disable-mtd_probe
+    cleanup:
+      - /include
+      - /etc
+      - /libexec
+      - /sbin
+      - /lib/pkgconfig
+      - /man
+      - /share/aclocal
+      - /share/doc
+      - /share/gtk-doc
+      - /share/man
+      - /share/pkgconfig
+      - '*.la'
+      - '*.a'
+    sources:
+      - type: archive
+        url: https://github.com/eudev-project/eudev/archive/refs/tags/v3.2.14.tar.gz
+        sha256: c340e6c51dfc5531ac0c0fa84a34b72162acf525f9023eb9cf4931b782c8f177
 
-- name: NetworkManager
-  buildsystem: meson
-  build-options:
-    cflags: -ltinfo
-    cxxflags: -ltinfo
-  config-opts:
-    - -Dlibaudit=no
-    - -Ddbus_conf_dir=/app/etc/dbus-1/system.d
-    - -Ddnsmasq=/usr/bin/true
-    - -Ddocs=false
-    - -Dintrospection=true
-    - -Diptables=/usr/bin/true
-    - -Dlibpsl=false
-    - -Dmodem_manager=false
-    - -Dnmtui=false
-    - -Dovs=false
-    - -Dppp=false
-    - -Dqt=false
-    - -Dselinux=false
-    - -Dsession_tracking=no
-    - -Dsystemdsystemunitdir='no'
-    - -Dsystemd_journal=false
-    - -Dtests=no
-    - -Dvapi=false
-    - -Dwifi=true
-  sources:
-    - type: archive
-      url: https://github.com/NetworkManager/NetworkManager/archive/refs/tags/1.46.6.tar.gz
-      sha256: 1486f5cf313c41f9dcc63c062d72be4a736633c9e25fb8213f2f4263c19aaa8a
+  - name: NetworkManager
+    buildsystem: meson
+    build-options:
+      cflags: -ltinfo
+      cxxflags: -ltinfo
+    config-opts:
+      - -Dlibaudit=no
+      - -Ddbus_conf_dir=/app/etc/dbus-1/system.d
+      - -Ddnsmasq=/usr/bin/true
+      - -Ddocs=false
+      - -Dintrospection=true
+      - -Diptables=/usr/bin/true
+      - -Dlibpsl=false
+      - -Dmodem_manager=false
+      - -Dnmtui=false
+      - -Dovs=false
+      - -Dppp=false
+      - -Dqt=false
+      - -Dselinux=false
+      - -Dsession_tracking=no
+      - -Dsystemdsystemunitdir='no'
+      - -Dsystemd_journal=false
+      - -Dtests=no
+      - -Dvapi=false
+      - -Dwifi=true
+    sources:
+      - type: archive
+        url: https://github.com/NetworkManager/NetworkManager/archive/refs/tags/1.46.6.tar.gz
+        sha256: 1486f5cf313c41f9dcc63c062d72be4a736633c9e25fb8213f2f4263c19aaa8a
 
-- name: blueprint-compiler
-  buildsystem: meson
-  cleanup:
-  - '*'
-  sources:
-  - type: git
-    url: https://gitlab.gnome.org/jwestman/blueprint-compiler
-    tag: v0.16.0
+  - name: blueprint-compiler
+    buildsystem: meson
+    cleanup:
+      - '*'
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/jwestman/blueprint-compiler
+        tag: v0.16.0
 
-- name: cobang
-  builddir: true
-  buildsystem: meson
-  sources:
-  - type: git
-    branch: main
-    path: .
+  - name: cobang
+    builddir: true
+    buildsystem: meson
+    sources:
+      - type: git
+        branch: main
+        path: .
