@@ -1,3 +1,10 @@
+cobang (1.8.1-1) plucky; urgency=medium
+
+  * Update GNOME platform for Flatpak to v48.
+  * Update Italian translations.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sun, 26 Oct 2025 16:27:08 +0700
+
 cobang (1.8.0-2) plucky; urgency=medium
 
   * Switch to plucky to meet PPA requirement.
