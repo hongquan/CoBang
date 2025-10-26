@@ -11,7 +11,7 @@ blueprints = custom_target('blueprints',
     'ui/generator-page.blp',
   ),
   output: 'gtk',
-  command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@/ui', '@INPUT@'],
+  command: [find_program('blueprint-compiler', '/usr/bin/blueprint-compiler', '/usr/local/bin/blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@/ui', '@INPUT@'],
 )
 
 gnome.compile_resources('cobang',

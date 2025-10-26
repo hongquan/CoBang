@@ -86,6 +86,7 @@ class CoBangWindow(Adw.ApplicationWindow):
     dev_monitor: Gst.DeviceMonitor | None = None
     webcam_store: Gio.ListStore = Gtk.Template.Child()
     webcam_dropdown: Gtk.DropDown = Gtk.Template.Child()
+    generator_page: GeneratorPage = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
