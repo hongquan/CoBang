@@ -488,9 +488,10 @@ template $CoBangWindow: Adw.ApplicationWindow {
 
 menu primary_menu {
   section {
+    // Ref: https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1.4/class.Application.html#shortcuts-dialog
     item {
       label: _("_Keyboard Shortcuts");
-      action: 'win.show-help-overlay';
+      action: 'app.shortcuts';
     }
 
     item {

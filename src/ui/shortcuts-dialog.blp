@@ -1,0 +1,15 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Ref: https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1.4/class.Application.html#shortcuts-dialog
+Adw.ShortcutsDialog shortcuts_dialog {
+
+  Adw.ShortcutsSection {
+    title: C_("shortcut window", "General");
+
+    Adw.ShortcutsItem {
+      title: C_("shortcut window", "Quit");
+      action-name: "app.quit";
+    }
+  }
+}

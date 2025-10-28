@@ -2,7 +2,8 @@
 <gresources>
   <gresource prefix="/vn/hoabinh/quan/CoBang">
     <file preprocess="xml-stripblanks">gtk/window.ui</file>
-    <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
+    <!-- This file is intentionally not in "gtk" subfolder, to be autodetected by AdwApplication -->
+    <file preprocess="xml-stripblanks">shortcuts-dialog.ui</file>
     <file preprocess="xml-stripblanks">gtk/wifi-display.ui</file>
     <file preprocess="xml-stripblanks">gtk/url-display.ui</file>
     <file preprocess="xml-stripblanks">gtk/generator-page.ui</file>
