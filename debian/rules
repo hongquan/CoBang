@@ -4,6 +4,11 @@ export PYBUILD_NAME=cobang
 %:
 	dh $@ --with python3 --buildsystem=meson
 
+override_dh_python3:
+	# Permission error when building in sbuild with "unshared" method.
+	# The shebang is already correct, no need to fix.
+	dh_python3 --ignore-shebangs
+
 override_dh_clean:
 	dh_clean
 	rm -rf .pytest_cache

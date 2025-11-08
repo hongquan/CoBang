@@ -1,3 +1,10 @@
+cobang (1.9.0-1) plucky; urgency=medium
+
+  * Use Adw.ShortcutsDialog for listing keyboard shortcut.
+  * Update GNOME platform for Flatpak to v49.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 08 Nov 2025 14:57:17 +0700
+
 cobang (1.8.1-1) plucky; urgency=medium
 
   * Update GNOME platform for Flatpak to v48.
