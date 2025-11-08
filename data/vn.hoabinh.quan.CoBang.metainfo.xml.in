@@ -42,6 +42,12 @@
   </kudos>
 
   <releases>
+    <release version="1.9.0" date="2025-11-08" urgency="medium">
+      <description translate="no">
+        <p>Use Adw.ShortcutsDialog for listing keyboard shortcut.</p>
+        <p>Update GNOME platform for Flatpak to v49.</p>
+      </description>
+    </release>
     <release version="1.8.1" date="2025-10-12" urgency="medium">
       <description translate="no">
         <p>Update GNOME platform for Flatpak to v48.</p>

@@ -172,7 +172,7 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def box_webcam_selector_halign(self, wd: Self, is_mobile: bool) -> Gtk.Align:
-        return Gtk.Align.FILL if is_mobile else Gtk.Align.END
+        return Gtk.Align.FILL if is_mobile else Gtk.Align.START
 
     @Gtk.Template.Callback()
     def scanner_page_layout_name(self, wd: Self, is_mobile: bool) -> str:
