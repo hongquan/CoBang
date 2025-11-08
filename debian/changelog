@@ -1,3 +1,9 @@
+cobang (1.9.0-2) questing; urgency=medium
+
+  * The Adw.ShortcutsDialog is only available on questing onward.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 08 Nov 2025 15:52:04 +0700
+
 cobang (1.9.0-1) plucky; urgency=medium
 
   * Use Adw.ShortcutsDialog for listing keyboard shortcut.
