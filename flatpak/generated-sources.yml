@@ -8,22 +8,35 @@ modules:
   - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} "Pillow" --no-build-isolation
   sources:
   - type: file
-    url: https://files.pythonhosted.org/packages/f3/af/c097e544e7bd278333db77933e535098c259609c4eb3b85381109602fb5b/pillow-11.1.0.tar.gz
-    sha256: 368da70808b36d73b4b390a8ffac11069f8a5c85f29eff1f1b01bcf3ef5b2a20
+    url: https://files.pythonhosted.org/packages/5a/b0/cace85a1b0c9775a9f8f5d5423c8261c858760e2466c79b2dd184638b056/pillow-12.0.0.tar.gz
+    sha256: 87d4f8125c9988bfbed67af47dd7a953e2fc7b0cc1e7800ec6d2080d490bb353
   - type: file
-    url: https://files.pythonhosted.org/packages/38/0d/84200ed6a871ce386ddc82904bfadc0c6b28b0c0ec78176871a4679e40b3/pillow-11.1.0-cp312-cp312-manylinux_2_28_x86_64.whl
-    sha256: 9aa9aeddeed452b2f616ff5507459e7bab436916ccb10961c4a382cd3e03f47f
+    url: https://files.pythonhosted.org/packages/fc/bd/69ed99fd46a8dba7c1887156d3572fe4484e3f031405fcc5a92e31c04035/pillow-12.0.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl
+    sha256: bde737cff1a975b70652b62d626f7785e0480918dece11e8fef3c0cf057351c3
   - type: file
-    url: https://files.pythonhosted.org/packages/08/d9/892e705f90051c7a2574d9f24579c9e100c828700d78a63239676f960b74/pillow-11.1.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
-    sha256: 9409c080586d1f683df3f184f20e36fb647f2e0bc3988094d4fd8c9f4eb1b3b3
+    url: https://files.pythonhosted.org/packages/ea/94/8fad659bcdbf86ed70099cb60ae40be6acca434bbc8c4c0d4ef356d7e0de/pillow-12.0.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
+    sha256: a6597ff2b61d121172f5844b53f21467f7082f5fb385a9a29c01414463f93b07
+  - type: file
+    url: https://files.pythonhosted.org/packages/20/39/c685d05c06deecfd4e2d1950e9a908aa2ca8bc4e6c3b12d93b9cafbd7837/pillow-12.0.0-cp313-cp313-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl
+    sha256: 0b817e7035ea7f6b942c13aa03bb554fc44fea70838ea21f8eb31c638326584e
+  - type: file
+    url: https://files.pythonhosted.org/packages/38/57/755dbd06530a27a5ed74f8cb0a7a44a21722ebf318edbe67ddbd7fb28f88/pillow-12.0.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+    sha256: f4f1231b7dec408e8670264ce63e9c71409d9583dd21d32c163e25213ee2a344
 - name: python3-Logbook
   buildsystem: simple
   build-commands:
   - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} "Logbook" --no-build-isolation
   sources:
   - type: file
-    url: https://files.pythonhosted.org/packages/c3/a2/fafcc4ce7bad34093150e14f9ed179aa53e3e60a5c46e840547bdae26674/logbook-1.8.0.tar.gz
-    sha256: 487fa41539787bfa21a51fabd7f3ae8ae7f9e6679bb3e241d0f5f18a2fc37e9c
+    url: https://files.pythonhosted.org/packages/ff/3d/bdfabb994bc96b5883212a70d323526ca997a30d0304dbf0db6b6b2344f7/logbook-1.9.1.tar.gz
+    sha256: 5f86371f7bd476ebcd52da989c020ab9f0fb90f106f38fc30f9788a3bf09c6ab
   - type: file
-    url: https://files.pythonhosted.org/packages/78/2e/943b43b943fb22ad36c7db6a75b3b92ed802860c061f8ab7c9a862f8d80f/Logbook-1.8.0-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-    sha256: b5d29ec522631dc13efba2d8f8d75e06ad1df12f69e703e69f6470ef8946bbe1
+    url: https://files.pythonhosted.org/packages/65/87/e79b2f9655f5805b683601eef24fe16535e513c078f8278e74c4247784fe/logbook-1.9.1-cp313-cp313-manylinux_2_28_aarch64.whl
+    sha256: 8d4cc934987d897bec9315068e735a9d85603e38054b2d8920ed016c881809af
+  - type: file
+    url: https://files.pythonhosted.org/packages/89/11/38db415068dabbf55ea88cd2ce55797a7e2466dc3fba577ad8621d9d5d5a/logbook-1.9.1-cp313-cp313-manylinux_2_28_x86_64.whl
+    sha256: b01c5f1785c66ebe320e72943fc2682e2750ff471793bc1166c5f3abc83ba351
+  - type: file
+    url: https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl
+    sha256: f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548
+
