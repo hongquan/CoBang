@@ -1,0 +1,189 @@
+# Croatian translation for CoBang.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the CoBang package.
+# Milo Ivir <mail@milotype.de>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: CoBang\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-12 16:12+0700\n"
+"PO-Revision-Date: 2025-11-11 23:06+0100\n"
+"Last-Translator: Milo Ivir <mail@mivirtype.de>\n"
+"Language-Team: \n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+
+#: src/help-overlay.blp:11
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Općenito"
+
+#: src/help-overlay.blp:14
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "Prikaži prečace"
+
+#: src/help-overlay.blp:19
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Zatvori aplikaciju"
+
+#: src/wifi-display.blp:15
+msgid "SSID"
+msgstr "SSID"
+
+#: src/wifi-display.blp:32
+msgid "Password"
+msgstr "Lozinka"
+
+#: src/wifi-display.blp:53
+msgid "Save"
+msgstr "Spremi"
+
+#: src/wifi-display.blp:58
+msgid "After saved, NetworkManager will connect automatically if in range."
+msgstr "Nakon spremanja, NetworkManager će se automatski povezati ako je u dometu."
+
+#: src/window.blp:6
+msgid "CoBang: QR scanner for Linux"
+msgstr "CoBang: QR skener za Linux"
+
+#: src/window.blp:52 src/window.blp:88
+msgid "Scanner"
+msgstr "Skener"
+
+#: src/window.blp:59 src/window.blp:484 src/window.blp:488
+msgid "Generator"
+msgstr "Generator"
+
+#: src/window.blp:70
+msgid "Main Menu"
+msgstr "Glavni izbornik"
+
+#: src/window.blp:127
+msgid "Show result"
+msgstr "Prikaži rezultat"
+
+#: src/window.blp:148 src/window.blp:171 src/window.blp:243
+msgid "Webcam"
+msgstr "Web kamera"
+
+#: src/window.blp:173
+msgid "No webcam detected."
+msgstr "Web kamera nije otkrivena."
+
+#: src/window.blp:208
+msgid "Play"
+msgstr "Pokreni"
+
+#: src/window.blp:218
+msgid "Pause"
+msgstr "Pauziraj"
+
+#: src/window.blp:275
+msgid "Mirror"
+msgstr "Zrcali"
+
+#: src/window.blp:292
+msgid "Image"
+msgstr "Slika"
+
+#: src/window.blp:364
+msgid "Choose an image"
+msgstr "Odaberi sliku"
+
+#: src/window.blp:406
+msgid "Please open webcam or choose an image."
+msgstr "Otvori web kameru ili odaberi sliku."
+
+#: src/window.blp:420
+msgid "Scanning..."
+msgstr "Skeniranje …"
+
+#: src/window.blp:430
+msgid "No result found."
+msgstr "Nijedan rezultat nije pronađen."
+
+#: src/window.blp:452
+msgid "Raw result"
+msgstr "Neobrađeni rezultat"
+
+#: src/window.blp:458
+msgid "Copy"
+msgstr "Kopiraj"
+
+#: src/window.blp:489
+msgid "Will be available in next versions..."
+msgstr "Bit će dostupno u sljedećim verzijama …"
+
+#: src/window.blp:500
+msgid "_Keyboard Shortcuts"
+msgstr "_Tipkovni prečaci"
+
+#: src/window.blp:505
+msgid "_About"
+msgstr "_Informacije"
+
+#: src/app.py:51
+msgid "Support the developer"
+msgstr "Podrži programera"
+
+#: src/app.py:52
+#, python-format
+msgid ""
+"QR code / barcode scanner for Linux.\n"
+"%(donate_link)s"
+msgstr ""
+"Skener QR koda / crtičnog koda za Linux.\n"
+"%(donate_link)s"
+
+#. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
+#: src/messages.py:23
+msgid ""
+"Please add an image file by one of these methods:\n"
+"\n"
+"- Drag and drop here.\n"
+"- Copy from somewhere and paste (Ctrl+V) here.\n"
+"- Choose with button below (non Flatpak).\n"
+"\n"
+"Remote image (from http://..., sftp://...) is allowed."
+msgstr ""
+"Dodaj slikovnu datoteku na jedan od ovih načina:\n"
+"\n"
+"- Povuci i ispusti ovdje.\n"
+"- Kopiraj odnekud i zalijepi (Ctrl+V) ovdje.\n"
+"- Odaberi pomoću gumba ispod (nije Flatpak).\n"
+"\n"
+"Može se koristiti eksterna slika (od http://..., sftp://...)."
+
+#: src/ui.py:28
+msgid "Connected"
+msgstr "Povezano"
+
+#: src/ui.py:60
+msgid "Saved"
+msgstr "Spremljeno"
+
+#: src/window.py:163
+msgid "Found a wifi configuration"
+msgstr "Pronađena je wifi konfiguracija"
+
+#: src/window.py:165
+msgid "Found a URL. Click to open:"
+msgstr "Pronađen URL. Klikni za otvaranje:"
+
+#: src/window.py:167
+msgid "Found unrecognized text."
+msgstr "Pronađen je neprepoznati tekst."
+
+#: src/window.py:168
+msgid "Unknown"
+msgstr "Nepoznato"
+
+#: src/window.py:234
+msgid "Copied!"
+msgstr "Kopirano!"
