@@ -1,3 +1,9 @@
+cobang (1.9.1-1) questing; urgency=medium
+
+  * Replace seeing-symbolic icon.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Tue, 11 Nov 2025 09:37:07 +0700
+
 cobang (1.9.0-2) questing; urgency=medium
 
   * The Adw.ShortcutsDialog is only available on questing onward.
