@@ -42,6 +42,11 @@
   </kudos>
 
   <releases>
+    <release version="1.9.1" date="2025-11-11" urgency="medium">
+      <description translate="no">
+        <p>Replace seeing-symbolic icon.</p>
+      </description>
+    </release>
     <release version="1.9.0" date="2025-11-08" urgency="medium">
       <description translate="no">
         <p>Use Adw.ShortcutsDialog for listing keyboard shortcut.</p>
