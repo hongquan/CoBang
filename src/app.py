@@ -55,7 +55,6 @@ log = Logger(__name__)
 
 class CoBangApplication(Adw.Application):
     """The main application singleton class."""
-    nm_client: NM.Client | None = None
 
     def __init__(self):
         super().__init__(
@@ -69,8 +68,6 @@ class CoBangApplication(Adw.Application):
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
         self.portal = Xdp.Portal()
-        self.zbar_scanner = zbar.ImageScanner()
-        NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
     def do_activate(self):
         """Called when the application is activated.
@@ -139,13 +136,6 @@ class CoBangApplication(Adw.Application):
         if shortcuts:
             self.set_accels_for_action(f'app.{name}', shortcuts)
 
-    def cb_networkmanager_client_init_done(self, client: NM.Client, res: Gio.AsyncResult):
-        if not client:
-            log.error('Failed to initialize NetworkManager client')
-            return
-        client.new_finish(res)
-        self.nm_client = client
-        log.debug('NM client: {}', client)
 
 
 def main(version):

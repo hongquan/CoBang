@@ -2,6 +2,7 @@
 py_files = [
   '__init__.py',
   'generator.py',
+  'scanner.py',
 ]
 
 install_data(
