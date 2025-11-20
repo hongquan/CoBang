@@ -2,6 +2,7 @@ from enum import StrEnum
 from typing import Callable, Any
 
 import gi
+
 gi.require_version('NM', '1.0')
 gi.require_version('GLib', '2.0')
 gi.require_version('Gio', '2.0')
@@ -20,8 +21,9 @@ class NMWifiKeyMn(StrEnum):
 
 def is_connected_same_wifi(info: WifiInfoMessage, client: NM.Client) -> bool:
     try:
-        conn = next(c for c in client.get_active_connections()
-                    if c.get_connection_type() == NM.SETTING_WIRELESS_SETTING_NAME)
+        conn = next(
+            c for c in client.get_active_connections() if c.get_connection_type() == NM.SETTING_WIRELESS_SETTING_NAME
+        )
     except StopIteration:
         return False
     # We don't need to compare password, because if we are connected to a wifi network

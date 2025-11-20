@@ -27,13 +27,11 @@ from gi.repository import XdpGtk4  # pyright: ignore[reportMissingModuleSource]
 from .consts import (
     JobName,
     ScanSourceName,
-    WebcamPageLayoutName,
     ENV_EMULATE_SANDBOX,
 )
 from .messages import WifiInfoMessage
 from .pages.generator import GeneratorPage
 from .pages.scanner import ScannerPage
-
 
 log = Logger(__name__)
 
@@ -80,18 +78,10 @@ class CoBangWindow(Adw.ApplicationWindow):
     def is_outside_sandbox(self) -> bool:
         return not self.portal.running_under_sandbox() and not os.getenv(ENV_EMULATE_SANDBOX)
 
-    # Ref: https://pygobject.gnome.org/guide/gtk_template.html
     @Gtk.Template.Callback()
     def on_job_viewstack_visible_child_changed(self, viewstack: Adw.ViewStack, *args):
         visible_child_name = viewstack.get_visible_child_name()
-        if visible_child_name != JobName.SCANNER:
-            self.scanner_page.stop_webcam()
-            return
-        if self.scanner_page.scan_source_viewstack.get_visible_child_name() == ScanSourceName.WEBCAM:
-            if not self.scanner_page.gst_pipeline:
-                self.scanner_page.request_camera_access()
-            elif not self.scanner_page.btn_pause.get_active():
-                self.scanner_page.play_webcam()
+        self.scanner_page.update_webcam_activity(visible_child_name == JobName.SCANNER)
 
     @Gtk.Template.Callback()
     def in_scanner_mode(self, wd: Self, child_name: str) -> bool:
@@ -119,20 +109,19 @@ class CoBangWindow(Adw.ApplicationWindow):
             return
         log.info('Allowed to access camera: {}', success)
         if not success:
-            self.scanner_page.webcam_multilayout.set_layout_name(WebcamPageLayoutName.UNAVAILABLE)
+            self.scanner_page.set_webcam_availability(False)
             return
         # Ref: https://github.com/workbenchdev/demos/blob/main/src/Camera/main.py#L33
         video_fd = portal.open_pipewire_remote_for_camera()
         log.info('Pipewire remote fd: {}', video_fd)
-        self.scanner_page.set_camera_pipewire_fd(video_fd)
+        self.scanner_page.setup_camera_for_sandbox(video_fd)
 
     def request_camera_access(self):
         has_camera = self.portal.is_camera_present()
         log.info('Is webcam available: {}', has_camera)
+        self.scanner_page.set_webcam_availability(has_camera)
         if not has_camera:
-            self.scanner_page.webcam_multilayout.set_layout_name(WebcamPageLayoutName.UNAVAILABLE)
             return
-        self.scanner_page.webcam_multilayout.set_layout_name(WebcamPageLayoutName.AVAILABLE)
         # Ref: https://lazka.github.io/pgi-docs/#Xdp-1.0/classes/Portal.html#Xdp.Portal.access_camera
         self.portal.access_camera(
             self.portal_parent,
@@ -161,9 +150,7 @@ class CoBangWindow(Adw.ApplicationWindow):
         log.debug('NM client: {}', client)
 
     def on_paste_image(self, *args):
-        self.scanner_page.on_paste_image(*args)
+        self.scanner_page.on_paste_image()
 
     def process_file_from_commandline(self, file: Gio.File, mime_type: str):
-        self.job_viewstack.set_visible_child_name(JobName.SCANNER)
-        self.scanner_page.scan_source_viewstack.set_visible_child_name(ScanSourceName.IMAGE)
-        self.scanner_page.process_passed_image_file(file, mime_type)
+        self.scanner_page.process_commandline_file(file, mime_type)

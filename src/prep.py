@@ -1,4 +1,3 @@
-
 from logbook import Logger
 from PIL import Image, ImageOps
 from gi.repository import Gio, Gst  # pyright: ignore[reportMissingModuleSource]
@@ -9,7 +8,9 @@ log = Logger(__name__)
 
 def guess_mimetype(file: Gio.File) -> str:
     # If file is local, we check magic bytes to determine the content type, otherwise we guess from file extension.
-    attr = Gio.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE if file.is_native() else Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE
+    attr = (
+        Gio.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE if file.is_native() else Gio.FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE
+    )
     log.debug('Querying attribute: {}', attr)
     info = file.query_info(attr, Gio.FileQueryInfoFlags.NONE, None)
     return info.get_attribute_string(attr)
@@ -51,7 +52,7 @@ def is_image_almost_black_white(rgba_img: Image.Image):
     # Get histogram
     htg = rgba_img.histogram()
     # Count pixels at the left most and right most of each RGB channel
-    polar_red = sum(htg[:10] + htg[256 - 10: 256])
+    polar_red = sum(htg[:10] + htg[256 - 10 : 256])
     polar_green = sum(htg[256 : 256 + 10] + htg[512 - 10 : 512])
     polar_blue = sum(htg[512 : 512 + 10] + htg[768 - 10 : 768])
     # Image is almost black-white if most of the pixels gather at the two ends of histogram.

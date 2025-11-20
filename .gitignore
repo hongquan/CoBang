@@ -111,6 +111,8 @@ venv.bak/
 .helix
 .zed
 
+.aider.*
+
 # PyCharm
 .idea
 

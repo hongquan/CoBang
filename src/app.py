@@ -20,7 +20,6 @@ import sys
 from datetime import datetime
 
 import gi
-import zbar
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
@@ -38,7 +37,7 @@ gi.require_version('Rsvg', '2.0')
 from gettext import gettext as _
 
 from logbook import Logger
-from gi.repository import Adw, Gio, Gtk, Gst, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import Adw, Gio, Gtk, Gst, Xdp  # pyright: ignore[reportMissingModuleSource]
 
 from .consts import BRAND_NAME, APP_ID
 from .window import CoBangWindow
@@ -49,7 +48,9 @@ from .prep import guess_mimetype
 DEVELOPPERS = ('Nguyễn Hồng Quân <ng.hong.quan@gmail.com>',)
 ARTISTS = ('Shadd Gallegos', 'Lucide')
 DONATE_TITLE = _('Support the developer')
-COMMENTS = _('QR code / barcode scanner for Linux.\n%(donate_link)s') % {'donate_link': f"<a href='https://ko-fi.com/hongquanvn'>{DONATE_TITLE}</a>."}
+COMMENTS = _('QR code / barcode scanner for Linux.\n%(donate_link)s') % {
+    'donate_link': f"<a href='https://ko-fi.com/hongquanvn'>{DONATE_TITLE}</a>."
+}
 log = Logger(__name__)
 
 
@@ -135,7 +136,6 @@ class CoBangApplication(Adw.Application):
         self.add_action(action)
         if shortcuts:
             self.set_accels_for_action(f'app.{name}', shortcuts)
-
 
 
 def main(version):

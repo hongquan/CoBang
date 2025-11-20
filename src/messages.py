@@ -19,12 +19,13 @@ class WifiInfoMessage:
     hidden: bool = False
 
 
-# Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
-IMAGE_GUIDE = _('Please add an image file by one of these methods:\n\n\
-- Drag and drop here.\n\
-- Copy from somewhere and paste (Ctrl+V) here.\n\
-- Choose with button below (non Flatpak).\n\n\
-Remote image (from http://..., sftp://...) is allowed.')
+IMAGE_GUIDE = _(
+    'Add an image by:\n\n\
+- Dragging and dropping it here.\n\
+- Copying and pasting (Ctrl+V).\n\
+- Clicking the button below (non-Flatpak).\n\n\
+Remote images (http://..., sftp://...) work too!'
+)
 
 
 def parse_to_boolean(value: str) -> bool:
@@ -33,8 +34,7 @@ def parse_to_boolean(value: str) -> bool:
 
 # Ref: https://en.wikipedia.org/wiki/QR_code#Joining_a_Wi%E2%80%91Fi_network
 def mecard_unescape(string: str):
-    return (string.replace(r'\"', '"').replace(r'\;', ';')
-            .replace(r'\,', ',').replace(r'\\', '\\'))
+    return string.replace(r'\"', '"').replace(r'\;', ';').replace(r'\,', ',').replace(r'\\', '\\')
 
 
 # Ref: https://github.com/zxing/zxing/wiki/Barcode-Contents#wifi-network-config-android

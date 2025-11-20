@@ -42,4 +42,3 @@ GST_SOURCE_NAME = 'webcam_source'
 GST_FLIP_FILTER_NAME = 'videoflip'
 GST_SINK_NAME = 'widget_sink'
 GST_APP_SINK_NAME = 'app_sink'
-

@@ -23,9 +23,12 @@ LOGBOOK_LEVEL_TO_GLIB = {
 def _log(level: GLib.LogLevelFlags, message: str):
     variant_message = GLib.Variant('s', message)
 
-    variant_dict = GLib.Variant('a{sv}', {
-        'MESSAGE': variant_message,
-    })
+    variant_dict = GLib.Variant(
+        'a{sv}',
+        {
+            'MESSAGE': variant_message,
+        },
+    )
     GLib.log_variant(SHORT_NAME, level, variant_dict)
 
 

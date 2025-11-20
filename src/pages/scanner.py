@@ -103,6 +103,41 @@ class ScannerPage(Adw.Bin):
         # Initialize zbar scanner
         self.zbar_scanner = zbar.ImageScanner()
 
+    def switch_to_webcam_source(self):
+        """Switch to webcam source view"""
+        self.scan_source_viewstack.set_visible_child_name(ScanSourceName.WEBCAM)
+
+    def switch_to_image_source(self):
+        """Switch to image source view"""
+        self.scan_source_viewstack.set_visible_child_name(ScanSourceName.IMAGE)
+
+    def open_file_chooser_dialog(self, parent_window: Gtk.Window):
+        """Open file chooser dialog to select an image file"""
+        dlg = Gtk.FileDialog(default_filter=self.props.file_filter, modal=True)
+        dlg.open(parent_window, None, self.cb_file_dialog)
+
+    def process_commandline_file(self, file: Gio.File, mime_type: str):
+        """Process a file passed from command line arguments"""
+        self.switch_to_image_source()
+        self.process_passed_image_file(file, mime_type)
+
+    def setup_camera_for_sandbox(self, video_fd: int):
+        """Setup camera pipeline for sandboxed environments (e.g., Flatpak)"""
+        log.info('Pipewire remote fd: {}', video_fd)
+        pipeline = self.build_gstreamer_pipeline_in_sandbox(video_fd)
+        if not pipeline:
+            return
+        self.attach_gstreamer_sink_to_window(pipeline)
+        if not self.btn_pause.get_active():
+            self.play_webcam()
+            self.scanner_state = ScannerState.SCANNING
+        self.enable_webcam_consumption(pipeline)
+
+    def set_webcam_availability(self, available: bool):
+        """Set webcam availability status"""
+        layout = WebcamPageLayoutName.AVAILABLE if available else WebcamPageLayoutName.UNAVAILABLE
+        self.webcam_multilayout.set_layout_name(layout)
+
     @property
     def is_outside_sandbox(self) -> bool:
         """Check if running outside sandbox by accessing parent window's property."""
@@ -242,8 +277,7 @@ class ScannerPage(Adw.Bin):
             log.warning('Root is not a window')
             return
 
-        dlg = Gtk.FileDialog(default_filter=self.props.file_filter, modal=True)
-        dlg.open(win, None, self.cb_file_dialog)
+        self.open_file_chooser_dialog(win)
 
     @Gtk.Template.Callback()
     def on_webcam_device_selected(self, dropdown: Gtk.DropDown, *args):
@@ -335,22 +369,11 @@ class ScannerPage(Adw.Bin):
         log.debug('Start device monitoring...')
         self.dev_monitor.start()
 
-    def set_camera_pipewire_fd(self, video_fd: int):
-        log.info('Pipewire remote fd: {}', video_fd)
-        pipeline = self.build_gstreamer_pipeline_in_sandbox(video_fd)
-        if not pipeline:
-            return
-        self.attach_gstreamer_sink_to_window(pipeline)
-        if not self.btn_pause.get_active():
-            self.play_webcam()
-            self.scanner_state = ScannerState.SCANNING
-        self.enable_webcam_consumption(pipeline)
-
-    def build_gstreamer_pipeline_in_sandbox(self, webcam_fd: int) -> Gst.Pipeline | None:
+    def build_gstreamer_pipeline_in_sandbox(self, video_fd: int) -> Gst.Pipeline | None:
         # Note: Setting custom name for gtk4paintablesink does not work.
         flip_method = 'horizontal-flip' if self.mirror_switch.get_active() else 'none'
         cmd = (
-            f'pipewiresrc name={GST_SOURCE_NAME} fd={webcam_fd} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
+            f'pipewiresrc name={GST_SOURCE_NAME} fd={video_fd} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
             'queue ! videoscale ! '
             f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin '
             't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
@@ -440,6 +463,19 @@ class ScannerPage(Adw.Bin):
             self.play_webcam()
             self.scanner_state = ScannerState.SCANNING
         self.enable_webcam_consumption(self.gst_pipeline)
+
+    def update_webcam_activity(self, is_visible: bool):
+        if not is_visible:
+            self.stop_webcam()
+            return
+
+        if self.scan_source_viewstack.get_visible_child_name() != ScanSourceName.WEBCAM:
+            return
+
+        if not self.gst_pipeline:
+            self.request_camera_access()
+        elif not self.btn_pause.get_active():
+            self.play_webcam()
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
