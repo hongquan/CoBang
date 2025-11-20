@@ -26,7 +26,7 @@ from typing import TYPE_CHECKING, Self, Any, cast
 import zbar
 from logbook import Logger
 from PIL import Image
-from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Gst, GstApp, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Gst, GstApp, Xdp  # pyright: ignore[reportMissingModuleSource]
 
 from ..consts import (
     ScanSourceName,
@@ -41,11 +41,17 @@ from ..consts import (
 )
 from ..custom_types import WebcamDeviceInfo
 from ..messages import WifiInfoMessage, IMAGE_GUIDE, parse_wifi_message
-from ..ui import build_wifi_info_display, build_url_display
-from ..prep import guess_mimetype, get_device_path, make_grayscale, invert_and_make_grayscale, is_image_almost_black_white
+from ..ui import build_url_display
+from ..prep import (
+    guess_mimetype,
+    get_device_path,
+    make_grayscale,
+    invert_and_make_grayscale,
+    is_image_almost_black_white,
+)
 
 if TYPE_CHECKING:
-    from ..app import CoBangApplication
+    pass
 
 log = Logger(__name__)
 
@@ -56,7 +62,7 @@ class ScannerPage(Adw.Bin):
 
     scanner_state = GObject.Property(type=int, default=0, nick='scanner-state')
     in_mobile_screen = GObject.Property(type=bool, default=False, nick='in-mobile-screen')
-    
+
     webcam_store: Gio.ListStore = Gtk.Template.Child()
     file_filter: Gtk.FileFilter = Gtk.Template.Child()
 
@@ -90,13 +96,13 @@ class ScannerPage(Adw.Bin):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        
+
         self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.REQUESTING)
         self.image_guide.set_label(IMAGE_GUIDE)
-        
+
         # Initialize zbar scanner
         self.zbar_scanner = zbar.ImageScanner()
-    
+
     @property
     def is_outside_sandbox(self) -> bool:
         """Check if running outside sandbox by accessing parent window's property."""
@@ -105,7 +111,7 @@ class ScannerPage(Adw.Bin):
             return win.is_outside_sandbox
         # Fallback
         return not Xdp.Portal().running_under_sandbox() and not os.getenv(ENV_EMULATE_SANDBOX)
-    
+
     @Gtk.Template.Callback()
     def on_scan_source_viewstack_visible_child_changed(self, viewstack: Adw.ViewStack, *args):
         self.reset_result()
@@ -233,7 +239,7 @@ class ScannerPage(Adw.Bin):
         # We need a window for the dialog.
         win = self.get_root()
         if not isinstance(win, Gtk.Window):
-            log.warning("Root is not a window")
+            log.warning('Root is not a window')
             return
 
         dlg = Gtk.FileDialog(default_filter=self.props.file_filter, modal=True)
@@ -306,7 +312,7 @@ class ScannerPage(Adw.Bin):
             self.dev_monitor = Gst.DeviceMonitor.new()
             self.dev_monitor.add_filter('Video/Source', Gst.Caps.from_string('video/x-raw'))
             log.debug('Device monitor: {}', self.dev_monitor)
-        
+
         devices = self.dev_monitor.get_devices() or []
         for d in devices:
             log.debug('Found device {}', d.get_path_string())
@@ -316,7 +322,9 @@ class ScannerPage(Adw.Bin):
                 log.info('Unsupported device: {} {}', src_type, d.get_path_string())
                 continue
             self.webcam_store.append(WebcamDeviceInfo(source_type=src_type, path=device_path, name=device_name))
-            log.debug('Added {} ({}) to webcam_store. Total items: {}', src_type, device_path, self.webcam_store.get_n_items())
+            log.debug(
+                'Added {} ({}) to webcam_store. Total items: {}', src_type, device_path, self.webcam_store.get_n_items()
+            )
         # If found any device, set the first one as selected.
         if next(iter(self.webcam_store), None):
             self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.AVAILABLE)
@@ -649,14 +657,14 @@ class ScannerPage(Adw.Bin):
 
     def display_wifi(self, wifi: WifiInfoMessage):
         """Request WiFi display from parent window.
-        
+
         Emits request-wifi-display signal with WiFi info. The parent window
         will build the display widget using NM.Client and call set_wifi_display().
         """
         log.debug('Requesting wifi display for: {}', wifi)
         self.emit('request-wifi-display', wifi)
         self.scanner_state = ScannerState.WIFI_FOUND
-    
+
     def set_wifi_display(self, widget: Gtk.Box | None):
         """Set the WiFi display widget built by parent window."""
         self.result_bin.set_child(widget)

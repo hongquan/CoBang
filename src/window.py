@@ -30,7 +30,7 @@ from .consts import (
     WebcamPageLayoutName,
     ENV_EMULATE_SANDBOX,
 )
-from .messages import IMAGE_GUIDE, WifiInfoMessage
+from .messages import WifiInfoMessage
 from .pages.generator import GeneratorPage
 from .pages.scanner import ScannerPage
 
@@ -47,10 +47,10 @@ class CoBangWindow(Adw.ApplicationWindow):
     job_viewstack: Adw.ViewStack = Gtk.Template.Child()
     toggle_scanner: Gtk.ToggleButton = Gtk.Template.Child()
     toggle_generator: Gtk.ToggleButton = Gtk.Template.Child()
-    
+
     scanner_page: ScannerPage = Gtk.Template.Child()
     generator_page: GeneratorPage = Gtk.Template.Child()
-    
+
     portal_parent: Xdp.Parent
 
     def __init__(self, **kwargs):
@@ -59,11 +59,11 @@ class CoBangWindow(Adw.ApplicationWindow):
         action = Gio.SimpleAction.new('paste-image', None)
         self.add_action(action)
         action.connect('activate', self.on_paste_image)
-        
+
         # Connect signals from scanner page
         self.scanner_page.connect('request-camera-access', self.on_request_camera_access)
         self.scanner_page.connect('request-wifi-display', self.on_request_wifi_display)
-        
+
         # Initialize NM.Client
         self.nm_client: NM.Client | None = None
         NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
@@ -88,10 +88,10 @@ class CoBangWindow(Adw.ApplicationWindow):
             self.scanner_page.stop_webcam()
             return
         if self.scanner_page.scan_source_viewstack.get_visible_child_name() == ScanSourceName.WEBCAM:
-             if not self.scanner_page.gst_pipeline:
-                 self.scanner_page.request_camera_access()
-             elif not self.scanner_page.btn_pause.get_active():
-                 self.scanner_page.play_webcam()
+            if not self.scanner_page.gst_pipeline:
+                self.scanner_page.request_camera_access()
+            elif not self.scanner_page.btn_pause.get_active():
+                self.scanner_page.play_webcam()
 
     @Gtk.Template.Callback()
     def in_scanner_mode(self, wd: Self, child_name: str) -> bool:
@@ -143,10 +143,11 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     def on_request_camera_access(self, scanner_page, *args):
         self.request_camera_access()
-    
+
     def on_request_wifi_display(self, scanner_page, wifi: WifiInfoMessage, *args):
         """Handle WiFi display request from scanner page."""
         from .ui import build_wifi_info_display
+
         box = build_wifi_info_display(wifi, self.nm_client)
         self.scanner_page.set_wifi_display(box)
 
