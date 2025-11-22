@@ -11,6 +11,9 @@ finish-args:
   - --socket=wayland
   - --socket=fallback-x11
   - --device=dri
+  # Allow shared memory access for images/streaming via flatpak portal
+  - --filesystem=host-etc
+  - --filesystem=/tmp:create
 cleanup:
   - /include
   - /lib/pkgconfig

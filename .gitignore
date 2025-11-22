@@ -122,3 +122,4 @@ venv.bak/
 node_modules
 
 /subprojects/blueprint-compiler
+.agents.md
