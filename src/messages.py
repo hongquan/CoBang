@@ -17,6 +17,8 @@ class WifiInfoMessage:
     # Value: WEP, WPA, WPA2-EAP, nopass
     auth_type: WifiAuthType | None = WifiAuthType.WPA
     hidden: bool = False
+    # Extra field (not in QR code)
+    connected: bool = False
 
 
 IMAGE_GUIDE = _(

@@ -28,8 +28,8 @@ from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
     GObject,
     Gtk,
     Xdp,
-    XdpGtk4,  # pyright: ignore[reportMissingModuleSource]
-)
+    XdpGtk4,
+)  # pyright: ignore[reportMissingModuleSource]
 from logbook import Logger
 
 from .consts import (
@@ -38,6 +38,7 @@ from .consts import (
     ScanSourceName,
 )
 from .messages import WifiInfoMessage
+from .net import add_wifi_connection, is_connected_same_wifi
 from .pages.generator import GeneratorPage
 from .pages.scanner import ScannerPage
 
@@ -68,8 +69,9 @@ class CoBangWindow(Adw.ApplicationWindow):
         action.connect('activate', self.on_paste_image)
 
         # Connect signals from scanner page
-        self.scanner_page.connect('request-camera-access', self.on_request_camera_access)
-        self.scanner_page.connect('request-wifi-display', self.on_request_wifi_display)
+        self.scanner_page.connect('request-camera-access', self.on_camera_access_requested)
+        self.scanner_page.connect('poll-wifi-connection-status', self.on_wifi_connection_status_polled)
+        self.scanner_page.connect('request-connect-wifi', self.on_wifi_connecting_requested)
 
         # Initialize NM.Client
         self.nm_client: NM.Client | None = None
@@ -109,7 +111,7 @@ class CoBangWindow(Adw.ApplicationWindow):
         if scan_source == ScanSourceName.WEBCAM:
             self.scanner_page.request_camera_access()
 
-    def cb_camera_access_request(self, portal: Xdp.Portal, result: Gio.AsyncResult):
+    def cb_camera_access_request_via_portal(self, portal: Xdp.Portal, result: Gio.AsyncResult):
         # When testing with Ghostty terminal, the app lost focus and the portal request is denied.
         try:
             success = portal.access_camera_finish(result)
@@ -125,7 +127,7 @@ class CoBangWindow(Adw.ApplicationWindow):
         log.info('Pipewire remote fd: {}', video_fd)
         self.scanner_page.setup_camera_for_sandbox(video_fd)
 
-    def request_camera_access(self):
+    def on_camera_access_requested(self, scanner_page, *args):
         has_camera = self.portal.is_camera_present()
         log.info('Is webcam available: {}', has_camera)
         self.scanner_page.set_webcam_availability(has_camera)
@@ -136,18 +138,26 @@ class CoBangWindow(Adw.ApplicationWindow):
             self.portal_parent,
             Xdp.CameraFlags.NONE,
             None,
-            self.cb_camera_access_request,
+            self.cb_camera_access_request_via_portal,
         )
 
-    def on_request_camera_access(self, scanner_page, *args):
-        self.request_camera_access()
+    def on_wifi_connection_status_polled(self, scanner_page: ScannerPage, wifi: WifiInfoMessage, *args):
+        """Handle WiFi connection status polling from scanner page."""
+        connected = False
+        if self.nm_client:
+            connected = is_connected_same_wifi(wifi.ssid, self.nm_client)
+        log.info('WiFi SSID "{}" connected: {}', wifi.ssid, connected)
+        wifi.connected = connected
+        scanner_page.build_wifi_display(wifi)
 
-    def on_request_wifi_display(self, scanner_page, wifi: WifiInfoMessage, *args):
-        """Handle WiFi display request from scanner page."""
-        from .ui import build_wifi_info_display
+    def on_wifi_connecting_requested(self, scanner_page: ScannerPage, wifi_info: WifiInfoMessage, *args):
+        """Handle WiFi connection request from scanner page."""
 
-        box = build_wifi_info_display(wifi, self.nm_client)
-        self.scanner_page.set_wifi_display(box)
+        if not self.nm_client:
+            log.error('No NM.Client available to connect to WiFi')
+            return
+        log.info('Requesting to connect to WiFi: {}', wifi_info)
+        add_wifi_connection(wifi_info, self.cb_wifi_connect_done, self.nm_client)
 
     def cb_networkmanager_client_init_done(self, client: NM.Client, res: Gio.AsyncResult):
         """Callback for NM.Client initialization."""
@@ -160,6 +170,12 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     def on_paste_image(self, *args):
         self.scanner_page.on_paste_image()
+
+    def cb_wifi_connect_done(self, client: NM.Client, res: Gio.AsyncResult):
+        """Callback for WiFi connection request."""
+        created = client.add_connection_finish(res)
+        log.debug('NetworkManager created connection: {}', created)
+        self.scanner_page.display_wifi_as_connected(True)
 
     def activate_pause_button(self):
         """Activate the Pause button if ScannerPage is visible and in an appropriate stage."""

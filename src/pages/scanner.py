@@ -60,7 +60,7 @@ from ..prep import (
     is_image_almost_black_white,
     make_grayscale,
 )
-from ..ui import build_url_display
+from ..ui import build_url_display, build_wifi_info_display
 
 
 log = Logger(__name__)
@@ -99,10 +99,17 @@ class ScannerPage(Adw.Bin):
     gst_pipeline: Gst.Pipeline | None = None
     dev_monitor: Gst.DeviceMonitor | None = None
 
-    __gsignals__ = {
-        'request-camera-access': (GObject.SignalFlags.RUN_LAST, None, ()),
-        'request-wifi-display': (GObject.SignalFlags.RUN_LAST, None, (object,)),
-    }
+    @GObject.Signal('request-camera-access', flags=GObject.SignalFlags.RUN_LAST)
+    def signal_request_camera_access(self):
+        pass
+
+    @GObject.Signal('poll-wifi-connection-status', flags=GObject.SignalFlags.RUN_LAST, arg_types=(object,))
+    def signal_poll_wifi_connection_status(self, info: WifiInfoMessage):
+        pass
+
+    @GObject.Signal('request-connect-wifi', flags=GObject.SignalFlags.RUN_LAST, arg_types=(object,))
+    def signal_request_connect_wifi(self, wifi_info: WifiInfoMessage):
+        pass
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -705,7 +712,8 @@ class ScannerPage(Adw.Bin):
             pass
         if wifi := parse_wifi_message(raw_data):
             log.info('Parsed wifi message: {}', wifi)
-            self.display_wifi(wifi)
+            self.emit('poll-wifi-connection-status', wifi)
+            self.scanner_state = ScannerState.WIFI_FOUND
             self.scanner_bottom_sheet.set_open(True)
             return
         # Non-welknown QR code. Just display the raw data.
@@ -714,19 +722,12 @@ class ScannerPage(Adw.Bin):
         self.raw_result_expander.set_expanded(True)
         self.scanner_bottom_sheet.set_open(True)
 
-    def display_wifi(self, wifi: WifiInfoMessage):
-        """Request WiFi display from parent window.
-
-        Emits request-wifi-display signal with WiFi info. The parent window
-        will build the display widget using NM.Client and call set_wifi_display().
-        """
-        log.debug('Requesting wifi display for: {}', wifi)
-        self.emit('request-wifi-display', wifi)
-        self.scanner_state = ScannerState.WIFI_FOUND
-
-    def set_wifi_display(self, widget: Gtk.Box | None):
-        """Set the WiFi display widget built by parent window."""
-        self.result_bin.set_child(widget)
+    def build_wifi_display(self, wifi: WifiInfoMessage):
+        match build_wifi_info_display(wifi):
+            case (box, btn_connect):
+                btn_connect.connect('clicked', self.on_wifi_connect_button_clicked, wifi)
+                self.result_bin.set_child(box)
+        return None
 
     def display_url(self, url: SplitResult):
         log.debug('Displaying URL: {}', url)
@@ -742,3 +743,23 @@ class ScannerPage(Adw.Bin):
         self.result_bin.set_child(None)
         self.pasted_image.set_visible(False)
         self.pasted_image.set_file(None)
+
+    def on_wifi_connect_button_clicked(self, button: Gtk.Button, wifi_info: WifiInfoMessage):
+        log.info('Connect button clicked for wifi: {}', wifi_info)
+        self.emit('request-connect-wifi', wifi_info)
+
+    def display_wifi_as_connected(self, connected: bool):
+        """Set the current wifi connection status."""
+        box = self.result_bin.get_child()
+        if not box:
+            return
+        if first_child := cast(Gtk.Widget | None, box.get_first_child()):
+            if (btn := first_child.get_next_sibling()) and isinstance(btn, Gtk.Button):
+                if connected:
+                    btn.set_sensitive(False)
+                    btn.set_label(_('Connected'))
+                else:
+                    btn.set_sensitive(True)
+                    btn.set_label(_('Connect'))
+                return
+        log.warning('Not able to find connect button in wifi display box')
