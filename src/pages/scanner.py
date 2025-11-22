@@ -123,7 +123,7 @@ class ScannerPage(Adw.Bin):
 
     def open_file_chooser_dialog(self, parent_window: Gtk.Window):
         """Open file chooser dialog to select an image file"""
-        dlg = Gtk.FileDialog(default_filter=self.props.file_filter, modal=True)
+        dlg = Gtk.FileDialog(default_filter=self.file_filter, modal=True)
         dlg.open(parent_window, None, self.cb_file_dialog)
 
     def process_commandline_file(self, file: Gio.File, mime_type: str):
@@ -226,7 +226,7 @@ class ScannerPage(Adw.Bin):
 
     @Gtk.Template.Callback()
     def passed_image_name(self, wd: Self, file: Gio.File | None) -> str:
-        return file.get_basename() if file else ''
+        return file.get_basename() or '' if file else ''
 
     @Gtk.Template.Callback()
     def on_mirror_switch_toggled(self, switch: Gtk.Switch, *args):
@@ -243,6 +243,10 @@ class ScannerPage(Adw.Bin):
         else:
             self.gst_pipeline.set_state(Gst.State.PLAYING)
 
+    def activate_pause_button(self):
+        """Activate the Pause button."""
+        self.btn_pause.set_active(True)
+
     @Gtk.Template.Callback()
     def on_btn_pause_toggled(self, button: Gtk.ToggleButton):
         to_pause = button.get_active()
@@ -250,10 +254,10 @@ class ScannerPage(Adw.Bin):
         if not self.gst_pipeline:
             return
         if to_pause:
-            app_sink = self.gst_pipeline.get_by_name(GST_APP_SINK_NAME)
-            app_sink.set_emit_signals(False)
-            source = self.gst_pipeline.get_by_name(GST_SOURCE_NAME)
-            source.set_state(Gst.State.PAUSED)
+            if app_sink := self.gst_pipeline.get_by_name(GST_APP_SINK_NAME):
+                app_sink.set_emit_signals(False)
+            if source := self.gst_pipeline.get_by_name(GST_SOURCE_NAME):
+                source.set_state(Gst.State.PAUSED)
             return
         # There is issue with the pipewiresrc when changing from PAUSED to PLAYING, an error is thrown:
         # "gst_caps_intersect_full: assertion 'GST_IS_CAPS (caps2)' failed".
@@ -262,8 +266,8 @@ class ScannerPage(Adw.Bin):
         if source and source.__class__.__name__ == 'GstPipeWireSrc':
             self.stop_webcam()
         self.play_webcam()
-        app_sink = self.gst_pipeline.get_by_name(GST_APP_SINK_NAME)
-        app_sink.set_emit_signals(True)
+        if app_sink := self.gst_pipeline.get_by_name(GST_APP_SINK_NAME):
+            app_sink.set_emit_signals(True)
 
     @Gtk.Template.Callback()
     def on_btn_show_result_clicked(self, button: Gtk.Button):
@@ -272,12 +276,18 @@ class ScannerPage(Adw.Bin):
     @Gtk.Template.Callback()
     def on_btn_copy_clicked(self, button: Gtk.Button):
         display = Gdk.Display.get_default()
+        if not display:
+            log.warning('No display available to access clipboard')
+            return
         clipboard = display.get_clipboard()
+        if not clipboard:
+            log.warning('No clipboard available on the display')
+            return
         buffer = self.raw_result_display.get_buffer()
         buffer.select_range(buffer.get_start_iter(), buffer.get_end_iter())
         buffer.copy_clipboard(clipboard)
         button.set_tooltip_text(_('Copied!'))
-        GLib.timeout_add_seconds(3, lambda: button.set_has_tooltip(False))
+        GLib.timeout_add_seconds(3, lambda: button.set_tooltip_text(None))
 
     @Gtk.Template.Callback()
     def on_btn_filechooser_clicked(self, button: Gtk.Button):
@@ -363,8 +373,8 @@ class ScannerPage(Adw.Bin):
             log.debug('Found device {}', d.get_path_string())
             device_path, src_type = get_device_path(d)
             device_name = d.get_display_name()
-            if not device_name or src_type not in DeviceSourceType:
-                log.info('Unsupported device: {} {}', src_type, d.get_path_string())
+            if not device_name or not device_path:
+                log.info('Unsupported device: {}', d.get_path_string())
                 continue
             self.webcam_store.append(WebcamDeviceInfo(source_type=src_type, path=device_path, name=device_name))
             log.debug(
@@ -404,11 +414,11 @@ class ScannerPage(Adw.Bin):
     def build_gstreamer_pipeline(self, src_type: DeviceSourceType, video_path: str) -> Gst.Pipeline | None:
         """Build GStreamer Pipeline to access webcam directly (via V4L2), when running outside sandbox."""
         flip_method = 'horizontal-flip' if self.mirror_switch.get_active() else 'none'
-        source_desc_parts = [
+        source_desc_parts = (
             src_type,
             f'name={GST_SOURCE_NAME}',
             f'device={video_path}' if src_type == DeviceSourceType.V4L2 else f'target-object={video_path}',
-        ]
+        )
         source_desc = ' '.join(source_desc_parts)
         cmd = (
             f'{source_desc} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
@@ -550,9 +560,11 @@ class ScannerPage(Adw.Bin):
             if not cam_path or src_type not in DeviceSourceType:
                 log.info('Unsupported device: {} {}', src_type, removed_dev.get_path_string())
                 return True
-            ppl_source = self.gst_pipeline.get_by_name(GST_SOURCE_NAME)
-            if cam_path == ppl_source.get_property('device') or cam_path == ppl_source.get_property('target-object'):
-                self.gst_pipeline.set_state(Gst.State.NULL)
+            if self.gst_pipeline and (ppl_source := self.gst_pipeline.get_by_name(GST_SOURCE_NAME)):
+                if cam_path == ppl_source.get_property('device') or cam_path == ppl_source.get_property(
+                    'target-object'
+                ):
+                    self.gst_pipeline.set_state(Gst.State.NULL)
             # Find the entry of just-removed in the list and remove it.
             try:
                 pos = next(i for i, d in enumerate(self.webcam_store) if d.path == cam_path)

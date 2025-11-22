@@ -16,8 +16,12 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 import sys
+from collections.abc import Sequence
 from datetime import datetime
+from typing import cast
 
 import gi
 
@@ -82,9 +86,9 @@ class CoBangApplication(Adw.Application):
             win = CoBangWindow(application=self)
         win.present()
 
-    def do_open(self, files: list[Gio.File], n_file: int, hint: str):
+    def do_open(self, files: Sequence[Gio.File], hint: str):
         """Called when the application is opened with files."""
-        if not n_file:
+        if not files:
             return
         # We only handle the first file
         file = files[0]
@@ -94,7 +98,7 @@ class CoBangApplication(Adw.Application):
         if not mime_type or not mime_type.startswith('image/'):
             log.info('Not an image. Ignore.')
             return
-        win = self.props.active_window
+        win = cast(CoBangWindow | None, self.props.active_window)
         if not win:
             win = CoBangWindow(application=self)
         win.process_file_from_commandline(file, mime_type)
@@ -102,8 +106,8 @@ class CoBangApplication(Adw.Application):
 
     def on_about_action(self, *args):
         """Callback for the app.about action."""
-        if win := self.props.active_window:
-            win.btn_pause.set_active(True)
+        if win := cast(CoBangWindow | None, self.props.active_window):
+            win.activate_pause_button()
         version = self.get_version() or '0.0'
         year = datetime.now().year
         about = Adw.AboutDialog(
