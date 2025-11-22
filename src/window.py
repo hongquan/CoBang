@@ -20,18 +20,27 @@
 import os
 from typing import TYPE_CHECKING, Self, cast
 
+from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
+    NM,
+    Adw,
+    Gio,
+    GLib,
+    GObject,
+    Gtk,
+    Xdp,
+    XdpGtk4,  # pyright: ignore[reportMissingModuleSource]
+)
 from logbook import Logger
-from gi.repository import Adw, Gio, GLib, GObject, Gtk, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
-from gi.repository import XdpGtk4  # pyright: ignore[reportMissingModuleSource]
 
 from .consts import (
+    ENV_EMULATE_SANDBOX,
     JobName,
     ScanSourceName,
-    ENV_EMULATE_SANDBOX,
 )
 from .messages import WifiInfoMessage
 from .pages.generator import GeneratorPage
 from .pages.scanner import ScannerPage
+
 
 log = Logger(__name__)
 

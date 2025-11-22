@@ -1,12 +1,14 @@
+from collections.abc import Callable
 from enum import StrEnum
-from typing import Callable, Any
+from typing import Any
 
 import gi
+
 
 gi.require_version('NM', '1.0')
 gi.require_version('GLib', '2.0')
 gi.require_version('Gio', '2.0')
-from gi.repository import GLib, NM
+from gi.repository import NM, GLib
 
 from .consts import BRAND_NAME
 from .messages import WifiInfoMessage

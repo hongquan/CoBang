@@ -17,41 +17,51 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 import io
 import os
 from locale import gettext as _
-from urllib.parse import urlsplit, SplitResult
-from typing import TYPE_CHECKING, Self, Any, cast
+from typing import Any, Self, cast
+from urllib.parse import SplitResult, urlsplit
 
 import zbar
+from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
+    Adw,
+    Gdk,
+    Gio,
+    GLib,
+    GObject,
+    Gst,
+    GstApp,
+    Gtk,
+    Xdp,
+)
 from logbook import Logger
 from PIL import Image
-from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Gst, GstApp, Xdp  # pyright: ignore[reportMissingModuleSource]
 
 from ..consts import (
-    ScanSourceName,
-    WebcamPageLayoutName,
-    ScannerState,
-    DeviceSourceType,
     ENV_EMULATE_SANDBOX,
-    GST_SOURCE_NAME,
+    GST_APP_SINK_NAME,
     GST_FLIP_FILTER_NAME,
     GST_SINK_NAME,
-    GST_APP_SINK_NAME,
+    GST_SOURCE_NAME,
+    DeviceSourceType,
+    ScannerState,
+    ScanSourceName,
+    WebcamPageLayoutName,
 )
 from ..custom_types import WebcamDeviceInfo
-from ..messages import WifiInfoMessage, IMAGE_GUIDE, parse_wifi_message
-from ..ui import build_url_display
+from ..messages import IMAGE_GUIDE, WifiInfoMessage, parse_wifi_message
 from ..prep import (
-    guess_mimetype,
     get_device_path,
-    make_grayscale,
+    guess_mimetype,
     invert_and_make_grayscale,
     is_image_almost_black_white,
+    make_grayscale,
 )
+from ..ui import build_url_display
 
-if TYPE_CHECKING:
-    pass
 
 log = Logger(__name__)
 
@@ -301,9 +311,9 @@ class ScannerPage(Adw.Bin):
         self.attach_gstreamer_sink_to_window(pipeline)
         # Let GTK prepare the UI fully for painting video. Without this, the video from pipewiresrc may not be displayed.
         if item.source_type == DeviceSourceType.PIPEWIRE:
-            GLib.idle_add(self.play_webcam_and_enable_consumption)
+            GLib.idle_add(self.play_webcam_and_enable_consumption, pipeline)
         else:
-            self.play_webcam_and_enable_consumption()
+            self.play_webcam_and_enable_consumption(pipeline)
 
     @Gtk.Template.Callback()
     def on_image_drop_target_accept(self, target: Gtk.DropTargetAsync, drop: Gdk.Drop):
@@ -322,9 +332,10 @@ class ScannerPage(Adw.Bin):
         return True
 
     def on_paste_image(self, *args):
-        log.info('Args: {}', args)
         display = Gdk.Display.get_default()
         log.debug('Display: {}', display)
+        if not display:
+            return
         clipboard = display.get_clipboard()
         log.debug('Clipboard: {}', clipboard)
         fmt = clipboard.get_formats()
@@ -458,11 +469,11 @@ class ScannerPage(Adw.Bin):
         else:
             log.warning('Appsink not found in pipeline')
 
-    def play_webcam_and_enable_consumption(self):
+    def play_webcam_and_enable_consumption(self, gst_pipeline: Gst.Pipeline):
         if not self.btn_pause.get_active():
             self.play_webcam()
             self.scanner_state = ScannerState.SCANNING
-        self.enable_webcam_consumption(self.gst_pipeline)
+        self.enable_webcam_consumption(gst_pipeline)
 
     def update_webcam_activity(self, is_visible: bool):
         if not is_visible:

@@ -1,6 +1,6 @@
+from gi.repository import Gio, Gst  # pyright: ignore[reportMissingModuleSource]
 from logbook import Logger
 from PIL import Image, ImageOps
-from gi.repository import Gio, Gst  # pyright: ignore[reportMissingModuleSource]
 
 
 log = Logger(__name__)

@@ -21,6 +21,7 @@ from datetime import datetime
 
 import gi
 
+
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 gi.require_version('Gio', '2.0')
@@ -36,13 +37,13 @@ gi.require_version('Rsvg', '2.0')
 
 from gettext import gettext as _
 
+from gi.repository import Adw, Gio, Gst, Gtk, Xdp  # pyright: ignore[reportMissingModuleSource]
 from logbook import Logger
-from gi.repository import Adw, Gio, Gtk, Gst, Xdp  # pyright: ignore[reportMissingModuleSource]
 
-from .consts import BRAND_NAME, APP_ID
-from .window import CoBangWindow
+from .consts import APP_ID, BRAND_NAME
 from .logging import GLibLogHandler
 from .prep import guess_mimetype
+from .window import CoBangWindow
 
 
 DEVELOPPERS = ('Nguyễn Hồng Quân <ng.hong.quan@gmail.com>',)

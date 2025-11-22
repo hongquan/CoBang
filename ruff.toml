@@ -30,11 +30,20 @@ exclude = [
 line-length = 120
 
 [format]
-quote-style = 'single'
+quote-style = "single"
+
+[lint]
+select = ["E4", "E7", "E9", "F", "B", "Q", "I", "UP"]
+
+[lint.flake8-quotes]
+inline-quotes = "single"
+
+[lint.isort]
+lines-after-imports = 2
 
 [lint.per-file-ignores]
-'src/app.py' = ['E402']
-'src/logging.py' = ['E402']
-'src/pages/scanner.py' = ['E402']
-'src/pages/generator.py' = ['E402']
-'src/net.py' = ['E402']
+'src/app.py' = ["E402"]
+'src/logging.py' = ["E402"]
+'src/pages/scanner.py' = ["E402"]
+'src/pages/generator.py' = ["E402"]
+'src/net.py' = ["E402"]

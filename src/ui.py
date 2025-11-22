@@ -1,12 +1,12 @@
 from gettext import gettext as _
-from urllib.parse import SplitResult
 from typing import cast
+from urllib.parse import SplitResult
 
+from gi.repository import NM, Gio, Gtk  # pyright: ignore[reportMissingModuleSource]
 from logbook import Logger
-from gi.repository import Gtk, Gio, NM  # pyright: ignore[reportMissingModuleSource]
 
 from .messages import WifiInfoMessage
-from .net import is_connected_same_wifi, add_wifi_connection
+from .net import add_wifi_connection, is_connected_same_wifi
 
 
 log = Logger(__name__)
