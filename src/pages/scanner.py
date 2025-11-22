@@ -72,6 +72,7 @@ class ScannerPage(Adw.Bin):
 
     scanner_state = GObject.Property(type=int, default=0, nick='scanner-state')
     in_mobile_screen = GObject.Property(type=bool, default=False, nick='in-mobile-screen')
+    is_outside_sandbox = GObject.Property(type=bool, default=False, nick='is-outside-sandbox')
 
     webcam_store: Gio.ListStore = Gtk.Template.Child()
     file_filter: Gtk.FileFilter = Gtk.Template.Child()
@@ -154,15 +155,6 @@ class ScannerPage(Adw.Bin):
         """Set webcam availability status"""
         layout = WebcamPageLayoutName.AVAILABLE if available else WebcamPageLayoutName.UNAVAILABLE
         self.webcam_multilayout.set_layout_name(layout)
-
-    @property
-    def is_outside_sandbox(self) -> bool:
-        """Check if running outside sandbox by accessing parent window's property."""
-        win = self.get_root()
-        if win and hasattr(win, 'is_outside_sandbox'):
-            return win.is_outside_sandbox
-        # Fallback
-        return not Xdp.Portal().running_under_sandbox() and not os.getenv(ENV_EMULATE_SANDBOX)
 
     @Gtk.Template.Callback()
     def on_scan_source_viewstack_visible_child_changed(self, viewstack: Adw.ViewStack, *args):

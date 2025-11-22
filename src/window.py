@@ -61,6 +61,13 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     portal_parent: Xdp.Parent
 
+    @GObject.Property(type=bool, default=False, nick='is-outside-sandbox')
+    def is_outside_sandbox(self) -> bool:
+        # This property may be accessed before application is set.
+        if not self.get_application():
+            return False
+        return not self.portal.running_under_sandbox() and not os.getenv(ENV_EMULATE_SANDBOX)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.portal_parent = XdpGtk4.parent_new_gtk(self)
@@ -84,10 +91,6 @@ class CoBangWindow(Adw.ApplicationWindow):
         app = self.get_application()
         assert app is not None
         return cast('CoBangApplication', app).portal
-
-    @property
-    def is_outside_sandbox(self) -> bool:
-        return not self.portal.running_under_sandbox() and not os.getenv(ENV_EMULATE_SANDBOX)
 
     @Gtk.Template.Callback()
     def on_job_viewstack_visible_child_changed(self, viewstack: Adw.ViewStack, *args):
