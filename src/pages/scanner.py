@@ -26,15 +26,14 @@ from urllib.parse import SplitResult, urlsplit
 
 import zbar
 from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
-    Adw,
-    Gdk,
-    Gio,
-    GLib,
-    GObject,
-    Gst,
-    GstApp,
-    Gtk,
-    Xdp,
+    Adw,  # pyright: ignore[reportMissingModuleSource]
+    Gdk,  # pyright: ignore[reportMissingModuleSource]
+    Gio,  # pyright: ignore[reportMissingModuleSource]
+    GLib,  # pyright: ignore[reportMissingModuleSource]
+    GObject,  # pyright: ignore[reportMissingModuleSource]
+    Gst,  # pyright: ignore[reportMissingModuleSource]
+    GstApp,  # pyright: ignore[reportMissingModuleSource]
+    Gtk,  # pyright: ignore[reportMissingModuleSource]
 )
 from logbook import Logger
 from PIL import Image
@@ -351,6 +350,7 @@ class ScannerPage(Adw.Bin):
 
     def request_camera_access(self):
         """Request camera access - emits signal for sandboxed, discovers devices otherwise."""
+        log.info('Is outside sandbox: {}', self.get_property('is-outside-sandbox'))
         if self.is_outside_sandbox:
             self.discover_webcam()
         else:

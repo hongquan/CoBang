@@ -22,13 +22,13 @@ from typing import TYPE_CHECKING, Self, cast
 
 from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
     NM,
-    Adw,
-    Gio,
-    GLib,
-    GObject,
-    Gtk,
-    Xdp,
-    XdpGtk4,
+    Adw,  # pyright: ignore[reportMissingModuleSource]
+    Gio,  # pyright: ignore[reportMissingModuleSource]
+    GLib,  # pyright: ignore[reportMissingModuleSource]
+    GObject,  # pyright: ignore[reportMissingModuleSource]
+    Gtk,  # pyright: ignore[reportMissingModuleSource]
+    Xdp,  # pyright: ignore[reportMissingModuleSource]
+    XdpGtk4,  # pyright: ignore[reportMissingModuleSource]
 )  # pyright: ignore[reportMissingModuleSource]
 from logbook import Logger
 
@@ -51,6 +51,9 @@ log = Logger(__name__)
 class CoBangWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'CoBangWindow'
     in_mobile_screen = GObject.Property(type=bool, default=False, nick='in-mobile-screen')
+    # PyGobject seems not to support re-computing GObject.Property yet. So we will make it writable
+    # and manually set new value later.
+    is_outside_sandbox = GObject.Property(type=bool, default=False, nick='is-outside-sandbox')
 
     job_viewstack: Adw.ViewStack = Gtk.Template.Child()
     toggle_scanner: Gtk.ToggleButton = Gtk.Template.Child()
@@ -60,13 +63,6 @@ class CoBangWindow(Adw.ApplicationWindow):
     generator_page: GeneratorPage = Gtk.Template.Child()
 
     portal_parent: Xdp.Parent
-
-    @GObject.Property(type=bool, default=False, nick='is-outside-sandbox')
-    def is_outside_sandbox(self) -> bool:
-        # This property may be accessed before application is set.
-        if not self.get_application():
-            return False
-        return not self.portal.running_under_sandbox() and not os.getenv(ENV_EMULATE_SANDBOX)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -109,7 +105,9 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_shown(self, *args):
-        # Delay a bit for 'portal` to be initialized.
+        if self.get_application():
+            outside_sandbox = not self.portal.running_under_sandbox() and not os.getenv(ENV_EMULATE_SANDBOX)
+            self.is_outside_sandbox = outside_sandbox
         GLib.timeout_add(1000, self.check_and_start_webcam)
 
     def check_and_start_webcam(self):

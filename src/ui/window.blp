@@ -81,7 +81,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
 
           child: $ScannerPage scanner_page {
             in-mobile-screen: bind template.in_mobile_screen;
-            is-outside-sandbox: bind template.is_outside_sandbox;
+            is-outside-sandbox: bind template.is_outside_sandbox no-sync-create;
           };
         }
 
