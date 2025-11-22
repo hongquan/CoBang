@@ -10,3 +10,4 @@ libglib2.0-dev-bin
 python3-pil
 python3-logbook
 python3-zbar
+python3-qrcode

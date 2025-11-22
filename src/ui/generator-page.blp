@@ -1,10 +1,12 @@
 using Gtk 4.0;
-using Adw 1;
 
 template $GeneratorPage: Box {
-    Adw.StatusPage {
-        title: _("Generator");
-        description: _("Will be available in next versions...");
-        hexpand: true;
-    }
+  $GeneratorStartingPage starting_page {
+    visible: bind $is_inputing_regular_text(template.generator-state) as <bool>;
+  }
+
+  $GeneratorQRCodePage qr_code_page {
+    visible: bind $is_qr_code_generated(template.generator-state) as <bool>;
+  }
+
 }

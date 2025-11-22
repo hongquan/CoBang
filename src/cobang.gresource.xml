@@ -7,6 +7,8 @@
     <file preprocess="xml-stripblanks">gtk/wifi-display.ui</file>
     <file preprocess="xml-stripblanks">gtk/url-display.ui</file>
     <file preprocess="xml-stripblanks">gtk/generator-page.ui</file>
+    <file preprocess="xml-stripblanks">gtk/generator-starting-page.ui</file>
+    <file preprocess="xml-stripblanks">gtk/generator-qr-code-page.ui</file>
     <file preprocess="xml-stripblanks">gtk/scanner-page.ui</file>
     <file preprocess="xml-stripblanks">img/wireframe-image-add.svg</file>
     <file>style.css</file>

@@ -1,0 +1,20 @@
+using Gtk 4.0;
+
+template $GeneratorQRCodePage: Box {
+  orientation: vertical;
+  spacing: 12;
+  halign: center;
+  valign: center;
+  hexpand: true;
+  vexpand: true;
+
+  Picture qr_picture {
+    width-request: 256;
+    height-request: 256;
+  }
+
+  Button btn_back {
+    label: _("Back");
+    clicked => $on_btn_back_clicked();
+  }
+}

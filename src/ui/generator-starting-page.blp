@@ -1,0 +1,46 @@
+using Gtk 4.0;
+
+template $GeneratorStartingPage: Gtk.Box {
+  orientation: vertical;
+  valign: center;
+  halign: fill;
+  hexpand: true;
+  vexpand: true;
+  spacing: 24;
+  margin-top: 24;
+  margin-bottom: 24;
+  margin-start: 12;
+  margin-end: 12;
+
+  Label {
+    label: _("Generate QR Code");
+
+    styles [
+      "title-2",
+    ]
+  }
+
+  Box {
+    orientation: vertical;
+    spacing: 12;
+
+    Entry entry {
+      placeholder-text: _("Enter text or URL...");
+      activates-default: true;
+    }
+
+    Button btn_generate {
+      label: _("Generate");
+      halign: center;
+      focusable: true;
+      sensitive: true;
+
+      styles [
+        "suggested-action",
+        "pill",
+      ]
+
+      clicked => $on_btn_generate_clicked();
+    }
+  }
+}
