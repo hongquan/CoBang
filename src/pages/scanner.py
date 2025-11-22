@@ -20,7 +20,6 @@
 from __future__ import annotations
 
 import io
-import os
 from locale import gettext as _
 from typing import Any, Self, cast
 from urllib.parse import SplitResult, urlsplit
@@ -41,7 +40,6 @@ from logbook import Logger
 from PIL import Image
 
 from ..consts import (
-    ENV_EMULATE_SANDBOX,
     GST_APP_SINK_NAME,
     GST_FLIP_FILTER_NAME,
     GST_SINK_NAME,
@@ -141,7 +139,6 @@ class ScannerPage(Adw.Bin):
 
     def setup_camera_for_sandbox(self, video_fd: int):
         """Setup camera pipeline for sandboxed environments (e.g., Flatpak)"""
-        log.info('Pipewire remote fd: {}', video_fd)
         pipeline = self.build_gstreamer_pipeline_in_sandbox(video_fd)
         if not pipeline:
             return

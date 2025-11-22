@@ -109,10 +109,16 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_shown(self, *args):
+        # Delay a bit for 'portal` to be initialized.
+        GLib.timeout_add(1000, self.check_and_start_webcam)
+
+    def check_and_start_webcam(self):
         scan_source = self.scanner_page.scan_source_viewstack.get_visible_child_name()
         log.info('Scan source: {}', scan_source)
         if scan_source == ScanSourceName.WEBCAM:
             self.scanner_page.request_camera_access()
+        # Indicate that we don't want to repeat this callback.
+        return False
 
     def cb_camera_access_request_via_portal(self, portal: Xdp.Portal, result: Gio.AsyncResult):
         # When testing with Ghostty terminal, the app lost focus and the portal request is denied.
