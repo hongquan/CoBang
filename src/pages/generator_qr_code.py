@@ -106,7 +106,7 @@ class GeneratorQRCodePage(Gtk.Box):
             log.error('Failed to write QR code to file: {}', e)
 
     @Gtk.Template.Callback()
-    def on_btn_copy_clicked(self, _btn: Gtk.Button):
+    def on_btn_copy_clicked(self, button: Gtk.Button):
         paintable = self.qr_picture.get_paintable()
         if not isinstance(paintable, Gdk.Texture):
             log.warning('QR code picture is not a texture')
@@ -116,5 +116,7 @@ class GeneratorQRCodePage(Gtk.Box):
         clipboard = Gdk.Display.get_default().get_clipboard()
         try:
             clipboard.set_content(content_provider)
+            button.set_tooltip_text(_('Copied!'))
+            GLib.timeout_add_seconds(3, lambda: button.set_tooltip_text(None))
         except GLib.Error as e:
             log.error('Failed to copy QR code to clipboard: {}', e)
