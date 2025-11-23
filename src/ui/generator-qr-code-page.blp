@@ -13,8 +13,26 @@ template $GeneratorQRCodePage: Box {
     height-request: 256;
   }
 
-  Button btn_back {
-    label: _("New");
-    clicked => $on_btn_back_clicked();
+  Box {
+    orientation: horizontal;
+    spacing: 6;
+    halign: center;
+
+    Button btn_download {
+      icon-name: "document-save-symbolic";
+      tooltip-text: _("Save QR Code");
+      clicked => $on_btn_download_clicked();
+    }
+
+    Button btn_copy {
+      icon-name: "edit-copy-symbolic";
+      tooltip-text: _("Copy to Clipboard");
+      clicked => $on_btn_copy_clicked();
+    }
+
+    Button btn_new {
+      label: _("New");
+      clicked => $on_btn_new_clicked();
+    }
   }
 }
