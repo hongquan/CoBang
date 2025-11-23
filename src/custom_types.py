@@ -25,3 +25,23 @@ class WebcamDeviceInfo(GObject.GObject):
         self.path = path
         self.name = name
         self.enabled = enabled
+
+
+class WifiNetworkInfo(GObject.GObject):
+    __gtype_name__ = 'WifiNetworkInfo'
+    ssid = GObject.Property(type=str)
+    password = GObject.Property(type=str)
+    # Ref: https://lazka.github.io/pgi-docs/#NM-1.0/classes/SettingWirelessSecurity.html#NM.SettingWirelessSecurity.props.key_mgmt
+    # Possible values: 'none', 'ieee8021x', 'owe', 'wpa-psk', 'sae', 'wpa-eap', 'wpa-eap-suite-b-192'.
+    # If seeing unknown value, assume 'wpa-psk'.
+    key_mgmt = GObject.Property(type=str, default='none')
+
+    __gsignals__ = {
+        'changed': (GObject.SIGNAL_RUN_LAST, None, ()),
+    }
+
+    def __init__(self, ssid: str, password: str = '', key_mgmt: str = 'none'):
+        super().__init__()
+        self.ssid = ssid
+        self.password = password
+        self.key_mgmt = key_mgmt

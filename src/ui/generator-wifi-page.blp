@@ -1,6 +1,47 @@
 using Gtk 4.0;
 using Adw 1;
+using Gio 2.0;
 
-template $GeneratorWiFiPage: Adw.Bin {
+Gio.ListStore wifi_list_store {
+  item-type: typeof<$WifiNetworkInfo>;
+}
 
+template $GeneratorWiFiPage : Adw.Bin {
+  Gtk.Box {
+    orientation: vertical;
+    spacing: 12;
+    margin-top: 12;
+    margin-bottom: 12;
+    margin-start: 12;
+    margin-end: 12;
+
+    ListView wifi_list_view {
+      model: NoSelection {
+        model: wifi_list_store;
+      };
+
+      factory: BuilderListItemFactory {
+        template ListItem {
+          child: Box {
+            spacing: 12;
+
+            Label {
+              label: bind template.item as <$WifiNetworkInfo>.ssid;
+              ellipsize: middle;
+              hexpand: true;
+              halign: start;
+            }
+
+            Button {
+              icon-name: 'qr-code-symbolic';
+              valign: center;
+              styles ['flat']
+            }
+          };
+        }
+      };
+
+      styles ['rich-list']
+    }
+  }
 }

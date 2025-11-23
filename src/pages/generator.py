@@ -37,8 +37,10 @@ from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
 from logbook import Logger
 
 from ..consts import GeneratorSubPage
+from ..custom_types import WifiNetworkInfo
 from .generator_qr_code import GeneratorQRCodePage
 from .generator_starting import GeneratorStartingPage
+from .generator_wifi import GeneratorWiFiPage
 
 
 log = Logger(__name__)
@@ -54,12 +56,19 @@ class GeneratorPage(Adw.Bin):
     view_stack: Adw.ViewStack = Gtk.Template.Child()
     starting_page: GeneratorStartingPage = Gtk.Template.Child()
     qr_code_page: GeneratorQRCodePage = Gtk.Template.Child()
+    wifi_page: GeneratorWiFiPage = Gtk.Template.Child()
+
+    __gsignals__ = {
+        'request-saved-wifi-networks': (GObject.SignalFlags.RUN_FIRST, None, ()),
+    }
 
     def __init__(self, **kwargs):
         """Initialize the page."""
         super().__init__(**kwargs)
         self.starting_page.connect('generate-qr', self.on_qr_code_generation_requested)
+        self.starting_page.connect('switch-to-wifi', self.on_switch_to_wifi)
         self.qr_code_page.connect('back-to-start', self.on_back_to_start)
+        self.wifi_page.connect('request-saved-wifi-networks', self.on_request_saved_wifi_networks)
 
     def on_qr_code_generation_requested(self, _src: GeneratorStartingPage, text: str):
         """Handle the QR code generation request."""
@@ -84,3 +93,24 @@ class GeneratorPage(Adw.Bin):
         self.starting_page.clear_entry()
         self.qr_code_page.clear_original_text()
         self.active_sub_page = GeneratorSubPage.STARTING
+
+    def on_switch_to_wifi(self, _src: GeneratorStartingPage):
+        """Handle switching to the WiFi page."""
+        self.active_sub_page = GeneratorSubPage.WIFI
+
+    def on_request_saved_wifi_networks(self, _src: GeneratorWiFiPage):
+        """Forward the request to the window."""
+        self.emit('request-saved-wifi-networks')
+
+    def populate_wifi_networks(self, wifi_networks: list[WifiNetworkInfo]):
+        """Populate WiFi networks in the WiFi page."""
+        self.wifi_page.populate_wifi_networks(wifi_networks)
+
+    @Gtk.Template.Callback()
+    def on_view_stack_visible_child_name_changed(self, view_stack: Adw.ViewStack, *args):
+        """Handle change of visible child name on the generator view stack."""
+        name = view_stack.get_visible_child_name()
+        log.debug('GeneratorPage visible child changed to: {}', name)
+        if name == GeneratorSubPage.WIFI:
+            # Ask for a refresh of saved WiFi networks every time user switches here.
+            self.emit('request-saved-wifi-networks')

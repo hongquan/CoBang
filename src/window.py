@@ -37,6 +37,7 @@ from .consts import (
     JobName,
     ScanSourceName,
 )
+from .custom_types import WifiNetworkInfo
 from .messages import WifiInfoMessage
 from .net import add_wifi_connection, is_connected_same_wifi
 from .pages.generator import GeneratorPage
@@ -75,6 +76,9 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.scanner_page.connect('request-camera-access', self.on_camera_access_requested)
         self.scanner_page.connect('poll-wifi-connection-status', self.on_wifi_connection_status_polled)
         self.scanner_page.connect('request-connect-wifi', self.on_wifi_connecting_requested)
+
+        # Connect signals from generator page
+        self.generator_page.connect('request-saved-wifi-networks', self.on_request_saved_wifi_networks)
 
         # Initialize NM.Client
         self.nm_client: NM.Client | None = None
@@ -178,11 +182,47 @@ class CoBangWindow(Adw.ApplicationWindow):
     def on_paste_image(self, *args):
         self.scanner_page.on_paste_image()
 
-    def cb_wifi_connect_done(self, client: NM.Client, res: Gio.AsyncResult):
-        """Callback for WiFi connection request."""
-        created = client.add_connection_finish(res)
-        log.debug('NetworkManager created connection: {}', created)
-        self.scanner_page.display_wifi_as_connected(True)
+    def on_request_saved_wifi_networks(self, _src: GeneratorPage):
+        """Handle request to retrieve saved WiFi networks."""
+        if not self.nm_client:
+            log.error('No NM.Client available to retrieve saved WiFi networks')
+            return
+
+        wifi_networks = []
+        connections = self.nm_client.get_connections()
+        for conn in connections:
+            wireless_setting = conn.get_setting_wireless()
+            if not wireless_setting:
+                continue
+            ssid_bytes = wireless_setting.get_ssid()
+            if not ssid_bytes:
+                continue
+            ssid = ssid_bytes.get_data().decode('utf-8', errors='ignore')
+
+            # Get password and key management from wireless security setting
+            password = ''
+            key_mgmt = 'none'
+            wireless_security = conn.get_setting_wireless_security()
+            if wireless_security:
+                key_mgmt = wireless_security.get_key_mgmt() or 'none'
+                # Try different password properties based on key management type
+                if key_mgmt in ('wpa-psk', 'sae'):
+                    password = wireless_security.get_psk() or ''
+                elif key_mgmt == 'none':
+                    # WEP uses key_mgmt='none'
+                    password = (
+                        wireless_security.get_wep_key(0) or
+                        wireless_security.get_wep_key(1) or
+                        wireless_security.get_wep_key(2) or
+                        wireless_security.get_wep_key(3) or
+                        ''
+                    )
+
+            wifi_info = WifiNetworkInfo(ssid=ssid, password=password, key_mgmt=key_mgmt)
+            wifi_networks.append(wifi_info)
+
+        log.info('Retrieved {} saved WiFi networks', len(wifi_networks))
+        self.generator_page.populate_wifi_networks(wifi_networks)
 
     def activate_pause_button(self):
         """Activate the Pause button if ScannerPage is visible and in an appropriate stage."""

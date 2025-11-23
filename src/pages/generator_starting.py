@@ -39,6 +39,10 @@ class GeneratorStartingPage(Gtk.Box):
     def signal_generate_qr(self, text: str):  # Emitted when user clicks Generate
         pass
 
+    @GObject.Signal('switch-to-wifi', flags=GObject.SignalFlags.RUN_LAST)
+    def signal_switch_to_wifi(self):  # Emitted when user clicks Wi-Fi
+        pass
+
     def __init__(self, **kwargs):
         """Initialize the page and connect entry events."""
         super().__init__(**kwargs)
@@ -49,6 +53,10 @@ class GeneratorStartingPage(Gtk.Box):
         text = self.get_entry_text().strip()
         if text:
             self.emit('generate-qr', text)
+
+    @Gtk.Template.Callback()
+    def on_btn_wifi_clicked(self, _btn: Gtk.Button):
+        self.emit('switch-to-wifi')
 
     def get_entry_text(self) -> str:
         """Get the text from the entry widget."""

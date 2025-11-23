@@ -5,6 +5,7 @@ template $GeneratorPage : Adw.Bin {
   Adw.ViewStack view_stack {
     enable-transitions: true;
     visible-child-name: bind template.active-sub-page;
+    notify::visible-child-name => $on_view_stack_visible_child_name_changed();
 
     Adw.ViewStackPage {
       name: 'starting';
@@ -15,6 +16,11 @@ template $GeneratorPage : Adw.Bin {
     Adw.ViewStackPage {
       name: 'qr-code-result';
       child: $GeneratorQRCodePage qr_code_page {};
+    }
+
+    Adw.ViewStackPage {
+      name: 'wifi';
+      child: $GeneratorWiFiPage wifi_page {};
     }
   }
 }

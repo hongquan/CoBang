@@ -34,18 +34,35 @@ template $GeneratorStartingPage: Gtk.Box {
         activates-default: true;
       }
 
-      Button btn_generate {
-        label: _("Generate");
+      Box {
+        orientation: horizontal;
+        spacing: 12;
         halign: center;
-        focusable: true;
-        sensitive: true;
 
-        styles [
-          "suggested-action",
-          "pill",
-        ]
+        Button btn_wifi {
+          label: _("Wi-Fi");
+          focusable: true;
+          sensitive: true;
 
-        clicked => $on_btn_generate_clicked();
+          styles [
+            "pill",
+          ]
+
+          clicked => $on_btn_wifi_clicked();
+        }
+
+        Button btn_generate {
+          label: _("Generate");
+          focusable: true;
+          sensitive: true;
+
+          styles [
+            "suggested-action",
+            "pill",
+          ]
+
+          clicked => $on_btn_generate_clicked();
+        }
       }
     }
   }

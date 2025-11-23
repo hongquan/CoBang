@@ -4,6 +4,7 @@ py_files = [
   'generator.py',
   'generator_starting.py',
   'generator_qr_code.py',
+  'generator_wifi.py',
   'scanner.py',
 ]
 

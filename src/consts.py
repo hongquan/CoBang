@@ -35,6 +35,7 @@ class ScannerState(IntEnum):
 
 class GeneratorSubPage(StrEnum):
     STARTING = 'starting'
+    WIFI = 'wifi'
     QR_CODE_RESULT = 'qr-code-result'
 
 
