@@ -28,6 +28,7 @@ gi.require_version('GLib', '2.0')
 
 import qrcode
 from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
+    Adw,  # pyright: ignore[reportMissingModuleSource]
     Gdk,  # pyright: ignore[reportMissingModuleSource]
     GLib,  # pyright: ignore[reportMissingModuleSource]
     GObject,  # pyright: ignore[reportMissingModuleSource]
@@ -35,7 +36,7 @@ from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
 )
 from logbook import Logger
 
-from ..consts import GeneratorState
+from ..consts import GeneratorSubPage
 from .generator_qr_code import GeneratorQRCodePage
 from .generator_starting import GeneratorStartingPage
 
@@ -44,12 +45,13 @@ log = Logger(__name__)
 
 
 @Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/generator-page.ui')
-class GeneratorPage(Gtk.Box):
+class GeneratorPage(Adw.Bin):
     """The main generator page."""
 
     __gtype_name__ = 'GeneratorPage'
 
-    generator_state = GObject.Property(type=int, default=GeneratorState.INPUTING_REGULAR_TEXT, nick='generator-state')
+    active_sub_page = GObject.Property(type=str, default=GeneratorSubPage.STARTING)
+    view_stack: Adw.ViewStack = Gtk.Template.Child()
     starting_page: GeneratorStartingPage = Gtk.Template.Child()
     qr_code_page: GeneratorQRCodePage = Gtk.Template.Child()
 
@@ -58,16 +60,6 @@ class GeneratorPage(Gtk.Box):
         super().__init__(**kwargs)
         self.starting_page.connect('generate-qr', self.on_qr_code_generation_requested)
         self.qr_code_page.connect('back-to-start', self.on_back_to_start)
-
-    @Gtk.Template.Callback()
-    def is_inputing_regular_text(self, _wd: GeneratorPage, value: int) -> bool:
-        """Check if the generator is in input mode."""
-        return value == GeneratorState.INPUTING_REGULAR_TEXT
-
-    @Gtk.Template.Callback()
-    def is_qr_code_generated(self, _wd: GeneratorPage, value: int) -> bool:
-        """Check if the QR code has been generated."""
-        return value == GeneratorState.QR_CODE_GENERATED
 
     def on_qr_code_generation_requested(self, _src: GeneratorStartingPage, text: str):
         """Handle the QR code generation request."""
@@ -83,7 +75,7 @@ class GeneratorPage(Gtk.Box):
             texture = Gdk.Texture.new_from_bytes(GLib.Bytes.new(png_data))
             self.qr_code_page.set_original_text(text)
             self.qr_code_page.qr_picture.set_paintable(texture)
-            self.generator_state = GeneratorState.QR_CODE_GENERATED
+            self.active_sub_page = GeneratorSubPage.QR_CODE_RESULT
         except GLib.Error as e:
             log.error('Failed to generate QR code image: {}', e)
 
@@ -91,4 +83,4 @@ class GeneratorPage(Gtk.Box):
         """Handle returning to the starting page."""
         self.starting_page.clear_entry()
         self.qr_code_page.clear_original_text()
-        self.generator_state = GeneratorState.INPUTING_REGULAR_TEXT
+        self.active_sub_page = GeneratorSubPage.STARTING

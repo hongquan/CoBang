@@ -1,12 +1,20 @@
 using Gtk 4.0;
+using Adw 1;
 
-template $GeneratorPage: Box {
-  $GeneratorStartingPage starting_page {
-    visible: bind $is_inputing_regular_text(template.generator-state) as <bool>;
+template $GeneratorPage : Adw.Bin {
+  Adw.ViewStack view_stack {
+    enable-transitions: true;
+    visible-child-name: bind template.active-sub-page;
+
+    Adw.ViewStackPage {
+      name: 'starting';
+      child: $GeneratorStartingPage starting_page {};
+
+    }
+
+    Adw.ViewStackPage {
+      name: 'qr-code-result';
+      child: $GeneratorQRCodePage qr_code_page {};
+    }
   }
-
-  $GeneratorQRCodePage qr_code_page {
-    visible: bind $is_qr_code_generated(template.generator-state) as <bool>;
-  }
-
 }

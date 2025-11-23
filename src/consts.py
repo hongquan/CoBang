@@ -33,9 +33,9 @@ class ScannerState(IntEnum):
     TEXT_FOUND = 5
 
 
-class GeneratorState(IntEnum):
-    INPUTING_REGULAR_TEXT = 0
-    QR_CODE_GENERATED = 1
+class GeneratorSubPage(StrEnum):
+    STARTING = 'starting'
+    QR_CODE_RESULT = 'qr-code-result'
 
 
 class DeviceSourceType(StrEnum):
