@@ -34,8 +34,8 @@ class GeneratorPage(Gtk.Box):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.starting_page.connect('generate-qr', self.on_generate_qr)
-        self.qr_code_page.connect('back-to-input', self.on_back_to_input)
+        self.starting_page.connect('generate-qr', self.on_qr_code_generation_requested)
+        self.qr_code_page.connect('back-to-start', self.on_back_to_start)
 
     @Gtk.Template.Callback()
     def is_inputing_regular_text(self, _wd: GeneratorPage, value: int) -> bool:
@@ -45,7 +45,7 @@ class GeneratorPage(Gtk.Box):
     def is_qr_code_generated(self, _wd: GeneratorPage, value: int) -> bool:
         return value == GeneratorState.QR_CODE_GENERATED
 
-    def on_generate_qr(self, _src: GeneratorStartingPage, text: str):
+    def on_qr_code_generation_requested(self, _src: GeneratorStartingPage, text: str):
         qr = qrcode.QRCode(border=2)
         qr.add_data(text)
         qr.make(fit=True)
@@ -61,5 +61,6 @@ class GeneratorPage(Gtk.Box):
         except GLib.Error as e:
             log.error('Failed to generate QR code image: {}', e)
 
-    def on_back_to_input(self, _src: GeneratorQRCodePage):
+    def on_back_to_start(self, _src: GeneratorQRCodePage):
+        self.starting_page.clear_entry()
         self.generator_state = GeneratorState.INPUTING_REGULAR_TEXT

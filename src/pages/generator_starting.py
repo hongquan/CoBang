@@ -32,7 +32,7 @@ class GeneratorStartingPage(Gtk.Box):
 
   __gtype_name__ = 'GeneratorStartingPage'
 
-  entry: Gtk.Entry = Gtk.Template.Child()
+  text_entry: Gtk.Entry = Gtk.Template.Child()
   btn_generate: Gtk.Button = Gtk.Template.Child()
 
   @GObject.Signal('generate-qr', flags=GObject.SignalFlags.RUN_LAST, arg_types=(str,))
@@ -42,7 +42,7 @@ class GeneratorStartingPage(Gtk.Box):
   def __init__(self, **kwargs):
     """Initialize the page and connect entry events."""
     super().__init__(**kwargs)
-    self.entry.connect('activate', self.on_entry_activated)
+    self.text_entry.connect('activate', self.on_entry_activated)
 
   @Gtk.Template.Callback()
   def on_btn_generate_clicked(self, _btn: Gtk.Button):
@@ -52,11 +52,11 @@ class GeneratorStartingPage(Gtk.Box):
 
   def get_entry_text(self) -> str:
     """Get the text from the entry widget."""
-    return self.entry.get_text()
+    return self.text_entry.get_text()
 
   def clear_entry(self):
     """Clear the entry widget."""
-    self.entry.set_text('')
+    self.text_entry.set_text('')
 
   def on_entry_activated(self, entry: Gtk.Entry):
     """Handle Enter key in the entry field."""

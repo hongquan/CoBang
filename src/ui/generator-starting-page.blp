@@ -1,4 +1,5 @@
 using Gtk 4.0;
+using Adw 1;
 
 template $GeneratorStartingPage: Gtk.Box {
   orientation: vertical;
@@ -12,35 +13,40 @@ template $GeneratorStartingPage: Gtk.Box {
   margin-start: 12;
   margin-end: 12;
 
-  Label {
-    label: _("Generate QR Code");
+  Adw.Clamp {
+    maximum-size: 400;
+    tightening-threshold: 300;
 
-    styles [
-      "title-2",
-    ]
-  }
+    Box {
+      orientation: vertical;
+      spacing: 12;
 
-  Box {
-    orientation: vertical;
-    spacing: 12;
+      Label {
+        label: _("Generate QR Code");
 
-    Entry entry {
-      placeholder-text: _("Enter text or URL...");
-      activates-default: true;
-    }
+        styles [
+          "title-2",
+        ]
+      }
 
-    Button btn_generate {
-      label: _("Generate");
-      halign: center;
-      focusable: true;
-      sensitive: true;
+      Entry text_entry {
+        placeholder-text: _("Enter text or URL...");
+        activates-default: true;
+      }
 
-      styles [
-        "suggested-action",
-        "pill",
-      ]
+      Button btn_generate {
+        label: _("Generate");
+        halign: center;
+        focusable: true;
+        sensitive: true;
 
-      clicked => $on_btn_generate_clicked();
+        styles [
+          "suggested-action",
+          "pill",
+        ]
+
+        clicked => $on_btn_generate_clicked();
+      }
     }
   }
 }
