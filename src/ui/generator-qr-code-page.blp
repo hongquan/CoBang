@@ -15,6 +15,39 @@ template $GeneratorQRCodePage: Box {
   }
 
   Box {
+    orientation: vertical;
+    spacing: 6;
+    hexpand: true;
+    halign: fill;
+
+    Label {
+      label: _("Original text");
+      wrap: true;
+      xalign: 0.0;
+    }
+
+    ScrolledWindow {
+      min-content-height: 40;
+      max-content-height: 160;
+      hexpand: true;
+      vexpand: false;
+
+      child: TextView original_text_view {
+        editable: false;
+        cursor-visible: false;
+        focusable: false;
+        wrap-mode: word_char;
+        hexpand: true;
+        vexpand: false;
+        top-margin: 6;
+        bottom-margin: 6;
+        left-margin: 0;
+        right-margin: 0;
+      };
+    }
+  }
+
+  Box {
     orientation: horizontal;
     spacing: 6;
     halign: center;

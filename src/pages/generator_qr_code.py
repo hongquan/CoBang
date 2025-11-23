@@ -39,10 +39,20 @@ class GeneratorQRCodePage(Gtk.Box):
     btn_download: Gtk.Button = Gtk.Template.Child()
     btn_copy: Gtk.Button = Gtk.Template.Child()
     btn_new: Gtk.Button = Gtk.Template.Child()
+    original_text_view: Gtk.TextView = Gtk.Template.Child()
 
     @GObject.Signal('back-to-start', flags=GObject.SignalFlags.RUN_LAST)
     def signal_back_to_start(self):  # Emitted when user clicks New
         pass
+
+    def set_original_text(self, text: str):
+        """Display the text used to generate the QR code."""
+        buffer = self.original_text_view.get_buffer()
+        buffer.set_text(text)
+
+    def clear_original_text(self):
+        """Clear the displayed original text."""
+        self.set_original_text('')
 
     @Gtk.Template.Callback()
     def on_btn_new_clicked(self, _btn: Gtk.Button):

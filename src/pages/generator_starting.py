@@ -61,3 +61,7 @@ class GeneratorStartingPage(Gtk.Box):
     def on_entry_activated(self, entry: Gtk.Entry):
         """Handle Enter key in the entry field."""
         self.on_btn_generate_clicked(None)
+
+    def grab_focus_on_entry(self):
+        """Grab focus on the text entry."""
+        self.text_entry.grab_focus()

@@ -81,6 +81,7 @@ class GeneratorPage(Gtk.Box):
         # Use direct GDK Texture rather than PixbufLoader to avoid external loader
         try:
             texture = Gdk.Texture.new_from_bytes(GLib.Bytes.new(png_data))
+            self.qr_code_page.set_original_text(text)
             self.qr_code_page.qr_picture.set_paintable(texture)
             self.generator_state = GeneratorState.QR_CODE_GENERATED
         except GLib.Error as e:
@@ -89,4 +90,5 @@ class GeneratorPage(Gtk.Box):
     def on_back_to_start(self, _src: GeneratorQRCodePage):
         """Handle returning to the starting page."""
         self.starting_page.clear_entry()
+        self.qr_code_page.clear_original_text()
         self.generator_state = GeneratorState.INPUTING_REGULAR_TEXT
