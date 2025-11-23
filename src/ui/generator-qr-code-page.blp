@@ -14,17 +14,11 @@ template $GeneratorQRCodePage: Box {
     content-fit: contain;
   }
 
-  Box {
-    orientation: vertical;
-    spacing: 6;
+  Expander original_text_expander {
+    label: _("Original text");
+    expanded: false;
     hexpand: true;
     halign: fill;
-
-    Label {
-      label: _("Original text");
-      wrap: true;
-      xalign: 0.0;
-    }
 
     ScrolledWindow {
       min-content-height: 40;
@@ -39,10 +33,12 @@ template $GeneratorQRCodePage: Box {
         wrap-mode: word_char;
         hexpand: true;
         vexpand: false;
-        top-margin: 6;
-        bottom-margin: 6;
-        left-margin: 0;
-        right-margin: 0;
+        // These properties has `margin` name,
+        // but actually padding inside the TextView
+        top-margin: 4;
+        bottom-margin: 4;
+        left-margin: 4;
+        right-margin: 4;
       };
     }
   }
