@@ -39,6 +39,7 @@ class GeneratorWiFiPage(Adw.Bin):
     __gsignals__ = {
         'request-saved-wifi-networks': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'generate-qr-for-wifi': (GObject.SignalFlags.RUN_FIRST, None, (WifiNetworkInfo,)),
+        'back-to-start': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
     def __init__(self, **kwargs):
@@ -51,10 +52,15 @@ class GeneratorWiFiPage(Adw.Bin):
             self.wifi_list_store.append(wifi_info)
         log.info('Populated {} WiFi networks in list store', len(wifi_networks))
 
-    def on_qr_button_clicked(self, button: Gtk.Button, list_item: Gtk.ListItem):
-        """Handle QR button click."""
-        wifi_info = list_item.get_item()
-        if wifi_info:
-            log.info('Generate QR for WiFi: {}', wifi_info.ssid)
-            self.emit('generate-qr-for-wifi', wifi_info)
+
+    @Gtk.Template.Callback()
+    def on_wifi_list_view_activated(self, list_view: Gtk.ListView, position: int):
+        item = self.wifi_list_store.get_item(position)
+        if isinstance(item, WifiNetworkInfo):
+            log.info('Generate QR for WiFi (activated): {}', item.ssid)
+            self.emit('generate-qr-for-wifi', item)
+
+    @Gtk.Template.Callback()
+    def on_btn_back_clicked(self, button: Gtk.Button):
+        self.emit('back-to-start')
 

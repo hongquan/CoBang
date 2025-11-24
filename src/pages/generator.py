@@ -69,6 +69,8 @@ class GeneratorPage(Adw.Bin):
         self.starting_page.connect('switch-to-wifi', self.on_switch_to_wifi)
         self.qr_code_page.connect('back-to-start', self.on_back_to_start)
         self.wifi_page.connect('request-saved-wifi-networks', self.on_request_saved_wifi_networks)
+        self.wifi_page.connect('generate-qr-for-wifi', self.on_generate_qr_for_wifi_network)
+        self.wifi_page.connect('back-to-start', self.on_back_to_start)
 
     def on_qr_code_generation_requested(self, _src: GeneratorStartingPage, text: str):
         """Handle the QR code generation request."""
@@ -106,6 +108,16 @@ class GeneratorPage(Adw.Bin):
         """Populate WiFi networks in the WiFi page."""
         self.wifi_page.populate_wifi_networks(wifi_networks)
 
+    def on_generate_qr_for_wifi_network(self, _src: GeneratorWiFiPage, wifi_info: WifiNetworkInfo):
+        """Generate QR code for a saved WiFi network."""
+        ssid = wifi_escape(wifi_info.ssid)
+        auth = map_key_mgmt_to_auth(wifi_info.key_mgmt)
+        parts = [f'S:{ssid}', f'T:{auth}']
+        if auth != 'nopass' and wifi_info.password:
+            parts.append(f'P:{wifi_escape(wifi_info.password)}')
+        text = 'WIFI:' + ';'.join(parts) + ';'
+        self.on_qr_code_generation_requested(self.starting_page, text)
+
     @Gtk.Template.Callback()
     def on_view_stack_visible_child_name_changed(self, view_stack: Adw.ViewStack, *args):
         """Handle change of visible child name on the generator view stack."""
@@ -114,3 +126,15 @@ class GeneratorPage(Adw.Bin):
         if name == GeneratorSubPage.WIFI:
             # Ask for a refresh of saved WiFi networks every time user switches here.
             self.emit('request-saved-wifi-networks')
+
+def wifi_escape(s: str) -> str:
+    return s.replace('\\', r'\\').replace(';', r'\;').replace(',', r'\,').replace('"', r'\"')
+
+def map_key_mgmt_to_auth(key_mgmt: str) -> str:
+    if key_mgmt in ('none', ''):
+        return 'nopass'
+    if key_mgmt in ('wpa-psk', 'sae'):
+        return 'WPA'
+    if key_mgmt == 'wpa-eap':
+        return 'WPA2-EAP'
+    return 'WPA'

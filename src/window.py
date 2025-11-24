@@ -190,6 +190,24 @@ class CoBangWindow(Adw.ApplicationWindow):
 
         wifi_networks = []
         connections = self.nm_client.get_connections()
+
+        # Map SSID -> strongest signal (0-100)
+        strengths: dict[str, int] = {}
+        for device in self.nm_client.get_devices():  # type: ignore[attr-defined]
+            if device.get_device_type() != NM.DeviceType.WIFI:
+                continue
+            for ap in device.get_access_points():
+                ssid_bytes = ap.get_ssid()
+                if not ssid_bytes:
+                    continue
+                ap_ssid = ssid_bytes.get_data().decode('utf-8', errors='ignore')
+                strengths[ap_ssid] = max(strengths.get(ap_ssid, 0), ap.get_strength())
+
+        # Currently active WiFi SSIDs
+        active_ssids = set(
+            ac.get_id() for ac in self.nm_client.get_active_connections() if ac.get_connection_type() == NM.SETTING_WIRELESS_SETTING_NAME
+        )
+
         for conn in connections:
             wireless_setting = conn.get_setting_wireless()
             if not wireless_setting:
@@ -205,11 +223,9 @@ class CoBangWindow(Adw.ApplicationWindow):
             wireless_security = conn.get_setting_wireless_security()
             if wireless_security:
                 key_mgmt = wireless_security.get_key_mgmt() or 'none'
-                # Try different password properties based on key management type
                 if key_mgmt in ('wpa-psk', 'sae'):
                     password = wireless_security.get_psk() or ''
                 elif key_mgmt == 'none':
-                    # WEP uses key_mgmt='none'
                     password = (
                         wireless_security.get_wep_key(0) or
                         wireless_security.get_wep_key(1) or
@@ -218,10 +234,31 @@ class CoBangWindow(Adw.ApplicationWindow):
                         ''
                     )
 
-            wifi_info = WifiNetworkInfo(ssid=ssid, password=password, key_mgmt=key_mgmt)
+            wifi_info = WifiNetworkInfo(
+                ssid=ssid,
+                password=password,
+                key_mgmt=key_mgmt,
+                is_active=ssid in active_ssids,
+                signal_strength=strengths.get(ssid, 0),
+            )
+            # Map strength to icon name (GNOME symbolic icons)
+            s = wifi_info.signal_strength
+            if s >= 75:
+                wifi_info.signal_strength_icon = 'network-wireless-signal-excellent-symbolic'
+            elif s >= 50:
+                wifi_info.signal_strength_icon = 'network-wireless-signal-good-symbolic'
+            elif s >= 25:
+                wifi_info.signal_strength_icon = 'network-wireless-signal-ok-symbolic'
+            elif s > 0:
+                wifi_info.signal_strength_icon = 'network-wireless-signal-weak-symbolic'
+            else:
+                wifi_info.signal_strength_icon = 'network-wireless-signal-none-symbolic'
             wifi_networks.append(wifi_info)
 
-        log.info('Retrieved {} saved WiFi networks', len(wifi_networks))
+        # Sort: active first, then by descending signal strength using stored fields
+        wifi_networks.sort(key=lambda w: (w.is_active, w.signal_strength), reverse=True)
+
+        log.info('Retrieved {} saved WiFi networks (sorted)', len(wifi_networks))
         self.generator_page.populate_wifi_networks(wifi_networks)
 
     def activate_pause_button(self):

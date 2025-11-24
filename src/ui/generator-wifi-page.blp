@@ -15,33 +15,97 @@ template $GeneratorWiFiPage : Adw.Bin {
     margin-start: 12;
     margin-end: 12;
 
-    ListView wifi_list_view {
-      model: NoSelection {
-        model: wifi_list_store;
-      };
+    Adw.Clamp {
+      maximum-size: 560;
+      tightening-threshold: 440;
 
-      factory: BuilderListItemFactory {
-        template ListItem {
-          child: Box {
-            spacing: 12;
+      Box {
+        orientation: vertical;
+        spacing: 12;
 
+        Label {
+          label: _("Generate QR for WiFi");
+          halign: start;
+          styles ["title-2"]
+        }
+
+        Box {
+          orientation: vertical;
+          spacing: 2;
+          margin-start: 4;
+
+          Box {
+            orientation: horizontal;
+            spacing: 4;
+            halign: fill;
             Label {
-              label: bind template.item as <$WifiNetworkInfo>.ssid;
-              ellipsize: middle;
+              label: "•";
+              hexpand: true;
+              halign: end;
+            }
+            Label {
+              label: _("Double-click a saved Wi‑Fi network.");
+              wrap: true;
               hexpand: true;
               halign: start;
             }
+          }
+          Box {
+            orientation: horizontal;
+            spacing: 4;
+            halign: fill;
+            Label {
+              label: "•";
+              hexpand: true;
+              halign: end;
+            }
+            Label {
+              label: _("Or select it and press Enter.");
+              wrap: true;
+              hexpand: true;
+              halign: start;
+            }
+          }
+        }
 
-            Button {
-              icon-name: 'qr-code-symbolic';
-              valign: center;
-              styles ['flat']
+        ListView wifi_list_view {
+          model: SingleSelection {
+            model: wifi_list_store;
+          };
+          activate => $on_wifi_list_view_activated();
+
+          factory: BuilderListItemFactory {
+            template ListItem {
+              child: Box {
+                spacing: 12;
+
+                Label {
+                  label: bind template.item as <$WifiNetworkInfo>.ssid;
+                  ellipsize: middle;
+                  hexpand: true;
+                  halign: start;
+                }
+
+                /* Signal strength icon for active connections */
+                Image {
+                  icon-name: bind template.item as <$WifiNetworkInfo>.signal_strength_icon;
+                  visible: bind template.item as <$WifiNetworkInfo>.is_active;
+                  valign: center;
+                  halign: end;
+                }
+              };
             }
           };
-        }
-      };
 
-      styles ['rich-list']
+          styles ['rich-list']
+        }
+
+        Button btn_back {
+          label: _("Back");
+          halign: center;
+          clicked => $on_btn_back_clicked();
+        }
+      }
     }
   }
 }
