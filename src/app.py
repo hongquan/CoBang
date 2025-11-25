@@ -16,11 +16,15 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 import sys
+from collections.abc import Sequence
 from datetime import datetime
+from typing import cast
 
 import gi
-import zbar
+
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
@@ -37,25 +41,26 @@ gi.require_version('Rsvg', '2.0')
 
 from gettext import gettext as _
 
+from gi.repository import Adw, Gio, Gst, Gtk, Xdp  # pyright: ignore[reportMissingModuleSource]
 from logbook import Logger
-from gi.repository import Adw, Gio, Gtk, Gst, NM, Xdp  # pyright: ignore[reportMissingModuleSource]
 
-from .consts import BRAND_NAME, APP_ID
-from .window import CoBangWindow
+from .consts import APP_ID, BRAND_NAME
 from .logging import GLibLogHandler
 from .prep import guess_mimetype
+from .window import CoBangWindow
 
 
 DEVELOPPERS = ('Nguyễn Hồng Quân <ng.hong.quan@gmail.com>',)
 ARTISTS = ('Shadd Gallegos', 'Lucide')
 DONATE_TITLE = _('Support the developer')
-COMMENTS = _('QR code / barcode scanner for Linux.\n%(donate_link)s') % {'donate_link': f"<a href='https://ko-fi.com/hongquanvn'>{DONATE_TITLE}</a>."}
+COMMENTS = _('QR code / barcode scanner for Linux.\n%(donate_link)s') % {
+    'donate_link': f"<a href='https://ko-fi.com/hongquanvn'>{DONATE_TITLE}</a>."
+}
 log = Logger(__name__)
 
 
 class CoBangApplication(Adw.Application):
     """The main application singleton class."""
-    nm_client: NM.Client | None = None
 
     def __init__(self):
         super().__init__(
@@ -69,8 +74,6 @@ class CoBangApplication(Adw.Application):
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
         self.portal = Xdp.Portal()
-        self.zbar_scanner = zbar.ImageScanner()
-        NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
     def do_activate(self):
         """Called when the application is activated.
@@ -83,9 +86,9 @@ class CoBangApplication(Adw.Application):
             win = CoBangWindow(application=self)
         win.present()
 
-    def do_open(self, files: list[Gio.File], n_file: int, hint: str):
+    def do_open(self, files: Sequence[Gio.File], hint: str):
         """Called when the application is opened with files."""
-        if not n_file:
+        if not files:
             return
         # We only handle the first file
         file = files[0]
@@ -95,7 +98,7 @@ class CoBangApplication(Adw.Application):
         if not mime_type or not mime_type.startswith('image/'):
             log.info('Not an image. Ignore.')
             return
-        win = self.props.active_window
+        win = cast(CoBangWindow | None, self.props.active_window)
         if not win:
             win = CoBangWindow(application=self)
         win.process_file_from_commandline(file, mime_type)
@@ -103,8 +106,8 @@ class CoBangApplication(Adw.Application):
 
     def on_about_action(self, *args):
         """Callback for the app.about action."""
-        if win := self.props.active_window:
-            win.btn_pause.set_active(True)
+        if win := cast(CoBangWindow | None, self.props.active_window):
+            win.activate_pause_button()
         version = self.get_version() or '0.0'
         year = datetime.now().year
         about = Adw.AboutDialog(
@@ -138,14 +141,6 @@ class CoBangApplication(Adw.Application):
         self.add_action(action)
         if shortcuts:
             self.set_accels_for_action(f'app.{name}', shortcuts)
-
-    def cb_networkmanager_client_init_done(self, client: NM.Client, res: Gio.AsyncResult):
-        if not client:
-            log.error('Failed to initialize NetworkManager client')
-            return
-        client.new_finish(res)
-        self.nm_client = client
-        log.debug('NM client: {}', client)
 
 
 def main(version):

@@ -30,6 +30,18 @@
       <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v1_3.png</image>
       <caption>Scan from webcam (mobile view, dark theme).</caption>
     </screenshot>
+     <screenshot>
+       <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v2_generator_1.png</image>
+       <caption>Generator start page.</caption>
+     </screenshot>
+     <screenshot>
+       <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v2_generator_2.png</image>
+       <caption>Generate QR code.</caption>
+     </screenshot>
+     <screenshot>
+       <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v2_generator_3.png</image>
+       <caption>Generate WiFi QR code.</caption>
+     </screenshot>
   </screenshots>
   <url type="homepage">https://github.com/hongquan/CoBang</url>
   <url type="bugtracker">https://github.com/hongquan/CoBang/issues</url>
@@ -42,6 +54,17 @@
   </kudos>
 
   <releases>
+    <release version="2.0.0" date="2025-11-25" urgency="medium">
+      <description translate="no">
+        <p>Add QR code generator.</p>
+        <p>Add Croatian language.</p>
+      </description>
+    </release>
+    <release version="1.9.1" date="2025-11-11" urgency="medium">
+      <description translate="no">
+        <p>Replace seeing-symbolic icon.</p>
+      </description>
+    </release>
     <release version="1.9.0" date="2025-11-08" urgency="medium">
       <description translate="no">
         <p>Use Adw.ShortcutsDialog for listing keyboard shortcut.</p>

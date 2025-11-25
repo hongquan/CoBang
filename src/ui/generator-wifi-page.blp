@@ -1,0 +1,117 @@
+using Gtk 4.0;
+using Adw 1;
+using Gio 2.0;
+
+Gio.ListStore wifi_list_store {
+  item-type: typeof<$WifiNetworkInfo>;
+}
+
+template $GeneratorWiFiPage : Adw.Bin {
+  Gtk.Box {
+    orientation: vertical;
+    spacing: 12;
+    margin-top: 12;
+    margin-bottom: 12;
+    margin-start: 12;
+    margin-end: 12;
+
+    Adw.Clamp {
+      maximum-size: 560;
+      tightening-threshold: 440;
+
+      Box {
+        orientation: vertical;
+        spacing: 12;
+
+        Label {
+          label: _("Generate QR for WiFi");
+          halign: start;
+          styles ["title-2"]
+        }
+
+        /* Make only the list scroll so the Back button stays visible */
+        ScrolledWindow {
+          vexpand: true;
+          hexpand: true;
+          hscrollbar-policy: never;
+          child: ListView wifi_list_view {
+            model: SingleSelection {
+              model: wifi_list_store;
+            };
+            activate => $on_wifi_list_view_activated();
+
+            factory: BuilderListItemFactory {
+              template ListItem {
+                child: Box {
+                  spacing: 12;
+
+                  Label {
+                    label: bind template.item as <$WifiNetworkInfo>.ssid;
+                    ellipsize: middle;
+                    hexpand: true;
+                    halign: start;
+                  }
+
+                  /* Signal strength icon for active connections */
+                  Image {
+                    icon-name: bind template.item as <$WifiNetworkInfo>.signal_strength_icon;
+                    visible: bind template.item as <$WifiNetworkInfo>.is_active;
+                    valign: center;
+                    halign: end;
+                  }
+                };
+              }
+            };
+
+            styles ['rich-list']
+          };
+        }
+
+        Box {
+          orientation: vertical;
+          spacing: 2;
+          margin-start: 4;
+
+          Box {
+            orientation: horizontal;
+            spacing: 4;
+            halign: fill;
+            Label {
+              label: "•";
+              hexpand: true;
+              halign: end;
+            }
+            Label {
+              label: _("Double-click a saved Wi‑Fi network.");
+              wrap: true;
+              hexpand: true;
+              halign: start;
+            }
+          }
+          Box {
+            orientation: horizontal;
+            spacing: 4;
+            halign: fill;
+            Label {
+              label: "•";
+              hexpand: true;
+              halign: end;
+            }
+            Label {
+              label: _("Or select it and press Enter.");
+              wrap: true;
+              hexpand: true;
+              halign: start;
+            }
+          }
+        }
+
+        Button btn_back {
+          label: _("Back");
+          halign: center;
+          clicked => $on_btn_back_clicked();
+        }
+      }
+    }
+  }
+}

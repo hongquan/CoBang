@@ -1,6 +1,6 @@
 id: vn.hoabinh.quan.CoBang
 runtime: org.gnome.Platform
-runtime-version: '49'
+runtime-version: "49"
 sdk: org.gnome.Sdk
 command: cobang
 finish-args:
@@ -11,6 +11,9 @@ finish-args:
   - --socket=wayland
   - --socket=fallback-x11
   - --device=dri
+  # Allow shared memory access for images/streaming via flatpak portal
+  - --filesystem=host-etc
+  - --filesystem=/tmp:create
 cleanup:
   - /include
   - /lib/pkgconfig
@@ -19,10 +22,9 @@ cleanup:
   - /share/gtk-doc
   - /share/man
   - /share/pkgconfig
-  - '*.la'
-  - '*.a'
+  - "*.la"
+  - "*.a"
 modules:
-
   - name: libzbar
     # Ref: https://gitlab.gnome.org/World/Authenticator
     config-opts:
@@ -44,7 +46,10 @@ modules:
 
   - name: python3-build-tools
     buildsystem: simple
-    build-commands: ['python3 -m pip install -U --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} wheel setuptools flit-core cffi']
+    build-commands:
+      [
+        'python3 -m pip install -U --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} wheel setuptools flit-core cffi',
+      ]
     sources:
       - type: file
         url: https://files.pythonhosted.org/packages/a3/dc/17031897dae0efacfea57dfd3a82fdd2a2aeb58e0ff71b77b87e44edc772/setuptools-80.9.0-py3-none-any.whl
@@ -85,9 +90,14 @@ modules:
     buildsystem: meson
     sources:
       - type: archive
-        url: https://github.com/flatpak/libportal/archive/refs/tags/0.9.0.tar.gz
-        sha256: 0fdf42ca371eeb1213ed25ab0c5681cd51750eb9a3e04adcd6a8dc2af4f4d440
-
+        url: https://github.com/flatpak/libportal/archive/0.9.1.tar.gz
+        sha256: ea422b789ae487e04194d387bea031fd7485bf88a18aef8c767f7d1c29496a4e
+        x-checker-data:
+          type: anitya
+          project-id: 230124
+          stable-only: true
+          url-template: https://github.com/flatpak/libportal/archive/$version.tar.gz
+          
   - name: intltool
     sources:
       - type: archive
@@ -149,8 +159,8 @@ modules:
       - /share/gtk-doc
       - /share/man
       - /share/pkgconfig
-      - '*.la'
-      - '*.a'
+      - "*.la"
+      - "*.a"
     sources:
       - type: archive
         url: https://github.com/eudev-project/eudev/archive/refs/tags/v3.2.14.tar.gz
@@ -191,7 +201,7 @@ modules:
   - name: blueprint-compiler
     buildsystem: meson
     cleanup:
-      - '*'
+      - "*"
     sources:
       - type: git
         url: https://gitlab.gnome.org/GNOME/blueprint-compiler

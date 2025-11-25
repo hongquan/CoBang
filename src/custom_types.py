@@ -25,3 +25,32 @@ class WebcamDeviceInfo(GObject.GObject):
         self.path = path
         self.name = name
         self.enabled = enabled
+
+
+class WifiNetworkInfo(GObject.GObject):
+    __gtype_name__ = 'WifiNetworkInfo'
+    ssid = GObject.Property(type=str)
+    password = GObject.Property(type=str)
+    # Ref: https://lazka.github.io/pgi-docs/#NM-1.0/classes/SettingWirelessSecurity.html#NM.SettingWirelessSecurity.props.key_mgmt
+    # Possible values: 'none', 'ieee8021x', 'owe', 'wpa-psk', 'sae', 'wpa-eap', 'wpa-eap-suite-b-192'.
+    # If seeing unknown value, assume 'wpa-psk'.
+    key_mgmt = GObject.Property(type=str, default='none')
+    # Whether this network is currently active (connected)
+    is_active = GObject.Property(type=bool, default=False)
+    # Signal strength 0-100 (best effort; 0 if unknown)
+    signal_strength = GObject.Property(type=int, default=0)
+    # Icon name representing signal strength (e.g. network-wireless-signal-excellent-symbolic)
+    signal_strength_icon = GObject.Property(type=str, default='network-wireless-signal-none-symbolic')
+
+    __gsignals__ = {
+        'changed': (GObject.SIGNAL_RUN_LAST, None, ()),
+    }
+
+    def __init__(self, ssid: str, password: str = '', key_mgmt: str = 'none', is_active: bool = False, signal_strength: int = 0):
+        super().__init__()
+        self.ssid = ssid
+        self.password = password
+        self.key_mgmt = key_mgmt
+        self.is_active = is_active
+        self.signal_strength = signal_strength
+        # Caller should update signal_strength_icon after setting strength.

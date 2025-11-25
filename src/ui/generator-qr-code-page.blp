@@ -1,0 +1,68 @@
+using Gtk 4.0;
+
+template $GeneratorQRCodePage: Box {
+  orientation: vertical;
+  spacing: 12;
+  halign: center;
+  valign: center;
+  hexpand: true;
+  vexpand: true;
+
+  Picture qr_picture {
+    width-request: 192;
+    height-request: 192;
+    content-fit: contain;
+  }
+
+  Expander original_text_expander {
+    label: _("Original text");
+    expanded: false;
+    hexpand: true;
+    halign: fill;
+
+    ScrolledWindow {
+      min-content-height: 40;
+      max-content-height: 160;
+      hexpand: true;
+      vexpand: false;
+
+      child: TextView original_text_view {
+        editable: false;
+        cursor-visible: false;
+        focusable: false;
+        wrap-mode: word_char;
+        hexpand: true;
+        vexpand: false;
+        // These properties has `margin` name,
+        // but actually padding inside the TextView
+        top-margin: 4;
+        bottom-margin: 4;
+        left-margin: 4;
+        right-margin: 4;
+      };
+    }
+  }
+
+  Box {
+    orientation: horizontal;
+    spacing: 6;
+    halign: center;
+
+    Button btn_download {
+      icon-name: "document-save-symbolic";
+      tooltip-text: _("Save QR Code");
+      clicked => $on_btn_download_clicked();
+    }
+
+    Button btn_copy {
+      icon-name: "edit-copy-symbolic";
+      tooltip-text: _("Copy to Clipboard");
+      clicked => $on_btn_copy_clicked();
+    }
+
+    Button btn_new {
+      label: _("New");
+      clicked => $on_btn_new_clicked();
+    }
+  }
+}

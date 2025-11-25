@@ -8,173 +8,204 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-12 16:12+0700\n"
+"POT-Creation-Date: 2025-11-25 17:44+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/help-overlay.blp:11
+#: src/ui/generator-qr-code-page.blp:18
+msgid "Original text"
+msgstr ""
+
+#: src/ui/generator-qr-code-page.blp:53
+msgid "Save QR Code"
+msgstr ""
+
+#: src/ui/generator-qr-code-page.blp:59
+msgid "Copy to Clipboard"
+msgstr ""
+
+#: src/ui/generator-qr-code-page.blp:64
+msgid "New"
+msgstr ""
+
+#: src/ui/generator-starting-page.blp:25
+msgid "Generate QR Code"
+msgstr ""
+
+#: src/ui/generator-starting-page.blp:33
+msgid "Enter text or URL..."
+msgstr ""
+
+#: src/ui/generator-starting-page.blp:43
+msgid "Wi-Fi"
+msgstr ""
+
+#: src/ui/generator-starting-page.blp:55
+msgid "Generate"
+msgstr ""
+
+#: src/ui/generator-wifi-page.blp:27
+msgid "Generate QR for WiFi"
+msgstr ""
+
+#: src/ui/generator-wifi-page.blp:85
+msgid "Double-click a saved Wi‑Fi network."
+msgstr ""
+
+#: src/ui/generator-wifi-page.blp:101
+msgid "Or select it and press Enter."
+msgstr ""
+
+#: src/ui/generator-wifi-page.blp:110
+msgid "Back"
+msgstr ""
+
+#: src/ui/scanner-page.blp:58
+msgid "Show result"
+msgstr ""
+
+#: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
+#: src/ui/scanner-page.blp:175
+msgid "Webcam"
+msgstr ""
+
+#: src/ui/scanner-page.blp:104
+msgid "No webcam detected."
+msgstr ""
+
+#: src/ui/scanner-page.blp:139
+msgid "Play"
+msgstr ""
+
+#: src/ui/scanner-page.blp:149
+msgid "Pause"
+msgstr ""
+
+#: src/ui/scanner-page.blp:208
+msgid "Mirror"
+msgstr ""
+
+#: src/ui/scanner-page.blp:225
+msgid "Image"
+msgstr ""
+
+#: src/ui/scanner-page.blp:270
+msgid "Drag and drop an image here."
+msgstr ""
+
+#: src/ui/scanner-page.blp:283
+msgid "Press Ctrl+V to paste an image."
+msgstr ""
+
+#: src/ui/scanner-page.blp:299
+msgid "Click the button below to choose a file."
+msgstr ""
+
+#: src/ui/scanner-page.blp:315
+msgid "Remote images (http://…, sftp://…) also work."
+msgstr ""
+
+#: src/ui/scanner-page.blp:357
+msgid "Choose an image"
+msgstr ""
+
+#: src/ui/scanner-page.blp:399
+msgid "Please open webcam or choose an image."
+msgstr ""
+
+#: src/ui/scanner-page.blp:413
+msgid "Scanning..."
+msgstr ""
+
+#: src/ui/scanner-page.blp:423
+msgid "No result found."
+msgstr ""
+
+#: src/ui/scanner-page.blp:445
+msgid "Raw result"
+msgstr ""
+
+#: src/ui/scanner-page.blp:451
+msgid "Copy"
+msgstr ""
+
+#: src/ui/shortcuts-dialog.blp:8
 msgctxt "shortcut window"
 msgid "General"
 msgstr ""
 
-#: src/help-overlay.blp:14
-msgctxt "shortcut window"
-msgid "Show Shortcuts"
-msgstr ""
-
-#: src/help-overlay.blp:19
+#: src/ui/shortcuts-dialog.blp:11
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr ""
 
-#: src/wifi-display.blp:15
+#: src/ui/wifi-display.blp:15
 msgid "SSID"
 msgstr ""
 
-#: src/wifi-display.blp:32
+#: src/ui/wifi-display.blp:32
 msgid "Password"
 msgstr ""
 
-#: src/wifi-display.blp:53
+#: src/ui/wifi-display.blp:53
 msgid "Save"
 msgstr ""
 
-#: src/wifi-display.blp:58
+#: src/ui/wifi-display.blp:58
 msgid "After saved, NetworkManager will connect automatically if in range."
 msgstr ""
 
-#: src/window.blp:6
+#: src/ui/window.blp:5
 msgid "CoBang: QR scanner for Linux"
 msgstr ""
 
-#: src/window.blp:52 src/window.blp:88
+#: src/ui/window.blp:44 src/ui/window.blp:80
 msgid "Scanner"
 msgstr ""
 
-#: src/window.blp:59 src/window.blp:484 src/window.blp:488
+#: src/ui/window.blp:51 src/ui/window.blp:91
 msgid "Generator"
 msgstr ""
 
-#: src/window.blp:70
+#: src/ui/window.blp:62
 msgid "Main Menu"
 msgstr ""
 
-#: src/window.blp:127
-msgid "Show result"
-msgstr ""
-
-#: src/window.blp:148 src/window.blp:171 src/window.blp:243
-msgid "Webcam"
-msgstr ""
-
-#: src/window.blp:173
-msgid "No webcam detected."
-msgstr ""
-
-#: src/window.blp:208
-msgid "Play"
-msgstr ""
-
-#: src/window.blp:218
-msgid "Pause"
-msgstr ""
-
-#: src/window.blp:275
-msgid "Mirror"
-msgstr ""
-
-#: src/window.blp:292
-msgid "Image"
-msgstr ""
-
-#: src/window.blp:364
-msgid "Choose an image"
-msgstr ""
-
-#: src/window.blp:406
-msgid "Please open webcam or choose an image."
-msgstr ""
-
-#: src/window.blp:420
-msgid "Scanning..."
-msgstr ""
-
-#: src/window.blp:430
-msgid "No result found."
-msgstr ""
-
-#: src/window.blp:452
-msgid "Raw result"
-msgstr ""
-
-#: src/window.blp:458
-msgid "Copy"
-msgstr ""
-
-#: src/window.blp:489
-msgid "Will be available in next versions..."
-msgstr ""
-
-#: src/window.blp:500
+#: src/ui/window.blp:105
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/window.blp:505
+#: src/ui/window.blp:110
 msgid "_About"
 msgstr ""
 
-#: src/app.py:51
+#: src/app.py:55
 msgid "Support the developer"
 msgstr ""
 
-#: src/app.py:52
+#: src/app.py:56
 #, python-format
 msgid ""
 "QR code / barcode scanner for Linux.\n"
 "%(donate_link)s"
 msgstr ""
 
-#. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
-#: src/messages.py:23
+#: src/messages.py:25
 msgid ""
-"Please add an image file by one of these methods:\n"
+"Add an image by:\n"
 "\n"
-"- Drag and drop here.\n"
-"- Copy from somewhere and paste (Ctrl+V) here.\n"
-"- Choose with button below (non Flatpak).\n"
+"- Dragging and dropping it here.\n"
+"- Copying and pasting (Ctrl+V).\n"
+"- Clicking the button below (non-Flatpak).\n"
 "\n"
-"Remote image (from http://..., sftp://...) is allowed."
+"Remote images (http://..., sftp://...) work too!"
 msgstr ""
 
-#: src/ui.py:28
+#: src/ui.py:27
 msgid "Connected"
-msgstr ""
-
-#: src/ui.py:60
-msgid "Saved"
-msgstr ""
-
-#: src/window.py:163
-msgid "Found a wifi configuration"
-msgstr ""
-
-#: src/window.py:165
-msgid "Found a URL. Click to open:"
-msgstr ""
-
-#: src/window.py:167
-msgid "Found unrecognized text."
-msgstr ""
-
-#: src/window.py:168
-msgid "Unknown"
-msgstr ""
-
-#: src/window.py:234
-msgid "Copied!"
 msgstr ""

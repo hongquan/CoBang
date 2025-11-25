@@ -1,34 +1,33 @@
-# Translations template for PROJECT.
-# Copyright (C) 2024 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+# Croatian translation for CoBang.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the CoBang package.
+# Milo Ivir <mail@milotype.de>, 2025.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: CoBang\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-25 17:44+0700\n"
-"PO-Revision-Date: 2025-11-25 17:44+0700\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2025-11-11 23:06+0100\n"
+"Last-Translator: Milo Ivir <mail@mivirtype.de>\n"
 "Language-Team: \n"
-"Language: pt_BR\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.10.3\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.8\n"
 
 #: src/ui/generator-qr-code-page.blp:18
 msgid "Original text"
-msgstr "Texto original"
+msgstr "Izvorni tekst"
 
 #: src/ui/generator-qr-code-page.blp:53
 msgid "Save QR Code"
-msgstr "Salvar Código QR"
+msgstr "Spremi QR kod"
 
 #: src/ui/generator-qr-code-page.blp:59
 msgid "Copy to Clipboard"
-msgstr "Copiar para Área de Transferência"
+msgstr "Kopiraj u međuspremnik"
 
 #: src/ui/generator-qr-code-page.blp:64
 msgid "New"
@@ -36,11 +35,11 @@ msgstr "Novo"
 
 #: src/ui/generator-starting-page.blp:25
 msgid "Generate QR Code"
-msgstr "Gerar Código QR"
+msgstr "Generiraj QR kod"
 
 #: src/ui/generator-starting-page.blp:33
 msgid "Enter text or URL..."
-msgstr "Digite texto ou URL..."
+msgstr "Unesite tekst ili URL..."
 
 #: src/ui/generator-starting-page.blp:43
 msgid "Wi-Fi"
@@ -48,146 +47,147 @@ msgstr "Wi-Fi"
 
 #: src/ui/generator-starting-page.blp:55
 msgid "Generate"
-msgstr "Gerar"
+msgstr "Generiraj"
 
 #: src/ui/generator-wifi-page.blp:27
 msgid "Generate QR for WiFi"
-msgstr "Gerar QR para Wi-Fi"
+msgstr "Generiraj QR za Wi-Fi"
 
 #: src/ui/generator-wifi-page.blp:85
 msgid "Double-click a saved Wi‑Fi network."
-msgstr "Clique duas vezes em uma rede Wi-Fi salva."
+msgstr "Dvaput kliknite na spremljenu Wi-Fi mrežu."
 
 #: src/ui/generator-wifi-page.blp:101
 msgid "Or select it and press Enter."
-msgstr "Ou selecione-a e pressione Enter."
+msgstr "Ili je odaberite i pritisnite Enter."
 
 #: src/ui/generator-wifi-page.blp:110
 msgid "Back"
-msgstr "Voltar"
+msgstr "Natrag"
 
 #: src/ui/scanner-page.blp:58
 msgid "Show result"
-msgstr "Mostrar resultado"
+msgstr "Prikaži rezultat"
 
 #: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
 #: src/ui/scanner-page.blp:175
 msgid "Webcam"
-msgstr "Webcam"
+msgstr "Web kamera"
 
 #: src/ui/scanner-page.blp:104
 msgid "No webcam detected."
-msgstr "Nenhuma webcam detectada."
+msgstr "Web kamera nije otkrivena."
 
 #: src/ui/scanner-page.blp:139
 msgid "Play"
-msgstr "Reproduzir"
+msgstr "Pokreni"
 
 #: src/ui/scanner-page.blp:149
 msgid "Pause"
-msgstr "Pausar"
+msgstr "Pauziraj"
 
 #: src/ui/scanner-page.blp:208
 msgid "Mirror"
-msgstr "Espelhar"
+msgstr "Zrcali"
 
 #: src/ui/scanner-page.blp:225
 msgid "Image"
-msgstr "Imagem"
+msgstr "Slika"
 
 #: src/ui/scanner-page.blp:270
 msgid "Drag and drop an image here."
-msgstr "Arraste e solte uma imagem aqui."
+msgstr "Povucite i ispustite sliku ovdje."
 
 #: src/ui/scanner-page.blp:283
 msgid "Press Ctrl+V to paste an image."
-msgstr "Pressione Ctrl+V para colar uma imagem."
+msgstr "Pritisnite Ctrl+V za lijepljenje slike."
 
 #: src/ui/scanner-page.blp:299
 msgid "Click the button below to choose a file."
-msgstr "Clique no botão abaixo para escolher um arquivo."
+msgstr "Kliknite gumb ispod za odabir datoteke."
 
 #: src/ui/scanner-page.blp:315
 msgid "Remote images (http://…, sftp://…) also work."
-msgstr "Imagens remotas (http://…, sftp://…) também funcionam."
+msgstr "Daljinske slike (http://…, sftp://…) također rade."
 
 #: src/ui/scanner-page.blp:357
 msgid "Choose an image"
-msgstr "Escolher uma imagem"
+msgstr "Odaberi sliku"
 
 #: src/ui/scanner-page.blp:399
 msgid "Please open webcam or choose an image."
-msgstr "Por favor, abra a webcam ou escolha uma imagem."
+msgstr "Otvori web kameru ili odaberi sliku."
 
 #: src/ui/scanner-page.blp:413
 msgid "Scanning..."
-msgstr "Escaneando..."
+msgstr "Skeniranje …"
 
 #: src/ui/scanner-page.blp:423
 msgid "No result found."
-msgstr "Nenhum resultado encontrado."
+msgstr "Nijedan rezultat nije pronađen."
 
 #: src/ui/scanner-page.blp:445
 msgid "Raw result"
-msgstr "Resultado bruto"
+msgstr "Neobrađeni rezultat"
 
 #: src/ui/scanner-page.blp:451
 msgid "Copy"
-msgstr "Copiar"
+msgstr "Kopiraj"
 
 #: src/ui/shortcuts-dialog.blp:8
 msgctxt "shortcut window"
 msgid "General"
-msgstr "Geral"
+msgstr "Općenito"
 
 #: src/ui/shortcuts-dialog.blp:11
 msgctxt "shortcut window"
 msgid "Quit"
-msgstr "Sair"
+msgstr "Zatvori aplikaciju"
 
 #: src/ui/wifi-display.blp:15
 msgid "SSID"
-msgstr "SSID (Nome do WiFi)"
+msgstr "SSID"
 
 #: src/ui/wifi-display.blp:32
 msgid "Password"
-msgstr "Senha"
+msgstr "Lozinka"
 
 #: src/ui/wifi-display.blp:53
 msgid "Save"
-msgstr "Salvar"
+msgstr "Spremi"
 
 #: src/ui/wifi-display.blp:58
 msgid "After saved, NetworkManager will connect automatically if in range."
-msgstr "Após salvar, o NetworkManager se conectará automaticamente se estiver no alcance."
+msgstr ""
+"Nakon spremanja, NetworkManager će se automatski povezati ako je u dometu."
 
 #: src/ui/window.blp:5
 msgid "CoBang: QR scanner for Linux"
-msgstr "CoBang: Leitor de QR Code para Linux"
+msgstr "CoBang: QR skener za Linux"
 
 #: src/ui/window.blp:44 src/ui/window.blp:80
 msgid "Scanner"
-msgstr "Scanner"
+msgstr "Skener"
 
 #: src/ui/window.blp:51 src/ui/window.blp:91
 msgid "Generator"
-msgstr "Gerador"
+msgstr "Generator"
 
 #: src/ui/window.blp:62
 msgid "Main Menu"
-msgstr "Menu Principal"
+msgstr "Glavni izbornik"
 
 #: src/ui/window.blp:105
 msgid "_Keyboard Shortcuts"
-msgstr "_Atalhos de Teclado"
+msgstr "_Tipkovni prečaci"
 
 #: src/ui/window.blp:110
 msgid "_About"
-msgstr "_Sobre"
+msgstr "_Informacije"
 
 #: src/app.py:55
 msgid "Support the developer"
-msgstr "Apoie o desenvolvedor"
+msgstr "Podrži programera"
 
 #: src/app.py:56
 #, python-format
@@ -195,7 +195,7 @@ msgid ""
 "QR code / barcode scanner for Linux.\n"
 "%(donate_link)s"
 msgstr ""
-"Scanner de código QR / código de barras para Linux.\n"
+"Skener QR koda / crtičnog koda za Linux.\n"
 "%(donate_link)s"
 
 #: src/messages.py:25
@@ -208,54 +208,39 @@ msgid ""
 "\n"
 "Remote images (http://..., sftp://...) work too!"
 msgstr ""
-"Insira um arquivo de imagem usando um destes métodos:\n"
+"Dodajte sliku putem:\n"
 "\n"
-"- Arraste e solte nesta área.\n"
-"- Copie e cole (Ctrl+V) de algum lugar.\n"
-"- Escolha um clicando no botão abaixo (não disponível com flatpak).\n"
+"- Povlačenja i ispuštanja ovdje.\n"
+"- Kopiranja i lijepljenja (Ctrl+V).\n"
+"- Klika na gumb ispod (nije Flatpak).\n"
 "\n"
-"Uma imagem remota (de http://..., sftp://...) é permitida."
+"Daljinske slike (http://..., sftp://...) također rade!"
 
 #: src/ui.py:27
 msgid "Connected"
-msgstr "Conectado"
+msgstr "Povezano"
 
-msgid "Saved"
-msgstr "Salvo"
+#~ msgctxt "shortcut window"
+#~ msgid "Show Shortcuts"
+#~ msgstr "Prikaži prečace"
 
-msgid "Found a wifi configuration"
-msgstr "Configuração Wi-Fi encontrada"
+#~ msgid "Will be available in next versions..."
+#~ msgstr "Bit će dostupno u sljedećim verzijama …"
 
-msgid "Found a URL. Click to open:"
-msgstr "URL encontrada. Clique para abrir:"
+#~ msgid "Saved"
+#~ msgstr "Spremljeno"
 
-msgid "Copied!"
-msgstr "Copiado!"
+#~ msgid "Found a wifi configuration"
+#~ msgstr "Pronađena je wifi konfiguracija"
 
-msgid "Result"
-msgstr "Resultado"
+#~ msgid "Found a URL. Click to open:"
+#~ msgstr "Pronađen URL. Klikni za otvaranje:"
 
-#, python-format
-msgid "Unsupported file type %s!"
-msgstr "Tipo de arquivo não suportado %s!"
+#~ msgid "Found unrecognized text."
+#~ msgstr "Pronađen je neprepoznati tekst."
 
-msgid "CoBang"
-msgstr "CoBang"
+#~ msgid "Unknown"
+#~ msgstr "Nepoznato"
 
-msgid "QR scanner for Linux"
-msgstr "Leitor de QR para Linux"
-
-msgid "button"
-msgstr "botão"
-
-msgid "QR code scanner"
-msgstr "Leitor de código QR"
-
-msgid "Scan and decode QR from camera or static image"
-msgstr "Escaneia e decodifica QR de câmera ou imagem estática"
-
-msgid "qr;code;qr-code;qr-decoder;qr-scanner"
-msgstr "qr;código;qr-code;qr-decoder;qr-scanner"
-
-msgid "vn.hoabinh.quan.CoBang"
-msgstr "vn.hoabinh.quan.CoBang"
+#~ msgid "Copied!"
+#~ msgstr "Kopirano!"

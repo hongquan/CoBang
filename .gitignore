@@ -111,6 +111,8 @@ venv.bak/
 .helix
 .zed
 
+.aider.*
+
 # PyCharm
 .idea
 
@@ -120,3 +122,4 @@ venv.bak/
 node_modules
 
 /subprojects/blueprint-compiler
+.agents.md

@@ -1,4 +1,4 @@
-from enum import StrEnum, IntEnum
+from enum import IntEnum, StrEnum
 
 
 SHORT_NAME = 'cobang'
@@ -33,6 +33,12 @@ class ScannerState(IntEnum):
     TEXT_FOUND = 5
 
 
+class GeneratorSubPage(StrEnum):
+    STARTING = 'starting'
+    WIFI = 'wifi'
+    QR_CODE_RESULT = 'qr-code-result'
+
+
 class DeviceSourceType(StrEnum):
     V4L2 = 'v4l2src'
     PIPEWIRE = 'pipewiresrc'
@@ -42,4 +48,3 @@ GST_SOURCE_NAME = 'webcam_source'
 GST_FLIP_FILTER_NAME = 'videoflip'
 GST_SINK_NAME = 'widget_sink'
 GST_APP_SINK_NAME = 'app_sink'
-

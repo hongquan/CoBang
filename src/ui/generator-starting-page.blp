@@ -1,0 +1,69 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GeneratorStartingPage: Gtk.Box {
+  orientation: vertical;
+  valign: center;
+  halign: fill;
+  hexpand: true;
+  vexpand: true;
+  spacing: 24;
+  margin-top: 24;
+  margin-bottom: 24;
+  margin-start: 12;
+  margin-end: 12;
+
+  Adw.Clamp {
+    maximum-size: 400;
+    tightening-threshold: 300;
+
+    Box {
+      orientation: vertical;
+      spacing: 12;
+
+      Label {
+        label: _("Generate QR Code");
+
+        styles [
+          "title-2",
+        ]
+      }
+
+      Entry text_entry {
+        placeholder-text: _("Enter text or URL...");
+        activates-default: true;
+      }
+
+      Box {
+        orientation: horizontal;
+        spacing: 12;
+        halign: center;
+
+        Button btn_wifi {
+          label: _("Wi-Fi");
+          focusable: true;
+          sensitive: true;
+
+          styles [
+            "pill",
+          ]
+
+          clicked => $on_btn_wifi_clicked();
+        }
+
+        Button btn_generate {
+          label: _("Generate");
+          focusable: true;
+          sensitive: true;
+
+          styles [
+            "suggested-action",
+            "pill",
+          ]
+
+          clicked => $on_btn_generate_clicked();
+        }
+      }
+    }
+  }
+}
