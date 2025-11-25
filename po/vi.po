@@ -6,133 +6,190 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoBang 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-12 16:12+0700\n"
+"POT-Creation-Date: 2025-11-25 17:44+0700\n"
 "PO-Revision-Date: 2023-04-15 19:40+0200\n"
 "Last-Translator: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
 "Language-Team: Vietnamese Team\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.10.3\n"
 
-#: src/help-overlay.blp:11
+#: src/ui/generator-qr-code-page.blp:18
+msgid "Original text"
+msgstr "Văn bản gốc"
+
+#: src/ui/generator-qr-code-page.blp:53
+msgid "Save QR Code"
+msgstr "Lưu mã QR"
+
+#: src/ui/generator-qr-code-page.blp:59
+msgid "Copy to Clipboard"
+msgstr "Sao chép vào bộ nhớ tạm"
+
+#: src/ui/generator-qr-code-page.blp:64
+msgid "New"
+msgstr "Tạo mới"
+
+#: src/ui/generator-starting-page.blp:25
+msgid "Generate QR Code"
+msgstr "Tạo mã QR"
+
+#: src/ui/generator-starting-page.blp:33
+msgid "Enter text or URL..."
+msgstr "Nhập văn bản hoặc URL..."
+
+#: src/ui/generator-starting-page.blp:43
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+#: src/ui/generator-starting-page.blp:55
+msgid "Generate"
+msgstr "Tạo"
+
+#: src/ui/generator-wifi-page.blp:27
+#, fuzzy
+msgid "Generate QR for WiFi"
+msgstr "Tạo mã"
+
+#: src/ui/generator-wifi-page.blp:85
+msgid "Double-click a saved Wi‑Fi network."
+msgstr "Nhấp đúp vào mạng Wi-Fi đã lưu."
+
+#: src/ui/generator-wifi-page.blp:101
+msgid "Or select it and press Enter."
+msgstr "Hoặc chọn nó và nhấn Enter."
+
+#: src/ui/generator-wifi-page.blp:110
+msgid "Back"
+msgstr "Quay lại"
+
+#: src/ui/scanner-page.blp:58
+msgid "Show result"
+msgstr "Xem kết quả"
+
+#: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
+#: src/ui/scanner-page.blp:175
+msgid "Webcam"
+msgstr "Webcam"
+
+#: src/ui/scanner-page.blp:104
+msgid "No webcam detected."
+msgstr "Không tìm thấy webcam."
+
+#: src/ui/scanner-page.blp:139
+msgid "Play"
+msgstr "Phát"
+
+#: src/ui/scanner-page.blp:149
+msgid "Pause"
+msgstr "Chựng"
+
+#: src/ui/scanner-page.blp:208
+msgid "Mirror"
+msgstr "Gương"
+
+#: src/ui/scanner-page.blp:225
+msgid "Image"
+msgstr "Hình ảnh"
+
+#: src/ui/scanner-page.blp:270
+msgid "Drag and drop an image here."
+msgstr "Kéo và thả hình ảnh vào đây."
+
+#: src/ui/scanner-page.blp:283
+msgid "Press Ctrl+V to paste an image."
+msgstr "Nhấn Ctrl+V để dán hình ảnh."
+
+#: src/ui/scanner-page.blp:299
+msgid "Click the button below to choose a file."
+msgstr "Nhấn nút bên dưới để chọn tập tin."
+
+#: src/ui/scanner-page.blp:315
+msgid "Remote images (http://…, sftp://…) also work."
+msgstr "Hình ảnh từ xa (http://…, sftp://…) cũng dùng được."
+
+#: src/ui/scanner-page.blp:357
+msgid "Choose an image"
+msgstr "Vui lòng chọn một hình ảnh"
+
+#: src/ui/scanner-page.blp:399
+msgid "Please open webcam or choose an image."
+msgstr "Hãy mở webcam hay chọn một hình ảnh"
+
+#: src/ui/scanner-page.blp:413
+msgid "Scanning..."
+msgstr "Đang quét..."
+
+#: src/ui/scanner-page.blp:423
+msgid "No result found."
+msgstr "Không có kết quả."
+
+#: src/ui/scanner-page.blp:445
+msgid "Raw result"
+msgstr "Kết quả thô"
+
+#: src/ui/scanner-page.blp:451
+msgid "Copy"
+msgstr "Sao chép"
+
+#: src/ui/shortcuts-dialog.blp:8
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Tổng quát"
 
-#: src/help-overlay.blp:14
-msgctxt "shortcut window"
-msgid "Show Shortcuts"
-msgstr "Xem phím tắt"
-
-#: src/help-overlay.blp:19
+#: src/ui/shortcuts-dialog.blp:11
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Thoát"
 
-#: src/wifi-display.blp:15
+#: src/ui/wifi-display.blp:15
 msgid "SSID"
-msgstr ""
+msgstr "SSID"
 
-#: src/wifi-display.blp:32
+#: src/ui/wifi-display.blp:32
 msgid "Password"
 msgstr "Mật khẩu"
 
-#: src/wifi-display.blp:53
+#: src/ui/wifi-display.blp:53
 msgid "Save"
 msgstr "Lưu"
 
-#: src/wifi-display.blp:58
+#: src/ui/wifi-display.blp:58
 msgid "After saved, NetworkManager will connect automatically if in range."
 msgstr "Sau khi lưu, NetworkManager sẽ tự động kết nối nếu trong tầm."
 
-#: src/window.blp:6
+#: src/ui/window.blp:5
 msgid "CoBang: QR scanner for Linux"
 msgstr "CoBang: Trình quét mã QR cho Linux"
 
-#: src/window.blp:52 src/window.blp:88
+#: src/ui/window.blp:44 src/ui/window.blp:80
 msgid "Scanner"
 msgstr "Quét mã"
 
-#: src/window.blp:59 src/window.blp:484 src/window.blp:488
+#: src/ui/window.blp:51 src/ui/window.blp:91
 msgid "Generator"
 msgstr "Tạo mã"
 
-#: src/window.blp:70
+#: src/ui/window.blp:62
 msgid "Main Menu"
 msgstr "Trình đơn chính"
 
-#: src/window.blp:127
-msgid "Show result"
-msgstr "Xem kết quả"
-
-#: src/window.blp:148 src/window.blp:171 src/window.blp:243
-msgid "Webcam"
-msgstr "Webcam"
-
-#: src/window.blp:173
-msgid "No webcam detected."
-msgstr "Không tìm thấy webcam."
-
-#: src/window.blp:208
-msgid "Play"
-msgstr "Phát"
-
-#: src/window.blp:218
-msgid "Pause"
-msgstr "Chựng"
-
-#: src/window.blp:275
-msgid "Mirror"
-msgstr "Gương"
-
-#: src/window.blp:292
-msgid "Image"
-msgstr "Hình ảnh"
-
-#: src/window.blp:364
-msgid "Choose an image"
-msgstr "Vui lòng chọn một hình ảnh"
-
-#: src/window.blp:406
-msgid "Please open webcam or choose an image."
-msgstr "Hãy mở webcam hay chọn một hình ảnh"
-
-#: src/window.blp:420
-msgid "Scanning..."
-msgstr "Đang quét..."
-
-#: src/window.blp:430
-msgid "No result found."
-msgstr "Không có kết quả."
-
-#: src/window.blp:452
-msgid "Raw result"
-msgstr "Kết quả thô"
-
-#: src/window.blp:458
-msgid "Copy"
-msgstr "Sao chép"
-
-#: src/window.blp:489
-msgid "Will be available in next versions..."
-msgstr "Sẽ có trong các phiên bản sau..."
-
-#: src/window.blp:500
+#: src/ui/window.blp:105
 msgid "_Keyboard Shortcuts"
 msgstr "Phím _tắt"
 
-#: src/window.blp:505
+#: src/ui/window.blp:110
 msgid "_About"
 msgstr "_Giới thiệu"
 
-#: src/app.py:51
+#: src/app.py:55
 msgid "Support the developer"
 msgstr "Tài trợ nhà phát triển"
 
-#: src/app.py:52
+#: src/app.py:56
 #, python-format
 msgid ""
 "QR code / barcode scanner for Linux.\n"
@@ -141,16 +198,15 @@ msgstr ""
 "Trình quét mã QR / mã vạch cho Linux.\n"
 "%(donate_link)s"
 
-#. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
-#: src/messages.py:23
+#: src/messages.py:25
 msgid ""
-"Please add an image file by one of these methods:\n"
+"Add an image by:\n"
 "\n"
-"- Drag and drop here.\n"
-"- Copy from somewhere and paste (Ctrl+V) here.\n"
-"- Choose with button below (non Flatpak).\n"
+"- Dragging and dropping it here.\n"
+"- Copying and pasting (Ctrl+V).\n"
+"- Clicking the button below (non-Flatpak).\n"
 "\n"
-"Remote image (from http://..., sftp://...) is allowed."
+"Remote images (http://..., sftp://...) work too!"
 msgstr ""
 "Vui lòng đưa một tập tin hình ảnh bằng một trong các cách sau:\n"
 "\n"
@@ -160,33 +216,34 @@ msgstr ""
 "\n"
 "Có thể dùng hình ảnh trên mạng (qua giao thức http://..., sftp://...)."
 
-#: src/ui.py:28
+#: src/ui.py:27
 msgid "Connected"
 msgstr "Đã kết nối"
 
-#: src/ui.py:60
-msgid "Saved"
-msgstr "Đã lưu"
+#~ msgctxt "shortcut window"
+#~ msgid "Show Shortcuts"
+#~ msgstr "Xem phím tắt"
 
-#: src/window.py:163
-msgid "Found a wifi configuration"
-msgstr "Bắt gặp một cấu hình wifi"
+#~ msgid "Will be available in next versions..."
+#~ msgstr "Sẽ có trong các phiên bản sau..."
 
-#: src/window.py:165
-msgid "Found a URL. Click to open:"
-msgstr "Bắt gặp một URL. Bấm vào để mở:"
+#~ msgid "Saved"
+#~ msgstr "Đã lưu"
 
-#: src/window.py:167
-msgid "Found unrecognized text."
-msgstr "Bắt gặp văn bản không nhận dạng được."
+#~ msgid "Found a wifi configuration"
+#~ msgstr "Bắt gặp một cấu hình wifi"
 
-#: src/window.py:168
-msgid "Unknown"
-msgstr "Không biết"
+#~ msgid "Found a URL. Click to open:"
+#~ msgstr "Bắt gặp một URL. Bấm vào để mở:"
 
-#: src/window.py:234
-msgid "Copied!"
-msgstr "Đã sao chép!"
+#~ msgid "Found unrecognized text."
+#~ msgstr "Bắt gặp văn bản không nhận dạng được."
+
+#~ msgid "Unknown"
+#~ msgstr "Không biết"
+
+#~ msgid "Copied!"
+#~ msgstr "Đã sao chép!"
 
 #~ msgid "Result"
 #~ msgstr "Kết quả"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoBang\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-12 16:12+0700\n"
+"POT-Creation-Date: 2025-11-25 17:44+0700\n"
 "PO-Revision-Date: 2025-11-11 23:06+0100\n"
 "Last-Translator: Milo Ivir <mail@mivirtype.de>\n"
 "Language-Team: \n"
@@ -17,122 +17,179 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.8\n"
 
-#: src/help-overlay.blp:11
+#: src/ui/generator-qr-code-page.blp:18
+msgid "Original text"
+msgstr "Izvorni tekst"
+
+#: src/ui/generator-qr-code-page.blp:53
+msgid "Save QR Code"
+msgstr "Spremi QR kod"
+
+#: src/ui/generator-qr-code-page.blp:59
+msgid "Copy to Clipboard"
+msgstr "Kopiraj u međuspremnik"
+
+#: src/ui/generator-qr-code-page.blp:64
+msgid "New"
+msgstr "Novo"
+
+#: src/ui/generator-starting-page.blp:25
+msgid "Generate QR Code"
+msgstr "Generiraj QR kod"
+
+#: src/ui/generator-starting-page.blp:33
+msgid "Enter text or URL..."
+msgstr "Unesite tekst ili URL..."
+
+#: src/ui/generator-starting-page.blp:43
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+#: src/ui/generator-starting-page.blp:55
+msgid "Generate"
+msgstr "Generiraj"
+
+#: src/ui/generator-wifi-page.blp:27
+msgid "Generate QR for WiFi"
+msgstr "Generiraj QR za Wi-Fi"
+
+#: src/ui/generator-wifi-page.blp:85
+msgid "Double-click a saved Wi‑Fi network."
+msgstr "Dvaput kliknite na spremljenu Wi-Fi mrežu."
+
+#: src/ui/generator-wifi-page.blp:101
+msgid "Or select it and press Enter."
+msgstr "Ili je odaberite i pritisnite Enter."
+
+#: src/ui/generator-wifi-page.blp:110
+msgid "Back"
+msgstr "Natrag"
+
+#: src/ui/scanner-page.blp:58
+msgid "Show result"
+msgstr "Prikaži rezultat"
+
+#: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
+#: src/ui/scanner-page.blp:175
+msgid "Webcam"
+msgstr "Web kamera"
+
+#: src/ui/scanner-page.blp:104
+msgid "No webcam detected."
+msgstr "Web kamera nije otkrivena."
+
+#: src/ui/scanner-page.blp:139
+msgid "Play"
+msgstr "Pokreni"
+
+#: src/ui/scanner-page.blp:149
+msgid "Pause"
+msgstr "Pauziraj"
+
+#: src/ui/scanner-page.blp:208
+msgid "Mirror"
+msgstr "Zrcali"
+
+#: src/ui/scanner-page.blp:225
+msgid "Image"
+msgstr "Slika"
+
+#: src/ui/scanner-page.blp:270
+msgid "Drag and drop an image here."
+msgstr "Povucite i ispustite sliku ovdje."
+
+#: src/ui/scanner-page.blp:283
+msgid "Press Ctrl+V to paste an image."
+msgstr "Pritisnite Ctrl+V za lijepljenje slike."
+
+#: src/ui/scanner-page.blp:299
+msgid "Click the button below to choose a file."
+msgstr "Kliknite gumb ispod za odabir datoteke."
+
+#: src/ui/scanner-page.blp:315
+msgid "Remote images (http://…, sftp://…) also work."
+msgstr "Daljinske slike (http://…, sftp://…) također rade."
+
+#: src/ui/scanner-page.blp:357
+msgid "Choose an image"
+msgstr "Odaberi sliku"
+
+#: src/ui/scanner-page.blp:399
+msgid "Please open webcam or choose an image."
+msgstr "Otvori web kameru ili odaberi sliku."
+
+#: src/ui/scanner-page.blp:413
+msgid "Scanning..."
+msgstr "Skeniranje …"
+
+#: src/ui/scanner-page.blp:423
+msgid "No result found."
+msgstr "Nijedan rezultat nije pronađen."
+
+#: src/ui/scanner-page.blp:445
+msgid "Raw result"
+msgstr "Neobrađeni rezultat"
+
+#: src/ui/scanner-page.blp:451
+msgid "Copy"
+msgstr "Kopiraj"
+
+#: src/ui/shortcuts-dialog.blp:8
 msgctxt "shortcut window"
 msgid "General"
 msgstr "Općenito"
 
-#: src/help-overlay.blp:14
-msgctxt "shortcut window"
-msgid "Show Shortcuts"
-msgstr "Prikaži prečace"
-
-#: src/help-overlay.blp:19
+#: src/ui/shortcuts-dialog.blp:11
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Zatvori aplikaciju"
 
-#: src/wifi-display.blp:15
+#: src/ui/wifi-display.blp:15
 msgid "SSID"
 msgstr "SSID"
 
-#: src/wifi-display.blp:32
+#: src/ui/wifi-display.blp:32
 msgid "Password"
 msgstr "Lozinka"
 
-#: src/wifi-display.blp:53
+#: src/ui/wifi-display.blp:53
 msgid "Save"
 msgstr "Spremi"
 
-#: src/wifi-display.blp:58
+#: src/ui/wifi-display.blp:58
 msgid "After saved, NetworkManager will connect automatically if in range."
-msgstr "Nakon spremanja, NetworkManager će se automatski povezati ako je u dometu."
+msgstr ""
+"Nakon spremanja, NetworkManager će se automatski povezati ako je u dometu."
 
-#: src/window.blp:6
+#: src/ui/window.blp:5
 msgid "CoBang: QR scanner for Linux"
 msgstr "CoBang: QR skener za Linux"
 
-#: src/window.blp:52 src/window.blp:88
+#: src/ui/window.blp:44 src/ui/window.blp:80
 msgid "Scanner"
 msgstr "Skener"
 
-#: src/window.blp:59 src/window.blp:484 src/window.blp:488
+#: src/ui/window.blp:51 src/ui/window.blp:91
 msgid "Generator"
 msgstr "Generator"
 
-#: src/window.blp:70
+#: src/ui/window.blp:62
 msgid "Main Menu"
 msgstr "Glavni izbornik"
 
-#: src/window.blp:127
-msgid "Show result"
-msgstr "Prikaži rezultat"
-
-#: src/window.blp:148 src/window.blp:171 src/window.blp:243
-msgid "Webcam"
-msgstr "Web kamera"
-
-#: src/window.blp:173
-msgid "No webcam detected."
-msgstr "Web kamera nije otkrivena."
-
-#: src/window.blp:208
-msgid "Play"
-msgstr "Pokreni"
-
-#: src/window.blp:218
-msgid "Pause"
-msgstr "Pauziraj"
-
-#: src/window.blp:275
-msgid "Mirror"
-msgstr "Zrcali"
-
-#: src/window.blp:292
-msgid "Image"
-msgstr "Slika"
-
-#: src/window.blp:364
-msgid "Choose an image"
-msgstr "Odaberi sliku"
-
-#: src/window.blp:406
-msgid "Please open webcam or choose an image."
-msgstr "Otvori web kameru ili odaberi sliku."
-
-#: src/window.blp:420
-msgid "Scanning..."
-msgstr "Skeniranje …"
-
-#: src/window.blp:430
-msgid "No result found."
-msgstr "Nijedan rezultat nije pronađen."
-
-#: src/window.blp:452
-msgid "Raw result"
-msgstr "Neobrađeni rezultat"
-
-#: src/window.blp:458
-msgid "Copy"
-msgstr "Kopiraj"
-
-#: src/window.blp:489
-msgid "Will be available in next versions..."
-msgstr "Bit će dostupno u sljedećim verzijama …"
-
-#: src/window.blp:500
+#: src/ui/window.blp:105
 msgid "_Keyboard Shortcuts"
 msgstr "_Tipkovni prečaci"
 
-#: src/window.blp:505
+#: src/ui/window.blp:110
 msgid "_About"
 msgstr "_Informacije"
 
-#: src/app.py:51
+#: src/app.py:55
 msgid "Support the developer"
 msgstr "Podrži programera"
 
-#: src/app.py:52
+#: src/app.py:56
 #, python-format
 msgid ""
 "QR code / barcode scanner for Linux.\n"
@@ -141,49 +198,49 @@ msgstr ""
 "Skener QR koda / crtičnog koda za Linux.\n"
 "%(donate_link)s"
 
-#. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
-#: src/messages.py:23
+#: src/messages.py:25
 msgid ""
-"Please add an image file by one of these methods:\n"
+"Add an image by:\n"
 "\n"
-"- Drag and drop here.\n"
-"- Copy from somewhere and paste (Ctrl+V) here.\n"
-"- Choose with button below (non Flatpak).\n"
+"- Dragging and dropping it here.\n"
+"- Copying and pasting (Ctrl+V).\n"
+"- Clicking the button below (non-Flatpak).\n"
 "\n"
-"Remote image (from http://..., sftp://...) is allowed."
+"Remote images (http://..., sftp://...) work too!"
 msgstr ""
-"Dodaj slikovnu datoteku na jedan od ovih načina:\n"
+"Dodajte sliku putem:\n"
 "\n"
-"- Povuci i ispusti ovdje.\n"
-"- Kopiraj odnekud i zalijepi (Ctrl+V) ovdje.\n"
-"- Odaberi pomoću gumba ispod (nije Flatpak).\n"
+"- Povlačenja i ispuštanja ovdje.\n"
+"- Kopiranja i lijepljenja (Ctrl+V).\n"
+"- Klika na gumb ispod (nije Flatpak).\n"
 "\n"
-"Može se koristiti eksterna slika (od http://..., sftp://...)."
+"Daljinske slike (http://..., sftp://...) također rade!"
 
-#: src/ui.py:28
+#: src/ui.py:27
 msgid "Connected"
 msgstr "Povezano"
 
-#: src/ui.py:60
-msgid "Saved"
-msgstr "Spremljeno"
+#~ msgctxt "shortcut window"
+#~ msgid "Show Shortcuts"
+#~ msgstr "Prikaži prečace"
 
-#: src/window.py:163
-msgid "Found a wifi configuration"
-msgstr "Pronađena je wifi konfiguracija"
+#~ msgid "Will be available in next versions..."
+#~ msgstr "Bit će dostupno u sljedećim verzijama …"
 
-#: src/window.py:165
-msgid "Found a URL. Click to open:"
-msgstr "Pronađen URL. Klikni za otvaranje:"
+#~ msgid "Saved"
+#~ msgstr "Spremljeno"
 
-#: src/window.py:167
-msgid "Found unrecognized text."
-msgstr "Pronađen je neprepoznati tekst."
+#~ msgid "Found a wifi configuration"
+#~ msgstr "Pronađena je wifi konfiguracija"
 
-#: src/window.py:168
-msgid "Unknown"
-msgstr "Nepoznato"
+#~ msgid "Found a URL. Click to open:"
+#~ msgstr "Pronađen URL. Klikni za otvaranje:"
 
-#: src/window.py:234
-msgid "Copied!"
-msgstr "Kopirano!"
+#~ msgid "Found unrecognized text."
+#~ msgstr "Pronađen je neprepoznati tekst."
+
+#~ msgid "Unknown"
+#~ msgstr "Nepoznato"
+
+#~ msgid "Copied!"
+#~ msgstr "Kopirano!"

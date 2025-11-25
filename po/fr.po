@@ -7,195 +7,232 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-12 16:12+0700\n"
+"POT-Creation-Date: 2025-11-25 17:44+0700\n"
 "PO-Revision-Date: 2023-04-14 19:26+0200\n"
 "Last-Translator: Miquel Lionel <lionel@les-miquelots.net>\n"
 "Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "Generated-By: Babel 2.10.3\n"
 
-#: src/help-overlay.blp:11
-#, fuzzy
+#: src/ui/generator-qr-code-page.blp:18
+msgid "Original text"
+msgstr "Texte original"
+
+#: src/ui/generator-qr-code-page.blp:53
+msgid "Save QR Code"
+msgstr "Enregistrer le code QR"
+
+#: src/ui/generator-qr-code-page.blp:59
+msgid "Copy to Clipboard"
+msgstr "Copier dans le presse-papiers"
+
+#: src/ui/generator-qr-code-page.blp:64
+msgid "New"
+msgstr "Nouveau"
+
+#: src/ui/generator-starting-page.blp:25
+msgid "Generate QR Code"
+msgstr "Générer un code QR"
+
+#: src/ui/generator-starting-page.blp:33
+msgid "Enter text or URL..."
+msgstr "Entrez du texte ou une URL..."
+
+#: src/ui/generator-starting-page.blp:43
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+#: src/ui/generator-starting-page.blp:55
+msgid "Generate"
+msgstr "Générer"
+
+#: src/ui/generator-wifi-page.blp:27
+msgid "Generate QR for WiFi"
+msgstr "Générer un QR pour le Wi-Fi"
+
+#: src/ui/generator-wifi-page.blp:85
+msgid "Double-click a saved Wi‑Fi network."
+msgstr "Double-cliquez sur un réseau Wi-Fi enregistré."
+
+#: src/ui/generator-wifi-page.blp:101
+msgid "Or select it and press Enter."
+msgstr "Ou sélectionnez-le et appuyez sur Entrée."
+
+#: src/ui/generator-wifi-page.blp:110
+msgid "Back"
+msgstr "Retour"
+
+#: src/ui/scanner-page.blp:58
+msgid "Show result"
+msgstr "Afficher le résultat"
+
+#: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
+#: src/ui/scanner-page.blp:175
+msgid "Webcam"
+msgstr "Webcam"
+
+#: src/ui/scanner-page.blp:104
+msgid "No webcam detected."
+msgstr "Aucune webcam détectée."
+
+#: src/ui/scanner-page.blp:139
+msgid "Play"
+msgstr "Lire"
+
+#: src/ui/scanner-page.blp:149
+msgid "Pause"
+msgstr "Pause"
+
+#: src/ui/scanner-page.blp:208
+msgid "Mirror"
+msgstr "Miroir"
+
+#: src/ui/scanner-page.blp:225
+msgid "Image"
+msgstr "Image"
+
+#: src/ui/scanner-page.blp:270
+msgid "Drag and drop an image here."
+msgstr "Faites glisser et déposez une image ici."
+
+#: src/ui/scanner-page.blp:283
+msgid "Press Ctrl+V to paste an image."
+msgstr "Appuyez sur Ctrl+V pour coller une image."
+
+#: src/ui/scanner-page.blp:299
+msgid "Click the button below to choose a file."
+msgstr "Cliquez sur le bouton ci-dessous pour choisir un fichier."
+
+#: src/ui/scanner-page.blp:315
+msgid "Remote images (http://…, sftp://…) also work."
+msgstr "Les images distantes (http://…, sftp://…) fonctionnent également."
+
+#: src/ui/scanner-page.blp:357
+msgid "Choose an image"
+msgstr "Choisir une image"
+
+#: src/ui/scanner-page.blp:399
+msgid "Please open webcam or choose an image."
+msgstr "Veuillez ouvrir la webcam ou choisir une image."
+
+#: src/ui/scanner-page.blp:413
+msgid "Scanning..."
+msgstr "Scan en cours..."
+
+#: src/ui/scanner-page.blp:423
+msgid "No result found."
+msgstr "Aucun résultat trouvé."
+
+#: src/ui/scanner-page.blp:445
+msgid "Raw result"
+msgstr "Résultat brut"
+
+#: src/ui/scanner-page.blp:451
+msgid "Copy"
+msgstr "Copier"
+
+#: src/ui/shortcuts-dialog.blp:8
 msgctxt "shortcut window"
 msgid "General"
-msgstr "Généreux"
+msgstr "Général"
 
-#: src/help-overlay.blp:14
-msgctxt "shortcut window"
-msgid "Show Shortcuts"
-msgstr ""
-
-#: src/help-overlay.blp:19
-#, fuzzy
+#: src/ui/shortcuts-dialog.blp:11
 msgctxt "shortcut window"
 msgid "Quit"
 msgstr "Quitter"
 
-#: src/wifi-display.blp:15
+#: src/ui/wifi-display.blp:15
 msgid "SSID"
 msgstr "Nom du WiFi"
 
-#: src/wifi-display.blp:32
+#: src/ui/wifi-display.blp:32
 msgid "Password"
 msgstr "Mot de passe"
 
-#: src/wifi-display.blp:53
+#: src/ui/wifi-display.blp:53
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: src/wifi-display.blp:58
+#: src/ui/wifi-display.blp:58
 msgid "After saved, NetworkManager will connect automatically if in range."
-msgstr ""
+msgstr "Une fois enregistré, NetworkManager se connectera automatiquement si à portée."
 
-#: src/window.blp:6
-#, fuzzy
+#: src/ui/window.blp:5
 msgid "CoBang: QR scanner for Linux"
-msgstr "Scanneur de code QR pour Linux"
+msgstr "CoBang: Scanner QR pour Linux"
 
-#: src/window.blp:52 src/window.blp:88
+#: src/ui/window.blp:44 src/ui/window.blp:80
 msgid "Scanner"
-msgstr ""
+msgstr "Scanner"
 
-#: src/window.blp:59 src/window.blp:484 src/window.blp:488
-#, fuzzy
+#: src/ui/window.blp:51 src/ui/window.blp:91
 msgid "Generator"
-msgstr "Généreux"
+msgstr "Générateur"
 
-#: src/window.blp:70
+#: src/ui/window.blp:62
 msgid "Main Menu"
-msgstr ""
+msgstr "Menu principal"
 
-#: src/window.blp:127
-#, fuzzy
-msgid "Show result"
-msgstr "Résultat brut"
-
-#: src/window.blp:148 src/window.blp:171 src/window.blp:243
-msgid "Webcam"
-msgstr "Webcam"
-
-#: src/window.blp:173
-msgid "No webcam detected."
-msgstr ""
-
-#: src/window.blp:208
-msgid "Play"
-msgstr "Lire"
-
-#: src/window.blp:218
-msgid "Pause"
-msgstr "Pause"
-
-#: src/window.blp:275
-msgid "Mirror"
-msgstr "Miroir"
-
-#: src/window.blp:292
-msgid "Image"
-msgstr "Image"
-
-#: src/window.blp:364
-#, fuzzy
-msgid "Choose an image"
-msgstr "Veuillez choisir un fichier image"
-
-#: src/window.blp:406
-msgid "Please open webcam or choose an image."
-msgstr ""
-
-#: src/window.blp:420
-msgid "Scanning..."
-msgstr ""
-
-#: src/window.blp:430
-msgid "No result found."
-msgstr ""
-
-#: src/window.blp:452
-msgid "Raw result"
-msgstr "Résultat brut"
-
-#: src/window.blp:458
-msgid "Copy"
-msgstr "Copier"
-
-#: src/window.blp:489
-msgid "Will be available in next versions..."
-msgstr ""
-
-#: src/window.blp:500
+#: src/ui/window.blp:105
 msgid "_Keyboard Shortcuts"
-msgstr ""
+msgstr "Raccourcis clavier"
 
-#: src/window.blp:505
-#, fuzzy
+#: src/ui/window.blp:110
 msgid "_About"
 msgstr "À propos"
 
-#: src/app.py:51
+#: src/app.py:55
 msgid "Support the developer"
-msgstr ""
+msgstr "Soutenir le développeur"
 
-#: src/app.py:52
+#: src/app.py:56
 #, python-format
 msgid ""
 "QR code / barcode scanner for Linux.\n"
 "%(donate_link)s"
 msgstr ""
+"Scanner de code QR / code-barres pour Linux.\n"
+"%(donate_link)s"
 
-#. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
-#: src/messages.py:23
+#: src/messages.py:25
 msgid ""
-"Please add an image file by one of these methods:\n"
+"Add an image by:\n"
 "\n"
-"- Drag and drop here.\n"
-"- Copy from somewhere and paste (Ctrl+V) here.\n"
-"- Choose with button below (non Flatpak).\n"
+"- Dragging and dropping it here.\n"
+"- Copying and pasting (Ctrl+V).\n"
+"- Clicking the button below (non-Flatpak).\n"
 "\n"
-"Remote image (from http://..., sftp://...) is allowed."
+"Remote images (http://..., sftp://...) work too!"
 msgstr ""
-"Veuillez insérer un fichier image grâce à l'une de ces méthodes:\n"
+"Ajoutez une image en :\n"
 "\n"
-"- Glissez-déposez la dans cette zone.\n"
-"- Copiez puis collez (Ctrl+V) la depuis quelque part.\n"
-"- Choisissez-en une en cliquant sur le bouton ci-dessous (indisponible avec "
-"flatpak).\n"
+"- La faisant glisser et en la déposant ici.\n"
+"- La copiant et en la collant (Ctrl+V).\n"
+"- Cliquant sur le bouton ci-dessous (non Flatpak).\n"
 "\n"
-"L'utilisation d'une image distante (http://..., sftp://...) est autorisé."
+"Les images distantes (http://..., sftp://...) fonctionnent aussi !"
 
-#: src/ui.py:28
+#: src/ui.py:27
 msgid "Connected"
 msgstr "Connecté"
 
-#: src/ui.py:60
-msgid "Saved"
-msgstr "Sauvegardé"
+#~ msgid "Saved"
+#~ msgstr "Sauvegardé"
 
-#: src/window.py:163
-msgid "Found a wifi configuration"
-msgstr "Configuration wifi trouvée"
+#~ msgid "Found a wifi configuration"
+#~ msgstr "Configuration wifi trouvée"
 
-#: src/window.py:165
 #, fuzzy
-msgid "Found a URL. Click to open:"
-msgstr "URL trouvée. Cliquez pour ouvrir:"
+#~ msgid "Found a URL. Click to open:"
+#~ msgstr "URL trouvée. Cliquez pour ouvrir:"
 
-#: src/window.py:167
-msgid "Found unrecognized text."
-msgstr ""
-
-#: src/window.py:168
-msgid "Unknown"
-msgstr ""
-
-#: src/window.py:234
 #, fuzzy
-msgid "Copied!"
-msgstr "Copié"
+#~ msgid "Copied!"
+#~ msgstr "Copié"
 
 #~ msgid "Result"
 #~ msgstr "Résultat"

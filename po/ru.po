@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-12 16:12+0700\n"
+"POT-Creation-Date: 2025-11-25 17:44+0700\n"
 "PO-Revision-Date: 2025-04-21 21:28+0300\n"
 "Last-Translator: Владислав Малышев <ma12@rambler.ru>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -18,126 +18,182 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Generator: Poedit 3.5\n"
 
-#: src/help-overlay.blp:11
-msgctxt "shortcut window"
-msgid "General"
-msgstr "Основные"
+#: src/ui/generator-qr-code-page.blp:18
+msgid "Original text"
+msgstr "Исходный текст"
 
-#: src/help-overlay.blp:14
-msgctxt "shortcut window"
-msgid "Show Shortcuts"
-msgstr "Клавиатурные сочетания"
+#: src/ui/generator-qr-code-page.blp:53
+msgid "Save QR Code"
+msgstr "Сохранить QR-код"
 
-#: src/help-overlay.blp:19
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "Выйти"
+#: src/ui/generator-qr-code-page.blp:59
+msgid "Copy to Clipboard"
+msgstr "Копировать в буфер обмена"
 
-#: src/wifi-display.blp:15
-msgid "SSID"
-msgstr ""
+#: src/ui/generator-qr-code-page.blp:64
+msgid "New"
+msgstr "Новый"
 
-#: src/wifi-display.blp:32
-msgid "Password"
-msgstr "Пароль"
+#: src/ui/generator-starting-page.blp:25
+msgid "Generate QR Code"
+msgstr "Сгенерировать QR-код"
 
-#: src/wifi-display.blp:53
-msgid "Save"
-msgstr "Сохранить"
+#: src/ui/generator-starting-page.blp:33
+msgid "Enter text or URL..."
+msgstr "Введите текст или URL..."
 
-#: src/wifi-display.blp:58
-msgid "After saved, NetworkManager will connect automatically if in range."
-msgstr ""
-"После сохранения NetworkManager автоматически подключится, если он находится "
-"в зоне действия."
+#: src/ui/generator-starting-page.blp:43
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
 
-#: src/window.blp:6
-msgid "CoBang: QR scanner for Linux"
-msgstr "CoBang: Сканер QR-кода для Линукс"
+#: src/ui/generator-starting-page.blp:55
+msgid "Generate"
+msgstr "Сгенерировать"
 
-#: src/window.blp:52 src/window.blp:88
-msgid "Scanner"
-msgstr "Сканер"
+#: src/ui/generator-wifi-page.blp:27
+msgid "Generate QR for WiFi"
+msgstr "Сгенерировать QR для Wi-Fi"
 
-#: src/window.blp:59 src/window.blp:484 src/window.blp:488
-msgid "Generator"
-msgstr "Генератор"
+#: src/ui/generator-wifi-page.blp:85
+msgid "Double-click a saved Wi‑Fi network."
+msgstr "Дважды щелкните сохраненную сеть Wi-Fi."
 
-#: src/window.blp:70
-msgid "Main Menu"
-msgstr "Основное меню"
+#: src/ui/generator-wifi-page.blp:101
+msgid "Or select it and press Enter."
+msgstr "Или выберите его и нажмите Enter."
 
-#: src/window.blp:127
+#: src/ui/generator-wifi-page.blp:110
+msgid "Back"
+msgstr "Назад"
+
+#: src/ui/scanner-page.blp:58
 msgid "Show result"
 msgstr "Результат"
 
-#: src/window.blp:148 src/window.blp:171 src/window.blp:243
+#: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
+#: src/ui/scanner-page.blp:175
 msgid "Webcam"
 msgstr "Камера"
 
-#: src/window.blp:173
+#: src/ui/scanner-page.blp:104
 msgid "No webcam detected."
 msgstr "Веб-камера не обнаружена."
 
-#: src/window.blp:208
+#: src/ui/scanner-page.blp:139
 msgid "Play"
 msgstr "Запуск видео"
 
-#: src/window.blp:218
+#: src/ui/scanner-page.blp:149
 msgid "Pause"
 msgstr "Пауза"
 
-#: src/window.blp:275
+#: src/ui/scanner-page.blp:208
 msgid "Mirror"
 msgstr "Зеркально"
 
-#: src/window.blp:292
+#: src/ui/scanner-page.blp:225
 msgid "Image"
 msgstr "Картинка"
 
-#: src/window.blp:364
+#: src/ui/scanner-page.blp:270
+msgid "Drag and drop an image here."
+msgstr "Перетащите изображение сюда."
+
+#: src/ui/scanner-page.blp:283
+msgid "Press Ctrl+V to paste an image."
+msgstr "Нажмите Ctrl+V, чтобы вставить изображение."
+
+#: src/ui/scanner-page.blp:299
+msgid "Click the button below to choose a file."
+msgstr "Нажмите кнопку ниже, чтобы выбрать файл."
+
+#: src/ui/scanner-page.blp:315
+msgid "Remote images (http://…, sftp://…) also work."
+msgstr "Удаленные изображения (http://…, sftp://…) также работают."
+
+#: src/ui/scanner-page.blp:357
 msgid "Choose an image"
 msgstr "Выберите изображение"
 
-#: src/window.blp:406
+#: src/ui/scanner-page.blp:399
 msgid "Please open webcam or choose an image."
 msgstr ""
 "Выберите изображение с кодом или переключитесь на камеру для сканирования "
 "кода."
 
-#: src/window.blp:420
+#: src/ui/scanner-page.blp:413
 msgid "Scanning..."
 msgstr "Сканирование ..."
 
-#: src/window.blp:430
+#: src/ui/scanner-page.blp:423
 msgid "No result found."
 msgstr "Нет результата."
 
-#: src/window.blp:452
+#: src/ui/scanner-page.blp:445
 msgid "Raw result"
 msgstr "Raw результат"
 
-#: src/window.blp:458
+#: src/ui/scanner-page.blp:451
 msgid "Copy"
 msgstr "Копировать"
 
-#: src/window.blp:489
-msgid "Will be available in next versions..."
-msgstr "Будет доступен в следующих версиях..."
+#: src/ui/shortcuts-dialog.blp:8
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Основные"
 
-#: src/window.blp:500
+#: src/ui/shortcuts-dialog.blp:11
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Выйти"
+
+#: src/ui/wifi-display.blp:15
+msgid "SSID"
+msgstr "SSID"
+
+#: src/ui/wifi-display.blp:32
+msgid "Password"
+msgstr "Пароль"
+
+#: src/ui/wifi-display.blp:53
+msgid "Save"
+msgstr "Сохранить"
+
+#: src/ui/wifi-display.blp:58
+msgid "After saved, NetworkManager will connect automatically if in range."
+msgstr ""
+"После сохранения NetworkManager автоматически подключится, если он находится "
+"в зоне действия."
+
+#: src/ui/window.blp:5
+msgid "CoBang: QR scanner for Linux"
+msgstr "CoBang: Сканер QR-кода для Линукс"
+
+#: src/ui/window.blp:44 src/ui/window.blp:80
+msgid "Scanner"
+msgstr "Сканер"
+
+#: src/ui/window.blp:51 src/ui/window.blp:91
+msgid "Generator"
+msgstr "Генератор"
+
+#: src/ui/window.blp:62
+msgid "Main Menu"
+msgstr "Основное меню"
+
+#: src/ui/window.blp:105
 msgid "_Keyboard Shortcuts"
 msgstr "_ Клавиатурные сочетания"
 
-#: src/window.blp:505
+#: src/ui/window.blp:110
 msgid "_About"
 msgstr "_О программе"
 
-#: src/app.py:51
+#: src/app.py:55
 msgid "Support the developer"
 msgstr "Поддержать разработчика"
 
-#: src/app.py:52
+#: src/app.py:56
 #, python-format
 msgid ""
 "QR code / barcode scanner for Linux.\n"
@@ -146,49 +202,49 @@ msgstr ""
 "Сканер QR-кодов / штрих-кодов для Linux.\n"
 "%(donate_link)s"
 
-#. Want to define this string in window.blp but Blueprint and xgettext treat the newline differently.
-#: src/messages.py:23
+#: src/messages.py:25
 msgid ""
-"Please add an image file by one of these methods:\n"
+"Add an image by:\n"
 "\n"
-"- Drag and drop here.\n"
-"- Copy from somewhere and paste (Ctrl+V) here.\n"
-"- Choose with button below (non Flatpak).\n"
+"- Dragging and dropping it here.\n"
+"- Copying and pasting (Ctrl+V).\n"
+"- Clicking the button below (non-Flatpak).\n"
 "\n"
-"Remote image (from http://..., sftp://...) is allowed."
+"Remote images (http://..., sftp://...) work too!"
 msgstr ""
-"Добавьте файл изображения одним из этих способов:\n"
+"Добавьте изображение, используя:\n"
 "\n"
-"- Перетащите сюда.\n"
-"- Скопируйте и вставьте (Ctrl+V) сюда.\n"
-"- Выберите расположение с помощью кнопки ниже.\n"
+"- Перетаскивание сюда.\n"
+"- Копирование и вставку (Ctrl+V).\n"
+"- Нажатие на кнопку ниже (не Flatpak).\n"
 "\n"
-"Допускается удаленное расположение (с http://..., sftp://...)."
+"Удаленные изображения (http://..., sftp://...) также работают!"
 
-#: src/ui.py:28
+#: src/ui.py:27
 msgid "Connected"
 msgstr "Связанный"
 
-#: src/ui.py:60
-msgid "Saved"
-msgstr "Сохранено"
+#~ msgctxt "shortcut window"
+#~ msgid "Show Shortcuts"
+#~ msgstr "Клавиатурные сочетания"
 
-#: src/window.py:163
-msgid "Found a wifi configuration"
-msgstr "Найдена конфигурация Wi-Fi"
+#~ msgid "Will be available in next versions..."
+#~ msgstr "Будет доступен в следующих версиях..."
 
-#: src/window.py:165
-msgid "Found a URL. Click to open:"
-msgstr "Найден URL-адрес:"
+#~ msgid "Saved"
+#~ msgstr "Сохранено"
 
-#: src/window.py:167
-msgid "Found unrecognized text."
-msgstr "Найден нераспознанный текст."
+#~ msgid "Found a wifi configuration"
+#~ msgstr "Найдена конфигурация Wi-Fi"
 
-#: src/window.py:168
-msgid "Unknown"
-msgstr "Неизвестный"
+#~ msgid "Found a URL. Click to open:"
+#~ msgstr "Найден URL-адрес:"
 
-#: src/window.py:234
-msgid "Copied!"
-msgstr "Скопировано!"
+#~ msgid "Found unrecognized text."
+#~ msgstr "Найден нераспознанный текст."
+
+#~ msgid "Unknown"
+#~ msgstr "Неизвестный"
+
+#~ msgid "Copied!"
+#~ msgstr "Скопировано!"
