@@ -29,6 +29,44 @@ template $GeneratorWiFiPage : Adw.Bin {
           styles ["title-2"]
         }
 
+        /* Make only the list scroll so the Back button stays visible */
+        ScrolledWindow {
+          vexpand: true;
+          hexpand: true;
+          hscrollbar-policy: never;
+          child: ListView wifi_list_view {
+            model: SingleSelection {
+              model: wifi_list_store;
+            };
+            activate => $on_wifi_list_view_activated();
+
+            factory: BuilderListItemFactory {
+              template ListItem {
+                child: Box {
+                  spacing: 12;
+
+                  Label {
+                    label: bind template.item as <$WifiNetworkInfo>.ssid;
+                    ellipsize: middle;
+                    hexpand: true;
+                    halign: start;
+                  }
+
+                  /* Signal strength icon for active connections */
+                  Image {
+                    icon-name: bind template.item as <$WifiNetworkInfo>.signal_strength_icon;
+                    visible: bind template.item as <$WifiNetworkInfo>.is_active;
+                    valign: center;
+                    halign: end;
+                  }
+                };
+              }
+            };
+
+            styles ['rich-list']
+          };
+        }
+
         Box {
           orientation: vertical;
           spacing: 2;
@@ -66,38 +104,6 @@ template $GeneratorWiFiPage : Adw.Bin {
               halign: start;
             }
           }
-        }
-
-        ListView wifi_list_view {
-          model: SingleSelection {
-            model: wifi_list_store;
-          };
-          activate => $on_wifi_list_view_activated();
-
-          factory: BuilderListItemFactory {
-            template ListItem {
-              child: Box {
-                spacing: 12;
-
-                Label {
-                  label: bind template.item as <$WifiNetworkInfo>.ssid;
-                  ellipsize: middle;
-                  hexpand: true;
-                  halign: start;
-                }
-
-                /* Signal strength icon for active connections */
-                Image {
-                  icon-name: bind template.item as <$WifiNetworkInfo>.signal_strength_icon;
-                  visible: bind template.item as <$WifiNetworkInfo>.is_active;
-                  valign: center;
-                  halign: end;
-                }
-              };
-            }
-          };
-
-          styles ['rich-list']
         }
 
         Button btn_back {
