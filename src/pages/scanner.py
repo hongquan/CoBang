@@ -49,7 +49,7 @@ from ..consts import (
     WebcamPageLayoutName,
 )
 from ..custom_types import WebcamDeviceInfo
-from ..messages import IMAGE_GUIDE, WifiInfoMessage, parse_wifi_message
+from ..messages import WifiInfoMessage, parse_wifi_message
 from ..prep import (
     get_device_path,
     guess_mimetype,
@@ -82,7 +82,7 @@ class ScannerPage(Adw.Bin):
     btn_pause: Gtk.ToggleButton = Gtk.Template.Child()
     mirror_switch: Gtk.Switch = Gtk.Template.Child()
     frame_image: Gtk.AspectFrame = Gtk.Template.Child()
-    image_guide: Gtk.Label = Gtk.Template.Child()
+
     pasted_image: Gtk.Picture = Gtk.Template.Child()
     image_drop_target: Gtk.DropTargetAsync = Gtk.Template.Child()
     btn_filechooser: Gtk.Button = Gtk.Template.Child()
@@ -113,7 +113,7 @@ class ScannerPage(Adw.Bin):
         super().__init__(**kwargs)
 
         self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.REQUESTING)
-        self.image_guide.set_label(IMAGE_GUIDE)
+
 
         # Initialize zbar scanner
         self.zbar_scanner = zbar.ImageScanner()

@@ -229,11 +229,15 @@ template $ScannerPage: Adw.Bin {
             orientation: vertical;
             spacing: 4;
 
-            AspectFrame frame_image {
+            Frame frame_image {
               focusable: true;
+              vexpand: true;
+
+              styles ['needs-highlight']
 
               child: Box box_image_empty {
                 orientation: vertical;
+                valign: center;
 
                 Picture pasted_image {
                   visible: false;
@@ -244,17 +248,77 @@ template $ScannerPage: Adw.Bin {
                   spacing: 6;
                   visible: bind pasted_image.visible inverted;
 
-                  Label {}
-
                   Image {
                     resource: '/vn/hoabinh/quan/CoBang/img/wireframe-image-add.svg';
                     pixel-size: 128;
                   }
 
-                  Label image_guide {
-                    label: '';
-                    margin-bottom: 4;
-                    selectable: true;
+                  Box image_guide_box {
+                    orientation: vertical;
+                    spacing: 2;
+                    margin-top: 8;
+
+                    Box {
+                      orientation: horizontal;
+                      spacing: 4;
+                      Label {
+                        label: "•";
+                        halign: end;
+                        hexpand: true;
+                      }
+                      Label {
+                        label: _("Drag and drop an image here.");
+                        wrap:
+                        true;
+                        selectable: true;
+                        halign: start;
+                        hexpand: true;
+                      }
+                    }
+                    Box {
+                      orientation: horizontal;
+                      spacing: 4;
+                      Label { label: "•"; halign: end; hexpand: true; }
+                      Label {
+                        label: _("Press Ctrl+V to paste an image.");
+                        wrap: true;
+                        selectable: true;
+                        halign: start;
+                        hexpand: true;
+                      }
+                    }
+                    Box {
+                      orientation: horizontal;
+                      spacing: 4;
+                      Label {
+                        label: "•";
+                        halign: end;
+                        hexpand: true;
+                      }
+                      Label {
+                        label: _("Click the button below to choose a file.");
+                        wrap: true;
+                        selectable: true;
+                        halign: start;
+                        hexpand: true;
+                      }
+                    }
+                    Box {
+                      orientation: horizontal;
+                      spacing: 4;
+                      Label {
+                        label: "•";
+                        halign: end;
+                        hexpand: true;
+                      }
+                      Label {
+                        label: _("Remote images (http://…, sftp://…) also work.");
+                        wrap: true;
+                        selectable: true;
+                        halign: start;
+                        hexpand: true;
+                      }
+                    }
                   }
                 }
               };
@@ -272,10 +336,6 @@ template $ScannerPage: Adw.Bin {
                 accept => $on_image_drop_target_accept();
                 drop => $on_image_dropped();
               }
-
-              styles [
-                'frame',
-              ]
             }
 
             Box {
