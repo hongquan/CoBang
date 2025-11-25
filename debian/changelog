@@ -1,3 +1,10 @@
+cobang (2.0.0-1) questing; urgency=medium
+
+  * Add QR code generator.
+  * Add Croatian language.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Tue, 25 Nov 2025 21:42:19 +0700
+
 cobang (1.9.1-1) questing; urgency=medium
 
   * Replace seeing-symbolic icon.
