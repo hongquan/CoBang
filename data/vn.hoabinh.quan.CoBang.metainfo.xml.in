@@ -54,6 +54,12 @@
   </kudos>
 
   <releases>
+    <release version="2.0.0" date="2025-11-25" urgency="medium">
+      <description translate="no">
+        <p>Add QR code generator.</p>
+        <p>Add Croatian language.</p>
+      </description>
+    </release>
     <release version="1.9.1" date="2025-11-11" urgency="medium">
       <description translate="no">
         <p>Replace seeing-symbolic icon.</p>
