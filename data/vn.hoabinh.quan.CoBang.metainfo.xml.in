@@ -39,8 +39,12 @@
        <caption>Generate QR code.</caption>
      </screenshot>
      <screenshot>
-       <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v2_generator_3.png</image>
-       <caption>Generate WiFi QR code.</caption>
+       <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v2_generator_4.png</image>
+       <caption>list WiFi networks.</caption>
+     </screenshot>
+     <screenshot>
+       <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v2_generator_5.png</image>
+       <caption>Search WiFi networks.</caption>
      </screenshot>
   </screenshots>
   <url type="homepage">https://github.com/hongquan/CoBang</url>
@@ -54,6 +58,12 @@
   </kudos>
 
   <releases>
+    <release version="2.1.0" date="2025-11-27" urgency="medium">
+      <description translate="no">
+        <p>Add search filter for WiFi networks.</p>
+        <p>Fix: Retrieved WiFi passwords are empty.</p>
+      </description>
+    </release>
     <release version="2.0.0" date="2025-11-25" urgency="medium">
       <description translate="no">
         <p>Add QR code generator.</p>
