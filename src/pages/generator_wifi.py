@@ -18,6 +18,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
+
 from gi.repository import Adw, Gio, GObject, Gtk  # pyright: ignore[reportMissingModuleSource]
 from logbook import Logger
 
@@ -35,6 +37,10 @@ class GeneratorWiFiPage(Adw.Bin):
 
     wifi_list_store: Gio.ListStore = Gtk.Template.Child()
     wifi_list_view: Gtk.ListView = Gtk.Template.Child()
+    wifi_search_entry: Gtk.SearchEntry = Gtk.Template.Child()
+    wifi_search_filter: Gtk.StringFilter = Gtk.Template.Child()
+    wifi_filter_model: Gtk.FilterListModel = Gtk.Template.Child()
+    wifi_selection: Gtk.SingleSelection = Gtk.Template.Child()
 
     __gsignals__ = {
         'request-saved-wifi-networks': (GObject.SignalFlags.RUN_FIRST, None, ()),
@@ -42,25 +48,40 @@ class GeneratorWiFiPage(Adw.Bin):
         'back-to-start': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def populate_wifi_networks(self, wifi_networks: list[WifiNetworkInfo]):
+    def populate_wifi_networks(self, wifi_networks: Iterable[WifiNetworkInfo]):
         """Populate the wifi list store with the given networks."""
         self.wifi_list_store.remove_all()
         for wifi_info in wifi_networks:
             self.wifi_list_store.append(wifi_info)
         log.info('Populated {} WiFi networks in list store', len(wifi_networks))
 
+    def update_wifi_password(self, uuid: str, password: str):
+        """Update the password for a WiFi network identified by UUID."""
+        for item in self.wifi_list_store:
+            if item.uuid == uuid:
+                item.password = password
+                return
+        log.warning('WiFi network with UUID {} not found in list store', uuid)
 
     @Gtk.Template.Callback()
     def on_wifi_list_view_activated(self, list_view: Gtk.ListView, position: int):
-        item = self.wifi_list_store.get_item(position)
-        if isinstance(item, WifiNetworkInfo):
-            log.info('Generate QR for WiFi (activated): {}', item.ssid)
-            self.emit('generate-qr-for-wifi', item)
+        # Get item from the filtered model
+        selection = list_view.get_model()
+        item = selection.get_item(position)
+        log.info('Generate QR for WiFi (activated): {}', item.ssid)
+        self.emit('generate-qr-for-wifi', item)
+
+    @Gtk.Template.Callback()
+    def on_search_changed(self, search_entry: Gtk.SearchEntry):
+        """Handle search text changes to filter the WiFi list."""
+        search_text = search_entry.get_text()
+        self.wifi_search_filter.set_search(search_text)
+
+    @Gtk.Template.Callback()
+    def on_search_stopped(self, search_entry: Gtk.SearchEntry):
+        """Handle Escape key to clear search and remove focus."""
+        search_entry.set_text('')
 
     @Gtk.Template.Callback()
     def on_btn_back_clicked(self, button: Gtk.Button):
         self.emit('back-to-start')
-

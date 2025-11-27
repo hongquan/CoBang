@@ -16,7 +16,7 @@ class WebcamDeviceInfo(GObject.GObject):
     enabled = GObject.Property(type=bool, default=True)
 
     __gsignals__ = {
-        'changed': (GObject.SIGNAL_RUN_LAST, None, ()),
+        'changed': (GObject.SignalFlags.RUN_LAST, None, ()),
     }
 
     def __init__(self, source_type: DeviceSourceType, path: str, name: str, enabled: bool = True):
@@ -29,6 +29,8 @@ class WebcamDeviceInfo(GObject.GObject):
 
 class WifiNetworkInfo(GObject.GObject):
     __gtype_name__ = 'WifiNetworkInfo'
+    # Used for finding object to update password asynchronously.
+    uuid = GObject.Property(type=str, default='')
     ssid = GObject.Property(type=str)
     password = GObject.Property(type=str)
     # Ref: https://lazka.github.io/pgi-docs/#NM-1.0/classes/SettingWirelessSecurity.html#NM.SettingWirelessSecurity.props.key_mgmt
@@ -43,11 +45,12 @@ class WifiNetworkInfo(GObject.GObject):
     signal_strength_icon = GObject.Property(type=str, default='network-wireless-signal-none-symbolic')
 
     __gsignals__ = {
-        'changed': (GObject.SIGNAL_RUN_LAST, None, ()),
+        'changed': (GObject.SignalFlags.RUN_LAST, None, ()),
     }
 
-    def __init__(self, ssid: str, password: str = '', key_mgmt: str = 'none', is_active: bool = False, signal_strength: int = 0):
+    def __init__(self, ssid: str, password: str = '', key_mgmt: str = 'none', is_active: bool = False, signal_strength: int = 0, uuid: str = ''):
         super().__init__()
+        self.uuid = uuid
         self.ssid = ssid
         self.password = password
         self.key_mgmt = key_mgmt

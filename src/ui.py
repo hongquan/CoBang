@@ -44,3 +44,17 @@ def build_url_display(url: SplitResult) -> Gtk.Box | None:
 def on_secondary_icon_pressed(entry: Gtk.Entry, pos: Gtk.EntryIconPosition):
     visible = entry.get_visibility()
     entry.set_visibility(not visible)
+
+
+def icon_name_for_wifi_strength(strength: int) -> str:
+    """Get the icon name for the given WiFi signal strength (0-100)."""
+    if strength >= 75:
+        return 'network-wireless-signal-excellent-symbolic'
+    elif strength >= 50:
+        return 'network-wireless-signal-good-symbolic'
+    elif strength >= 25:
+        return 'network-wireless-signal-ok-symbolic'
+    elif strength > 0:
+        return 'network-wireless-signal-weak-symbolic'
+    else:
+        return 'network-wireless-signal-none-symbolic'

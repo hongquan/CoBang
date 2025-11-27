@@ -38,6 +38,7 @@ from logbook import Logger
 
 from ..consts import GeneratorSubPage
 from ..custom_types import WifiNetworkInfo
+from ..messages import WifiInfoMessage, serialize_wifi_message
 from .generator_qr_code import GeneratorQRCodePage
 from .generator_starting import GeneratorStartingPage
 from .generator_wifi import GeneratorWiFiPage
@@ -108,14 +109,13 @@ class GeneratorPage(Adw.Bin):
         """Populate WiFi networks in the WiFi page."""
         self.wifi_page.populate_wifi_networks(wifi_networks)
 
+    def update_wifi_password(self, uuid: str, password: str):
+        """Update password for a WiFi network by UUID."""
+        self.wifi_page.update_wifi_password(uuid, password)
+
     def on_generate_qr_for_wifi_network(self, _src: GeneratorWiFiPage, wifi_info: WifiNetworkInfo):
         """Generate QR code for a saved WiFi network."""
-        ssid = wifi_escape(wifi_info.ssid)
-        auth = map_key_mgmt_to_auth(wifi_info.key_mgmt)
-        parts = [f'S:{ssid}', f'T:{auth}']
-        if auth != 'nopass' and wifi_info.password:
-            parts.append(f'P:{wifi_escape(wifi_info.password)}')
-        text = 'WIFI:' + ';'.join(parts) + ';'
+        text = serialize_wifi_message(WifiInfoMessage.from_networkmanager_info(wifi_info))
         self.on_qr_code_generation_requested(self.starting_page, text)
 
     @Gtk.Template.Callback()
@@ -127,8 +127,10 @@ class GeneratorPage(Adw.Bin):
             # Ask for a refresh of saved WiFi networks every time user switches here.
             self.emit('request-saved-wifi-networks')
 
+
 def wifi_escape(s: str) -> str:
     return s.replace('\\', r'\\').replace(';', r'\;').replace(',', r'\,').replace('"', r'\"')
+
 
 def map_key_mgmt_to_auth(key_mgmt: str) -> str:
     if key_mgmt in ('none', ''):
