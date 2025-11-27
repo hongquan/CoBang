@@ -42,6 +42,7 @@ from .messages import WifiInfoMessage
 from .net import add_wifi_connection, is_connected_same_wifi
 from .pages.generator import GeneratorPage
 from .pages.scanner import ScannerPage
+from .ui import icon_name_for_wifi_strength
 
 
 log = Logger(__name__)
@@ -183,32 +184,33 @@ class CoBangWindow(Adw.ApplicationWindow):
         """Callback for WiFi secrets retrieval."""
         try:
             secrets_variant = conn.get_secrets_finish(res)
-            if not secrets_variant:
-                log.debug('No secrets returned for connection UUID: {}', conn.get_uuid())
-                return
-
-            # The variant is a dict with setting names as keys
-            # e.g., {'802-11-wireless-security': {'psk': 'password'}}
-            secrets_dict = secrets_variant.unpack()
-            wireless_security_dict = secrets_dict.get(NM.SETTING_WIRELESS_SECURITY_SETTING_NAME, {})
-
-            if not wireless_security_dict:
-                log.debug('No wireless security setting in secrets for UUID: {}', conn.get_uuid())
-                return
-
-            # Try different password fields based on key management type
-            password = (wireless_security_dict.get('psk') or
-                       wireless_security_dict.get('wep-key0') or
-                       wireless_security_dict.get('leap-password') or
-                       '')
-
-            if password:
-                log.info('Retrieved password for WiFi network UUID: {}', conn.get_uuid())
-                self.generator_page.update_wifi_password(conn.get_uuid(), password)
-            else:
-                log.debug('No password found in secrets for UUID: {}', conn.get_uuid())
         except GLib.Error as e:
-            log.error('Failed to retrieve WiFi secrets for UUID {}: {}', conn.get_uuid(), e)
+            log.warning('Failed to retrieve WiFi secrets for "{}": {}', conn.get_id(), e)
+            return
+        if not secrets_variant:
+            log.debug('No secrets returned for connection "{}"', conn.get_id())
+            return
+
+        # The variant is a dict with setting names as keys
+        # e.g., {'802-11-wireless-security': {'psk': 'password'}}
+        secrets = secrets_variant.unpack()
+        wireless_security = secrets.get(NM.SETTING_WIRELESS_SECURITY_SETTING_NAME, {})
+
+        if not wireless_security:
+            log.debug('No wireless security setting in secrets for UUID: {}', conn.get_uuid())
+            return
+
+        # Try different password fields based on key management type
+        if password := (
+            wireless_security.get('psk')
+            or wireless_security.get('wep-key0')
+            or wireless_security.get('leap-password')
+            or ''
+        ):
+            log.info('Retrieved password for "{}" Wi-Fi: {}', conn.get_id(), password)
+            self.generator_page.update_wifi_password(conn.get_uuid(), password)
+        else:
+            log.debug('No password found in secrets for UUID: {}', conn.get_uuid())
 
     def on_paste_image(self, *args):
         self.scanner_page.on_paste_image()
@@ -236,7 +238,9 @@ class CoBangWindow(Adw.ApplicationWindow):
 
         # Currently active WiFi SSIDs
         active_ssids = set(
-            ac.get_id() for ac in self.nm_client.get_active_connections() if ac.get_connection_type() == NM.SETTING_WIRELESS_SETTING_NAME
+            ac.get_id()
+            for ac in self.nm_client.get_active_connections()
+            if ac.get_connection_type() == NM.SETTING_WIRELESS_SETTING_NAME
         )
 
         for conn in connections:
@@ -247,9 +251,6 @@ class CoBangWindow(Adw.ApplicationWindow):
             if not ssid_bytes:
                 continue
             ssid = ssid_bytes.get_data().decode('utf-8', errors='ignore')
-
-            # Get password via `get_secrets()`
-            # conn.get_secrets_async('802-11-wireless-security')
 
             # It is not possible to get Wi-Fi password from the `NM.SettingWirelessSecurity`
             password = ''
@@ -267,17 +268,7 @@ class CoBangWindow(Adw.ApplicationWindow):
                 signal_strength=strengths.get(ssid, 0),
             )
             # Map strength to icon name (GNOME symbolic icons)
-            s = wifi_info.signal_strength
-            if s >= 75:
-                wifi_info.signal_strength_icon = 'network-wireless-signal-excellent-symbolic'
-            elif s >= 50:
-                wifi_info.signal_strength_icon = 'network-wireless-signal-good-symbolic'
-            elif s >= 25:
-                wifi_info.signal_strength_icon = 'network-wireless-signal-ok-symbolic'
-            elif s > 0:
-                wifi_info.signal_strength_icon = 'network-wireless-signal-weak-symbolic'
-            else:
-                wifi_info.signal_strength_icon = 'network-wireless-signal-none-symbolic'
+            wifi_info.signal_strength_icon = icon_name_for_wifi_strength(wifi_info.signal_strength)
             wifi_networks.append(wifi_info)
 
         # Sort: active first, then by descending signal strength using stored fields
@@ -286,15 +277,11 @@ class CoBangWindow(Adw.ApplicationWindow):
         log.info('Retrieved {} saved WiFi networks (sorted)', len(wifi_networks))
         self.generator_page.populate_wifi_networks(wifi_networks)
 
-        # Asynchronously retrieve passwords for each connection
+        # Asynchronously retrieve password for each connection
         for conn in connections:
             if conn.get_setting_wireless():
                 # Request secrets for wireless security setting
-                conn.get_secrets_async(
-                    NM.SETTING_WIRELESS_SECURITY_SETTING_NAME,
-                    None,
-                    self.cb_wifi_secrets_retrieved
-                )
+                conn.get_secrets_async(NM.SETTING_WIRELESS_SECURITY_SETTING_NAME, None, self.cb_wifi_secrets_retrieved)
 
     def activate_pause_button(self):
         """Activate the Pause button if ScannerPage is visible and in an appropriate stage."""

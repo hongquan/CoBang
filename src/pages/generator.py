@@ -38,10 +38,10 @@ from logbook import Logger
 
 from ..consts import GeneratorSubPage
 from ..custom_types import WifiNetworkInfo
+from ..messages import WifiInfoMessage, serialize_wifi_message
 from .generator_qr_code import GeneratorQRCodePage
 from .generator_starting import GeneratorStartingPage
 from .generator_wifi import GeneratorWiFiPage
-from ..messages import WifiInfoMessage, serialize_wifi_message
 
 
 log = Logger(__name__)
@@ -127,8 +127,10 @@ class GeneratorPage(Adw.Bin):
             # Ask for a refresh of saved WiFi networks every time user switches here.
             self.emit('request-saved-wifi-networks')
 
+
 def wifi_escape(s: str) -> str:
     return s.replace('\\', r'\\').replace(';', r'\;').replace(',', r'\,').replace('"', r'\"')
+
 
 def map_key_mgmt_to_auth(key_mgmt: str) -> str:
     if key_mgmt in ('none', ''):

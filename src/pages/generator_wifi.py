@@ -18,6 +18,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
+
 from gi.repository import Adw, Gio, GObject, Gtk  # pyright: ignore[reportMissingModuleSource]
 from logbook import Logger
 
@@ -45,7 +47,7 @@ class GeneratorWiFiPage(Adw.Bin):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def populate_wifi_networks(self, wifi_networks: list[WifiNetworkInfo]):
+    def populate_wifi_networks(self, wifi_networks: Iterable[WifiNetworkInfo]):
         """Populate the wifi list store with the given networks."""
         self.wifi_list_store.remove_all()
         for wifi_info in wifi_networks:
@@ -57,7 +59,6 @@ class GeneratorWiFiPage(Adw.Bin):
         for item in self.wifi_list_store:
             if item.uuid == uuid:
                 item.password = password
-                log.debug('Updated password for WiFi network UUID: {}', uuid)
                 return
         log.warning('WiFi network with UUID {} not found in list store', uuid)
 
