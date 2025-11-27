@@ -6,8 +6,19 @@ Gio.ListStore wifi_list_store {
   item-type: typeof<$WifiNetworkInfo>;
 }
 
+StringFilter wifi_search_filter {
+  expression: expr item as <$WifiNetworkInfo>.ssid;
+  ignore-case: true;
+  match-mode: substring;
+}
+
+FilterListModel wifi_filter_model {
+  model: wifi_list_store;
+  filter: wifi_search_filter;
+}
+
 template $GeneratorWiFiPage : Adw.Bin {
-  Gtk.Box {
+  Box {
     orientation: vertical;
     spacing: 12;
     margin-top: 12;
@@ -29,14 +40,20 @@ template $GeneratorWiFiPage : Adw.Bin {
           styles ["title-2"]
         }
 
+        SearchEntry wifi_search_entry {
+          placeholder-text: _("Search WiFi networks...");
+          search-changed => $on_search_changed();
+          stop-search => $on_search_stopped();
+        }
+
         /* Make only the list scroll so the Back button stays visible */
         ScrolledWindow {
           vexpand: true;
           hexpand: true;
           hscrollbar-policy: never;
           child: ListView wifi_list_view {
-            model: SingleSelection {
-              model: wifi_list_store;
+            model: SingleSelection wifi_selection {
+              model: wifi_filter_model;
             };
             activate => $on_wifi_list_view_activated();
 
