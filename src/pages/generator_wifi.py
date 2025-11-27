@@ -52,15 +52,21 @@ class GeneratorWiFiPage(Adw.Bin):
             self.wifi_list_store.append(wifi_info)
         log.info('Populated {} WiFi networks in list store', len(wifi_networks))
 
+    def update_wifi_password(self, uuid: str, password: str):
+        """Update the password for a WiFi network identified by UUID."""
+        for item in self.wifi_list_store:
+            if item.uuid == uuid:
+                item.password = password
+                log.debug('Updated password for WiFi network UUID: {}', uuid)
+                return
+        log.warning('WiFi network with UUID {} not found in list store', uuid)
 
     @Gtk.Template.Callback()
     def on_wifi_list_view_activated(self, list_view: Gtk.ListView, position: int):
         item = self.wifi_list_store.get_item(position)
-        if isinstance(item, WifiNetworkInfo):
-            log.info('Generate QR for WiFi (activated): {}', item.ssid)
-            self.emit('generate-qr-for-wifi', item)
+        log.info('Generate QR for WiFi (activated): {}', item.ssid)
+        self.emit('generate-qr-for-wifi', item)
 
     @Gtk.Template.Callback()
     def on_btn_back_clicked(self, button: Gtk.Button):
         self.emit('back-to-start')
-

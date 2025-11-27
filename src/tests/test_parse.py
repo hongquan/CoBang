@@ -1,4 +1,4 @@
-from cobang.messages import mecard_unescape, parse_wifi_message
+from ..messages import mecard_unescape, parse_wifi_message
 
 
 def test_mecard_unescape():

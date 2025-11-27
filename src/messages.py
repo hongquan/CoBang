@@ -1,6 +1,10 @@
+from typing import Self
+
 from dataclasses import dataclass
 from enum import StrEnum
 from locale import gettext as _
+
+from .custom_types import WifiNetworkInfo
 
 
 class WifiAuthType(StrEnum):
@@ -19,6 +23,25 @@ class WifiInfoMessage:
     hidden: bool = False
     # Extra field (not in QR code)
     connected: bool = False
+
+    @classmethod
+    def from_networkmanager_info(cls, wifi_info: WifiNetworkInfo) -> Self:
+        match wifi_info.key_mgmt:
+            case 'none':
+                auth_type = None
+            case 'wpa-psk' | 'sae':
+                auth_type = WifiAuthType.WPA
+            case 'wpa-eap':
+                auth_type = WifiAuthType.WPA2_EAP
+            case _:
+                auth_type = WifiAuthType.WPA2
+        password = None if wifi_info.key_mgmt == 'none' else wifi_info.password
+        return cls(
+            ssid=wifi_info.ssid,
+            password=password,
+            auth_type=auth_type,
+            connected=wifi_info.is_active,
+        )
 
 
 IMAGE_GUIDE = _(
@@ -60,3 +83,15 @@ def parse_wifi_message(string: str) -> WifiInfoMessage | None:
     if not winfo.auth_type:
         winfo.password = None
     return winfo
+
+
+def serialize_wifi_message(wifi_info: WifiInfoMessage) -> str:
+    parts = [f'S:{wifi_info.ssid}']
+    auth_type = wifi_info.auth_type.value if wifi_info.auth_type else 'nopass'
+    parts.append(f'T:{auth_type}')
+    if auth_type != 'nopass' and wifi_info.password:
+        parts.append(f'P:{wifi_info.password}')
+    if wifi_info.hidden:
+        parts.append('H:true')
+    text = 'WIFI:' + ';'.join(parts) + ';;'
+    return text
