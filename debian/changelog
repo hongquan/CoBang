@@ -1,3 +1,10 @@
+cobang (2.1.0-1) questing; urgency=medium
+
+  * Add search filter for WiFi networks.
+  * Fix: Retrieved WiFi passwords are empty.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Thu, 27 Nov 2025 17:53:41 +0700
+
 cobang (2.0.0-1) questing; urgency=medium
 
   * Add QR code generator.
