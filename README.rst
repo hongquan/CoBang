@@ -54,6 +54,8 @@ Screenshots
 .. image:: https://i.imgur.com/a4KoZCg.png
 .. image:: https://i.imgur.com/AigLax4.png
 .. image:: https://i.imgur.com/Q9xwcep.png
+.. image:: https://cdn.imgchest.com/files/2e65266f6f59.png
+.. image:: https://cdn.imgchest.com/files/0edc6ec2c4aa.png
 
 
 Install
@@ -103,8 +105,8 @@ The release on FlatHub is lagging behind traditional distribution channels (PPA,
 Compatibility
 -------------
 
-Though being targeted at Wayland, this app can still work in X11 desktop environments, like `KDE`_ (in Kubuntu), `Xfce`_ (in Xubuntu), `LxQt`_ (in Lubuntu). 
-But due to a gap between GTK and Qt, the app gets some minor quirky issue when running in Qt-based DEs like KDE and LxQt. 
+Though being targeted at Wayland, this app can still work in X11 desktop environments, like `KDE`_ (in Kubuntu), `Xfce`_ (in Xubuntu), `LxQt`_ (in Lubuntu).
+But due to a gap between GTK and Qt, the app gets some minor quirky issue when running in Qt-based DEs like KDE and LxQt.
 CoBang should not be tried in VirtualBox virtual machine, because of poor graphics stack VirtualBox provides.
 
 Since v1.6, CoBang has different webcam access methods, depending on whether it runs inside sandbox (Flatpak) or not. Outside sandbox, it tries to access webcam directly as V4L2 device.
@@ -266,4 +268,4 @@ Credit
 .. _lucide_license: https://lucide.dev/license
 .. _nu: https://www.nushell.sh/
 .. _xdg-desktop-portal: https://flatpak.github.io/xdg-desktop-portal/
-.. 
+..
