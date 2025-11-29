@@ -112,6 +112,7 @@ class CoBangWindow(Adw.ApplicationWindow):
     def on_shown(self, *args):
         if self.get_application():
             outside_sandbox = not self.portal.running_under_sandbox() and not os.getenv(ENV_EMULATE_SANDBOX)
+            log.debug('Calculated is_outside_sandbox: {}', outside_sandbox)
             self.is_outside_sandbox = outside_sandbox
         GLib.timeout_add(1000, self.check_and_start_webcam)
 

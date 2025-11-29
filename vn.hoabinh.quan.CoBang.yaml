@@ -97,7 +97,7 @@ modules:
           project-id: 230124
           stable-only: true
           url-template: https://github.com/flatpak/libportal/archive/$version.tar.gz
-          
+
   - name: intltool
     sources:
       - type: archive
