@@ -1,0 +1,229 @@
+# Slovak translation for CoBang.
+# Copyright (C) 2025 Nguyễn Hồng Quân
+# This file is distributed under the same license as the CoBang project.
+# Jozef Gaal <preklady@mayday.sk>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: CoBang v2.2.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-29 21:20+0700\n"
+"PO-Revision-Date: 2025-11-29 18:05+0100\n"
+"Last-Translator: Jozef Gaal <preklady@mayday.sk>\n"
+"Language-Team: Jozef Gaal <preklady@mayday.sk>\n"
+"Language: sk_SK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.6\n"
+
+#: src/ui/generator-qr-code-page.blp:18
+msgid "Original text"
+msgstr "Pôvodný text"
+
+#: src/ui/generator-qr-code-page.blp:53
+msgid "Save QR Code"
+msgstr "Uložiť QR kód"
+
+#: src/ui/generator-qr-code-page.blp:59
+msgid "Copy to Clipboard"
+msgstr "Kopírovať do schránky"
+
+#: src/ui/generator-qr-code-page.blp:64
+msgid "New"
+msgstr "Nový"
+
+#: src/ui/generator-starting-page.blp:25
+msgid "Generate QR Code"
+msgstr "Vygenerovať QR kód"
+
+#: src/ui/generator-starting-page.blp:33
+msgid "Enter text or URL..."
+msgstr "Zadajte text alebo URL adresu..."
+
+#: src/ui/generator-starting-page.blp:43
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+#: src/ui/generator-starting-page.blp:55
+msgid "Generate"
+msgstr "Vygenerovať"
+
+#: src/ui/generator-wifi-page.blp:38
+msgid "Generate QR for WiFi"
+msgstr "Vygenerovať QR kód pre WiFi"
+
+#: src/ui/generator-wifi-page.blp:44
+msgid "Search WiFi networks..."
+msgstr "Vyhľadať WiFi siete..."
+
+#: src/ui/generator-wifi-page.blp:102
+msgid "Double-click a saved Wi‑Fi network."
+msgstr "Dvakrát kliknite na uloženú sieť Wi-Fi."
+
+#: src/ui/generator-wifi-page.blp:118
+msgid "Or select it and press Enter."
+msgstr "Alebo ju vyberte a stlačte Enter."
+
+#: src/ui/generator-wifi-page.blp:127
+msgid "Back"
+msgstr "Späť"
+
+#: src/ui/scanner-page.blp:58
+msgid "Show result"
+msgstr "Zobraziť výsledok"
+
+#: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
+#: src/ui/scanner-page.blp:188
+msgid "Webcam"
+msgstr "Webkamera"
+
+#: src/ui/scanner-page.blp:104
+msgid "No webcam detected."
+msgstr "Nebola zistená žiadna webová kamera."
+
+#: src/ui/scanner-page.blp:139
+msgid "Play"
+msgstr "Prehrať"
+
+#: src/ui/scanner-page.blp:149
+msgid "Pause"
+msgstr "Pozastaviť"
+
+#: src/ui/scanner-page.blp:168
+msgid "Sandboxed, webcam hardware info is not available."
+msgstr "V režime Sandbox nie sú k dispozícii informácie o hardvéri webovej kamery."
+
+#: src/ui/scanner-page.blp:221
+msgid "Mirror"
+msgstr "Zrkadliť"
+
+#: src/ui/scanner-page.blp:238
+msgid "Image"
+msgstr "Obrázok"
+
+#: src/ui/scanner-page.blp:283
+msgid "Drag and drop an image here."
+msgstr "Presuňte sem obrázok."
+
+#: src/ui/scanner-page.blp:295
+msgid "Press Ctrl+V to paste an image."
+msgstr "Stlačte klávesy Ctrl+V, aby ste vložili obrázok."
+
+#: src/ui/scanner-page.blp:311
+msgid "Click the button below to choose a file."
+msgstr "Kliknite na tlačidlo nižšie a vyberte súbor."
+
+#: src/ui/scanner-page.blp:327
+msgid "Remote images (http://…, sftp://…) also work."
+msgstr "Fungujú aj vzdialené obrázky (http://…, sftp://…)."
+
+#: src/ui/scanner-page.blp:369
+msgid "Choose an image"
+msgstr "Vyberte obrázok"
+
+#: src/ui/scanner-page.blp:411
+msgid "Please open webcam or choose an image."
+msgstr "Otvorte prosím webovú kameru alebo vyberte obrázok."
+
+#: src/ui/scanner-page.blp:425
+msgid "Scanning..."
+msgstr "Skenovanie..."
+
+#: src/ui/scanner-page.blp:435
+msgid "No result found."
+msgstr "Nenašiel sa žiadny výsledok."
+
+#: src/ui/scanner-page.blp:457
+msgid "Raw result"
+msgstr "Nespracovaný výsledok"
+
+#: src/ui/scanner-page.blp:463
+msgid "Copy"
+msgstr "Kopírovať"
+
+#: src/ui/shortcuts-dialog.blp:8
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Všeobecné"
+
+#: src/ui/shortcuts-dialog.blp:11
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Ukončiť"
+
+#: src/ui/wifi-display.blp:15
+msgid "SSID"
+msgstr "SSID"
+
+#: src/ui/wifi-display.blp:32
+msgid "Password"
+msgstr "Heslo"
+
+#: src/ui/wifi-display.blp:53
+msgid "Save"
+msgstr "Uložiť"
+
+#: src/ui/wifi-display.blp:58
+msgid "After saved, NetworkManager will connect automatically if in range."
+msgstr "Po uložení sa NetworkManager automaticky pripojí, ak je v dosahu."
+
+#: src/ui/window.blp:5
+msgid "CoBang: QR scanner for Linux"
+msgstr "CoBang: skener QR kódov pre Linux"
+
+#: src/ui/window.blp:44 src/ui/window.blp:80
+msgid "Scanner"
+msgstr "Skener"
+
+#: src/ui/window.blp:51 src/ui/window.blp:91
+msgid "Generator"
+msgstr "Generátor"
+
+#: src/ui/window.blp:62
+msgid "Main Menu"
+msgstr "Hlavná ponuka"
+
+#: src/ui/window.blp:105
+msgid "_Keyboard Shortcuts"
+msgstr "_Klávesové skratky"
+
+#: src/ui/window.blp:110
+msgid "_About"
+msgstr "_O aplikácii"
+
+#: src/app.py:55
+msgid "Support the developer"
+msgstr "Podporujte vývojára"
+
+#: src/app.py:56
+#, python-format
+msgid ""
+"QR code / barcode scanner for Linux.\n"
+"%(donate_link)s"
+msgstr ""
+"Skener QR / čiarových kódov pre Linux.\n"
+"%(donate_link)s"
+
+#: src/messages.py:48
+msgid ""
+"Add an image by:\n"
+"\n"
+"- Dragging and dropping it here.\n"
+"- Copying and pasting (Ctrl+V).\n"
+"- Clicking the button below (non-Flatpak).\n"
+"\n"
+"Remote images (http://..., sftp://...) work too!"
+msgstr ""
+"Pridať obrázok môžete:\n"
+"\n"
+"- Pretiahnutím a umiestnením sem.\n"
+"- Kopírovaním a vložením (Ctrl+V).\n"
+"- Kliknutím na tlačidlo nižšie (nie Flatpak).\n"
+"\n"
+"Vzdialené obrázky (http://..., sftp://...) tiež fungujú!"
+
+#: src/ui.py:27
+msgid "Connected"
+msgstr "Pripojené"
