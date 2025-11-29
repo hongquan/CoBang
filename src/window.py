@@ -283,6 +283,16 @@ class CoBangWindow(Adw.ApplicationWindow):
                 # Request secrets for wireless security setting
                 conn.get_secrets_async(NM.SETTING_WIRELESS_SECURITY_SETTING_NAME, None, self.cb_wifi_secrets_retrieved)
 
+    def cb_wifi_connect_done(self, client: NM.Client, res: Gio.AsyncResult):
+        """Callback for WiFi connection attempt."""
+        try:
+            conn = client.add_connection_finish(res)
+            log.info('Successfully added and activated WiFi connection: {}', conn.get_id())
+        except GLib.Error as e:
+            log.error('Failed to add/activate WiFi connection: {}', e)
+            return
+        self.scanner_page.display_wifi_as_saved()
+
     def activate_pause_button(self):
         """Activate the Pause button if ScannerPage is visible and in an appropriate stage."""
         if self.job_viewstack.get_visible_child() == self.scanner_page and self.scanner_page.is_scanning():
