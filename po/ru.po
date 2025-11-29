@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 17:44+0700\n"
+"POT-Creation-Date: 2025-11-29 21:20+0700\n"
 "PO-Revision-Date: 2025-04-21 21:28+0300\n"
 "Last-Translator: Владислав Малышев <ma12@rambler.ru>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -50,19 +50,23 @@ msgstr "Wi-Fi"
 msgid "Generate"
 msgstr "Сгенерировать"
 
-#: src/ui/generator-wifi-page.blp:27
+#: src/ui/generator-wifi-page.blp:38
 msgid "Generate QR for WiFi"
 msgstr "Сгенерировать QR для Wi-Fi"
 
-#: src/ui/generator-wifi-page.blp:85
+#: src/ui/generator-wifi-page.blp:44
+msgid "Search WiFi networks..."
+msgstr ""
+
+#: src/ui/generator-wifi-page.blp:102
 msgid "Double-click a saved Wi‑Fi network."
 msgstr "Дважды щелкните сохраненную сеть Wi-Fi."
 
-#: src/ui/generator-wifi-page.blp:101
+#: src/ui/generator-wifi-page.blp:118
 msgid "Or select it and press Enter."
 msgstr "Или выберите его и нажмите Enter."
 
-#: src/ui/generator-wifi-page.blp:110
+#: src/ui/generator-wifi-page.blp:127
 msgid "Back"
 msgstr "Назад"
 
@@ -71,7 +75,7 @@ msgid "Show result"
 msgstr "Результат"
 
 #: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
-#: src/ui/scanner-page.blp:175
+#: src/ui/scanner-page.blp:188
 msgid "Webcam"
 msgstr "Камера"
 
@@ -87,53 +91,57 @@ msgstr "Запуск видео"
 msgid "Pause"
 msgstr "Пауза"
 
-#: src/ui/scanner-page.blp:208
+#: src/ui/scanner-page.blp:168
+msgid "Sandboxed, webcam hardware info is not available."
+msgstr ""
+
+#: src/ui/scanner-page.blp:221
 msgid "Mirror"
 msgstr "Зеркально"
 
-#: src/ui/scanner-page.blp:225
+#: src/ui/scanner-page.blp:238
 msgid "Image"
 msgstr "Картинка"
 
-#: src/ui/scanner-page.blp:270
+#: src/ui/scanner-page.blp:283
 msgid "Drag and drop an image here."
 msgstr "Перетащите изображение сюда."
 
-#: src/ui/scanner-page.blp:283
+#: src/ui/scanner-page.blp:295
 msgid "Press Ctrl+V to paste an image."
 msgstr "Нажмите Ctrl+V, чтобы вставить изображение."
 
-#: src/ui/scanner-page.blp:299
+#: src/ui/scanner-page.blp:311
 msgid "Click the button below to choose a file."
 msgstr "Нажмите кнопку ниже, чтобы выбрать файл."
 
-#: src/ui/scanner-page.blp:315
+#: src/ui/scanner-page.blp:327
 msgid "Remote images (http://…, sftp://…) also work."
 msgstr "Удаленные изображения (http://…, sftp://…) также работают."
 
-#: src/ui/scanner-page.blp:357
+#: src/ui/scanner-page.blp:369
 msgid "Choose an image"
 msgstr "Выберите изображение"
 
-#: src/ui/scanner-page.blp:399
+#: src/ui/scanner-page.blp:411
 msgid "Please open webcam or choose an image."
 msgstr ""
 "Выберите изображение с кодом или переключитесь на камеру для сканирования "
 "кода."
 
-#: src/ui/scanner-page.blp:413
+#: src/ui/scanner-page.blp:425
 msgid "Scanning..."
 msgstr "Сканирование ..."
 
-#: src/ui/scanner-page.blp:423
+#: src/ui/scanner-page.blp:435
 msgid "No result found."
 msgstr "Нет результата."
 
-#: src/ui/scanner-page.blp:445
+#: src/ui/scanner-page.blp:457
 msgid "Raw result"
 msgstr "Raw результат"
 
-#: src/ui/scanner-page.blp:451
+#: src/ui/scanner-page.blp:463
 msgid "Copy"
 msgstr "Копировать"
 
@@ -202,7 +210,7 @@ msgstr ""
 "Сканер QR-кодов / штрих-кодов для Linux.\n"
 "%(donate_link)s"
 
-#: src/messages.py:25
+#: src/messages.py:48
 msgid ""
 "Add an image by:\n"
 "\n"

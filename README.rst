@@ -12,8 +12,6 @@ A native QR Code and barcode scanner application for Linux desktop.
 
 CoBang can scan barcode, QR code from webcam or static image, local or remote.
 
-In the future, it will support generating QR code and running on Linux phones.
-
 
 Name
 ++++
@@ -61,7 +59,7 @@ Screenshots
 Install
 +++++++
 
-Due to dependence on GObject, GTK libraries and being a desktop app with extra desktop-integration files (icons, \*.desktop etc.),
+Due to dependence on GObject, GTK libraries and being a desktop app with extra desktop-integration files (icons, *\*.desktop* etc.),
 CoBang cannot be installed from `PyPI`_. You have to install it with OS package manager.
 
 Ubuntu

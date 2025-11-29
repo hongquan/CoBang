@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoBang 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 17:44+0700\n"
+"POT-Creation-Date: 2025-11-29 21:20+0700\n"
 "PO-Revision-Date: 2023-04-15 19:40+0200\n"
 "Last-Translator: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
 "Language-Team: Vietnamese Team\n"
@@ -49,20 +49,23 @@ msgstr "Wi-Fi"
 msgid "Generate"
 msgstr "Tạo"
 
-#: src/ui/generator-wifi-page.blp:27
-#, fuzzy
+#: src/ui/generator-wifi-page.blp:38
 msgid "Generate QR for WiFi"
-msgstr "Tạo mã"
+msgstr "Tạo mã QR cho WiFi"
 
-#: src/ui/generator-wifi-page.blp:85
+#: src/ui/generator-wifi-page.blp:44
+msgid "Search WiFi networks..."
+msgstr "Tìm kiếm mạng WiFi"
+
+#: src/ui/generator-wifi-page.blp:102
 msgid "Double-click a saved Wi‑Fi network."
 msgstr "Nhấp đúp vào mạng Wi-Fi đã lưu."
 
-#: src/ui/generator-wifi-page.blp:101
+#: src/ui/generator-wifi-page.blp:118
 msgid "Or select it and press Enter."
 msgstr "Hoặc chọn nó và nhấn Enter."
 
-#: src/ui/generator-wifi-page.blp:110
+#: src/ui/generator-wifi-page.blp:127
 msgid "Back"
 msgstr "Quay lại"
 
@@ -71,7 +74,7 @@ msgid "Show result"
 msgstr "Xem kết quả"
 
 #: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
-#: src/ui/scanner-page.blp:175
+#: src/ui/scanner-page.blp:188
 msgid "Webcam"
 msgstr "Webcam"
 
@@ -87,51 +90,55 @@ msgstr "Phát"
 msgid "Pause"
 msgstr "Chựng"
 
-#: src/ui/scanner-page.blp:208
+#: src/ui/scanner-page.blp:168
+msgid "Sandboxed, webcam hardware info is not available."
+msgstr "Chạy trong hộp cát, thông tin phần cứng webcam không thể truy cập."
+
+#: src/ui/scanner-page.blp:221
 msgid "Mirror"
 msgstr "Gương"
 
-#: src/ui/scanner-page.blp:225
+#: src/ui/scanner-page.blp:238
 msgid "Image"
 msgstr "Hình ảnh"
 
-#: src/ui/scanner-page.blp:270
+#: src/ui/scanner-page.blp:283
 msgid "Drag and drop an image here."
 msgstr "Kéo và thả hình ảnh vào đây."
 
-#: src/ui/scanner-page.blp:283
+#: src/ui/scanner-page.blp:295
 msgid "Press Ctrl+V to paste an image."
 msgstr "Nhấn Ctrl+V để dán hình ảnh."
 
-#: src/ui/scanner-page.blp:299
+#: src/ui/scanner-page.blp:311
 msgid "Click the button below to choose a file."
 msgstr "Nhấn nút bên dưới để chọn tập tin."
 
-#: src/ui/scanner-page.blp:315
+#: src/ui/scanner-page.blp:327
 msgid "Remote images (http://…, sftp://…) also work."
 msgstr "Hình ảnh từ xa (http://…, sftp://…) cũng dùng được."
 
-#: src/ui/scanner-page.blp:357
+#: src/ui/scanner-page.blp:369
 msgid "Choose an image"
 msgstr "Vui lòng chọn một hình ảnh"
 
-#: src/ui/scanner-page.blp:399
+#: src/ui/scanner-page.blp:411
 msgid "Please open webcam or choose an image."
 msgstr "Hãy mở webcam hay chọn một hình ảnh"
 
-#: src/ui/scanner-page.blp:413
+#: src/ui/scanner-page.blp:425
 msgid "Scanning..."
 msgstr "Đang quét..."
 
-#: src/ui/scanner-page.blp:423
+#: src/ui/scanner-page.blp:435
 msgid "No result found."
 msgstr "Không có kết quả."
 
-#: src/ui/scanner-page.blp:445
+#: src/ui/scanner-page.blp:457
 msgid "Raw result"
 msgstr "Kết quả thô"
 
-#: src/ui/scanner-page.blp:451
+#: src/ui/scanner-page.blp:463
 msgid "Copy"
 msgstr "Sao chép"
 
@@ -198,7 +205,7 @@ msgstr ""
 "Trình quét mã QR / mã vạch cho Linux.\n"
 "%(donate_link)s"
 
-#: src/messages.py:25
+#: src/messages.py:48
 msgid ""
 "Add an image by:\n"
 "\n"

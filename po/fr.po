@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 17:44+0700\n"
+"POT-Creation-Date: 2025-11-29 21:20+0700\n"
 "PO-Revision-Date: 2023-04-14 19:26+0200\n"
 "Last-Translator: Miquel Lionel <lionel@les-miquelots.net>\n"
 "Language-Team: fr <LL@li.org>\n"
@@ -50,19 +50,23 @@ msgstr "Wi-Fi"
 msgid "Generate"
 msgstr "Générer"
 
-#: src/ui/generator-wifi-page.blp:27
+#: src/ui/generator-wifi-page.blp:38
 msgid "Generate QR for WiFi"
 msgstr "Générer un QR pour le Wi-Fi"
 
-#: src/ui/generator-wifi-page.blp:85
+#: src/ui/generator-wifi-page.blp:44
+msgid "Search WiFi networks..."
+msgstr ""
+
+#: src/ui/generator-wifi-page.blp:102
 msgid "Double-click a saved Wi‑Fi network."
 msgstr "Double-cliquez sur un réseau Wi-Fi enregistré."
 
-#: src/ui/generator-wifi-page.blp:101
+#: src/ui/generator-wifi-page.blp:118
 msgid "Or select it and press Enter."
 msgstr "Ou sélectionnez-le et appuyez sur Entrée."
 
-#: src/ui/generator-wifi-page.blp:110
+#: src/ui/generator-wifi-page.blp:127
 msgid "Back"
 msgstr "Retour"
 
@@ -71,7 +75,7 @@ msgid "Show result"
 msgstr "Afficher le résultat"
 
 #: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
-#: src/ui/scanner-page.blp:175
+#: src/ui/scanner-page.blp:188
 msgid "Webcam"
 msgstr "Webcam"
 
@@ -87,51 +91,55 @@ msgstr "Lire"
 msgid "Pause"
 msgstr "Pause"
 
-#: src/ui/scanner-page.blp:208
+#: src/ui/scanner-page.blp:168
+msgid "Sandboxed, webcam hardware info is not available."
+msgstr ""
+
+#: src/ui/scanner-page.blp:221
 msgid "Mirror"
 msgstr "Miroir"
 
-#: src/ui/scanner-page.blp:225
+#: src/ui/scanner-page.blp:238
 msgid "Image"
 msgstr "Image"
 
-#: src/ui/scanner-page.blp:270
+#: src/ui/scanner-page.blp:283
 msgid "Drag and drop an image here."
 msgstr "Faites glisser et déposez une image ici."
 
-#: src/ui/scanner-page.blp:283
+#: src/ui/scanner-page.blp:295
 msgid "Press Ctrl+V to paste an image."
 msgstr "Appuyez sur Ctrl+V pour coller une image."
 
-#: src/ui/scanner-page.blp:299
+#: src/ui/scanner-page.blp:311
 msgid "Click the button below to choose a file."
 msgstr "Cliquez sur le bouton ci-dessous pour choisir un fichier."
 
-#: src/ui/scanner-page.blp:315
+#: src/ui/scanner-page.blp:327
 msgid "Remote images (http://…, sftp://…) also work."
 msgstr "Les images distantes (http://…, sftp://…) fonctionnent également."
 
-#: src/ui/scanner-page.blp:357
+#: src/ui/scanner-page.blp:369
 msgid "Choose an image"
 msgstr "Choisir une image"
 
-#: src/ui/scanner-page.blp:399
+#: src/ui/scanner-page.blp:411
 msgid "Please open webcam or choose an image."
 msgstr "Veuillez ouvrir la webcam ou choisir une image."
 
-#: src/ui/scanner-page.blp:413
+#: src/ui/scanner-page.blp:425
 msgid "Scanning..."
 msgstr "Scan en cours..."
 
-#: src/ui/scanner-page.blp:423
+#: src/ui/scanner-page.blp:435
 msgid "No result found."
 msgstr "Aucun résultat trouvé."
 
-#: src/ui/scanner-page.blp:445
+#: src/ui/scanner-page.blp:457
 msgid "Raw result"
 msgstr "Résultat brut"
 
-#: src/ui/scanner-page.blp:451
+#: src/ui/scanner-page.blp:463
 msgid "Copy"
 msgstr "Copier"
 
@@ -159,7 +167,9 @@ msgstr "Sauvegarder"
 
 #: src/ui/wifi-display.blp:58
 msgid "After saved, NetworkManager will connect automatically if in range."
-msgstr "Une fois enregistré, NetworkManager se connectera automatiquement si à portée."
+msgstr ""
+"Une fois enregistré, NetworkManager se connectera automatiquement si à "
+"portée."
 
 #: src/ui/window.blp:5
 msgid "CoBang: QR scanner for Linux"
@@ -198,7 +208,7 @@ msgstr ""
 "Scanner de code QR / code-barres pour Linux.\n"
 "%(donate_link)s"
 
-#: src/messages.py:25
+#: src/messages.py:48
 msgid ""
 "Add an image by:\n"
 "\n"
