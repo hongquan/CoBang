@@ -58,6 +58,11 @@
   </kudos>
 
   <releases>
+    <release version="2.2.0" date="2025-11-29" urgency="medium">
+      <description translate="no">
+        <p>Fix: Failed to save Wi-Fi.</p>
+      </description>
+    </release>
     <release version="2.1.0" date="2025-11-27" urgency="medium">
       <description translate="no">
         <p>Add search filter for WiFi networks.</p>

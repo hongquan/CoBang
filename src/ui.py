@@ -25,7 +25,6 @@ def build_wifi_info_display(wifi: WifiInfoMessage) -> tuple[Gtk.Box, Gtk.Button]
         log.debug('Set sensitive for {}', btn)
         btn.set_sensitive(False)
         btn.set_label(_('Connected'))
-    log.debug('Connect handlers for Wifi UI')
     if password_entry := builder.get_object('password_value'):
         password_entry.connect('icon-press', on_secondary_icon_pressed)
     return box, btn

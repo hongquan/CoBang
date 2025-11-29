@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoBang\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 17:44+0700\n"
+"POT-Creation-Date: 2025-11-29 21:20+0700\n"
 "PO-Revision-Date: 2025-11-11 23:06+0100\n"
 "Last-Translator: Milo Ivir <mail@mivirtype.de>\n"
 "Language-Team: \n"
@@ -49,19 +49,23 @@ msgstr "Wi-Fi"
 msgid "Generate"
 msgstr "Generiraj"
 
-#: src/ui/generator-wifi-page.blp:27
+#: src/ui/generator-wifi-page.blp:38
 msgid "Generate QR for WiFi"
 msgstr "Generiraj QR za Wi-Fi"
 
-#: src/ui/generator-wifi-page.blp:85
+#: src/ui/generator-wifi-page.blp:44
+msgid "Search WiFi networks..."
+msgstr ""
+
+#: src/ui/generator-wifi-page.blp:102
 msgid "Double-click a saved Wi‑Fi network."
 msgstr "Dvaput kliknite na spremljenu Wi-Fi mrežu."
 
-#: src/ui/generator-wifi-page.blp:101
+#: src/ui/generator-wifi-page.blp:118
 msgid "Or select it and press Enter."
 msgstr "Ili je odaberite i pritisnite Enter."
 
-#: src/ui/generator-wifi-page.blp:110
+#: src/ui/generator-wifi-page.blp:127
 msgid "Back"
 msgstr "Natrag"
 
@@ -70,7 +74,7 @@ msgid "Show result"
 msgstr "Prikaži rezultat"
 
 #: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
-#: src/ui/scanner-page.blp:175
+#: src/ui/scanner-page.blp:188
 msgid "Webcam"
 msgstr "Web kamera"
 
@@ -86,51 +90,55 @@ msgstr "Pokreni"
 msgid "Pause"
 msgstr "Pauziraj"
 
-#: src/ui/scanner-page.blp:208
+#: src/ui/scanner-page.blp:168
+msgid "Sandboxed, webcam hardware info is not available."
+msgstr ""
+
+#: src/ui/scanner-page.blp:221
 msgid "Mirror"
 msgstr "Zrcali"
 
-#: src/ui/scanner-page.blp:225
+#: src/ui/scanner-page.blp:238
 msgid "Image"
 msgstr "Slika"
 
-#: src/ui/scanner-page.blp:270
+#: src/ui/scanner-page.blp:283
 msgid "Drag and drop an image here."
 msgstr "Povucite i ispustite sliku ovdje."
 
-#: src/ui/scanner-page.blp:283
+#: src/ui/scanner-page.blp:295
 msgid "Press Ctrl+V to paste an image."
 msgstr "Pritisnite Ctrl+V za lijepljenje slike."
 
-#: src/ui/scanner-page.blp:299
+#: src/ui/scanner-page.blp:311
 msgid "Click the button below to choose a file."
 msgstr "Kliknite gumb ispod za odabir datoteke."
 
-#: src/ui/scanner-page.blp:315
+#: src/ui/scanner-page.blp:327
 msgid "Remote images (http://…, sftp://…) also work."
 msgstr "Daljinske slike (http://…, sftp://…) također rade."
 
-#: src/ui/scanner-page.blp:357
+#: src/ui/scanner-page.blp:369
 msgid "Choose an image"
 msgstr "Odaberi sliku"
 
-#: src/ui/scanner-page.blp:399
+#: src/ui/scanner-page.blp:411
 msgid "Please open webcam or choose an image."
 msgstr "Otvori web kameru ili odaberi sliku."
 
-#: src/ui/scanner-page.blp:413
+#: src/ui/scanner-page.blp:425
 msgid "Scanning..."
 msgstr "Skeniranje …"
 
-#: src/ui/scanner-page.blp:423
+#: src/ui/scanner-page.blp:435
 msgid "No result found."
 msgstr "Nijedan rezultat nije pronađen."
 
-#: src/ui/scanner-page.blp:445
+#: src/ui/scanner-page.blp:457
 msgid "Raw result"
 msgstr "Neobrađeni rezultat"
 
-#: src/ui/scanner-page.blp:451
+#: src/ui/scanner-page.blp:463
 msgid "Copy"
 msgstr "Kopiraj"
 
@@ -198,7 +206,7 @@ msgstr ""
 "Skener QR koda / crtičnog koda za Linux.\n"
 "%(donate_link)s"
 
-#: src/messages.py:25
+#: src/messages.py:48
 msgid ""
 "Add an image by:\n"
 "\n"

@@ -164,9 +164,22 @@ template $ScannerPage: Adw.Bin {
                   margin-start: 4;
                   margin-end: 4;
 
+                  Label label_sandboxed_webcam {
+                    label: _("Sandboxed, webcam hardware info is not available.");
+                    wrap: true;
+                    halign: start;
+                    hexpand: true;
+                    margin-bottom: 4;
+                    visible: bind template.is_outside_sandbox inverted;
+
+                    styles [
+                      'dim-label',
+                    ]
+                  }
+
                   Box box_webcam_selector {
                     orientation: horizontal;
-                    visible: true;
+                    visible: bind template.is_outside_sandbox as <bool>;
                     hexpand: bind template.in_mobile_screen inverted;
                     halign: bind $box_webcam_selector_halign(template.in_mobile_screen) as <Align>;
                     spacing: 4;
@@ -268,8 +281,7 @@ template $ScannerPage: Adw.Bin {
                       }
                       Label {
                         label: _("Drag and drop an image here.");
-                        wrap:
-                        true;
+                        wrap: true;
                         selectable: true;
                         halign: start;
                         hexpand: true;

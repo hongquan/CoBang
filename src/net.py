@@ -7,7 +7,7 @@ import gi
 gi.require_version('NM', '1.0')
 gi.require_version('GLib', '2.0')
 gi.require_version('Gio', '2.0')
-from gi.repository import NM, GLib
+from gi.repository import NM, GLib  # pyright: ignore[reportMissingModuleSource]
 
 from .consts import BRAND_NAME
 from .messages import WifiInfoMessage

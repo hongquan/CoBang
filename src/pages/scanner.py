@@ -737,18 +737,14 @@ class ScannerPage(Adw.Bin):
         log.info('Connect button clicked for wifi: {}', wifi_info)
         self.emit('request-connect-wifi', wifi_info)
 
-    def display_wifi_as_connected(self, connected: bool):
-        """Set the current wifi connection status."""
+    def display_wifi_as_saved(self):
+        """Set the current wifi connection status as saved."""
         box = self.result_bin.get_child()
         if not box:
             return
         if first_child := cast(Gtk.Widget | None, box.get_first_child()):
             if (btn := first_child.get_next_sibling()) and isinstance(btn, Gtk.Button):
-                if connected:
-                    btn.set_sensitive(False)
-                    btn.set_label(_('Connected'))
-                else:
-                    btn.set_sensitive(True)
-                    btn.set_label(_('Connect'))
+                btn.set_sensitive(False)
+                btn.set_label(_('Saved'))
                 return
         log.warning('Not able to find connect button in wifi display box')

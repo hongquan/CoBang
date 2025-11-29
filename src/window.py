@@ -112,6 +112,7 @@ class CoBangWindow(Adw.ApplicationWindow):
     def on_shown(self, *args):
         if self.get_application():
             outside_sandbox = not self.portal.running_under_sandbox() and not os.getenv(ENV_EMULATE_SANDBOX)
+            log.debug('Calculated is_outside_sandbox: {}', outside_sandbox)
             self.is_outside_sandbox = outside_sandbox
         GLib.timeout_add(1000, self.check_and_start_webcam)
 
@@ -282,6 +283,16 @@ class CoBangWindow(Adw.ApplicationWindow):
             if conn.get_setting_wireless():
                 # Request secrets for wireless security setting
                 conn.get_secrets_async(NM.SETTING_WIRELESS_SECURITY_SETTING_NAME, None, self.cb_wifi_secrets_retrieved)
+
+    def cb_wifi_connect_done(self, client: NM.Client, res: Gio.AsyncResult):
+        """Callback for WiFi connection attempt."""
+        try:
+            conn = client.add_connection_finish(res)
+            log.info('Successfully added and activated WiFi connection: {}', conn.get_id())
+        except GLib.Error as e:
+            log.error('Failed to add/activate WiFi connection: {}', e)
+            return
+        self.scanner_page.display_wifi_as_saved()
 
     def activate_pause_button(self):
         """Activate the Pause button if ScannerPage is visible and in an appropriate stage."""

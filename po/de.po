@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 17:44+0700\n"
+"POT-Creation-Date: 2025-11-29 21:20+0700\n"
 "PO-Revision-Date: 2024-05-26 20:50+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -50,19 +50,23 @@ msgstr "WLAN"
 msgid "Generate"
 msgstr "Generieren"
 
-#: src/ui/generator-wifi-page.blp:27
+#: src/ui/generator-wifi-page.blp:38
 msgid "Generate QR for WiFi"
 msgstr "QR für WLAN erzeugen"
 
-#: src/ui/generator-wifi-page.blp:85
+#: src/ui/generator-wifi-page.blp:44
+msgid "Search WiFi networks..."
+msgstr ""
+
+#: src/ui/generator-wifi-page.blp:102
 msgid "Double-click a saved Wi‑Fi network."
 msgstr "Doppelklicke auf ein gespeichertes WLAN."
 
-#: src/ui/generator-wifi-page.blp:101
+#: src/ui/generator-wifi-page.blp:118
 msgid "Or select it and press Enter."
 msgstr "Oder auswählen und Enter drücken."
 
-#: src/ui/generator-wifi-page.blp:110
+#: src/ui/generator-wifi-page.blp:127
 msgid "Back"
 msgstr "Zurück"
 
@@ -71,7 +75,7 @@ msgid "Show result"
 msgstr "Ergebnis anzeigen"
 
 #: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
-#: src/ui/scanner-page.blp:175
+#: src/ui/scanner-page.blp:188
 msgid "Webcam"
 msgstr "Webcam"
 
@@ -87,51 +91,55 @@ msgstr "Abspielen"
 msgid "Pause"
 msgstr "Pausieren"
 
-#: src/ui/scanner-page.blp:208
+#: src/ui/scanner-page.blp:168
+msgid "Sandboxed, webcam hardware info is not available."
+msgstr ""
+
+#: src/ui/scanner-page.blp:221
 msgid "Mirror"
 msgstr "Spiegel"
 
-#: src/ui/scanner-page.blp:225
+#: src/ui/scanner-page.blp:238
 msgid "Image"
 msgstr "Bild"
 
-#: src/ui/scanner-page.blp:270
+#: src/ui/scanner-page.blp:283
 msgid "Drag and drop an image here."
 msgstr "Ein Bild hierher ziehen und ablegen."
 
-#: src/ui/scanner-page.blp:283
+#: src/ui/scanner-page.blp:295
 msgid "Press Ctrl+V to paste an image."
 msgstr "Strg+V drücken, um ein Bild einzufügen."
 
-#: src/ui/scanner-page.blp:299
+#: src/ui/scanner-page.blp:311
 msgid "Click the button below to choose a file."
 msgstr "Unten auf die Schaltfläche klicken, um eine Datei zu wählen."
 
-#: src/ui/scanner-page.blp:315
+#: src/ui/scanner-page.blp:327
 msgid "Remote images (http://…, sftp://…) also work."
 msgstr "Entfernte Bilder (http://…, sftp://…) funktionieren auch."
 
-#: src/ui/scanner-page.blp:357
+#: src/ui/scanner-page.blp:369
 msgid "Choose an image"
 msgstr "Bild auswählen"
 
-#: src/ui/scanner-page.blp:399
+#: src/ui/scanner-page.blp:411
 msgid "Please open webcam or choose an image."
 msgstr "Webcam öffnen oder Bild auswählen"
 
-#: src/ui/scanner-page.blp:413
+#: src/ui/scanner-page.blp:425
 msgid "Scanning..."
 msgstr "Scanne..."
 
-#: src/ui/scanner-page.blp:423
+#: src/ui/scanner-page.blp:435
 msgid "No result found."
 msgstr "Kein Ergebnis gefunden"
 
-#: src/ui/scanner-page.blp:445
+#: src/ui/scanner-page.blp:457
 msgid "Raw result"
 msgstr "Unbearbeitetes Ergebnis"
 
-#: src/ui/scanner-page.blp:451
+#: src/ui/scanner-page.blp:463
 msgid "Copy"
 msgstr "Kopieren"
 
@@ -199,7 +207,7 @@ msgstr ""
 "QR-Code- / Barcode-Scanner für Linux.\n"
 "%(donate_link)s"
 
-#: src/messages.py:25
+#: src/messages.py:48
 #, fuzzy
 msgid ""
 "Add an image by:\n"
