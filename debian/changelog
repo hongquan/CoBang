@@ -1,3 +1,9 @@
+cobang (2.2.0-1) questing; urgency=medium
+
+  * Fix: Failed to save Wi-Fi.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sat, 29 Nov 2025 21:29:04 +0700
+
 cobang (2.1.0-1) questing; urgency=medium
 
   * Add search filter for WiFi networks.
