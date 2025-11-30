@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 21:20+0700\n"
+"POT-Creation-Date: 2025-11-30 10:52+0700\n"
 "PO-Revision-Date: 2025-04-21 23:49-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -22,7 +22,8 @@ msgstr ""
 msgid "Original text"
 msgstr "Texto original"
 
-#: src/ui/generator-qr-code-page.blp:53
+#. Create a file dialog to save the image
+#: src/ui/generator-qr-code-page.blp:53 src/pages/generator_qr_code.py:72
 msgid "Save QR Code"
 msgstr "Guardar código QR"
 
@@ -226,6 +227,36 @@ msgstr ""
 "\n"
 "¡Las imágenes remotas (http://..., sftp://...) también funcionan!"
 
+#. Prepare dialog for saving file
+#: src/pages/generator_qr_code.py:69
+#, fuzzy
+msgid "PNG Image"
+msgstr "Imagen"
+
+#: src/pages/generator_qr_code.py:119 src/pages/scanner.py:284
+msgid "Copied!"
+msgstr "¡Copiado!"
+
+#: src/pages/scanner.py:215
+msgid "Found a wifi configuration"
+msgstr "Configuración wifi encontrada"
+
+#: src/pages/scanner.py:217
+msgid "Found a URL. Click to open:"
+msgstr "URL encontrada. Haga clic para abrir:"
+
+#: src/pages/scanner.py:219
+msgid "Found unrecognized text."
+msgstr "Se ha encontrado un texto no reconocido."
+
+#: src/pages/scanner.py:220
+msgid "Unknown"
+msgstr "Desconocido"
+
+#: src/pages/scanner.py:748
+msgid "Saved"
+msgstr "Guardado"
+
 #: src/ui.py:27
 msgid "Connected"
 msgstr "Conectado"
@@ -236,24 +267,6 @@ msgstr "Conectado"
 
 #~ msgid "Will be available in next versions..."
 #~ msgstr "Estará disponible en próximas versiones..."
-
-#~ msgid "Saved"
-#~ msgstr "Guardado"
-
-#~ msgid "Found a wifi configuration"
-#~ msgstr "Configuración wifi encontrada"
-
-#~ msgid "Found a URL. Click to open:"
-#~ msgstr "URL encontrada. Haga clic para abrir:"
-
-#~ msgid "Found unrecognized text."
-#~ msgstr "Se ha encontrado un texto no reconocido."
-
-#~ msgid "Unknown"
-#~ msgstr "Desconocido"
-
-#~ msgid "Copied!"
-#~ msgstr "¡Copiado!"
 
 #~ msgid "Result"
 #~ msgstr "Resultado"

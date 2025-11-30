@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoBang\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 21:20+0700\n"
+"POT-Creation-Date: 2025-11-30 10:52+0700\n"
 "PO-Revision-Date: 2025-11-11 23:06+0100\n"
 "Last-Translator: Milo Ivir <mail@mivirtype.de>\n"
 "Language-Team: \n"
@@ -21,7 +21,8 @@ msgstr ""
 msgid "Original text"
 msgstr "Izvorni tekst"
 
-#: src/ui/generator-qr-code-page.blp:53
+#. Create a file dialog to save the image
+#: src/ui/generator-qr-code-page.blp:53 src/pages/generator_qr_code.py:72
 msgid "Save QR Code"
 msgstr "Spremi QR kod"
 
@@ -224,6 +225,36 @@ msgstr ""
 "\n"
 "Daljinske slike (http://..., sftp://...) također rade!"
 
+#. Prepare dialog for saving file
+#: src/pages/generator_qr_code.py:69
+#, fuzzy
+msgid "PNG Image"
+msgstr "Slika"
+
+#: src/pages/generator_qr_code.py:119 src/pages/scanner.py:284
+msgid "Copied!"
+msgstr "Kopirano!"
+
+#: src/pages/scanner.py:215
+msgid "Found a wifi configuration"
+msgstr "Pronađena je wifi konfiguracija"
+
+#: src/pages/scanner.py:217
+msgid "Found a URL. Click to open:"
+msgstr "Pronađen URL. Klikni za otvaranje:"
+
+#: src/pages/scanner.py:219
+msgid "Found unrecognized text."
+msgstr "Pronađen je neprepoznati tekst."
+
+#: src/pages/scanner.py:220
+msgid "Unknown"
+msgstr "Nepoznato"
+
+#: src/pages/scanner.py:748
+msgid "Saved"
+msgstr "Spremljeno"
+
 #: src/ui.py:27
 msgid "Connected"
 msgstr "Povezano"
@@ -234,21 +265,3 @@ msgstr "Povezano"
 
 #~ msgid "Will be available in next versions..."
 #~ msgstr "Bit će dostupno u sljedećim verzijama …"
-
-#~ msgid "Saved"
-#~ msgstr "Spremljeno"
-
-#~ msgid "Found a wifi configuration"
-#~ msgstr "Pronađena je wifi konfiguracija"
-
-#~ msgid "Found a URL. Click to open:"
-#~ msgstr "Pronađen URL. Klikni za otvaranje:"
-
-#~ msgid "Found unrecognized text."
-#~ msgstr "Pronađen je neprepoznati tekst."
-
-#~ msgid "Unknown"
-#~ msgstr "Nepoznato"
-
-#~ msgid "Copied!"
-#~ msgstr "Kopirano!"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 21:20+0700\n"
+"POT-Creation-Date: 2025-11-30 10:52+0700\n"
 "PO-Revision-Date: 2025-02-05 20:49+0100\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -22,7 +22,8 @@ msgstr ""
 msgid "Original text"
 msgstr "Originele tekst"
 
-#: src/ui/generator-qr-code-page.blp:53
+#. Create a file dialog to save the image
+#: src/ui/generator-qr-code-page.blp:53 src/pages/generator_qr_code.py:72
 msgid "Save QR Code"
 msgstr "QR-code opslaan"
 
@@ -225,6 +226,36 @@ msgstr ""
 "\n"
 "Externe afbeeldingen (http://..., sftp://...) werken ook!"
 
+#. Prepare dialog for saving file
+#: src/pages/generator_qr_code.py:69
+#, fuzzy
+msgid "PNG Image"
+msgstr "Afbeelding"
+
+#: src/pages/generator_qr_code.py:119 src/pages/scanner.py:284
+msgid "Copied!"
+msgstr "Gekopieerd!"
+
+#: src/pages/scanner.py:215
+msgid "Found a wifi configuration"
+msgstr "Er zijn wifi-instellingen aangetroffen"
+
+#: src/pages/scanner.py:217
+msgid "Found a URL. Click to open:"
+msgstr "Er is een URL aangetroffen. Klik om te openen:"
+
+#: src/pages/scanner.py:219
+msgid "Found unrecognized text."
+msgstr ""
+
+#: src/pages/scanner.py:220
+msgid "Unknown"
+msgstr ""
+
+#: src/pages/scanner.py:748
+msgid "Saved"
+msgstr "Opgeslagen"
+
 #: src/ui.py:27
 msgid "Connected"
 msgstr "Verbonden"
@@ -235,18 +266,6 @@ msgstr "Verbonden"
 
 #~ msgid "Will be available in next versions..."
 #~ msgstr "Dit zal in een toekomstige versie beschikbaar zijn…"
-
-#~ msgid "Saved"
-#~ msgstr "Opgeslagen"
-
-#~ msgid "Found a wifi configuration"
-#~ msgstr "Er zijn wifi-instellingen aangetroffen"
-
-#~ msgid "Found a URL. Click to open:"
-#~ msgstr "Er is een URL aangetroffen. Klik om te openen:"
-
-#~ msgid "Copied!"
-#~ msgstr "Gekopieerd!"
 
 #~ msgid "Result"
 #~ msgstr "Resultaat"

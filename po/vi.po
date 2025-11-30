@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoBang 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 21:20+0700\n"
+"POT-Creation-Date: 2025-11-30 10:52+0700\n"
 "PO-Revision-Date: 2023-04-15 19:40+0200\n"
 "Last-Translator: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>\n"
 "Language-Team: Vietnamese Team\n"
@@ -21,7 +21,8 @@ msgstr ""
 msgid "Original text"
 msgstr "Văn bản gốc"
 
-#: src/ui/generator-qr-code-page.blp:53
+#. Create a file dialog to save the image
+#: src/ui/generator-qr-code-page.blp:53 src/pages/generator_qr_code.py:72
 msgid "Save QR Code"
 msgstr "Lưu mã QR"
 
@@ -223,6 +224,36 @@ msgstr ""
 "\n"
 "Có thể dùng hình ảnh trên mạng (qua giao thức http://..., sftp://...)."
 
+#. Prepare dialog for saving file
+#: src/pages/generator_qr_code.py:69
+#, fuzzy
+msgid "PNG Image"
+msgstr "Hình ảnh"
+
+#: src/pages/generator_qr_code.py:119 src/pages/scanner.py:284
+msgid "Copied!"
+msgstr "Đã sao chép!"
+
+#: src/pages/scanner.py:215
+msgid "Found a wifi configuration"
+msgstr "Bắt gặp một cấu hình wifi"
+
+#: src/pages/scanner.py:217
+msgid "Found a URL. Click to open:"
+msgstr "Bắt gặp một URL. Bấm vào để mở:"
+
+#: src/pages/scanner.py:219
+msgid "Found unrecognized text."
+msgstr "Bắt gặp văn bản không nhận dạng được."
+
+#: src/pages/scanner.py:220
+msgid "Unknown"
+msgstr "Không biết"
+
+#: src/pages/scanner.py:748
+msgid "Saved"
+msgstr "Đã lưu"
+
 #: src/ui.py:27
 msgid "Connected"
 msgstr "Đã kết nối"
@@ -233,24 +264,6 @@ msgstr "Đã kết nối"
 
 #~ msgid "Will be available in next versions..."
 #~ msgstr "Sẽ có trong các phiên bản sau..."
-
-#~ msgid "Saved"
-#~ msgstr "Đã lưu"
-
-#~ msgid "Found a wifi configuration"
-#~ msgstr "Bắt gặp một cấu hình wifi"
-
-#~ msgid "Found a URL. Click to open:"
-#~ msgstr "Bắt gặp một URL. Bấm vào để mở:"
-
-#~ msgid "Found unrecognized text."
-#~ msgstr "Bắt gặp văn bản không nhận dạng được."
-
-#~ msgid "Unknown"
-#~ msgstr "Không biết"
-
-#~ msgid "Copied!"
-#~ msgstr "Đã sao chép!"
 
 #~ msgid "Result"
 #~ msgstr "Kết quả"
