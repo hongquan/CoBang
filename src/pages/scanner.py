@@ -118,6 +118,11 @@ class ScannerPage(Adw.Bin):
         # Initialize zbar scanner
         self.zbar_scanner = zbar.ImageScanner()
 
+    @property
+    def is_at_scanning(self) -> bool:
+        """Check if the scanner is currently scanning."""
+        return self.scanner_state == ScannerState.SCANNING
+
     def switch_to_webcam_source(self):
         """Switch to webcam source view"""
         self.scan_source_viewstack.set_visible_child_name(ScanSourceName.WEBCAM)

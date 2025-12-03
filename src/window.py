@@ -296,7 +296,7 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     def activate_pause_button(self):
         """Activate the Pause button if ScannerPage is visible and in an appropriate stage."""
-        if self.job_viewstack.get_visible_child() == self.scanner_page and self.scanner_page.is_scanning():
+        if self.job_viewstack.get_visible_child() == self.scanner_page and self.scanner_page.is_at_scanning:
             self.scanner_page.activate_pause_button()
 
     def process_file_from_commandline(self, file: Gio.File, mime_type: str):
