@@ -6,3 +6,18 @@
   border-color: var(--accent-color);
   box-shadow: 0 0 0 2px var(--accent-color);
 }
+
+@keyframes scanning {
+  0% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(-10px);
+  }
+}
+.scanning-image {
+  animation: scanning 2s infinite linear;
+}

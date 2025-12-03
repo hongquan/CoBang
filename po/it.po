@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 21:20+0700\n"
+"POT-Creation-Date: 2025-11-30 10:52+0700\n"
 "PO-Revision-Date: 2025-08-26 00:10+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: it <LL@li.org>\n"
@@ -22,7 +22,8 @@ msgstr ""
 msgid "Original text"
 msgstr "Testo originale"
 
-#: src/ui/generator-qr-code-page.blp:53
+#. Create a file dialog to save the image
+#: src/ui/generator-qr-code-page.blp:53 src/pages/generator_qr_code.py:72
 msgid "Save QR Code"
 msgstr "Salva codice QR"
 
@@ -227,6 +228,36 @@ msgstr ""
 "\n"
 "L'immagine remota (da http:// ..., sftp://...) è consentita."
 
+#. Prepare dialog for saving file
+#: src/pages/generator_qr_code.py:69
+#, fuzzy
+msgid "PNG Image"
+msgstr "Immagine"
+
+#: src/pages/generator_qr_code.py:119 src/pages/scanner.py:284
+msgid "Copied!"
+msgstr "Copiato!"
+
+#: src/pages/scanner.py:215
+msgid "Found a wifi configuration"
+msgstr "Trovato una configurazione wifi"
+
+#: src/pages/scanner.py:217
+msgid "Found a URL. Click to open:"
+msgstr "Trovato un URL. Fare clic per aprire:"
+
+#: src/pages/scanner.py:219
+msgid "Found unrecognized text."
+msgstr "È stato trovato del testo non riconosciuto."
+
+#: src/pages/scanner.py:220
+msgid "Unknown"
+msgstr "Sconosciuto"
+
+#: src/pages/scanner.py:748
+msgid "Saved"
+msgstr "Salvato"
+
 #: src/ui.py:27
 msgid "Connected"
 msgstr "Connesso"
@@ -237,24 +268,6 @@ msgstr "Connesso"
 
 #~ msgid "Will be available in next versions..."
 #~ msgstr "Sarà disponibile nelle prossime versioni..."
-
-#~ msgid "Saved"
-#~ msgstr "Salvato"
-
-#~ msgid "Found a wifi configuration"
-#~ msgstr "Trovato una configurazione wifi"
-
-#~ msgid "Found a URL. Click to open:"
-#~ msgstr "Trovato un URL. Fare clic per aprire:"
-
-#~ msgid "Found unrecognized text."
-#~ msgstr "È stato trovato del testo non riconosciuto."
-
-#~ msgid "Unknown"
-#~ msgstr "Sconosciuto"
-
-#~ msgid "Copied!"
-#~ msgstr "Copiato!"
 
 #~ msgid "Result"
 #~ msgstr "Risultato"

@@ -1,166 +1,158 @@
-# Turkish translation for vn.hoabinh.quan.CoBang
-# Copyright (C) 2022-2024 vn.hoabinh.quan.CoBang's COPYRIGHT HOLDER
-# This file is distributed under the same license as the
-# vn.hoabinh.quan.CoBang package
+# Slovak translation for CoBang.
+# Copyright (C) 2025 Nguyễn Hồng Quân
+# This file is distributed under the same license as the CoBang project.
+# Jozef Gaal <preklady@mayday.sk>, 2025.
 #
-# Sabri Ünal <libreajans@gmail.com>, 2022, 2024
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vn.hoabinh.quan.CoBang master\n"
+"Project-Id-Version: CoBang v2.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-30 10:52+0700\n"
-"PO-Revision-Date: 2024-01-05 18:40+0300\n"
-"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
-"Language-Team: Turkish <takim@gnome.org.tr>\n"
-"Language: tr\n"
+"PO-Revision-Date: 2025-11-30 11:49+0100\n"
+"Last-Translator: Jozef Gaal <preklady@mayday.sk>\n"
+"Language-Team: Jozef Gaal <preklady@mayday.sk>\n"
+"Language: sk_SK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Generated-By: Babel 2.10.3\n"
+"X-Generator: Poedit 3.6\n"
 
 #: src/ui/generator-qr-code-page.blp:18
 msgid "Original text"
-msgstr ""
+msgstr "Pôvodný text"
 
 #. Create a file dialog to save the image
 #: src/ui/generator-qr-code-page.blp:53 src/pages/generator_qr_code.py:72
 msgid "Save QR Code"
-msgstr ""
+msgstr "Uložiť QR kód"
 
 #: src/ui/generator-qr-code-page.blp:59
 msgid "Copy to Clipboard"
-msgstr ""
+msgstr "Kopírovať do schránky"
 
 #: src/ui/generator-qr-code-page.blp:64
 msgid "New"
-msgstr ""
+msgstr "Nový"
 
 #: src/ui/generator-starting-page.blp:25
-#, fuzzy
 msgid "Generate QR Code"
-msgstr "Cömert"
+msgstr "Vygenerovať QR kód"
 
 #: src/ui/generator-starting-page.blp:33
 msgid "Enter text or URL..."
-msgstr ""
+msgstr "Zadajte text alebo URL adresu..."
 
 #: src/ui/generator-starting-page.blp:43
 msgid "Wi-Fi"
-msgstr ""
+msgstr "Wi-Fi"
 
 #: src/ui/generator-starting-page.blp:55
-#, fuzzy
 msgid "Generate"
-msgstr "Cömert"
+msgstr "Vygenerovať"
 
 #: src/ui/generator-wifi-page.blp:38
-#, fuzzy
 msgid "Generate QR for WiFi"
-msgstr "Cömert"
+msgstr "Vygenerovať QR kód pre WiFi"
 
 #: src/ui/generator-wifi-page.blp:44
 msgid "Search WiFi networks..."
-msgstr ""
+msgstr "Vyhľadať WiFi siete..."
 
 #: src/ui/generator-wifi-page.blp:102
 msgid "Double-click a saved Wi‑Fi network."
-msgstr ""
+msgstr "Dvakrát kliknite na uloženú sieť Wi-Fi."
 
 #: src/ui/generator-wifi-page.blp:118
 msgid "Or select it and press Enter."
-msgstr ""
+msgstr "Alebo ju vyberte a stlačte Enter."
 
 #: src/ui/generator-wifi-page.blp:127
 msgid "Back"
-msgstr ""
+msgstr "Späť"
 
 #: src/ui/scanner-page.blp:58
-#, fuzzy
 msgid "Show result"
-msgstr "Ham sonuç"
+msgstr "Zobraziť výsledok"
 
 #: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
 #: src/ui/scanner-page.blp:188
 msgid "Webcam"
-msgstr "Web Kamerası"
+msgstr "Webkamera"
 
 #: src/ui/scanner-page.blp:104
 msgid "No webcam detected."
-msgstr ""
+msgstr "Nebola zistená žiadna webová kamera."
 
 #: src/ui/scanner-page.blp:139
 msgid "Play"
-msgstr "Oynat"
+msgstr "Prehrať"
 
 #: src/ui/scanner-page.blp:149
 msgid "Pause"
-msgstr "Duraklat"
+msgstr "Pozastaviť"
 
 #: src/ui/scanner-page.blp:168
 msgid "Sandboxed, webcam hardware info is not available."
-msgstr ""
+msgstr "V režime Sandbox nie sú k dispozícii informácie o hardvéri webovej kamery."
 
 #: src/ui/scanner-page.blp:221
 msgid "Mirror"
-msgstr "Ayna"
+msgstr "Zrkadliť"
 
 #: src/ui/scanner-page.blp:238
 msgid "Image"
-msgstr "Görüntü"
+msgstr "Obrázok"
 
 #: src/ui/scanner-page.blp:283
 msgid "Drag and drop an image here."
-msgstr ""
+msgstr "Presuňte sem obrázok."
 
 #: src/ui/scanner-page.blp:295
 msgid "Press Ctrl+V to paste an image."
-msgstr ""
+msgstr "Stlačte klávesy Ctrl+V, aby ste vložili obrázok."
 
 #: src/ui/scanner-page.blp:311
 msgid "Click the button below to choose a file."
-msgstr ""
+msgstr "Kliknite na tlačidlo nižšie a vyberte súbor."
 
 #: src/ui/scanner-page.blp:327
 msgid "Remote images (http://…, sftp://…) also work."
-msgstr ""
+msgstr "Fungujú aj vzdialené obrázky (http://…, sftp://…)."
 
 #: src/ui/scanner-page.blp:369
-#, fuzzy
 msgid "Choose an image"
-msgstr "Lütfen görüntü dosyası seçin"
+msgstr "Vyberte obrázok"
 
 #: src/ui/scanner-page.blp:411
 msgid "Please open webcam or choose an image."
-msgstr ""
+msgstr "Otvorte prosím webovú kameru alebo vyberte obrázok."
 
 #: src/ui/scanner-page.blp:425
 msgid "Scanning..."
-msgstr ""
+msgstr "Skenovanie..."
 
 #: src/ui/scanner-page.blp:435
 msgid "No result found."
-msgstr ""
+msgstr "Nenašiel sa žiadny výsledok."
 
 #: src/ui/scanner-page.blp:457
 msgid "Raw result"
-msgstr "Ham sonuç"
+msgstr "Nespracovaný výsledok"
 
 #: src/ui/scanner-page.blp:463
 msgid "Copy"
-msgstr "Kopyala"
+msgstr "Kopírovať"
 
 #: src/ui/shortcuts-dialog.blp:8
-#, fuzzy
 msgctxt "shortcut window"
 msgid "General"
-msgstr "Cömert"
+msgstr "Všeobecné"
 
 #: src/ui/shortcuts-dialog.blp:11
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Quit"
-msgstr "Çık"
+msgstr "Ukončiť"
 
 #: src/ui/wifi-display.blp:15
 msgid "SSID"
@@ -168,46 +160,43 @@ msgstr "SSID"
 
 #: src/ui/wifi-display.blp:32
 msgid "Password"
-msgstr "Parola"
+msgstr "Heslo"
 
 #: src/ui/wifi-display.blp:53
 msgid "Save"
-msgstr "Kaydet"
+msgstr "Uložiť"
 
 #: src/ui/wifi-display.blp:58
 msgid "After saved, NetworkManager will connect automatically if in range."
-msgstr ""
+msgstr "Po uložení sa NetworkManager automaticky pripojí, ak je v dosahu."
 
 #: src/ui/window.blp:5
-#, fuzzy
 msgid "CoBang: QR scanner for Linux"
-msgstr "Linux için QR tarayıcı"
+msgstr "CoBang: skener QR kódov pre Linux"
 
 #: src/ui/window.blp:44 src/ui/window.blp:80
 msgid "Scanner"
-msgstr ""
+msgstr "Skener"
 
 #: src/ui/window.blp:51 src/ui/window.blp:91
-#, fuzzy
 msgid "Generator"
-msgstr "Cömert"
+msgstr "Generátor"
 
 #: src/ui/window.blp:62
 msgid "Main Menu"
-msgstr ""
+msgstr "Hlavná ponuka"
 
 #: src/ui/window.blp:105
 msgid "_Keyboard Shortcuts"
-msgstr ""
+msgstr "_Klávesové skratky"
 
 #: src/ui/window.blp:110
-#, fuzzy
 msgid "_About"
-msgstr "Hakkında"
+msgstr "_O aplikácii"
 
 #: src/app.py:55
 msgid "Support the developer"
-msgstr ""
+msgstr "Podporujte vývojára"
 
 #: src/app.py:56
 #, python-format
@@ -215,9 +204,10 @@ msgid ""
 "QR code / barcode scanner for Linux.\n"
 "%(donate_link)s"
 msgstr ""
+"Skener QR / čiarových kódov pre Linux.\n"
+"%(donate_link)s"
 
 #: src/messages.py:48
-#, fuzzy
 msgid ""
 "Add an image by:\n"
 "\n"
@@ -227,62 +217,43 @@ msgid ""
 "\n"
 "Remote images (http://..., sftp://...) work too!"
 msgstr ""
-"Lütfen aşağıdaki yöntemlerden birini kullanarak resim dosyası ekleyin:\n"
+"Pridať obrázok môžete:\n"
 "\n"
-"- Buraya sürükleyip bırakabilirsiniz.\n"
-"- Bir yerden kopyalayıp buraya yapıştırabilirsiniz (Ctrl+V).\n"
-"- Aşağıdaki düğme ile seçebilirsiniz (Flatpak olmayan sürümler için).\n"
+"- Pretiahnutím a umiestnením sem.\n"
+"- Kopírovaním a vložením (Ctrl+V).\n"
+"- Kliknutím na tlačidlo nižšie (nie Flatpak).\n"
 "\n"
-"Uzak görüntülere izin verilmektedir (http://..., sftp://...)"
+"Vzdialené obrázky (http://..., sftp://...) tiež fungujú!"
 
 #. Prepare dialog for saving file
 #: src/pages/generator_qr_code.py:69
-#, fuzzy
 msgid "PNG Image"
-msgstr "Görüntü"
+msgstr "Obrázok PNG"
 
 #: src/pages/generator_qr_code.py:119 src/pages/scanner.py:284
-#, fuzzy
 msgid "Copied!"
-msgstr "Kopyalandı"
+msgstr "Skopírované!"
 
 #: src/pages/scanner.py:215
 msgid "Found a wifi configuration"
-msgstr "Kablosuz bağlantı yapılandırması bulundu"
+msgstr "Našla sa wifi konfigurácia"
 
 #: src/pages/scanner.py:217
-#, fuzzy
 msgid "Found a URL. Click to open:"
-msgstr "URL bulundu. Açmak için tıklayın."
+msgstr "Našla sa URL adresa. Kliknutím ju otvoríte:"
 
 #: src/pages/scanner.py:219
 msgid "Found unrecognized text."
-msgstr ""
+msgstr "Našiel sa nerozpoznaný text."
 
 #: src/pages/scanner.py:220
 msgid "Unknown"
-msgstr ""
+msgstr "Neznáme"
 
 #: src/pages/scanner.py:748
 msgid "Saved"
-msgstr "Kaydedildi"
+msgstr "Uložené"
 
 #: src/ui.py:27
 msgid "Connected"
-msgstr "Bağlı"
-
-#~ msgid "Result"
-#~ msgstr "Sonuç"
-
-#, python-format
-#~ msgid "Unsupported file type %s!"
-#~ msgstr "%s dosya türü desteklenmiyor!"
-
-#~ msgid "CoBang"
-#~ msgstr "CoBang"
-
-#~ msgid "QR scanner for Linux"
-#~ msgstr "Linux için QR tarayıcı"
-
-#~ msgid "button"
-#~ msgstr "düğme"
+msgstr "Pripojené"
