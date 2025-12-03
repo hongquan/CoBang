@@ -58,6 +58,12 @@
   </kudos>
 
   <releases>
+    <release version="2.3.0" date="2025-12-04" urgency="medium">
+      <description translate="no">
+        <p>Fix: Failed to open About dialog.</p>
+        <p>Add animation for the magnifying glass.</p>
+      </description>
+    </release>
     <release version="2.2.0" date="2025-11-29" urgency="medium">
       <description translate="no">
         <p>Fix: Failed to save Wi-Fi.</p>
