@@ -39,7 +39,7 @@ gi.require_version('NM', '1.0')
 gi.require_version('GdkPixbuf', '2.0')
 gi.require_version('Rsvg', '2.0')
 
-from gettext import gettext as _
+from locale import gettext as _
 
 from gi.repository import Adw, Gio, Gst, Gtk, Xdp  # pyright: ignore[reportMissingModuleSource]
 from logbook import Logger
