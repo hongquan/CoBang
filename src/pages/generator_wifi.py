@@ -63,6 +63,14 @@ class GeneratorWiFiPage(Adw.Bin):
                 return
         log.warning('WiFi network with UUID {} not found in list store', uuid)
 
+    def set_network_error(self, uuid: str):
+        """Set the erroneous field for a WiFi network identified by UUID."""
+        for item in self.wifi_list_store:
+            if item.uuid == uuid:
+                item.erroneous = True
+                return
+        log.warning('WiFi network with UUID {} not found in list store', uuid)
+
     @Gtk.Template.Callback()
     def on_wifi_list_view_activated(self, list_view: Gtk.ListView, position: int):
         # Get item from the filtered model
