@@ -58,6 +58,12 @@
   </kudos>
 
   <releases>
+    <release version="2.3.1" date="2025-12-07" urgency="medium">
+      <description translate="no">
+        <p>Fix: Translated strings are not shown.</p>
+        <p>Don't show erroneous Wi-Fi networks.</p>
+      </description>
+    </release>
     <release version="2.3.0" date="2025-12-04" urgency="medium">
       <description translate="no">
         <p>Fix: Failed to open About dialog.</p>
