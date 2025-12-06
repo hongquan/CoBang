@@ -1,3 +1,10 @@
+cobang (2.3.1-1) questing; urgency=medium
+
+  * Fix: Translated strings are not shown.
+  * Don't show erroneous Wi-Fi networks.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sun, 07 Dec 2025 00:41:18 +0700
+
 cobang (2.3.0-1) questing; urgency=medium
 
   * Fix: Failed to open About dialog.
