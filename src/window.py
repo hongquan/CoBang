@@ -187,6 +187,7 @@ class CoBangWindow(Adw.ApplicationWindow):
             secrets_variant = conn.get_secrets_finish(res)
         except GLib.Error as e:
             log.warning('Failed to retrieve WiFi secrets for "{}": {}', conn.get_id(), e)
+            self.generator_page.set_wifi_network_error(conn.get_uuid())
             return
         if not secrets_variant:
             log.debug('No secrets returned for connection "{}"', conn.get_id())

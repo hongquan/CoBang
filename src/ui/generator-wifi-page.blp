@@ -6,15 +6,21 @@ Gio.ListStore wifi_list_store {
   item-type: typeof<$WifiNetworkInfo>;
 }
 
-StringFilter wifi_search_filter {
-  expression: expr item as <$WifiNetworkInfo>.ssid;
-  ignore-case: true;
-  match-mode: substring;
+EveryFilter wifi_search_fine_filter {
+  StringFilter wifi_search_filter {
+    expression: expr item as <$WifiNetworkInfo>.ssid;
+    ignore-case: true;
+    match-mode: substring;
+  }
+  BoolFilter {
+    expression: expr item as <$WifiNetworkInfo>.erroneous;
+    invert: true;
+  }
 }
 
 FilterListModel wifi_filter_model {
   model: wifi_list_store;
-  filter: wifi_search_filter;
+  filter: wifi_search_fine_filter;
 }
 
 template $GeneratorWiFiPage : Adw.Bin {

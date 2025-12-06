@@ -1,4 +1,4 @@
-from gettext import gettext as _
+from locale import gettext as _
 from typing import cast
 from urllib.parse import SplitResult
 

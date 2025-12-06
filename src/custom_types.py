@@ -39,6 +39,8 @@ class WifiNetworkInfo(GObject.GObject):
     key_mgmt = GObject.Property(type=str, default='none')
     # Whether this network is currently active (connected)
     is_active = GObject.Property(type=bool, default=False)
+    # Whether failed to retrieve password, maybe broken storage in NetworkManager.
+    erroneous = GObject.Property(type=bool, default=False)
     # Signal strength 0-100 (best effort; 0 if unknown)
     signal_strength = GObject.Property(type=int, default=0)
     # Icon name representing signal strength (e.g. network-wireless-signal-excellent-symbolic)

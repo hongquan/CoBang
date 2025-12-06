@@ -113,6 +113,10 @@ class GeneratorPage(Adw.Bin):
         """Update password for a WiFi network by UUID."""
         self.wifi_page.update_wifi_password(uuid, password)
 
+    def set_wifi_network_error(self, uuid: str):
+        """Set the error status for a WiFi network by UUID."""
+        self.wifi_page.set_network_error(uuid)
+
     def on_generate_qr_for_wifi_network(self, _src: GeneratorWiFiPage, wifi_info: WifiNetworkInfo):
         """Generate QR code for a saved WiFi network."""
         text = serialize_wifi_message(WifiInfoMessage.from_networkmanager_info(wifi_info))
