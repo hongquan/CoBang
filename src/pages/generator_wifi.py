@@ -80,12 +80,6 @@ class GeneratorWiFiPage(Adw.Bin):
         self.emit('generate-qr-for-wifi', item)
 
     @Gtk.Template.Callback()
-    def on_search_changed(self, search_entry: Gtk.SearchEntry):
-        """Handle search text changes to filter the WiFi list."""
-        search_text = search_entry.get_text()
-        self.wifi_search_filter.set_search(search_text)
-
-    @Gtk.Template.Callback()
     def on_search_stopped(self, search_entry: Gtk.SearchEntry):
         """Handle Escape key to clear search and remove focus."""
         search_entry.set_text('')
