@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-30 10:52+0700\n"
-"PO-Revision-Date: 2025-08-26 00:10+0200\n"
+"PO-Revision-Date: 2025-12-25 17:10+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: it <LL@li.org>\n"
 "Language: it\n"
@@ -16,280 +16,243 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Generated-By: Babel 2.10.3\n"
 
-#: src/ui/generator-qr-code-page.blp:18
-msgid "Original text"
-msgstr "Testo originale"
-
-#. Create a file dialog to save the image
-#: src/ui/generator-qr-code-page.blp:53 src/pages/generator_qr_code.py:72
-msgid "Save QR Code"
-msgstr "Salva codice QR"
-
-#: src/ui/generator-qr-code-page.blp:59
-msgid "Copy to Clipboard"
-msgstr "Copia negli appunti"
-
-#: src/ui/generator-qr-code-page.blp:64
-msgid "New"
-msgstr "Nuovo"
-
-#: src/ui/generator-starting-page.blp:25
-msgid "Generate QR Code"
-msgstr "Genera codice QR"
-
-#: src/ui/generator-starting-page.blp:33
-msgid "Enter text or URL..."
-msgstr "Inserisci testo o URL..."
-
-#: src/ui/generator-starting-page.blp:43
-msgid "Wi-Fi"
-msgstr "Wi-Fi"
-
-#: src/ui/generator-starting-page.blp:55
-msgid "Generate"
-msgstr "Genera"
-
-#: src/ui/generator-wifi-page.blp:38
-msgid "Generate QR for WiFi"
-msgstr "Genera QR per Wi-Fi"
-
-#: src/ui/generator-wifi-page.blp:44
-msgid "Search WiFi networks..."
-msgstr ""
-
-#: src/ui/generator-wifi-page.blp:102
-msgid "Double-click a saved Wi‑Fi network."
-msgstr "Fai doppio clic su una rete Wi‑Fi salvata."
-
-#: src/ui/generator-wifi-page.blp:118
-msgid "Or select it and press Enter."
-msgstr "Oppure selezionala e premi Invio."
-
-#: src/ui/generator-wifi-page.blp:127
-msgid "Back"
-msgstr "Indietro"
-
-#: src/ui/scanner-page.blp:58
-msgid "Show result"
-msgstr "Mostra risultato"
-
-#: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
-#: src/ui/scanner-page.blp:188
-msgid "Webcam"
-msgstr "Webcam"
-
-#: src/ui/scanner-page.blp:104
-msgid "No webcam detected."
-msgstr "Nessuna webcam rilevata."
-
-#: src/ui/scanner-page.blp:139
-msgid "Play"
-msgstr "Avvia"
-
-#: src/ui/scanner-page.blp:149
-msgid "Pause"
-msgstr "Pausa"
-
-#: src/ui/scanner-page.blp:168
-msgid "Sandboxed, webcam hardware info is not available."
-msgstr ""
-
-#: src/ui/scanner-page.blp:221
-msgid "Mirror"
-msgstr "Specchio"
-
-#: src/ui/scanner-page.blp:238
-msgid "Image"
-msgstr "Immagine"
-
-#: src/ui/scanner-page.blp:283
-msgid "Drag and drop an image here."
-msgstr "Trascina e rilascia qui un'immagine."
-
-#: src/ui/scanner-page.blp:295
-msgid "Press Ctrl+V to paste an image."
-msgstr "Premi Ctrl+V per incollare un'immagine."
-
-#: src/ui/scanner-page.blp:311
-msgid "Click the button below to choose a file."
-msgstr "Clicca il pulsante qui sotto per scegliere un file."
-
-#: src/ui/scanner-page.blp:327
-msgid "Remote images (http://…, sftp://…) also work."
-msgstr "Anche le immagini remote (http://..., sftp://...) funzionano."
-
-#: src/ui/scanner-page.blp:369
-msgid "Choose an image"
-msgstr "Scegli un'immagine"
-
-#: src/ui/scanner-page.blp:411
-msgid "Please open webcam or choose an image."
-msgstr "Apri la webcam o scegli un'immagine."
-
-#: src/ui/scanner-page.blp:425
-msgid "Scanning..."
-msgstr "Scansione in corso..."
-
-#: src/ui/scanner-page.blp:435
-msgid "No result found."
-msgstr "Nessun risultato trovato."
-
-#: src/ui/scanner-page.blp:457
-msgid "Raw result"
-msgstr "Risultato grezzo"
-
-#: src/ui/scanner-page.blp:463
-msgid "Copy"
-msgstr "Copia"
-
-#: src/ui/shortcuts-dialog.blp:8
-msgctxt "shortcut window"
-msgid "General"
-msgstr "Generale"
-
-#: src/ui/shortcuts-dialog.blp:11
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "Esci"
-
-#: src/ui/wifi-display.blp:15
-msgid "SSID"
-msgstr "SSID"
-
-#: src/ui/wifi-display.blp:32
-msgid "Password"
-msgstr "Password"
-
-#: src/ui/wifi-display.blp:53
-msgid "Save"
-msgstr "Salva"
-
-#: src/ui/wifi-display.blp:58
-msgid "After saved, NetworkManager will connect automatically if in range."
-msgstr ""
-"Dopo il salvataggio, NetworkManager si connetterà automaticamente se si "
-"trova nel raggio d'azione."
-
-#: src/ui/window.blp:5
-msgid "CoBang: QR scanner for Linux"
-msgstr "CoBang: QR scanner for Linux"
-
-#: src/ui/window.blp:44 src/ui/window.blp:80
-msgid "Scanner"
-msgstr "Scanner"
-
-#: src/ui/window.blp:51 src/ui/window.blp:91
-msgid "Generator"
-msgstr "Generatore"
-
-#: src/ui/window.blp:62
-msgid "Main Menu"
-msgstr "Menu principale"
-
-#: src/ui/window.blp:105
-msgid "_Keyboard Shortcuts"
-msgstr "_Scorciatoie da tastiera"
-
-#: src/ui/window.blp:110
-msgid "_About"
-msgstr "_Informazioni"
-
-#: src/app.py:55
-msgid "Support the developer"
-msgstr "Supporta lo sviluppatore"
-
-#: src/app.py:56
-#, python-format
-msgid ""
-"QR code / barcode scanner for Linux.\n"
-"%(donate_link)s"
-msgstr ""
-"Scanner per codici QR/codici a barre per Linux.\n"
-"%(donate_link)s"
-
-#: src/messages.py:48
-#, fuzzy
-msgid ""
-"Add an image by:\n"
-"\n"
-"- Dragging and dropping it here.\n"
-"- Copying and pasting (Ctrl+V).\n"
-"- Clicking the button below (non-Flatpak).\n"
-"\n"
-"Remote images (http://..., sftp://...) work too!"
-msgstr ""
-"Aggiungi un file immagine con uno di questi metodi:\n"
-"\n"
-"- Trascina e rilascia qui.\n"
-"- Copia da qualche parte e incolla (Ctrl + V) qui.\n"
-"- Scegli con il pulsante sotto (non Flatpak).\n"
-"\n"
-"L'immagine remota (da http:// ..., sftp://...) è consentita."
-
-#. Prepare dialog for saving file
-#: src/pages/generator_qr_code.py:69
-#, fuzzy
-msgid "PNG Image"
-msgstr "Immagine"
-
-#: src/pages/generator_qr_code.py:119 src/pages/scanner.py:284
-msgid "Copied!"
-msgstr "Copiato!"
-
-#: src/pages/scanner.py:215
-msgid "Found a wifi configuration"
-msgstr "Trovato una configurazione wifi"
-
-#: src/pages/scanner.py:217
-msgid "Found a URL. Click to open:"
-msgstr "Trovato un URL. Fare clic per aprire:"
-
-#: src/pages/scanner.py:219
-msgid "Found unrecognized text."
-msgstr "È stato trovato del testo non riconosciuto."
-
-#: src/pages/scanner.py:220
-msgid "Unknown"
-msgstr "Sconosciuto"
-
-#: src/pages/scanner.py:748
-msgid "Saved"
-msgstr "Salvato"
-
-#: src/ui.py:27
-msgid "Connected"
-msgstr "Connesso"
-
-#~ msgctxt "shortcut window"
-#~ msgid "Show Shortcuts"
-#~ msgstr "Mostra scorciatoie"
-
-#~ msgid "Will be available in next versions..."
-#~ msgstr "Sarà disponibile nelle prossime versioni..."
-
-#~ msgid "Result"
-#~ msgstr "Risultato"
-
-#, python-format
-#~ msgid "Unsupported file type %s!"
-#~ msgstr "Tipo di file non supportato %s!"
-
-#~ msgid "CoBang"
-#~ msgstr "CoBang"
-
-#~ msgid "QR scanner for Linux"
-#~ msgstr "Scanner QR per Linux"
-
-#~ msgid "button"
-#~ msgstr "pulsante"
-
-#~ msgid "QR code scanner"
-#~ msgstr "Scanner di codici QR"
-
-#~ msgid "Scan and decode QR from camera or static image"
-#~ msgstr "Scansiona e decodifica QR dalla fotocamera o da un'immagine statica"
-
-#~ msgid "qr;code;qr-code;qr-decoder;qr-scanner"
-#~ msgstr "qr;codice;codice-qr;qr-decoder;scanner-qr"
+#: src/ui/generator-qr-code-page.blp:18  
+msgid "Original text"  
+msgstr "Testo originale"  
+  
+#. Create a file dialog to save the image  
+#: src/ui/generator-qr-code-page.blp:53 src/pages/generator_qr_code.py:72  
+msgid "Save QR Code"  
+msgstr "Salva codice QR"  
+  
+#: src/ui/generator-qr-code-page.blp:59  
+msgid "Copy to Clipboard"  
+msgstr "Copia negli appunti"  
+  
+#: src/ui/generator-qr-code-page.blp:64  
+msgid "New"  
+msgstr "Nuovo"  
+  
+#: src/ui/generator-starting-page.blp:25  
+msgid "Generate QR Code"  
+msgstr "Genera codice QR"  
+  
+#: src/ui/generator-starting-page.blp:33  
+msgid "Enter text or URL..."  
+msgstr "Inserisci testo o URL..."  
+  
+#: src/ui/generator-starting-page.blp:43  
+msgid "Wi-Fi"  
+msgstr "Wi-Fi"  
+  
+#: src/ui/generator-starting-page.blp:55  
+msgid "Generate"  
+msgstr "Genera"  
+  
+#: src/ui/generator-wifi-page.blp:38  
+msgid "Generate QR for WiFi"  
+msgstr "Genera QR per Wi-Fi"  
+  
+#: src/ui/generator-wifi-page.blp:44  
+msgid "Search WiFi networks..."  
+msgstr "Cerca reti Wi-Fi..."  
+  
+#: src/ui/generator-wifi-page.blp:102  
+msgid "Double-click a saved Wi‑Fi network."  
+msgstr "Fai doppio clic su una rete Wi-Fi salvata."  
+  
+#: src/ui/generator-wifi-page.blp:118  
+msgid "Or select it and press Enter."  
+msgstr "Oppure selezionala e premi Invio."  
+  
+#: src/ui/generator-wifi-page.blp:127  
+msgid "Back"  
+msgstr "Indietro"  
+  
+#: src/ui/scanner-page.blp:58  
+msgid "Show result"  
+msgstr "Mostra risultato"  
+  
+#: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102  
+#: src/ui/scanner-page.blp:188  
+msgid "Webcam"  
+msgstr "Webcam"  
+  
+#: src/ui/scanner-page.blp:104  
+msgid "No webcam detected."  
+msgstr "Nessuna webcam rilevata."  
+  
+#: src/ui/scanner-page.blp:139  
+msgid "Play"  
+msgstr "Avvia"  
+  
+#: src/ui/scanner-page.blp:149  
+msgid "Pause"  
+msgstr "Pausa"  
+  
+#: src/ui/scanner-page.blp:168  
+msgid "Sandboxed, webcam hardware info is not available."  
+msgstr "In sandbox, le informazioni sull'hardware della webcam non sono disponibili."  
+  
+#: src/ui/scanner-page.blp:221  
+msgid "Mirror"  
+msgstr "Specchio"  
+  
+#: src/ui/scanner-page.blp:238  
+msgid "Image"  
+msgstr "Immagine"  
+  
+#: src/ui/scanner-page.blp:283  
+msgid "Drag and drop an image here."  
+msgstr "Trascina e rilascia un'immagine qui."  
+  
+#: src/ui/scanner-page.blp:295  
+msgid "Press Ctrl+V to paste an image."  
+msgstr "Premi Ctrl+V per incollare un'immagine."  
+  
+#: src/ui/scanner-page.blp:311  
+msgid "Click the button below to choose a file."  
+msgstr "Clicca sul pulsante sottostante per scegliere un file."  
+  
+#: src/ui/scanner-page.blp:327  
+msgid "Remote images (http://…, sftp://…) also work."  
+msgstr "Anche le immagini remote (http://…, sftp://…) funzionano."  
+  
+#: src/ui/scanner-page.blp:369  
+msgid "Choose an image"  
+msgstr "Scegli un'immagine"  
+  
+#: src/ui/scanner-page.blp:411  
+msgid "Please open webcam or choose an image."  
+msgstr "Apri la webcam o scegli un'immagine."  
+  
+#: src/ui/scanner-page.blp:425  
+msgid "Scanning..."  
+msgstr "Scansione in corso..."  
+  
+#: src/ui/scanner-page.blp:435  
+msgid "No result found."  
+msgstr "Nessun risultato trovato."  
+  
+#: src/ui/scanner-page.blp:457  
+msgid "Raw result"  
+msgstr "Risultato grezzo"  
+  
+#: src/ui/scanner-page.blp:463  
+msgid "Copy"  
+msgstr "Copia"  
+  
+#: src/ui/shortcuts-dialog.blp:8  
+msgctxt "shortcut window"  
+msgid "General"  
+msgstr "Generale"  
+  
+#: src/ui/shortcuts-dialog.blp:11  
+msgctxt "shortcut window"  
+msgid "Quit"  
+msgstr "Esci"  
+  
+#: src/ui/wifi-display.blp:15  
+msgid "SSID"  
+msgstr "SSID"  
+  
+#: src/ui/wifi-display.blp:32  
+msgid "Password"  
+msgstr "Password"  
+  
+#: src/ui/wifi-display.blp:53  
+msgid "Save"  
+msgstr "Salva"  
+  
+#: src/ui/wifi-display.blp:58  
+msgid "After saved, NetworkManager will connect automatically if in range."  
+msgstr "Dopo il salvataggio, NetworkManager si connetterà automaticamente se nel raggio d'azione."  
+  
+#: src/ui/window.blp:5  
+msgid "CoBang: QR scanner for Linux"  
+msgstr "CoBang: scanner QR per Linux"  
+  
+#: src/ui/window.blp:44 src/ui/window.blp:80  
+msgid "Scanner"  
+msgstr "Scanner"  
+  
+#: src/ui/window.blp:51 src/ui/window.blp:91  
+msgid "Generator"  
+msgstr "Generatore"  
+  
+#: src/ui/window.blp:62  
+msgid "Main Menu"  
+msgstr "Menu principale"  
+  
+#: src/ui/window.blp:105  
+msgid "_Keyboard Shortcuts"  
+msgstr "_Scorciatoie da tastiera"  
+  
+#: src/ui/window.blp:110  
+msgid "_About"  
+msgstr "_Informazioni su"  
+  
+#: src/app.py:55  
+msgid "Support the developer"  
+msgstr "Supporta lo sviluppatore"  
+  
+#: src/app.py:56  
+#, python-format  
+msgid ""  
+"QR code / barcode scanner for Linux.\n"  
+"%(donate_link)s"  
+msgstr ""  
+"Scanner di codici QR / codici a barre per Linux.\n"  
+"%(donate_link)s"  
+  
+#: src/messages.py:48  
+msgid ""  
+"Add an image by:\n"  
+"\n"  
+"- Dragging and dropping it here.\n"  
+"- Copying and pasting (Ctrl+V).\n"  
+"- Clicking the button below (non-Flatpak).\n"  
+"\n"  
+"Remote images (http://..., sftp://...) work too!"  
+msgstr ""  
+"Aggiungi un'immagine tramite:\n"  
+"\n"  
+"- Trascinandola e rilasciandola qui.\n"  
+"- Copiandola e incollandola (Ctrl+V).\n"  
+"- Cliccando sul pulsante sottostante (non-Flatpak).\n"  
+"\n"  
+"Anche le immagini remote (http://..., sftp://...) funzionano!"  
+  
+#. Prepare dialog for saving file  
+#: src/pages/generator_qr_code.py:69  
+msgid "PNG Image"  
+msgstr "Immagine PNG"  
+  
+#: src/pages/generator_qr_code.py:119 src/pages/scanner.py:284  
+msgid "Copied!"  
+msgstr "Copiato!"  
+  
+#: src/pages/scanner.py:215  
+msgid "Found a wifi configuration"  
+msgstr "Trovata una configurazione Wi-Fi"  
+  
+#: src/pages/scanner.py:217  
+msgid "Found a URL. Click to open:"  
+msgstr "Trovato un URL. Clicca per aprire:"  
+  
+#: src/pages/scanner.py:219  
+msgid "Found unrecognized text."  
+msgstr "Trovato testo non riconosciuto."  
+  
+#: src/pages/scanner.py:220  
+msgid "Unknown"  
+msgstr "Sconosciuto"  
+  
+#: src/pages/scanner.py:748  
+msgid "Saved"  
+msgstr "Salvato"  
+  
+#: src/ui.py:27  
+msgid "Connected"  
+msgstr "Connesso"  
