@@ -198,15 +198,6 @@ modules:
         url: https://github.com/NetworkManager/NetworkManager/archive/refs/tags/1.54.1.tar.gz
         sha256: 3bec7f01698e416c58fe823d042de87fdc0e5ddf54d1871a8b65216070eb9a93
 
-  - name: blueprint-compiler
-    buildsystem: meson
-    cleanup:
-      - "*"
-    sources:
-      - type: git
-        url: https://gitlab.gnome.org/GNOME/blueprint-compiler
-        tag: 0.18.0
-
   - name: cobang
     builddir: true
     buildsystem: meson
