@@ -58,6 +58,11 @@
   </kudos>
 
   <releases>
+    <release version="2.4.0" date="2026-03-08" urgency="medium">
+      <description translate="no">
+        <p>Try to recognize WPA3.</p>
+      </description>
+    </release>
     <release version="2.3.1" date="2025-12-07" urgency="medium">
       <description translate="no">
         <p>Fix: Translated strings are not shown.</p>
