@@ -37,9 +37,8 @@ from .consts import (
     JobName,
     ScanSourceName,
 )
-from .custom_types import WifiNetworkInfo
 from .messages import WifiInfoMessage
-from .net import add_wifi_connection, is_connected_same_wifi
+from .net import NMWifiSecretsRetriever, add_wifi_connection, get_saved_wifi_networks, is_connected_same_wifi
 from .pages.generator import GeneratorPage
 from .pages.scanner import ScannerPage
 from .ui import icon_name_for_wifi_strength
@@ -83,6 +82,8 @@ class CoBangWindow(Adw.ApplicationWindow):
 
         # Initialize NM.Client
         self.nm_client: NM.Client | None = None
+        self.nm_wifi_secrets_retriever = NMWifiSecretsRetriever()
+        self.nm_wifi_secrets_retriever.connect('wifi-secrets-retrieved', self.cb_wifi_secrets_retrieved)
         NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
     @property
@@ -181,38 +182,14 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.nm_client = client
         log.debug('NM client: {}', client)
 
-    def cb_wifi_secrets_retrieved(self, conn: NM.RemoteConnection, res: Gio.AsyncResult):
+    def cb_wifi_secrets_retrieved(self, _src: NMWifiSecretsRetriever, uuid: str, failed: bool, password: str):
         """Callback for WiFi secrets retrieval."""
-        try:
-            secrets_variant = conn.get_secrets_finish(res)
-        except GLib.Error as e:
-            log.warning('Failed to retrieve WiFi secrets for "{}": {}', conn.get_id(), e)
-            self.generator_page.set_wifi_network_error(conn.get_uuid())
+        if failed:
+            log.info('Failed to retrieve WiFi secrets for UUID: {}', uuid)
+            self.generator_page.set_wifi_network_error(uuid)
             return
-        if not secrets_variant:
-            log.debug('No secrets returned for connection "{}"', conn.get_id())
-            return
-
-        # The variant is a dict with setting names as keys
-        # e.g., {'802-11-wireless-security': {'psk': 'password'}}
-        secrets = secrets_variant.unpack()
-        wireless_security = secrets.get(NM.SETTING_WIRELESS_SECURITY_SETTING_NAME, {})
-
-        if not wireless_security:
-            log.debug('No wireless security setting in secrets for UUID: {}', conn.get_uuid())
-            return
-
-        # Try different password fields based on key management type
-        if password := (
-            wireless_security.get('psk')
-            or wireless_security.get('wep-key0')
-            or wireless_security.get('leap-password')
-            or ''
-        ):
-            log.info('Retrieved password for "{}" Wi-Fi: {}', conn.get_id(), password)
-            self.generator_page.update_wifi_password(conn.get_uuid(), password)
-        else:
-            log.debug('No password found in secrets for UUID: {}', conn.get_uuid())
+        log.info('Retrieved password for UUID {}', uuid)
+        self.generator_page.update_wifi_password(uuid, password)
 
     def on_paste_image(self, *args):
         self.scanner_page.on_paste_image()
@@ -223,67 +200,16 @@ class CoBangWindow(Adw.ApplicationWindow):
             log.error('No NM.Client available to retrieve saved WiFi networks')
             return
 
-        wifi_networks = []
-        connections = self.nm_client.get_connections()
-
-        # Map SSID -> strongest signal (0-100)
-        strengths: dict[str, int] = {}
-        for device in self.nm_client.get_devices():  # type: ignore[attr-defined]
-            if device.get_device_type() != NM.DeviceType.WIFI:
-                continue
-            for ap in device.get_access_points():
-                ssid_bytes = ap.get_ssid()
-                if not ssid_bytes:
-                    continue
-                ap_ssid = ssid_bytes.get_data().decode('utf-8', errors='ignore')
-                strengths[ap_ssid] = max(strengths.get(ap_ssid, 0), ap.get_strength())
-
-        # Currently active WiFi SSIDs
-        active_ssids = set(
-            ac.get_id()
-            for ac in self.nm_client.get_active_connections()
-            if ac.get_connection_type() == NM.SETTING_WIRELESS_SETTING_NAME
-        )
-
-        for conn in connections:
-            wireless_setting = conn.get_setting_wireless()
-            if not wireless_setting:
-                continue
-            ssid_bytes = wireless_setting.get_ssid()
-            if not ssid_bytes:
-                continue
-            ssid = ssid_bytes.get_data().decode('utf-8', errors='ignore')
-
-            # It is not possible to get Wi-Fi password from the `NM.SettingWirelessSecurity`
-            password = ''
-            key_mgmt = 'none'
-            if wireless_security := conn.get_setting_wireless_security():
-                key_mgmt = wireless_security.get_key_mgmt() or 'none'
-                log.debug('WiFi key management: "{}"', key_mgmt)
-
-            wifi_info = WifiNetworkInfo(
-                uuid=conn.get_uuid(),
-                ssid=ssid,
-                password=password,
-                key_mgmt=key_mgmt,
-                is_active=ssid in active_ssids,
-                signal_strength=strengths.get(ssid, 0),
-            )
+        wifi_networks = get_saved_wifi_networks(self.nm_client)
+        for wifi_info in wifi_networks:
             # Map strength to icon name (GNOME symbolic icons)
             wifi_info.signal_strength_icon = icon_name_for_wifi_strength(wifi_info.signal_strength)
-            wifi_networks.append(wifi_info)
-
-        # Sort: active first, then by descending signal strength using stored fields
-        wifi_networks.sort(key=lambda w: (w.is_active, w.signal_strength), reverse=True)
 
         log.info('Retrieved {} saved WiFi networks (sorted)', len(wifi_networks))
         self.generator_page.populate_wifi_networks(wifi_networks)
 
         # Asynchronously retrieve password for each connection
-        for conn in connections:
-            if conn.get_setting_wireless():
-                # Request secrets for wireless security setting
-                conn.get_secrets_async(NM.SETTING_WIRELESS_SECURITY_SETTING_NAME, None, self.cb_wifi_secrets_retrieved)
+        self.nm_wifi_secrets_retriever.request_saved_wifi_secrets(self.nm_client)
 
     def cb_wifi_connect_done(self, client: NM.Client, res: Gio.AsyncResult):
         """Callback for WiFi connection attempt."""

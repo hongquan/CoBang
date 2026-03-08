@@ -11,6 +11,7 @@ EveryFilter wifi_search_fine_filter {
     expression: expr item as <$WifiNetworkInfo>.ssid;
     ignore-case: true;
     match-mode: substring;
+    search: bind wifi_search_entry.text;
   }
   BoolFilter {
     expression: expr item as <$WifiNetworkInfo>.erroneous;
@@ -48,7 +49,6 @@ template $GeneratorWiFiPage : Adw.Bin {
 
         SearchEntry wifi_search_entry {
           placeholder-text: _("Search WiFi networks...");
-          search-changed => $on_search_changed();
           stop-search => $on_search_stopped();
         }
 
@@ -76,6 +76,14 @@ template $GeneratorWiFiPage : Adw.Bin {
                   }
 
                   /* Signal strength icon for active connections */
+                  Image {
+                    icon-name: "dialog-warning-symbolic";
+                    visible: bind template.item as <$WifiNetworkInfo>.erroneous;
+                    valign: center;
+                    halign: end;
+                    tooltip-text: _("Failed to retrieve Wi-Fi password");
+                  }
+
                   Image {
                     icon-name: bind template.item as <$WifiNetworkInfo>.signal_strength_icon;
                     visible: bind template.item as <$WifiNetworkInfo>.is_active;

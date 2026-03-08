@@ -139,8 +139,10 @@ def wifi_escape(s: str) -> str:
 def map_key_mgmt_to_auth(key_mgmt: str) -> str:
     if key_mgmt in ('none', ''):
         return 'nopass'
-    if key_mgmt in ('wpa-psk', 'sae'):
+    if key_mgmt == 'wpa-psk':
         return 'WPA'
+    if key_mgmt == 'sae':
+        return 'WPA3'
     if key_mgmt == 'wpa-eap':
         return 'WPA2-EAP'
     return 'WPA'

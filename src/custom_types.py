@@ -11,20 +11,16 @@ class WebcamDeviceInfo(GObject.GObject):
     # or PipeWire serial number.
     path = GObject.Property(type=str)
     name = GObject.Property(type=str)
-    # When GStreamer DeviceMonitor reports both V4L2 and PipeWire devices,
-    # we will use this field to ignore the PipeWire ones.
-    enabled = GObject.Property(type=bool, default=True)
 
     __gsignals__ = {
         'changed': (GObject.SignalFlags.RUN_LAST, None, ()),
     }
 
-    def __init__(self, source_type: DeviceSourceType, path: str, name: str, enabled: bool = True):
+    def __init__(self, source_type: DeviceSourceType, path: str, name: str):
         super().__init__()
         self.source_type = source_type
         self.path = path
         self.name = name
-        self.enabled = enabled
 
 
 class WifiNetworkInfo(GObject.GObject):

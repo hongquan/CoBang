@@ -19,3 +19,19 @@ def test_wifi_info2():
     out = parse_wifi_message(raw_data)
     assert out.ssid == 'my-network'
     assert out.password == 'my-password'
+
+
+def test_wifi_info_wpa3():
+    raw_data = 'WIFI:S:wpa3-network;T:WPA3;P:super-secret;;'
+    out = parse_wifi_message(raw_data)
+    assert out.ssid == 'wpa3-network'
+    assert out.password == 'super-secret'
+    assert out.auth_type.value == 'WPA3'
+
+
+def test_wifi_info_wpa3_sae_alias():
+    raw_data = 'WIFI:S:wpa3-network;T:SAE;P:super-secret;;'
+    out = parse_wifi_message(raw_data)
+    assert out.ssid == 'wpa3-network'
+    assert out.password == 'super-secret'
+    assert out.auth_type.value == 'WPA3'
