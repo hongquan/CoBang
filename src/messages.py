@@ -1,8 +1,7 @@
-from typing import Self
-
 from dataclasses import dataclass
 from enum import StrEnum
 from locale import gettext as _
+from typing import Self
 
 from .custom_types import WifiNetworkInfo
 
@@ -11,6 +10,7 @@ class WifiAuthType(StrEnum):
     WEP = 'WEP'
     WPA = 'WPA'
     WPA2 = 'WPA2'
+    WPA3 = 'WPA3'
     WPA2_EAP = 'WPA2-EAP'
 
 
@@ -18,7 +18,7 @@ class WifiAuthType(StrEnum):
 class WifiInfoMessage:
     ssid: str = ''
     password: str | None = None
-    # Value: WEP, WPA, WPA2-EAP, nopass
+    # Value: WEP, WPA, WPA2, WPA3, WPA2-EAP, nopass
     auth_type: WifiAuthType | None = WifiAuthType.WPA
     hidden: bool = False
     # Extra field (not in QR code)
@@ -29,8 +29,10 @@ class WifiInfoMessage:
         match wifi_info.key_mgmt:
             case 'none':
                 auth_type = None
-            case 'wpa-psk' | 'sae':
+            case 'wpa-psk':
                 auth_type = WifiAuthType.WPA
+            case 'sae':
+                auth_type = WifiAuthType.WPA3
             case 'wpa-eap':
                 auth_type = WifiAuthType.WPA2_EAP
             case _:
@@ -76,8 +78,13 @@ def parse_wifi_message(string: str) -> WifiInfoMessage | None:
         elif p.startswith('P:'):
             winfo.password = mecard_unescape(p[2:])
         elif p.startswith('T:'):
-            auth_type = p[2:]
-            winfo.auth_type = WifiAuthType(auth_type) if auth_type != 'nopass' else None
+            auth_type = p[2:].strip().upper()
+            if auth_type == 'NOPASS':
+                winfo.auth_type = None
+            elif auth_type == 'SAE':
+                winfo.auth_type = WifiAuthType.WPA3
+            else:
+                winfo.auth_type = WifiAuthType(auth_type)
         elif p.startswith('H:'):
             winfo.hidden = parse_to_boolean(p[2:])
     if not winfo.auth_type:
