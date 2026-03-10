@@ -27,6 +27,41 @@ class NMWifiKeyMn(StrEnum):
     WPA2_EAP = 'wpa-eap'
 
 
+class DummyAgent(NM.SecretAgentOld):
+    """
+    A minimal SecretAgent implementation.
+    Registering this agent satisfies NetworkManager's requirement for an active
+    secret agent in the caller session, allowing get_secrets_async to successfully
+    return system-stored or 802-1x secrets which would otherwise fail with
+    'No agents were available for this request'.
+    """
+    def __init__(self):
+        super().__init__(
+            identifier='org.cobang.NetworkManager.SecretAgent',
+            auto_register=True,
+            capabilities=NM.SecretAgentCapabilities.VPN_HINTS
+        )
+        super().init()
+
+    def do_get_secrets(self, connection, connection_path, setting_name, hints, flags, callback, user_data):
+        error = GLib.Error.new_literal(
+            NM.SecretAgentError.quark(),
+            'Not implemented',
+            NM.SecretAgentError.FAILED
+        )
+        empty_secrets = GLib.Variant('a{sa{sv}}', {})
+        callback(self, connection, empty_secrets, error)
+
+    def do_save_secrets(self, connection, connection_path, callback, user_data):
+        callback(self, connection, None)
+
+    def do_delete_secrets(self, connection, connection_path, callback, user_data):
+        callback(self, connection, None)
+
+    def do_cancel_get_secrets(self, connection_path, setting_name):
+        pass
+
+
 class NMWifiSecretsRetriever(GObject.GObject):
     __gtype_name__ = 'NMWifiSecretsRetriever'
 
@@ -40,7 +75,19 @@ class NMWifiSecretsRetriever(GObject.GObject):
     def request_saved_wifi_secrets(self, nm_client: NM.Client):
         """Request wireless secrets asynchronously for all saved WiFi connections."""
         for conn in nm_client.get_connections():
-            if conn.get_setting_wireless():
+            w_setting = conn.get_setting_wireless()
+            if not w_setting:
+                continue
+
+            w_sec = conn.get_setting_wireless_security()
+            if w_sec and w_sec.get_key_mgmt() in ('wpa-eap', 'wpa-eap-suite-b-192'):
+                # For WPA-EAP (802-1x), we need to request 802-1x secrets explicitly
+                conn.get_secrets_async(
+                    NM.SETTING_802_1X_SETTING_NAME,
+                    None,
+                    self.on_wifi_secrets_retrieved,
+                )
+            else:
                 conn.get_secrets_async(
                     NM.SETTING_WIRELESS_SECURITY_SETTING_NAME,
                     None,
@@ -49,36 +96,31 @@ class NMWifiSecretsRetriever(GObject.GObject):
 
     def on_wifi_secrets_retrieved(self, conn: NM.RemoteConnection, res: Gio.AsyncResult):
         uuid = conn.get_uuid()
+        password = ''
         try:
             secrets_variant = conn.get_secrets_finish(res)
+            if secrets_variant:
+                secrets = secrets_variant.unpack()
+                wireless_security = secrets.get(NM.SETTING_WIRELESS_SECURITY_SETTING_NAME, {})
+                one_x = secrets.get(NM.SETTING_802_1X_SETTING_NAME, {})
+
+                password = (
+                    wireless_security.get('psk')
+                    or wireless_security.get('wep-key0')
+                    or wireless_security.get('leap-password')
+                    or one_x.get('password')
+                    or ''
+                )
         except GLib.Error as e:
             log.warning('get_secrets_async for connection {} threw an error: {}', uuid, e)
-            self.emit('wifi-secrets-retrieved', uuid, True, '')
-            return
 
-        if not secrets_variant:
-            return
-
-        # The variant is a dict with setting names as keys.
-        # e.g., {'802-11-wireless-security': {'psk': 'password'}}
-        secrets = secrets_variant.unpack()
-        wireless_security = secrets.get(NM.SETTING_WIRELESS_SECURITY_SETTING_NAME, {})
-        if not wireless_security:
-            # Log here to debug later.
-            log.debug('No wireless_security found for WiFi connection {}. Secrets: {}', uuid, secrets)
-            return
-
-        password = (
-            wireless_security.get('psk')
-            or wireless_security.get('wep-key0')
-            or wireless_security.get('leap-password')
-            or ''
-        )
         if isinstance(password, str) and password:
             self.emit('wifi-secrets-retrieved', uuid, False, password)
             return
+
         # Sometimes we failed to get secrets, log here to debug later.
-        log.debug('Retrieved secrets for WiFi connection {}: {}', uuid, secrets)
+        log.debug('Retrieved no secrets for WiFi connection {} ({})', uuid, conn.get_path())
+        self.emit('wifi-secrets-retrieved', uuid, True, '')
 
 
 def is_connected_same_wifi(ssid: str, client: NM.Client) -> bool:
