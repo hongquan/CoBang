@@ -1,3 +1,9 @@
+cobang (2.5.0-1) questing; urgency=medium
+
+  * Improve WiFi password retrieval methods.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Mon, 11 Mar 2026 18:00:00 +0700
+
 cobang (2.4.0-1) questing; urgency=medium
 
   * Try to recognize WPA3.
