@@ -58,6 +58,11 @@
   </kudos>
 
   <releases>
+    <release version="2.5.0" date="2026-03-11" urgency="medium">
+      <description translate="no">
+        <p>Improve WiFi password retrieval methods.</p>
+      </description>
+    </release>
     <release version="2.4.0" date="2026-03-08" urgency="medium">
       <description translate="no">
         <p>Try to recognize WPA3.</p>
