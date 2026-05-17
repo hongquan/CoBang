@@ -63,6 +63,26 @@ from ..ui import build_url_display, build_wifi_info_display
 log = Logger(__name__)
 
 
+def probe_gl() -> bool:
+    """Check if gtk4paintablesink can use a GL context on the current display."""
+    probe = Gst.ElementFactory.make('gtk4paintablesink', None)
+    if not probe:
+        return False
+    paintable = probe.get_property('paintable')
+    result = bool(paintable and paintable.props.gl_context)
+    log.info('GL available for gtk4paintablesink: {}', result)
+    return result
+
+
+def build_display_sink_desc() -> str:
+    # On X11, GTK4 may not provide a GL context to gtk4paintablesink, causing glsinkbin
+    # to fail after the first frame (the wrapped GL context can't be initialized).
+    # Probe first and fall back to a software videoconvert path when GL is unavailable.
+    if probe_gl():
+        return f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin'
+    return f'videoconvert ! gtk4paintablesink name={GST_SINK_NAME}'
+
+
 @Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/scanner-page.ui')
 class ScannerPage(Adw.Bin):
     __gtype_name__ = 'ScannerPage'
@@ -392,12 +412,13 @@ class ScannerPage(Adw.Bin):
         self.dev_monitor.start()
 
     def build_gstreamer_pipeline_in_sandbox(self, video_fd: int) -> Gst.Pipeline | None:
-        # Note: Setting custom name for gtk4paintablesink does not work.
         flip_method = 'horizontal-flip' if self.mirror_switch.get_active() else 'none'
+        # leaky=2 on the display queue prevents a stalled GL sink from back-pressuring the tee
+        # and blocking the scan branch.
         cmd = (
-            f'pipewiresrc name={GST_SOURCE_NAME} fd={video_fd} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
-            'queue ! videoscale ! '
-            f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin '
+            f'pipewiresrc name={GST_SOURCE_NAME} fd={video_fd} ! '
+            f'videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
+            f'queue leaky=2 ! videoscale ! {build_display_sink_desc()} '
             't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
             f'appsink name={GST_APP_SINK_NAME} max_buffers=2 drop=1'
         )
@@ -417,14 +438,15 @@ class ScannerPage(Adw.Bin):
         flip_method = 'horizontal-flip' if self.mirror_switch.get_active() else 'none'
         source_desc_parts = (
             src_type,
-            f'name={GST_SOURCE_NAME}',
+            f'name={GST_SOURCE_NAME} ',
             f'device={video_path}' if src_type == DeviceSourceType.V4L2 else f'target-object={video_path}',
         )
         source_desc = ' '.join(source_desc_parts)
+        # leaky=2 on the display queue prevents a stalled GL sink from back-pressuring the tee
+        # and blocking the scan branch.
         cmd = (
             f'{source_desc} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
-            'queue ! videoscale ! '
-            f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin '
+            f'queue leaky=2 ! videoscale ! {build_display_sink_desc()} '
             't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
             f'appsink name={GST_APP_SINK_NAME} max_buffers=2 drop=1'
         )
@@ -439,11 +461,16 @@ class ScannerPage(Adw.Bin):
         return pipeline
 
     def attach_gstreamer_sink_to_window(self, pipeline: Gst.Pipeline):
-        sinkbin = pipeline.get_by_name('sink_bin')
-        if not sinkbin:
-            log.error('Failed to get glsinkbin element')
+        gtk4_sink = pipeline.get_by_name(GST_SINK_NAME)
+        if not gtk4_sink:
+            # When glsinkbin wraps gtk4paintablesink, the inner element's name is not
+            # discoverable via get_by_name() — retrieve it via the bin's "sink" property.
+            sink_bin = pipeline.get_by_name('sink_bin')
+            if sink_bin:
+                gtk4_sink = sink_bin.get_property('sink')
+        if not gtk4_sink:
+            log.error('Failed to get gtk4paintablesink element')
             return
-        gtk4_sink = sinkbin.get_property('sink')
         log.info('Gtk4 sink: {}', gtk4_sink)
         paintable = gtk4_sink.get_property('paintable')
         self.webcam_display.set_paintable(paintable)

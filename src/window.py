@@ -38,7 +38,13 @@ from .consts import (
     ScanSourceName,
 )
 from .messages import WifiInfoMessage
-from .net import NMWifiSecretsRetriever, add_wifi_connection, get_saved_wifi_networks, is_connected_same_wifi
+from .net import (
+    DummyAgent,
+    NMWifiSecretsRetriever,
+    add_wifi_connection,
+    get_saved_wifi_networks,
+    is_connected_same_wifi,
+)
 from .pages.generator import GeneratorPage
 from .pages.scanner import ScannerPage
 from .ui import icon_name_for_wifi_strength
@@ -79,6 +85,10 @@ class CoBangWindow(Adw.ApplicationWindow):
 
         # Connect signals from generator page
         self.generator_page.connect('request-saved-wifi-networks', self.on_request_saved_wifi_networks)
+
+        # Keep a reference to the dummy agent on the window so it stays alive
+        # and remains registered with NetworkManager.
+        self.nm_dummy_agent = DummyAgent()
 
         # Initialize NM.Client
         self.nm_client: NM.Client | None = None
