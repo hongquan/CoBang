@@ -19,6 +19,7 @@
 
 from __future__ import annotations
 
+import os
 import io
 from locale import gettext as _
 from typing import Any, Self, cast
@@ -63,22 +64,13 @@ from ..ui import build_url_display, build_wifi_info_display
 log = Logger(__name__)
 
 
-def probe_gl() -> bool:
-    """Check if gtk4paintablesink can use a GL context on the current display."""
-    probe = Gst.ElementFactory.make('gtk4paintablesink', None)
-    if not probe:
-        return False
-    paintable = probe.get_property('paintable')
-    result = bool(paintable and paintable.props.gl_context)
-    log.info('GL available for gtk4paintablesink: {}', result)
-    return result
-
-
 def build_display_sink_desc() -> str:
-    # On X11, GTK4 may not provide a GL context to gtk4paintablesink, causing glsinkbin
-    # to fail after the first frame (the wrapped GL context can't be initialized).
-    # Probe first and fall back to a software videoconvert path when GL is unavailable.
-    if probe_gl():
+    # On Wayland, GTK4 provides a proper GL context to gtk4paintablesink, so glsinkbin
+    # works for zero-copy GPU rendering. On X11, the wrapped GL context lacks the
+    # gst_gl_context_fill_info() implementation, causing glsinkbin to stall after the
+    # first frame. Probe the display server to choose the right path.
+    display_server = os.getenv('XDG_SESSION_TYPE', '').lower()
+    if display_server == 'wayland':
         return f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin'
     return f'videoconvert ! gtk4paintablesink name={GST_SINK_NAME}'
 

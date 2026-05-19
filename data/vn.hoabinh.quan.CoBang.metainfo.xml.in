@@ -58,6 +58,11 @@
   </kudos>
 
   <releases>
+    <release version="2.5.2" date="2026-05-19" urgency="medium">
+      <description translate="no">
+        <p>Do not use `glsinkbin` on X11.</p>
+      </description>
+    </release>
     <release version="2.5.1" date="2026-05-17" urgency="medium">
       <description translate="no">
         <p>Correctly handle the "missing GL context" in X11.</p>

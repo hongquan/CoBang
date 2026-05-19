@@ -1,1 +1,2 @@
 pygobject-stubs
+logbook-stubs
