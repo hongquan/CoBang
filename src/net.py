@@ -35,20 +35,17 @@ class DummyAgent(NM.SecretAgentOld):
     return system-stored or 802-1x secrets which would otherwise fail with
     'No agents were available for this request'.
     """
+
     def __init__(self):
         super().__init__(
             identifier='org.cobang.NetworkManager.SecretAgent',
             auto_register=True,
-            capabilities=NM.SecretAgentCapabilities.VPN_HINTS
+            capabilities=NM.SecretAgentCapabilities.VPN_HINTS,
         )
         super().init()
 
     def do_get_secrets(self, connection, connection_path, setting_name, hints, flags, callback, user_data):
-        error = GLib.Error.new_literal(
-            NM.SecretAgentError.quark(),
-            'Not implemented',
-            NM.SecretAgentError.FAILED
-        )
+        error = GLib.Error.new_literal(NM.SecretAgentError.quark(), 'Not implemented', NM.SecretAgentError.FAILED)
         empty_secrets = GLib.Variant('a{sa{sv}}', {})
         callback(self, connection, empty_secrets, error)
 

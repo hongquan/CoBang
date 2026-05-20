@@ -46,7 +46,15 @@ class WifiNetworkInfo(GObject.GObject):
         'changed': (GObject.SignalFlags.RUN_LAST, None, ()),
     }
 
-    def __init__(self, ssid: str, password: str = '', key_mgmt: str = 'none', is_active: bool = False, signal_strength: int = 0, uuid: str = ''):
+    def __init__(
+        self,
+        ssid: str,
+        password: str = '',
+        key_mgmt: str = 'none',
+        is_active: bool = False,
+        signal_strength: int = 0,
+        uuid: str = '',
+    ):
         super().__init__()
         self.uuid = uuid
         self.ssid = ssid

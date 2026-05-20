@@ -19,8 +19,8 @@
 
 from __future__ import annotations
 
-import os
 import io
+import os
 from locale import gettext as _
 from typing import Any, Self, cast
 from urllib.parse import SplitResult, urlsplit
@@ -125,7 +125,6 @@ class ScannerPage(Adw.Bin):
         super().__init__(**kwargs)
 
         self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.REQUESTING)
-
 
         # Initialize zbar scanner
         self.zbar_scanner = zbar.ImageScanner()
