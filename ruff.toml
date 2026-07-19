@@ -45,6 +45,6 @@ lines-after-imports = 2
 [lint.per-file-ignores]
 'src/app.py' = ["E402"]
 'src/logging.py' = ["E402"]
-'src/pages/scanner.py' = ["E402"]
-'src/pages/generator.py' = ["E402"]
 'src/net.py' = ["E402"]
+'src/pages/old_generator.py' = ["E402"]
+'src/pages/scanner.py' = ["E402"]

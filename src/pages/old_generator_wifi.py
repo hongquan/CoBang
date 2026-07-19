@@ -30,11 +30,11 @@ from ..custom_types import WifiNetworkInfo
 log = Logger(__name__)
 
 
-@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/generator/wifi-page.ui')
-class GeneratorWiFiPage(Adw.Bin):
+@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/old-generator/wifi-page.ui')
+class OldGeneratorWiFiPage(Adw.Bin):
     """A page for generating WiFi QR codes."""
 
-    __gtype_name__ = 'GeneratorWiFiPage'
+    __gtype_name__ = 'OldGeneratorWiFiPage'
 
     wifi_list_store: Gio.ListStore = Gtk.Template.Child()
     wifi_list_view: Gtk.ListView = Gtk.Template.Child()

@@ -1,4 +1,4 @@
-# generator_starting.py
+# old_generator_starting.py
 #
 # Copyright 2025 Nguyễn Hồng Quân
 #
@@ -26,11 +26,11 @@ from logbook import Logger
 log = Logger(__name__)
 
 
-@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/generator/starting-page.ui')
-class GeneratorStartingPage(Gtk.Box):
+@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/old-generator/starting-page.ui')
+class OldGeneratorStartingPage(Gtk.Box):
     """A starting page for QR code generator."""
 
-    __gtype_name__ = 'GeneratorStartingPage'
+    __gtype_name__ = 'OldGeneratorStartingPage'
 
     text_entry: Gtk.Entry = Gtk.Template.Child()
     btn_generate: Gtk.Button = Gtk.Template.Child()

@@ -22,11 +22,12 @@ from __future__ import annotations
 import io
 
 import gi
+import qrcode
+from logbook import Logger
 
 
 gi.require_version('GLib', '2.0')
 
-import qrcode
 from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
     Adw,  # pyright: ignore[reportMissingModuleSource]
     Gdk,  # pyright: ignore[reportMissingModuleSource]
@@ -34,30 +35,29 @@ from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
     GObject,  # pyright: ignore[reportMissingModuleSource]
     Gtk,  # pyright: ignore[reportMissingModuleSource]
 )
-from logbook import Logger
 
 from ..consts import GeneratorSubPage
 from ..custom_types import WifiNetworkInfo
 from ..messages import WifiInfoMessage, serialize_wifi_message
-from .generator_qr_code import GeneratorQRCodePage
-from .generator_starting import GeneratorStartingPage
-from .generator_wifi import GeneratorWiFiPage
+from .old_generator_qr_code import OldGeneratorQRCodePage
+from .old_generator_starting import OldGeneratorStartingPage
+from .old_generator_wifi import OldGeneratorWiFiPage
 
 
 log = Logger(__name__)
 
 
-@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/generator-page.ui')
-class GeneratorPage(Adw.Bin):
+@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/old-generator-page.ui')
+class OldGeneratorPage(Adw.Bin):
     """The main generator page."""
 
-    __gtype_name__ = 'GeneratorPage'
+    __gtype_name__ = 'OldGeneratorPage'
 
     active_sub_page = GObject.Property(type=str, default=GeneratorSubPage.STARTING)
     view_stack: Adw.ViewStack = Gtk.Template.Child()
-    starting_page: GeneratorStartingPage = Gtk.Template.Child()
-    qr_code_page: GeneratorQRCodePage = Gtk.Template.Child()
-    wifi_page: GeneratorWiFiPage = Gtk.Template.Child()
+    starting_page: OldGeneratorStartingPage = Gtk.Template.Child()
+    qr_code_page: OldGeneratorQRCodePage = Gtk.Template.Child()
+    wifi_page: OldGeneratorWiFiPage = Gtk.Template.Child()
 
     __gsignals__ = {
         'request-saved-wifi-networks': (GObject.SignalFlags.RUN_FIRST, None, ()),
@@ -73,7 +73,7 @@ class GeneratorPage(Adw.Bin):
         self.wifi_page.connect('generate-qr-for-wifi', self.on_generate_qr_for_wifi_network)
         self.wifi_page.connect('back-to-start', self.on_back_to_start)
 
-    def on_qr_code_generation_requested(self, _src: GeneratorStartingPage, text: str):
+    def on_qr_code_generation_requested(self, _src: OldGeneratorStartingPage, text: str):
         """Handle the QR code generation request."""
         qr = qrcode.QRCode(border=2)
         qr.add_data(text)
@@ -91,17 +91,17 @@ class GeneratorPage(Adw.Bin):
         except GLib.Error as e:
             log.error('Failed to generate QR code image: {}', e)
 
-    def on_back_to_start(self, _src: GeneratorQRCodePage):
+    def on_back_to_start(self, _src: OldGeneratorQRCodePage):
         """Handle returning to the starting page."""
         self.starting_page.clear_entry()
         self.qr_code_page.clear_original_text()
         self.active_sub_page = GeneratorSubPage.STARTING
 
-    def on_switch_to_wifi(self, _src: GeneratorStartingPage):
+    def on_switch_to_wifi(self, _src: OldGeneratorStartingPage):
         """Handle switching to the WiFi page."""
         self.active_sub_page = GeneratorSubPage.WIFI
 
-    def on_request_saved_wifi_networks(self, _src: GeneratorWiFiPage):
+    def on_request_saved_wifi_networks(self, _src: OldGeneratorWiFiPage):
         """Forward the request to the window."""
         self.emit('request-saved-wifi-networks')
 
@@ -117,7 +117,7 @@ class GeneratorPage(Adw.Bin):
         """Set the error status for a WiFi network by UUID."""
         self.wifi_page.set_network_error(uuid)
 
-    def on_generate_qr_for_wifi_network(self, _src: GeneratorWiFiPage, wifi_info: WifiNetworkInfo):
+    def on_generate_qr_for_wifi_network(self, _src: OldGeneratorWiFiPage, wifi_info: WifiNetworkInfo):
         """Generate QR code for a saved WiFi network."""
         text = serialize_wifi_message(WifiInfoMessage.from_networkmanager_info(wifi_info))
         self.on_qr_code_generation_requested(self.starting_page, text)
@@ -126,7 +126,7 @@ class GeneratorPage(Adw.Bin):
     def on_view_stack_visible_child_name_changed(self, view_stack: Adw.ViewStack, *args):
         """Handle change of visible child name on the generator view stack."""
         name = view_stack.get_visible_child_name()
-        log.debug('GeneratorPage visible child changed to: {}', name)
+        log.debug('OldGeneratorPage visible child changed to: {}', name)
         if name == GeneratorSubPage.WIFI:
             # Ask for a refresh of saved WiFi networks every time user switches here.
             self.emit('request-saved-wifi-networks')

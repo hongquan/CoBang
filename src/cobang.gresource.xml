@@ -6,10 +6,10 @@
     <file alias="shortcuts-dialog.ui" preprocess="xml-stripblanks">gtk/shortcuts-dialog.ui</file>
     <file preprocess="xml-stripblanks">gtk/scanner/wifi.ui</file>
     <file preprocess="xml-stripblanks">gtk/scanner/url.ui</file>
-    <file preprocess="xml-stripblanks">gtk/generator-page.ui</file>
-    <file preprocess="xml-stripblanks">gtk/generator/starting-page.ui</file>
-    <file preprocess="xml-stripblanks">gtk/generator/qr-code-page.ui</file>
-    <file preprocess="xml-stripblanks">gtk/generator/wifi-page.ui</file>
+    <file preprocess="xml-stripblanks">gtk/old-generator-page.ui</file>
+    <file preprocess="xml-stripblanks">gtk/old-generator/starting-page.ui</file>
+    <file preprocess="xml-stripblanks">gtk/old-generator/qr-code-page.ui</file>
+    <file preprocess="xml-stripblanks">gtk/old-generator/wifi-page.ui</file>
     <file preprocess="xml-stripblanks">gtk/scanner-page.ui</file>
     <file preprocess="xml-stripblanks">img/wireframe-image-add.svg</file>
     <file>style.css</file>

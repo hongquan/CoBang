@@ -47,7 +47,7 @@ from .net import (
     get_saved_wifi_networks,
     is_connected_same_wifi,
 )
-from .pages.generator import GeneratorPage
+from .pages.old_generator import OldGeneratorPage
 from .pages.scanner import ScannerPage
 from .ui import icon_name_for_wifi_strength
 
@@ -69,7 +69,7 @@ class CoBangWindow(Adw.ApplicationWindow):
     toggle_generator: Gtk.ToggleButton = Gtk.Template.Child()
 
     scanner_page: ScannerPage = Gtk.Template.Child()
-    generator_page: GeneratorPage = Gtk.Template.Child()
+    generator_page: OldGeneratorPage = Gtk.Template.Child()
 
     portal_parent: Xdp.Parent
 
@@ -208,7 +208,7 @@ class CoBangWindow(Adw.ApplicationWindow):
     def on_paste_image(self, *args):
         self.scanner_page.on_paste_image()
 
-    def on_request_saved_wifi_networks(self, _src: GeneratorPage):
+    def on_request_saved_wifi_networks(self, _src: OldGeneratorPage):
         """Handle request to retrieve saved WiFi networks."""
         if not self.nm_client:
             log.error('No NM.Client available to retrieve saved WiFi networks')
