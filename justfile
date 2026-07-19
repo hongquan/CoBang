@@ -1,3 +1,6 @@
+build:
+   ninja -C __build
+
 install:
    ninja -C __build install
 

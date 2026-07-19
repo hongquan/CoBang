@@ -19,11 +19,11 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import os
-import sys
-import signal
 import locale
-import gettext
+import os
+import signal
+import sys
+
 
 VERSION = '@VERSION@'
 pkgdatadir = '@pkgdatadir@'
@@ -35,11 +35,11 @@ locale.bindtextdomain('cobang', localedir)
 locale.textdomain('cobang')
 
 if __name__ == '__main__':
-    import gi
-
     from gi.repository import Gio
+
     resource = Gio.Resource.load(os.path.join(pkgdatadir, 'cobang.gresource'))
     resource._register()
 
     from cobang import app
+
     sys.exit(app.main(VERSION))

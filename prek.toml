@@ -12,6 +12,6 @@ hooks = [
 [[repos]]
 repo = "local"
 hooks = [
-    { id = "ruff-check", name = "ruff check", language = "system", entry = "uv run --only-group=lint ruff check --fix --force-exclude", types = ["python"] },
-    { id = "ruff-format", name = "ruff format", language = "system", entry = "uv run --only-group=lint ruff format --force-exclude", types = ["python"] },
+    { id = "ruff-check", name = "ruff check", language = "system", entry = "ruff check --fix src", files = "src/" },
+    { id = "ruff-format", name = "ruff format", language = "system", entry = "ruff format src", files = "src/" },
 ]
