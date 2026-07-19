@@ -80,7 +80,7 @@ class GeneratorPage(Adw.Bin):
         qr.make(fit=True)
         img = qr.make_image(fill_color='black', back_color='white')
         buf = io.BytesIO()
-        img.save(buf, format='PNG')
+        img.save(buf)
         png_data = buf.getvalue()
         # Use direct GDK Texture rather than PixbufLoader to avoid external loader
         try:

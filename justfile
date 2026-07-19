@@ -3,3 +3,6 @@ install:
 
 uninstall:
    ninja -C __build uninstall
+
+type-check:
+   zuban check src/

@@ -1,0 +1,17 @@
+[[repos]]
+repo = "builtin"
+hooks = [
+    { id = "check-added-large-files" },
+    { id = "check-merge-conflict" },
+    { id = "check-yaml" },
+    { id = "check-toml" },
+    { id = "end-of-file-fixer" },
+    { id = "trailing-whitespace" },
+]
+
+[[repos]]
+repo = "local"
+hooks = [
+    { id = "ruff-check", name = "ruff check", language = "system", entry = "uv run --only-group=lint ruff check --fix --force-exclude", types = ["python"] },
+    { id = "ruff-format", name = "ruff format", language = "system", entry = "uv run --only-group=lint ruff format --force-exclude", types = ["python"] },
+]

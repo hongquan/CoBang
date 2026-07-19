@@ -1,0 +1,13 @@
+[project]
+name = "vn.hoabinh.quan.CoBang"
+dynamic = ["version"]
+
+[build-system]
+requires = ["meson-python", "meson"]
+build-backend = "mesonpy"
+
+[[tool.mypy.overrides]]
+module = [
+  "zbar"
+]
+ignore_missing_imports = true

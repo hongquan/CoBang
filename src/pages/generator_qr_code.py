@@ -60,8 +60,7 @@ class GeneratorQRCodePage(Gtk.Box):
 
     @Gtk.Template.Callback()
     def on_btn_download_clicked(self, _btn: Gtk.Button):
-        paintable = self.qr_picture.get_paintable()
-        if not isinstance(paintable, Gdk.Texture):
+        if not isinstance(paintable := self.qr_picture.get_paintable(), Gdk.Texture):
             log.warning('QR code picture is not a texture')
             return
 
@@ -78,11 +77,13 @@ class GeneratorQRCodePage(Gtk.Box):
         file_dialog.set_initial_file(file)
 
         # Show the dialog
-        file_dialog.save(self.get_root(), None, self.on_save_dialog_response, paintable)
+        if not isinstance(root := self.get_root(), Gtk.Window):
+            log.warning('QR code page is not inside a window, cannot show save dialog')
+            return
+        file_dialog.save(root, None, self.on_save_dialog_response, paintable)
 
     def on_save_dialog_response(self, dialog: Gtk.FileDialog, result: Gio.AsyncResult, paintable: Gdk.Texture):
-        file = dialog.save_finish(result)
-        if not file:
+        if not (file := dialog.save_finish(result)):
             return
         try:
             bytes_data = paintable.save_to_png_bytes()
@@ -107,13 +108,15 @@ class GeneratorQRCodePage(Gtk.Box):
 
     @Gtk.Template.Callback()
     def on_btn_copy_clicked(self, button: Gtk.Button):
-        paintable = self.qr_picture.get_paintable()
-        if not isinstance(paintable, Gdk.Texture):
+        if not isinstance(paintable := self.qr_picture.get_paintable(), Gdk.Texture):
             log.warning('QR code picture is not a texture')
             return
 
         content_provider = Gdk.ContentProvider.new_for_bytes('image/png', paintable.save_to_png_bytes())
-        clipboard = Gdk.Display.get_default().get_clipboard()
+        if not isinstance(display := Gdk.Display.get_default(), Gdk.Display):
+            log.warning('No default display available')
+            return
+        clipboard = display.get_clipboard()
         try:
             clipboard.set_content(content_provider)
             button.set_tooltip_text(_('Copied!'))

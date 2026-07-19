@@ -17,11 +17,13 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 import os
 from typing import TYPE_CHECKING, Self, cast
 
 from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
-    NM,
+    NM,  # type: ignore[attr-defined]
     Adw,  # pyright: ignore[reportMissingModuleSource]
     Gio,  # pyright: ignore[reportMissingModuleSource]
     GLib,  # pyright: ignore[reportMissingModuleSource]
@@ -98,11 +100,13 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     @property
     def portal(self) -> Xdp.Portal:
-        if TYPE_CHECKING:
-            from .app import CoBangApplication
         app = self.get_application()
         assert app is not None
-        return cast('CoBangApplication', app).portal
+        if TYPE_CHECKING:
+            from .app import CoBangApplication
+
+            app = cast(CoBangApplication, app)
+        return app.portal
 
     @Gtk.Template.Callback()
     def on_job_viewstack_visible_child_changed(self, viewstack: Adw.ViewStack, *args):

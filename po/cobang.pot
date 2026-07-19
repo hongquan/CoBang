@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 10:52+0700\n"
+"POT-Creation-Date: 2026-07-19 13:31+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,59 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: src/ui/generator-qr-code-page.blp:18
-msgid "Original text"
-msgstr ""
-
-#. Create a file dialog to save the image
-#: src/ui/generator-qr-code-page.blp:53 src/pages/generator_qr_code.py:72
-msgid "Save QR Code"
-msgstr ""
-
-#: src/ui/generator-qr-code-page.blp:59
-msgid "Copy to Clipboard"
-msgstr ""
-
-#: src/ui/generator-qr-code-page.blp:64
-msgid "New"
-msgstr ""
-
-#: src/ui/generator-starting-page.blp:25
-msgid "Generate QR Code"
-msgstr ""
-
-#: src/ui/generator-starting-page.blp:33
-msgid "Enter text or URL..."
-msgstr ""
-
-#: src/ui/generator-starting-page.blp:43
-msgid "Wi-Fi"
-msgstr ""
-
-#: src/ui/generator-starting-page.blp:55
-msgid "Generate"
-msgstr ""
-
-#: src/ui/generator-wifi-page.blp:38
-msgid "Generate QR for WiFi"
-msgstr ""
-
-#: src/ui/generator-wifi-page.blp:44
-msgid "Search WiFi networks..."
-msgstr ""
-
-#: src/ui/generator-wifi-page.blp:102
-msgid "Double-click a saved Wi‑Fi network."
-msgstr ""
-
-#: src/ui/generator-wifi-page.blp:118
-msgid "Or select it and press Enter."
-msgstr ""
-
-#: src/ui/generator-wifi-page.blp:127
-msgid "Back"
-msgstr ""
 
 #: src/ui/scanner-page.blp:58
 msgid "Show result"
@@ -131,15 +78,15 @@ msgstr ""
 msgid "Scanning..."
 msgstr ""
 
-#: src/ui/scanner-page.blp:435
+#: src/ui/scanner-page.blp:439
 msgid "No result found."
 msgstr ""
 
-#: src/ui/scanner-page.blp:457
+#: src/ui/scanner-page.blp:461
 msgid "Raw result"
 msgstr ""
 
-#: src/ui/scanner-page.blp:463
+#: src/ui/scanner-page.blp:467
 msgid "Copy"
 msgstr ""
 
@@ -151,22 +98,6 @@ msgstr ""
 #: src/ui/shortcuts-dialog.blp:11
 msgctxt "shortcut window"
 msgid "Quit"
-msgstr ""
-
-#: src/ui/wifi-display.blp:15
-msgid "SSID"
-msgstr ""
-
-#: src/ui/wifi-display.blp:32
-msgid "Password"
-msgstr ""
-
-#: src/ui/wifi-display.blp:53
-msgid "Save"
-msgstr ""
-
-#: src/ui/wifi-display.blp:58
-msgid "After saved, NetworkManager will connect automatically if in range."
 msgstr ""
 
 #: src/ui/window.blp:5
@@ -204,7 +135,7 @@ msgid ""
 "%(donate_link)s"
 msgstr ""
 
-#: src/messages.py:48
+#: src/messages.py:50
 msgid ""
 "Add an image by:\n"
 "\n"
@@ -220,30 +151,35 @@ msgstr ""
 msgid "PNG Image"
 msgstr ""
 
-#: src/pages/generator_qr_code.py:119 src/pages/scanner.py:284
+#. Create a file dialog to save the image
+#: src/pages/generator_qr_code.py:72
+msgid "Save QR Code"
+msgstr ""
+
+#: src/pages/generator_qr_code.py:119 src/pages/scanner.py:300
 msgid "Copied!"
 msgstr ""
 
-#: src/pages/scanner.py:215
+#: src/pages/scanner.py:231
 msgid "Found a wifi configuration"
 msgstr ""
 
-#: src/pages/scanner.py:217
+#: src/pages/scanner.py:233
 msgid "Found a URL. Click to open:"
 msgstr ""
 
-#: src/pages/scanner.py:219
+#: src/pages/scanner.py:235
 msgid "Found unrecognized text."
 msgstr ""
 
-#: src/pages/scanner.py:220
+#: src/pages/scanner.py:236
 msgid "Unknown"
 msgstr ""
 
-#: src/pages/scanner.py:748
+#: src/pages/scanner.py:770
 msgid "Saved"
 msgstr ""
 
-#: src/ui.py:27
+#: src/ui.py:29
 msgid "Connected"
 msgstr ""

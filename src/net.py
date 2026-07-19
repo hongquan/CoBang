@@ -8,7 +8,7 @@ gi.require_version('NM', '1.0')
 gi.require_version('GLib', '2.0')
 gi.require_version('Gio', '2.0')
 gi.require_version('GObject', '2.0')
-from gi.repository import NM, Gio, GLib, GObject  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import NM, Gio, GLib, GObject  # type: ignore[attr-defined]
 from logbook import Logger
 
 from .consts import BRAND_NAME
@@ -170,8 +170,7 @@ def get_saved_wifi_networks(nm_client: NM.Client) -> list[WifiNetworkInfo]:
         if device.get_device_type() != NM.DeviceType.WIFI:
             continue
         for ap in device.get_access_points():
-            ssid_bytes = ap.get_ssid()
-            if not ssid_bytes:
+            if not (ssid_bytes := ap.get_ssid()):
                 continue
             ssid = ssid_bytes.get_data().decode('utf-8', errors='ignore')
             strengths[ssid] = max(strengths.get(ssid, 0), ap.get_strength())
@@ -184,11 +183,9 @@ def get_saved_wifi_networks(nm_client: NM.Client) -> list[WifiNetworkInfo]:
     }
 
     for conn in connections:
-        wireless_setting = conn.get_setting_wireless()
-        if not wireless_setting:
+        if not (wireless_setting := conn.get_setting_wireless()):
             continue
-        ssid_bytes = wireless_setting.get_ssid()
-        if not ssid_bytes:
+        if not (ssid_bytes := wireless_setting.get_ssid()):
             continue
         ssid = ssid_bytes.get_data().decode('utf-8', errors='ignore')
 

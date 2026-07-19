@@ -19,8 +19,9 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+from typing import cast
 
-from gi.repository import Adw, Gio, GObject, Gtk  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import Adw, Gio, GObject, Gtk
 from logbook import Logger
 
 from ..custom_types import WifiNetworkInfo
@@ -53,7 +54,7 @@ class GeneratorWiFiPage(Adw.Bin):
         self.wifi_list_store.remove_all()
         for wifi_info in wifi_networks:
             self.wifi_list_store.append(wifi_info)
-        log.info('Populated {} WiFi networks in list store', len(wifi_networks))
+        log.info('Populated {} WiFi networks in list store', len(list(wifi_networks)))
 
     def update_wifi_password(self, uuid: str, password: str):
         """Update the password for a WiFi network identified by UUID."""
@@ -74,8 +75,10 @@ class GeneratorWiFiPage(Adw.Bin):
     @Gtk.Template.Callback()
     def on_wifi_list_view_activated(self, list_view: Gtk.ListView, position: int):
         # Get item from the filtered model
-        selection = list_view.get_model()
-        item = selection.get_item(position)
+        if not (selection := list_view.get_model()):
+            return
+        if not (item := cast(Gtk.SingleSelection, selection).get_item(position)):
+            return
         log.info('Generate QR for WiFi (activated): {}', item.ssid)
         self.emit('generate-qr-for-wifi', item)
 

@@ -81,12 +81,11 @@ class CoBangApplication(Adw.Application):
         We raise the application's main window, creating it if
         necessary.
         """
-        win = self.props.active_window
-        if not win:
+        if not (win := self.props.active_window):
             win = CoBangWindow(application=self)
         win.present()
 
-    def do_open(self, files: Sequence[Gio.File], hint: str):
+    def do_open(self, files: Sequence[Gio.File], _n_files: int, hint: str) -> None:
         """Called when the application is opened with files."""
         if not files:
             return
@@ -98,8 +97,7 @@ class CoBangApplication(Adw.Application):
         if not mime_type or not mime_type.startswith('image/'):
             log.info('Not an image. Ignore.')
             return
-        win = cast(CoBangWindow | None, self.props.active_window)
-        if not win:
+        if not (win := cast(CoBangWindow | None, self.props.active_window)):
             win = CoBangWindow(application=self)
         win.process_file_from_commandline(file, mime_type)
         win.present()
