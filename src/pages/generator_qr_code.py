@@ -29,7 +29,7 @@ from logbook import Logger
 log = Logger(__name__)
 
 
-@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/generator-qr-code-page.ui')
+@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/generator/qr-code-page.ui')
 class GeneratorQRCodePage(Gtk.Box):
     """A page for displaying generated QR code."""
 

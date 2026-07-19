@@ -29,7 +29,7 @@ from ..custom_types import WifiNetworkInfo
 log = Logger(__name__)
 
 
-@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/generator-wifi-page.ui')
+@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/generator/wifi-page.ui')
 class GeneratorWiFiPage(Adw.Bin):
     """A page for generating WiFi QR codes."""
 

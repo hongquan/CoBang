@@ -1,0 +1,5 @@
+install:
+   ninja -C __build install
+
+uninstall:
+   ninja -C __build uninstall

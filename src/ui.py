@@ -12,7 +12,7 @@ log = Logger(__name__)
 
 
 def build_wifi_info_display(wifi: WifiInfoMessage) -> tuple[Gtk.Box, Gtk.Button] | None:
-    builder = Gtk.Builder.new_from_resource('/vn/hoabinh/quan/CoBang/gtk/wifi-display.ui')
+    builder = Gtk.Builder.new_from_resource('/vn/hoabinh/quan/CoBang/gtk/scanner/wifi.ui')
     box = cast(Gtk.Box | None, builder.get_object('wifi_form'))
     if not box:
         return None
@@ -31,7 +31,7 @@ def build_wifi_info_display(wifi: WifiInfoMessage) -> tuple[Gtk.Box, Gtk.Button]
 
 
 def build_url_display(url: SplitResult) -> Gtk.Box | None:
-    builder = Gtk.Builder.new_from_resource('/vn/hoabinh/quan/CoBang/gtk/url-display.ui')
+    builder = Gtk.Builder.new_from_resource('/vn/hoabinh/quan/CoBang/gtk/scanner/url.ui')
     btn = cast(Gtk.LinkButton | None, builder.get_object('btn_link'))
     box = cast(Gtk.Box | None, builder.get_object('box_url'))
     if btn:
