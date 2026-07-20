@@ -6,7 +6,7 @@ Gio.ListStore generator_type_store {
   item-type: typeof<$GeneratorChoiceItem>;
 }
 
-Gio.ListStore wifi_security_store {
+Gio.ListStore wifi_auth_method_store {
   item-type: typeof<$GeneratorChoiceItem>;
 }
 
@@ -14,7 +14,7 @@ template $GeneratorForm: Adw.PreferencesPage {
   Adw.PreferencesGroup {
     title: _("Type");
 
-    Adw.ComboRow row_type {
+    Adw.ComboRow content_type_row {
       title: _("Type");
       model: SingleSelection {
         model: generator_type_store;
@@ -27,7 +27,7 @@ template $GeneratorForm: Adw.PreferencesPage {
     title: _("Content");
     visible: bind $is_text_type(template.content-type) as <bool>;
 
-    Adw.EntryRow row_text {
+    Adw.EntryRow text_row {
       title: _("Text or URL");
       text: bind template.text-content bidirectional;
     }
@@ -37,23 +37,22 @@ template $GeneratorForm: Adw.PreferencesPage {
     title: _("WiFi");
     visible: bind $is_wifi_type(template.content-type) as <bool>;
 
-    Adw.EntryRow row_ssid {
+    Adw.EntryRow wifi_ssid_row {
       title: _("SSID");
       text: bind template.wifi-ssid bidirectional;
     }
 
-    Adw.PasswordEntryRow row_password {
+    Adw.PasswordEntryRow wifi_password_row {
       title: _("Password");
       text: bind template.wifi-password bidirectional;
       show-apply-button: false;
     }
 
-    Adw.ComboRow row_security {
+    Adw.ComboRow wifi_auth_method_row {
       title: _("Security");
       model: SingleSelection {
-        model: wifi_security_store;
+        model: wifi_auth_method_store;
       };
-      selected: bind template.wifi-security as <uint>;
       expression: expr item as <$GeneratorChoiceItem>.label;
     }
   }

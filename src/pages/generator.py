@@ -34,6 +34,7 @@ if TYPE_CHECKING:
 
 from .generator_form import GeneratorForm
 from .generator_qr_preview_pane import GeneratorQRPreviewPane
+from ..consts import WifiAuthMethod
 
 
 gi.require_version('Gdk', '4.0')
@@ -106,10 +107,14 @@ class GeneratorPage(Adw.Bin):
             return self.form.text_content
         if content_type == 'wifi':
             security_item = self.form.get_selected_security_item()
-            auth = security_item.value if security_item else 'WPA'
+            try:
+                auth_method = WifiAuthMethod(security_item.value) if security_item else WifiAuthMethod.WPA_PSK
+            except ValueError:
+                auth_method = WifiAuthMethod.WPA_PSK
+            auth = auth_method.qr_auth()
             password = self.form.wifi_password
             ssid = wifi_escape(self.form.wifi_ssid)
-            if auth == 'nopass':
+            if auth_method == WifiAuthMethod.NONE:
                 password = ''
             parts = [f'S:{ssid}', f'T:{auth}']
             if password:

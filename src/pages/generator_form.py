@@ -31,7 +31,7 @@ from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
 )
 from logbook import Logger
 
-from ..consts import ContentType
+from ..consts import ContentType, WifiAuthMethod
 from ..custom_types import GeneratorChoiceItem, WifiNetworkInfo
 
 
@@ -48,10 +48,10 @@ class GeneratorForm(Adw.PreferencesPage):
         'content-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
-    row_type: Adw.ComboRow = Gtk.Template.Child()
-    row_security: Adw.ComboRow = Gtk.Template.Child()
+    content_type_row: Adw.ComboRow = Gtk.Template.Child()
+    wifi_auth_method_row: Adw.ComboRow = Gtk.Template.Child()
     generator_type_store: Gio.ListStore = Gtk.Template.Child()
-    wifi_security_store: Gio.ListStore = Gtk.Template.Child()
+    wifi_auth_method_store: Gio.ListStore = Gtk.Template.Child()
 
     # GObject.Property declared as class attributes to avoid zuban no-redef
     # false positives from decorator-style getter/setter pairs.
@@ -59,7 +59,8 @@ class GeneratorForm(Adw.PreferencesPage):
     text_content = GObject.Property(type=str, default='')
     wifi_ssid = GObject.Property(type=str, default='')
     wifi_password = GObject.Property(type=str, default='')
-    wifi_security = GObject.Property(type=int, default=2)
+    # NetworkManager key_mgmt string, see WifiAuthMethod.
+    wifi_auth_method = GObject.Property(type=str, default=WifiAuthMethod.WPA_PSK.value)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -67,12 +68,15 @@ class GeneratorForm(Adw.PreferencesPage):
             'text-content',
             'wifi-ssid',
             'wifi-password',
-            'wifi-security',
+            'wifi-auth-method',
         ):
             self.connect(f'notify::{prop}', self._on_content_property_changed)
         self._populate_type_store()
         self._populate_security_store()
-        self.row_type.connect('notify::selected', self._on_row_type_selected)
+        self.content_type_row.connect('notify::selected', self._on_content_type_row_selected)
+        self.wifi_auth_method_row.connect('notify::selected', self._on_wifi_auth_method_row_selected)
+        # Sync the ComboRow to the property's default value.
+        self._select_wifi_auth_method(WifiAuthMethod(self.wifi_auth_method))
 
     @Gtk.Template.Callback()
     def is_text_type(self, wd: Self, value: str) -> bool:
@@ -84,11 +88,18 @@ class GeneratorForm(Adw.PreferencesPage):
         """Whether the WiFi rows should be visible for the current type."""
         return value == ContentType.WIFI.value
 
-    def _on_row_type_selected(self, row_type: Adw.ComboRow, *args):
+    def _on_content_type_row_selected(self, content_type_row: Adw.ComboRow, *args):
         """Reflect the ComboRow selection into content_type and emit content-changed."""
-        if not isinstance(item := row_type.get_selected_item(), GeneratorChoiceItem):
+        if not isinstance(item := content_type_row.get_selected_item(), GeneratorChoiceItem):
             return
         self.set_property('content-type', item.value)
+        self._on_content_property_changed()
+
+    def _on_wifi_auth_method_row_selected(self, wifi_auth_method_row: Adw.ComboRow, *args):
+        """Reflect the security ComboRow selection into wifi_auth_method and emit content-changed."""
+        if not isinstance(item := wifi_auth_method_row.get_selected_item(), GeneratorChoiceItem):
+            return
+        self.set_property('wifi-auth-method', item.value)
         self._on_content_property_changed()
 
     def _populate_type_store(self):
@@ -98,16 +109,12 @@ class GeneratorForm(Adw.PreferencesPage):
             self.generator_type_store.append(GeneratorChoiceItem(label=content_type.label(), value=content_type.value))
 
     def _populate_security_store(self):
-        """Populate the WiFi security choices."""
-        self.wifi_security_store.remove_all()
-        for label, value in (
-            (_('No Security'), 'nopass'),
-            (_('WEP'), 'WEP'),
-            (_('WPA2 Personal'), 'WPA'),
-            (_('WPA2 Enterprise'), 'WPA2-EAP'),
-            (_('WPA3'), 'WPA3'),
-        ):
-            self.wifi_security_store.append(GeneratorChoiceItem(label=label, value=value))
+        """Populate the WiFi security choices from WifiAuthMethod."""
+        self.wifi_auth_method_store.remove_all()
+        for auth_method in WifiAuthMethod:
+            self.wifi_auth_method_store.append(
+                GeneratorChoiceItem(label=auth_method.label(), value=auth_method.value)
+            )
 
     def _on_content_property_changed(self, *args):
         """Emit a single signal when any QR-relevant property changes."""
@@ -115,13 +122,13 @@ class GeneratorForm(Adw.PreferencesPage):
 
     def get_selected_type_item(self) -> GeneratorChoiceItem | None:
         """Return the selected content type item."""
-        if not isinstance(item := self.row_type.get_selected_item(), GeneratorChoiceItem):
+        if not isinstance(item := self.content_type_row.get_selected_item(), GeneratorChoiceItem):
             return None
         return item
 
     def get_selected_security_item(self) -> GeneratorChoiceItem | None:
         """Return the selected WiFi security item."""
-        if not isinstance(item := self.row_security.get_selected_item(), GeneratorChoiceItem):
+        if not isinstance(item := self.wifi_auth_method_row.get_selected_item(), GeneratorChoiceItem):
             return None
         return item
 
@@ -131,15 +138,23 @@ class GeneratorForm(Adw.PreferencesPage):
         self.text_content = ''
         self.wifi_ssid = ''
         self.wifi_password = ''
-        self.wifi_security = 2
+        self._select_wifi_auth_method(WifiAuthMethod.WPA_PSK)
 
     def _select_content_type(self, content_type: ContentType):
         """Select the ComboRow row matching the given content type."""
         for index, item in enumerate(self.generator_type_store):
             if item.value == content_type.value:
-                self.row_type.set_selected(index)
+                self.content_type_row.set_selected(index)
                 return
         log.warning('No ComboRow item matches content_type={}', content_type.value)
+
+    def _select_wifi_auth_method(self, auth_method: WifiAuthMethod):
+        """Select the security ComboRow row matching the given auth method."""
+        for index, item in enumerate(self.wifi_auth_method_store):
+            if item.value == auth_method.value:
+                self.wifi_auth_method_row.set_selected(index)
+                return
+        log.warning('No ComboRow item matches wifi_auth_method={}', auth_method.value)
 
     def populate_wifi_networks(self, wifi_networks: Iterable[WifiNetworkInfo]):
         """Populate the saved WiFi network list (placeholder for future UI)."""
@@ -158,16 +173,8 @@ class GeneratorForm(Adw.PreferencesPage):
         self._select_content_type(ContentType.WIFI)
         self.wifi_ssid = wifi_info.ssid
         self.wifi_password = wifi_info.password or ''
-        match wifi_info.key_mgmt:
-            case 'none':
-                self.wifi_security = 0
-            case 'wep':
-                self.wifi_security = 1
-            case 'wpa-psk':
-                self.wifi_security = 2
-            case 'wpa-eap':
-                self.wifi_security = 3
-            case 'sae':
-                self.wifi_security = 4
-            case _:
-                self.wifi_security = 2
+        try:
+            auth_method = WifiAuthMethod(wifi_info.key_mgmt)
+        except ValueError:
+            auth_method = WifiAuthMethod.WPA_PSK
+        self._select_wifi_auth_method(auth_method)
