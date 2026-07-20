@@ -47,7 +47,7 @@ from .net import (
     get_saved_wifi_networks,
     is_connected_same_wifi,
 )
-from .pages.old_generator import OldGeneratorPage
+from .pages.generator import GeneratorPage
 from .pages.scanner import ScannerPage
 from .ui import icon_name_for_wifi_strength
 
@@ -69,7 +69,7 @@ class CoBangWindow(Adw.ApplicationWindow):
     toggle_generator: Gtk.ToggleButton = Gtk.Template.Child()
 
     scanner_page: ScannerPage = Gtk.Template.Child()
-    generator_page: OldGeneratorPage = Gtk.Template.Child()
+    generator_page: GeneratorPage = Gtk.Template.Child()
 
     portal_parent: Xdp.Parent
 
@@ -200,15 +200,18 @@ class CoBangWindow(Adw.ApplicationWindow):
         """Callback for WiFi secrets retrieval."""
         if failed:
             log.info('Failed to retrieve WiFi secrets for UUID: {}', uuid)
-            self.generator_page.set_wifi_network_error(uuid)
+            if self.generator_page:
+                self.generator_page.set_wifi_network_error(uuid)
             return
         log.info('Retrieved password for UUID {}', uuid)
-        self.generator_page.update_wifi_password(uuid, password)
+        # self.generator_page.update_wifi_password(uuid, password)
+        if self.generator_page:
+            self.generator_page.update_wifi_password(uuid, password)
 
     def on_paste_image(self, *args):
         self.scanner_page.on_paste_image()
 
-    def on_request_saved_wifi_networks(self, _src: OldGeneratorPage):
+    def on_request_saved_wifi_networks(self, _src: GeneratorPage):
         """Handle request to retrieve saved WiFi networks."""
         if not self.nm_client:
             log.error('No NM.Client available to retrieve saved WiFi networks')
@@ -220,7 +223,9 @@ class CoBangWindow(Adw.ApplicationWindow):
             wifi_info.signal_strength_icon = icon_name_for_wifi_strength(wifi_info.signal_strength)
 
         log.info('Retrieved {} saved WiFi networks (sorted)', len(wifi_networks))
-        self.generator_page.populate_wifi_networks(wifi_networks)
+        # self.generator_page.populate_wifi_networks(wifi_networks)
+        if self.generator_page:
+            self.generator_page.populate_wifi_networks(wifi_networks)
 
         # Asynchronously retrieve password for each connection
         self.nm_wifi_secrets_retriever.request_saved_wifi_secrets(self.nm_client)

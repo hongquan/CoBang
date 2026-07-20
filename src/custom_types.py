@@ -63,3 +63,16 @@ class WifiNetworkInfo(GObject.GObject):
         self.is_active = is_active
         self.signal_strength = signal_strength
         # Caller should update signal_strength_icon after setting strength.
+
+
+class GeneratorChoiceItem(GObject.GObject):
+    """A single item for generator combo rows, with a display label and an internal value."""
+
+    __gtype_name__ = 'GeneratorChoiceItem'
+    label = GObject.Property(type=str)
+    value = GObject.Property(type=str)
+
+    def __init__(self, label: str, value: str):
+        super().__init__()
+        self.label = label
+        self.value = value

@@ -147,15 +147,43 @@ def blueprint-inputs [meson_file: string] {
 # In Blueprint, dynamic object classes are written as `$ClassName`:
 #   template $ScannerPage: Adw.Bin { ... }
 #   child: $ScannerPage scanner_page { ... };
-# This returns the unique class names declared by `template $...` and by
-# references `$ClassName id { ... }`.
+# This returns only the unique class names declared by `template $...`.
+# Callbacks (`$on_foo_clicked`) and child references are handled separately.
 def dynamic-classes [blp_file: string] {
     let body = (open --raw $blp_file)
     let template_pattern = r#'template\s+\$([A-Za-z][A-Za-z0-9_]*)'#
-    let ref_pattern = r#'(?<!template\s)\$([A-Za-z][A-Za-z0-9_]*)'#
-    let template_hits = ($body | parse --regex $template_pattern | get capture0)
-    let ref_hits = ($body | parse --regex $ref_pattern | get capture0)
-    ($template_hits | append $ref_hits | uniq)
+    $body | parse --regex $template_pattern | get capture0 | uniq
+}
+
+# Extract custom callback names referenced in a `.blp` file.
+# Blueprint callbacks are written as `$callback_name()` inside signal handlers,
+# e.g. `clicked => $on_btn_save_clicked();` or `show => $on_shown();`.
+# Returns the unique callback names without the `$` prefix or trailing `()`.
+def custom-callbacks [blp_file: string] {
+    let body = (open --raw $blp_file)
+    let pattern = r#'\$([A-Za-z_][A-Za-z0-9_]*)\s*\('#
+    $body | parse --regex $pattern | get capture0 | uniq
+}
+
+# Extract every method name defined in a Python file.
+# Only top-level class methods decorated with `@Gtk.Template.Callback()` or
+# regular `def` inside a class body are collected. Module-level functions are
+# ignored because callbacks always live inside the template class.
+def py-class-methods [py_file: string] {
+    let body = (open --raw $py_file)
+    # Match class bodies by capturing all lines from `class Name:` up to the
+    # next top-level `class` or end of file. Then grab `def method_name` inside.
+    let class_blocks = ($body | parse --regex r#'(?ms)^class\s+([A-Za-z][A-Za-z0-9_]*)[^:\n]*:\s*(.*?)(?=^class\s|\z)'#)
+    if ($class_blocks | is-empty) {
+        return []
+    }
+    $class_blocks
+    | get capture1
+    | each { |block|
+        $block | parse --regex r#'(?m)^\s*def\s+([A-Za-z_][A-Za-z0-9_]*)\s*\('# | get capture0
+    }
+    | flatten
+    | uniq
 }
 
 # Find all Python classes that have a `@Gtk.Template.from_resource(...)` decorator
@@ -187,11 +215,11 @@ def py-template-classes [] {
 def expected-ui-for-blp [blp_rel: string] {
     let parsed = ($blp_rel | path parse)
     let stem = $parsed.stem
-    let parent = ($parsed.parent | str replace "src/ui/" "")
+    let parent = ($parsed.parent | str replace "src/ui" "")
     if $parent == "" {
         $"gtk/($stem).ui"
     } else {
-        $"gtk/($parent)/($stem).ui"
+        $"gtk($parent)/($stem).ui"
     }
 }
 
@@ -234,6 +262,9 @@ def plain [text: string] { { text: $text, italic: false } }
 
 # Convenience: build an italic part (used to highlight file paths).
 def path-style [text: string] { { text: $text, italic: true } }
+
+# Convenience: build a non-italic part (used for class names and callbacks).
+def code-style [text: string] { { text: $"(ansi magenta)($text)(ansi reset)", italic: false } }
 
 # Section header.
 def section [title: string] {
@@ -340,15 +371,42 @@ def main [] {
                 let expected_res = $"($APP_RES_PREFIX_SLASH)($expected_ui)"
                 let ok = ($res == $expected_res)
                 report $ok [
-                    (path-style $blp) (plain " declares dynamic class ") (path-style $class_name) (plain " backed by ") (path-style $py_rel) (plain " -> ") (path-style $res)
+                    (path-style $blp) (plain " declares dynamic class ") (code-style $class_name) (plain " backed by ") (path-style $py_rel) (plain " -> ") (path-style $res)
                 ]
                 if not $ok { $issues = $issues + 1 }
             } else {
                 report false [
-                    (path-style $blp) (plain " declares dynamic class ") (path-style $class_name) (plain ": no matching Python @Gtk.Template class")
+                    (path-style $blp) (plain " declares dynamic class ") (code-style $class_name) (plain ": no matching Python @Gtk.Template class")
                 ]
                 $issues = $issues + 1
             }
+        }
+    }
+
+    section "5. Every custom callback in blp files must be backed by a method in Python"
+    for blp in $on_disk_blps {
+        let blp_abs = ($root | path join $blp)
+        let callbacks = (custom-callbacks $blp_abs)
+        if ($callbacks | is-empty) {
+            continue
+        }
+        # Find the template class for this blp file
+        let expected_ui = (expected-ui-for-blp $blp)
+        let expected_res = $"($APP_RES_PREFIX_SLASH)($expected_ui)"
+        let matching_classes = ($py_classes | where resource == $expected_res)
+        if ($matching_classes | is-empty) {
+            # No template class found for this blp, skip callback check
+            continue
+        }
+        let py_file = ($matching_classes | get py_file.0)
+        let py_rel = ($py_file | path relative-to $root)
+        let methods = (py-class-methods $py_file)
+        for callback in $callbacks {
+            let has_method = ($callback in $methods)
+            report $has_method [
+                (path-style $blp) (plain " callback ") (code-style $callback) (plain " backed by method in ") (path-style $py_rel)
+            ]
+            if not $has_method { $issues = $issues + 1 }
         }
     }
 

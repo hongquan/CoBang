@@ -1,0 +1,139 @@
+using Gtk 4.0;
+using Gio 2.0;
+
+Gio.ListStore error_correction_store {
+  item-type: typeof<$GeneratorChoiceItem>;
+}
+
+template $GeneratorQRPreviewPane: Gtk.Box {
+  orientation: vertical;
+  spacing: 8;
+  halign: center;
+  valign: start;
+  width-request: 240;
+
+  Picture qr_preview {
+    alternative-text: _("Generated QR code");
+    accessibility {
+      label: _("Generated QR code");
+    }
+    width-request: 192;
+    height-request: 192;
+    content-fit: contain;
+  }
+
+  Box options_box {
+    orientation: vertical;
+    spacing: 8;
+    halign: fill;
+    margin-top: 4;
+
+    Box pixel_box {
+      orientation: horizontal;
+      spacing: 8;
+      halign: center;
+      tooltip-text: _("Pixel size");
+
+      Label pixel_label {
+        label: _("Pixel");
+      }
+
+      SpinButton row_pixel {
+        adjustment: Adjustment {
+          lower: 1;
+          upper: 32;
+          value: bind template.qr-pixel-size bidirectional;
+        };
+        climb-rate: 1;
+        numeric: true;
+        width-chars: 3;
+        max-width-chars: 3;
+      }
+    }
+
+    Box border_box {
+      orientation: horizontal;
+      spacing: 8;
+      halign: center;
+      tooltip-text: _("Border");
+
+      Label border_label {
+        label: _("Border");
+      }
+
+      SpinButton row_border {
+        adjustment: Adjustment {
+          lower: 0;
+          upper: 16;
+          value: bind template.qr-border-size bidirectional;
+        };
+        climb-rate: 1;
+        numeric: true;
+        width-chars: 3;
+        max-width-chars: 3;
+      }
+    }
+
+    Box color_box {
+      orientation: horizontal;
+      spacing: 8;
+      halign: center;
+
+      Label color_label {
+        label: _("Colors");
+      }
+
+      ColorDialogButton btn_foreground {
+        tooltip-text: _("Foreground color");
+        rgba: bind template.foreground-color bidirectional;
+      }
+
+      ColorDialogButton btn_background {
+        tooltip-text: _("Background color");
+        rgba: bind template.background-color bidirectional;
+      }
+    }
+
+    Box quality_box {
+      orientation: horizontal;
+      spacing: 8;
+      halign: center;
+
+      Label quality_label {
+        label: _("Error Correction:");
+      }
+
+      DropDown row_error_correction {
+        model: SingleSelection {
+          model: error_correction_store;
+        };
+        selected: bind template.error-correction as <uint>;
+        expression: expr item as <$GeneratorChoiceItem>.label;
+      }
+    }
+  }
+
+  Box action_buttons {
+    orientation: horizontal;
+    spacing: 6;
+    halign: center;
+
+    Button btn_download {
+      icon-name: "document-save-symbolic";
+      tooltip-text: _("Save QR Code");
+      clicked => $on_btn_download_clicked();
+    }
+
+    Button btn_copy {
+      icon-name: "edit-copy-symbolic";
+      tooltip-text: _("Copy to Clipboard");
+      clicked => $on_btn_copy_clicked();
+    }
+
+    Button btn_new {
+      icon-name: "document-new-symbolic";
+      tooltip-text: _("New QR code");
+      clicked => $on_btn_new_clicked();
+    }
+  }
+}

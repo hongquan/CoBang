@@ -1,0 +1,60 @@
+using Gtk 4.0;
+using Adw 1;
+using Gio 2.0;
+
+Gio.ListStore generator_type_store {
+  item-type: typeof<$GeneratorChoiceItem>;
+}
+
+Gio.ListStore wifi_security_store {
+  item-type: typeof<$GeneratorChoiceItem>;
+}
+
+template $GeneratorForm: Adw.PreferencesPage {
+  Adw.PreferencesGroup {
+    title: _("Type");
+
+    Adw.ComboRow row_type {
+      title: _("Type");
+      model: SingleSelection {
+        model: generator_type_store;
+      };
+      expression: expr item as <$GeneratorChoiceItem>.label;
+    }
+  }
+
+  Adw.PreferencesGroup {
+    title: _("Content");
+    visible: bind $is_text_type(template.content-type) as <bool>;
+
+    Adw.EntryRow row_text {
+      title: _("Text or URL");
+      text: bind template.text-content bidirectional;
+    }
+  }
+
+  Adw.PreferencesGroup {
+    title: _("WiFi");
+    visible: bind $is_wifi_type(template.content-type) as <bool>;
+
+    Adw.EntryRow row_ssid {
+      title: _("SSID");
+      text: bind template.wifi-ssid bidirectional;
+    }
+
+    Adw.PasswordEntryRow row_password {
+      title: _("Password");
+      text: bind template.wifi-password bidirectional;
+      show-apply-button: false;
+    }
+
+    Adw.ComboRow row_security {
+      title: _("Security");
+      model: SingleSelection {
+        model: wifi_security_store;
+      };
+      selected: bind template.wifi-security as <uint>;
+      expression: expr item as <$GeneratorChoiceItem>.label;
+    }
+  }
+}

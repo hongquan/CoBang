@@ -124,3 +124,4 @@ node_modules
 /subprojects/blueprint-compiler
 .agents.md
 .claude
+.agents/ui-debug/

@@ -21,9 +21,12 @@ from __future__ import annotations
 import sys
 from collections.abc import Sequence
 from datetime import datetime
+from locale import gettext as _
 from typing import cast
 
 import gi
+import logbook
+from logbook.handlers import Handler, StringFormatterHandlerMixin
 
 
 gi.require_version('Gtk', '4.0')
@@ -39,13 +42,11 @@ gi.require_version('NM', '1.0')
 gi.require_version('GdkPixbuf', '2.0')
 gi.require_version('Rsvg', '2.0')
 
-from locale import gettext as _
 
-from gi.repository import Adw, Gio, Gst, Gtk, Xdp  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import Adw, Gio, GLib, Gst, Gtk, Xdp  # pyright: ignore[reportMissingModuleSource]
 from logbook import Logger
 
-from .consts import APP_ID, BRAND_NAME
-from .logging import GLibLogHandler
+from .consts import APP_ID, BRAND_NAME, SHORT_NAME
 from .prep import guess_mimetype
 from .window import CoBangWindow
 
@@ -57,6 +58,35 @@ COMMENTS = _('QR code / barcode scanner for Linux.\n%(donate_link)s') % {
     'donate_link': f"<a href='https://ko-fi.com/hongquanvn'>{DONATE_TITLE}</a>."
 }
 log = Logger(__name__)
+
+
+LOGBOOK_LEVEL_TO_GLIB = {
+    logbook.DEBUG: GLib.LogLevelFlags.LEVEL_DEBUG,
+    logbook.INFO: GLib.LogLevelFlags.LEVEL_INFO,
+    logbook.WARNING: GLib.LogLevelFlags.LEVEL_WARNING,
+    # For Error level, we translate to GLib Critical, instead of Error, because the later causes crash
+    logbook.ERROR: GLib.LogLevelFlags.LEVEL_CRITICAL,
+}
+
+
+def _log(level: GLib.LogLevelFlags, message: str):
+    variant_message = GLib.Variant('s', message)
+
+    variant_dict = GLib.Variant(
+        'a{sv}',
+        {
+            'MESSAGE': variant_message,
+        },
+    )
+    GLib.log_variant(SHORT_NAME, level, variant_dict)
+
+
+# Logbook custom handler to redirect message to GLib log
+class GLibLogHandler(Handler, StringFormatterHandlerMixin):
+    def emit(self, record):
+        message = self.format(record)
+        level = LOGBOOK_LEVEL_TO_GLIB[record.level]
+        _log(level, message)
 
 
 class CoBangApplication(Adw.Application):

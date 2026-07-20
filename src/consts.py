@@ -1,4 +1,5 @@
 from enum import IntEnum, StrEnum
+from locale import gettext as _
 
 
 SHORT_NAME = 'cobang'
@@ -42,6 +43,19 @@ class GeneratorSubPage(StrEnum):
 class DeviceSourceType(StrEnum):
     V4L2 = 'v4l2src'
     PIPEWIRE = 'pipewiresrc'
+
+
+class ContentType(StrEnum):
+    TEXT = 'text'
+    VCARD = 'vcard'
+    WIFI = 'wifi'
+
+    def label(self) -> str:
+        if self == self.TEXT:
+            return _('Text / URL')
+        if self == self.WIFI:
+            return _('WiFi')
+        return _('vCard')
 
 
 GST_SOURCE_NAME = 'webcam_source'

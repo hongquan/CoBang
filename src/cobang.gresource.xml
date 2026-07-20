@@ -6,6 +6,9 @@
     <file alias="shortcuts-dialog.ui" preprocess="xml-stripblanks">gtk/shortcuts-dialog.ui</file>
     <file preprocess="xml-stripblanks">gtk/scanner/wifi.ui</file>
     <file preprocess="xml-stripblanks">gtk/scanner/url.ui</file>
+    <file preprocess="xml-stripblanks">gtk/generator-page.ui</file>
+    <file preprocess="xml-stripblanks">gtk/generator/form.ui</file>
+    <file preprocess="xml-stripblanks">gtk/generator/qr-preview-pane.ui</file>
     <file preprocess="xml-stripblanks">gtk/old-generator-page.ui</file>
     <file preprocess="xml-stripblanks">gtk/old-generator/starting-page.ui</file>
     <file preprocess="xml-stripblanks">gtk/old-generator/qr-code-page.ui</file>
