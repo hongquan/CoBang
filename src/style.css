@@ -21,3 +21,8 @@
 .scanning-image {
   animation: scanning 2s infinite linear;
 }
+
+.qr-placeholder {
+  border: 1px dashed alpha(currentColor, 0.4);
+  border-radius: 6px;
+}

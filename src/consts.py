@@ -58,6 +58,24 @@ class ContentType(StrEnum):
         return _('vCard')
 
 
+# Ref: https://www.qrcode.com/en/about/error_correction.html
+# Maps to qrcode.constants.ERROR_CORRECT_L/M/Q/H used when generating the QR.
+class ErrorCorrectionLevel(StrEnum):
+    LOWEST = 'L'
+    LOW = 'M'
+    MEDIUM = 'Q'
+    HIGH = 'H'
+
+    def label(self) -> str:
+        if self == self.LOWEST:
+            return _('Lowest')
+        if self == self.LOW:
+            return _('Low')
+        if self == self.MEDIUM:
+            return _('Medium')
+        return _('High')
+
+
 # Ref: https://lazka.github.io/pgi-docs/#NM-1.0/classes/SettingWirelessSecurity.html#NM.SettingWirelessSecurity.props.key_mgmt
 # Possible values: 'none', 'ieee8021x', 'owe', 'wpa-psk', 'sae', 'wpa-eap', 'wpa-eap-suite-b-192'.
 class WifiAuthMethod(StrEnum):

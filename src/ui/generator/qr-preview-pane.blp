@@ -16,14 +16,26 @@ template $GeneratorQRPreviewPane: Gtk.Box {
   valign: start;
   width-request: 240;
 
-  Picture qr_preview {
-    alternative-text: _("Generated QR code");
-    accessibility {
-      label: _("Generated QR code");
-    }
+  Overlay qr_preview_overlay {
     width-request: 192;
     height-request: 192;
-    content-fit: contain;
+
+    Box qr_placeholder {
+      halign: fill;
+      valign: fill;
+      visible: bind template.qr-empty as <bool>;
+      styles ["qr-placeholder"]
+    }
+
+    Picture qr_preview {
+      alternative-text: _("Generated QR code");
+      accessibility {
+        label: _("Generated QR code");
+      }
+      halign: fill;
+      valign: fill;
+      content-fit: contain;
+    }
   }
 
   Box options_box {
@@ -42,13 +54,14 @@ template $GeneratorQRPreviewPane: Gtk.Box {
         label: _("Pixel");
       }
 
-      SpinButton row_pixel {
+      SpinButton qr_pixel_size_row {
         adjustment: Adjustment {
           lower: 1;
           upper: 32;
-          value: bind template.qr-pixel-size bidirectional;
+          step-increment: 1;
+          page-increment: 5;
         };
-        climb-rate: 1;
+        value: bind template.qr-pixel-size bidirectional;
         numeric: true;
         width-chars: 3;
         max-width-chars: 3;
@@ -65,13 +78,14 @@ template $GeneratorQRPreviewPane: Gtk.Box {
         label: _("Border");
       }
 
-      SpinButton row_border {
+      SpinButton qr_border_size_row {
         adjustment: Adjustment {
           lower: 0;
           upper: 16;
-          value: bind template.qr-border-size bidirectional;
+          step-increment: 1;
+          page-increment: 4;
         };
-        climb-rate: 1;
+        value: bind template.qr-border-size bidirectional;
         numeric: true;
         width-chars: 3;
         max-width-chars: 3;
@@ -113,7 +127,6 @@ template $GeneratorQRPreviewPane: Gtk.Box {
         model: SingleSelection {
           model: error_correction_store;
         };
-        selected: bind template.error-correction as <uint>;
         expression: expr item as <$GeneratorChoiceItem>.label;
       }
     }

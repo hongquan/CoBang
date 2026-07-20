@@ -34,7 +34,7 @@ if TYPE_CHECKING:
 
 from .generator_form import GeneratorForm
 from .generator_qr_preview_pane import GeneratorQRPreviewPane
-from ..consts import WifiAuthMethod
+from ..consts import ErrorCorrectionLevel, WifiAuthMethod
 
 
 gi.require_version('Gdk', '4.0')
@@ -84,7 +84,7 @@ class GeneratorPage(Adw.Bin):
         # The form asks the window to fetch saved WiFi networks when the picker is opened.
         self.form.connect('request-saved-wifi-networks', self.on_form_request_saved_wifi_networks)
         # Preview-pane appearance/quality changes also regenerate the QR code.
-        self.qr_preview_widget.connect('content-changed', self.on_form_content_changed)
+        self.qr_preview_widget.connect('qr-property-changed', self.on_form_content_changed)
         # Wire pane button signals to handlers.
         self.qr_preview_widget.connect('download-clicked', self.on_btn_download_clicked)
         self.qr_preview_widget.connect('copy-clicked', self.on_btn_copy_clicked)
@@ -140,8 +140,8 @@ class GeneratorPage(Adw.Bin):
             qr = qrcode.QRCode(
                 version=None,
                 error_correction=error_correction,
-                box_size=self.qr_preview_widget.qr_pixel_size,
-                border=self.qr_preview_widget.qr_border_size,
+                box_size=int(self.qr_preview_widget.qr_pixel_size),
+                border=int(self.qr_preview_widget.qr_border_size),
             )
             qr.add_data(text)
             qr.make(fit=True)
@@ -166,21 +166,18 @@ class GeneratorPage(Adw.Bin):
         self.current_text = ''
         self.qr_preview_widget.set_paintable(None)
 
-    def error_correction_for_level(self, level: int) -> int:
-        """Map the form error-correction index to qrcode error constants."""
-        match level:
-            case 0:
-                return qrcode.constants.ERROR_CORRECT_L
-            case 1:
-                return qrcode.constants.ERROR_CORRECT_M
-            case 2:
-                return qrcode.constants.ERROR_CORRECT_Q
-            case 3:
-                return qrcode.constants.ERROR_CORRECT_H
-            case 4:
-                return qrcode.constants.ERROR_CORRECT_H
-            case _:
-                return qrcode.constants.ERROR_CORRECT_M
+    def error_correction_for_level(self, level: str) -> int:
+        """Map the form error-correction value (L/M/Q/H) to a qrcode error constant."""
+        try:
+            return {
+                ErrorCorrectionLevel.LOWEST: qrcode.constants.ERROR_CORRECT_L,
+                ErrorCorrectionLevel.LOW: qrcode.constants.ERROR_CORRECT_M,
+                ErrorCorrectionLevel.MEDIUM: qrcode.constants.ERROR_CORRECT_Q,
+                ErrorCorrectionLevel.HIGH: qrcode.constants.ERROR_CORRECT_H,
+            }[ErrorCorrectionLevel(level)]
+        except (ValueError, KeyError):
+            log.warning('Unknown error_correction value: {}, falling back to LOW', level)
+            return qrcode.constants.ERROR_CORRECT_M
 
     def rgba_to_hex(self, rgba: Gdk.RGBA) -> str:
         """Convert a Gdk.RGBA to a CSS-style hex string."""
@@ -246,7 +243,7 @@ class GeneratorPage(Adw.Bin):
         except GLib.Error as e:
             log.error('Failed to copy QR code to clipboard: {}', e)
 
-    def on_btn_new_clicked(self, _src: GeneratorQRPreviewPane, _btn: Gtk.Button):
+    def on_btn_new_clicked(self, _src: GeneratorQRPreviewPane):
         """Reset the form and preview to start a new QR code."""
         self.clear_preview()
         self.form.reset()
