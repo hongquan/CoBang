@@ -48,6 +48,8 @@ class GeneratorQRPreviewPane(Gtk.Box):
     qr_preview: Gtk.Picture = Gtk.Template.Child()
     error_correction_store: Gio.ListStore = Gtk.Template.Child()
     row_error_correction: Gtk.DropDown = Gtk.Template.Child()
+    btn_foreground: Gtk.ColorDialogButton = Gtk.Template.Child()
+    btn_background: Gtk.ColorDialogButton = Gtk.Template.Child()
 
     qr_pixel_size = GObject.Property(type=int, default=8)
     qr_border_size = GObject.Property(type=int, default=3)
@@ -77,10 +79,10 @@ class GeneratorQRPreviewPane(Gtk.Box):
             'background-color',
             'error-correction',
         ):
-            self.connect(f'notify::{prop}', self._on_content_property_changed)
-        self._populate_error_correction_store()
+            self.connect(f'notify::{prop}', self.on_content_property_changed)
+        self.populate_error_correction_store()
 
-    def _populate_error_correction_store(self):
+    def populate_error_correction_store(self):
         self.error_correction_store.remove_all()
         for label, value in (
             (_('Lowest'), 'L'),
@@ -91,7 +93,7 @@ class GeneratorQRPreviewPane(Gtk.Box):
         ):
             self.error_correction_store.append(GeneratorChoiceItem(label=label, value=value))
 
-    def _on_content_property_changed(self, *args):
+    def on_content_property_changed(self, *args):
         self.emit('content-changed')
 
     def reset(self):

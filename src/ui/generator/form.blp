@@ -37,6 +37,11 @@ template $GeneratorForm: Adw.PreferencesPage {
     title: _("WiFi");
     visible: bind $is_wifi_type(template.content-type) as <bool>;
 
+    Adw.ButtonRow choose_saved_wifi_network_row {
+      title: _("Choose one of saved networks…");
+      activated => $on_choose_saved_wifi_network_clicked();
+    }
+
     Adw.EntryRow wifi_ssid_row {
       title: _("SSID");
       text: bind template.wifi-ssid bidirectional;

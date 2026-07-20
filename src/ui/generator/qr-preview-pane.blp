@@ -5,6 +5,10 @@ Gio.ListStore error_correction_store {
   item-type: typeof<$GeneratorChoiceItem>;
 }
 
+ColorDialog color_dialog {
+  title: _("Color");
+}
+
 template $GeneratorQRPreviewPane: Gtk.Box {
   orientation: vertical;
   spacing: 8;
@@ -86,11 +90,13 @@ template $GeneratorQRPreviewPane: Gtk.Box {
       ColorDialogButton btn_foreground {
         tooltip-text: _("Foreground color");
         rgba: bind template.foreground-color bidirectional;
+        dialog: color_dialog;
       }
 
       ColorDialogButton btn_background {
         tooltip-text: _("Background color");
         rgba: bind template.background-color bidirectional;
+        dialog: color_dialog;
       }
     }
 

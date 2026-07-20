@@ -74,13 +74,15 @@ class GeneratorPage(Adw.Bin):
         'request-saved-wifi-networks': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         """Initialize the generator page."""
         super().__init__(**kwargs)
-        self._current_paintable: Gdk.Texture | None = None
-        self._current_text: str = ''
+        self.current_paintable: Gdk.Texture | None = None
+        self.current_text: str = ''
         # React to form changes by regenerating the QR code.
         self.form.connect('content-changed', self.on_form_content_changed)
+        # The form asks the window to fetch saved WiFi networks when the picker is opened.
+        self.form.connect('request-saved-wifi-networks', self.on_form_request_saved_wifi_networks)
         # Preview-pane appearance/quality changes also regenerate the QR code.
         self.qr_preview_widget.connect('content-changed', self.on_form_content_changed)
         # Wire pane button signals to handlers.
@@ -90,14 +92,17 @@ class GeneratorPage(Adw.Bin):
 
     def on_form_content_changed(self, *args):
         """Regenerate QR code when any form field changes."""
-        log.info('Form changed')
-        # self._regenerate_qr_code()
+        self.regenerate_qr_code()
+
+    def on_form_request_saved_wifi_networks(self, _src: GeneratorForm):
+        """Forward the form's request for saved WiFi networks up to the window."""
+        self.emit('request-saved-wifi-networks')
 
     @Gtk.Template.Callback()
     def generator_page_layout_name(self, wd: Self, is_mobile: bool) -> str:
         return 'mobile' if is_mobile else 'desktop'
 
-    def _build_qr_text(self) -> str:
+    def build_qr_text(self) -> str:
         """Build the raw text that should be encoded into the QR code."""
         content_type_item = self.form.get_selected_type_item()
         if content_type_item is None:
@@ -122,15 +127,15 @@ class GeneratorPage(Adw.Bin):
             return 'WIFI:' + ';'.join(parts) + ';;'
         return ''
 
-    def _regenerate_qr_code(self):
+    def regenerate_qr_code(self):
         """Generate a QR code from the current form content and display it."""
-        text = self._build_qr_text()
+        text = self.build_qr_text()
         if not text:
-            self._clear_preview()
+            self.clear_preview()
             return
 
-        self._current_text = text
-        error_correction = self._error_correction_for_level(self.qr_preview_widget.error_correction)
+        self.current_text = text
+        error_correction = self.error_correction_for_level(self.qr_preview_widget.error_correction)
         try:
             qr = qrcode.QRCode(
                 version=None,
@@ -141,27 +146,27 @@ class GeneratorPage(Adw.Bin):
             qr.add_data(text)
             qr.make(fit=True)
             img = qr.make_image(
-                fill_color=self._rgba_to_hex(self.qr_preview_widget.foreground_color),
-                back_color=self._rgba_to_hex(self.qr_preview_widget.background_color),
+                fill_color=self.rgba_to_hex(self.qr_preview_widget.foreground_color),
+                back_color=self.rgba_to_hex(self.qr_preview_widget.background_color),
             )
             buf = io.BytesIO()
             img.save(buf)
             texture = Gdk.Texture.new_from_bytes(GLib.Bytes.new(buf.getvalue()))
         except GLib.Error as e:
             log.error('Failed to generate QR code image: {}', e)
-            self._clear_preview()
+            self.clear_preview()
             return
 
-        self._current_paintable = texture
+        self.current_paintable = texture
         self.qr_preview_widget.set_paintable(texture)
 
-    def _clear_preview(self):
+    def clear_preview(self):
         """Clear the preview picture and current paintable."""
-        self._current_paintable = None
-        self._current_text = ''
+        self.current_paintable = None
+        self.current_text = ''
         self.qr_preview_widget.set_paintable(None)
 
-    def _error_correction_for_level(self, level: int) -> int:
+    def error_correction_for_level(self, level: int) -> int:
         """Map the form error-correction index to qrcode error constants."""
         match level:
             case 0:
@@ -177,13 +182,13 @@ class GeneratorPage(Adw.Bin):
             case _:
                 return qrcode.constants.ERROR_CORRECT_M
 
-    def _rgba_to_hex(self, rgba: Gdk.RGBA) -> str:
+    def rgba_to_hex(self, rgba: Gdk.RGBA) -> str:
         """Convert a Gdk.RGBA to a CSS-style hex string."""
         return f'#{int(rgba.red * 255):02x}{int(rgba.green * 255):02x}{int(rgba.blue * 255):02x}'
 
     def on_btn_download_clicked(self, _src: GeneratorQRPreviewPane, _btn: Gtk.Button):
         """Save the generated QR code to a PNG file."""
-        if not isinstance(self._current_paintable, Gdk.Texture):
+        if not isinstance(self.current_paintable, Gdk.Texture):
             log.warning('No QR code to save')
             return
 
@@ -197,7 +202,7 @@ class GeneratorPage(Adw.Bin):
         if not isinstance(root := self.get_root(), Gtk.Window):
             log.warning('Generator page is not inside a window, cannot show save dialog')
             return
-        file_dialog.save(root, None, self.on_save_dialog_response, self._current_paintable)
+        file_dialog.save(root, None, self.on_save_dialog_response, self.current_paintable)
 
     def on_save_dialog_response(self, dialog: Gtk.FileDialog, result: Gio.AsyncResult, paintable: Gdk.Texture):
         if not (file := dialog.save_finish(result)):
@@ -225,11 +230,11 @@ class GeneratorPage(Adw.Bin):
 
     def on_btn_copy_clicked(self, _src: GeneratorQRPreviewPane, button: Gtk.Button):
         """Copy the generated QR code image to the clipboard."""
-        if not isinstance(self._current_paintable, Gdk.Texture):
+        if not isinstance(self.current_paintable, Gdk.Texture):
             log.warning('No QR code to copy')
             return
 
-        content_provider = Gdk.ContentProvider.new_for_bytes('image/png', self._current_paintable.save_to_png_bytes())
+        content_provider = Gdk.ContentProvider.new_for_bytes('image/png', self.current_paintable.save_to_png_bytes())
         if not isinstance(display := Gdk.Display.get_default(), Gdk.Display):
             log.warning('No default display available')
             return
@@ -243,7 +248,7 @@ class GeneratorPage(Adw.Bin):
 
     def on_btn_new_clicked(self, _src: GeneratorQRPreviewPane, _btn: Gtk.Button):
         """Reset the form and preview to start a new QR code."""
-        self._clear_preview()
+        self.clear_preview()
         self.form.reset()
         self.qr_preview_widget.reset()
 

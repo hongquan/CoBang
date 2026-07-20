@@ -32,6 +32,7 @@
    just install    # or: meson install -C __build
    ```
    Re-run `just install` after source edits to refresh the local install without wiping.
+   If a _*.blp_ file is changed, need to do `just uninstall` before `just install`, to expire the cache of GResource.
 3. Launch the app from the shell:
    ```sh
    G_MESSAGES_DEBUG=cobang cobang
@@ -47,6 +48,7 @@
   - Files using `gi.require_version` before `from gi.repository import ...` are listed in `ruff.toml[lint.per-file-ignores]` with `E402` ignored, so no `--ignore E402` is needed.
 - UI consistency: `dev/check-ui-file-paths.nu` verifies that every `@Gtk.Template.from_resource` path has a backing `.blp` source, is listed in the blueprints target and gresource manifest, and that every Blueprint callback/class is backed by Python code.
 - Keep in mind that UI/portal logic isn't covered by automated tests; manual testing with a webcam or sandbox is often required.
+- Do not make constants, functions, object methods private (underscore prefix), except when being asked to do so.
 
 ## Localization Workflow
 - Extract strings (requires Nu + gettext): `./dev/extract-for-translating.nu` generates/updates `po/cobang.pot`.
@@ -82,7 +84,7 @@
 ## Packaging Artefacts
 - Flatpak: `vn.hoabinh.quan.CoBang.yaml` orchestrates dependencies (zbar, libportal, NM, etc.) and consumes `flatpak/generated-sources.yml` for Python wheels.
 - Snap: `snap/snapcraft.yaml` uses the Meson plugin, building against core24 with a staged `gst-plugin-gtk4`.
-- Additional automation/config lives under `.ansible/` and `dev/` for release workflows.
+- Additional automation/config lives under `dev/` for release workflows.
 
 ## Operational Notes & Gotchas
 - Hardware integration requires PipeWire/NM access; inside Flatpak the app relies on xdg-desktop-portal (see `CoBangWindow.portal` and `ScannerPage.setup_camera_for_sandbox`). Use `COBANG_LIKE_IN_SANDBOX=1` to emulate restricted environments while testing.
