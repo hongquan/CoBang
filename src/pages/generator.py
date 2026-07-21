@@ -32,9 +32,9 @@ from logbook import Logger
 if TYPE_CHECKING:
     from ..custom_types import WifiNetworkInfo
 
+from ..consts import ErrorCorrectionLevel, WifiAuthMethod
 from .generator_form import GeneratorForm
 from .generator_qr_preview_pane import GeneratorQRPreviewPane
-from ..consts import ErrorCorrectionLevel, WifiAuthMethod
 
 
 gi.require_version('Gdk', '4.0')

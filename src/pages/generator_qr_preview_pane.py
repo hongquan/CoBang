@@ -20,7 +20,6 @@
 from __future__ import annotations
 
 import gi
-
 from logbook import Logger
 
 
@@ -92,9 +91,7 @@ class GeneratorQRPreviewPane(Gtk.Box):
         """Populate the error-correction dropdown from ErrorCorrectionLevel."""
         self.error_correction_store.remove_all()
         for level in ErrorCorrectionLevel:
-            self.error_correction_store.append(
-                GeneratorChoiceItem(label=level.label(), value=level.value)
-            )
+            self.error_correction_store.append(GeneratorChoiceItem(label=level.label(), value=level.value))
 
     def on_row_error_correction_selected(self, row_error_correction: Gtk.DropDown, *args):
         """Reflect the DropDown selection into error_correction and emit qr-property-changed."""

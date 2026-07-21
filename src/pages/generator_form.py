@@ -20,7 +20,6 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from locale import gettext as _
 from typing import Self
 
 from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
@@ -31,9 +30,9 @@ from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
 )
 from logbook import Logger
 
-from .generator_wifi_network_picker import GeneratorWifiNetworkPickerDialog
 from ..consts import ContentType, WifiAuthMethod
 from ..custom_types import GeneratorChoiceItem, WifiNetworkInfo
+from .generator_wifi_network_picker import GeneratorWifiNetworkPickerDialog
 
 
 log = Logger(__name__)
@@ -92,6 +91,11 @@ class GeneratorForm(Adw.PreferencesPage):
     def is_wifi_type(self, wd: Self, value: str) -> bool:
         """Whether the WiFi rows should be visible for the current type."""
         return value == ContentType.WIFI.value
+
+    @Gtk.Template.Callback()
+    def is_vcard_type(self, wd: Self, value: str) -> bool:
+        """Whether the vCard empty state should be visible for the current type."""
+        return value == ContentType.VCARD.value
 
     def on_content_type_row_selected(self, content_type_row: Adw.ComboRow, *args):
         """Reflect the ComboRow selection into content_type and emit content-changed."""
