@@ -20,7 +20,7 @@ template $GeneratorPage: Adw.Bin {
           id: 'preview';
           valign: start;
           halign: center;
-          hexpand: false;
+          hexpand: true;
         }
 
         Separator {
@@ -58,7 +58,12 @@ template $GeneratorPage: Adw.Bin {
     }
 
     [preview]
-    $GeneratorQRPreviewPane qr_preview_widget {}
+    Box {
+      hexpand: false;
+      max-width-request: 256;
+
+      $GeneratorQRPreviewPane qr_preview_widget {}
+    }
 
     [form]
     $GeneratorForm form {}

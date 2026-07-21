@@ -20,13 +20,6 @@ template $GeneratorQRPreviewPane: Gtk.Box {
     width-request: 192;
     height-request: 192;
 
-    Box qr_placeholder {
-      halign: fill;
-      valign: fill;
-      visible: bind template.qr-empty as <bool>;
-      styles ["qr-placeholder"]
-    }
-
     Picture qr_preview {
       alternative-text: _("Generated QR code");
       accessibility {
@@ -35,6 +28,14 @@ template $GeneratorQRPreviewPane: Gtk.Box {
       halign: fill;
       valign: fill;
       content-fit: contain;
+    }
+
+    [overlay]
+    Box qr_placeholder {
+      width-request: 192;
+      height-request: 192;
+      visible: bind template.qr-empty as <bool>;
+      styles ["qr-placeholder"]
     }
   }
 

@@ -149,8 +149,8 @@ However, you can still try running it in development by:
 .. code-block:: console
 
   $ meson setup __build --prefix ~/.local/
-  $ ninja -C __build
-  $ meson install -C __build
+  $ just build
+  $ just install
   $ G_MESSAGES_DEBUG=cobang cobang
 
 These steps will install CoBang to *~/.local/*. Everytime we modify source code, we only need to run the ``meson install ...`` step again.
@@ -159,7 +159,7 @@ To uninstall, do:
 
 .. code-block:: console
 
-  $ ninja -C __build uninstall
+  $ just uninstall
 
 
 Translation

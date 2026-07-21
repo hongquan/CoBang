@@ -24,7 +24,7 @@
 ## Build & Run Workflow
 1. Setup build dir (only once or after dependency changes):
    ```sh
-   meson setup __build --prefix "$HOME/.local/"
+   just configure  # or: meson setup __build --prefix "$HOME/.local/"
    ```
 2. Build and install locally:
    ```sh
@@ -32,7 +32,7 @@
    just install    # or: meson install -C __build
    ```
    Re-run `just install` after source edits to refresh the local install without wiping.
-   If a _*.blp_ file is changed, need to do `just uninstall` before `just install`, to expire the cache of GResource.
+   If a _*.blp_ file is changed, need to do `just uninstall` before `just install`.
 3. Launch the app from the shell:
    ```sh
    G_MESSAGES_DEBUG=cobang cobang
