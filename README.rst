@@ -52,8 +52,8 @@ Screenshots
 .. image:: https://i.imgur.com/a4KoZCg.png
 .. image:: https://i.imgur.com/AigLax4.png
 .. image:: https://i.imgur.com/Q9xwcep.png
-.. image:: https://cdn.imgchest.com/files/2e65266f6f59.png
-.. image:: https://cdn.imgchest.com/files/0edc6ec2c4aa.png
+.. image:: https://quan-images.b-cdn.net/app-screenshots/cobang/Generate-from-text-dark.png
+.. image:: https://quan-images.b-cdn.net/app-screenshots/cobang/Generate-from-wifi-light.png
 
 
 Install
