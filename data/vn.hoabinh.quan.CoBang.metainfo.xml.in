@@ -19,7 +19,7 @@
       <caption>Scan from webcam.</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v1_5.png</image>
+      <image>https://quan-images.b-cdn.net/app-screenshots/cobang/Waiting-image-light.png</image>
       <caption>Scan from image file.</caption>
     </screenshot>
     <screenshot>
@@ -31,20 +31,20 @@
       <caption>Scan from webcam (mobile view, dark theme).</caption>
     </screenshot>
      <screenshot>
-       <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v2_generator_1.png</image>
-       <caption>Generator start page.</caption>
+       <image>https://quan-images.b-cdn.net/app-screenshots/cobang/Generate-from-text-light.png</image>
+       <caption>Generate from text (light).</caption>
      </screenshot>
      <screenshot>
-       <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v2_generator_2.png</image>
-       <caption>Generate QR code.</caption>
+       <image>https://quan-images.b-cdn.net/app-screenshots/cobang/Generate-from-text-dark.png</image>
+       <caption>Generate from text (dark).</caption>
      </screenshot>
      <screenshot>
-       <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v2_generator_4.png</image>
-       <caption>list WiFi networks.</caption>
+       <image>https://quan-images.b-cdn.net/app-screenshots/cobang/Generate-from-wifi-light.png</image>
+       <caption>Generate QR for WiFi (light)</caption>
      </screenshot>
      <screenshot>
-       <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v2_generator_5.png</image>
-       <caption>Search WiFi networks.</caption>
+       <image>https://quan-images.b-cdn.net/app-screenshots/cobang/Choose-wifi-dark.png</image>
+       <caption>Choose WiFi network from a list (dark)</caption>
      </screenshot>
   </screenshots>
   <url type="homepage">https://github.com/hongquan/CoBang</url>
@@ -58,6 +58,16 @@
   </kudos>
 
   <releases>
+    <release version="2.6.0" date="2026-07-23" urgency="medium">
+      <description translate="no">
+        <p>New UI for QR generator: preview and adjust QR properties.</p>
+      </description>
+    </release>
+    <release version="2.5.2" date="2026-05-19" urgency="medium">
+      <description translate="no">
+        <p>Do not use `glsinkbin` on X11.</p>
+      </description>
+    </release>
     <release version="2.5.1" date="2026-05-17" urgency="medium">
       <description translate="no">
         <p>Correctly handle the "missing GL context" in X11.</p>

@@ -20,11 +20,12 @@
 from __future__ import annotations
 
 import io
+import os
 from locale import gettext as _
 from typing import Any, Self, cast
 from urllib.parse import SplitResult, urlsplit
 
-import zbar
+import zbar  # zuban: ignore[import-not-found]
 from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
     Adw,  # pyright: ignore[reportMissingModuleSource]
     Gdk,  # pyright: ignore[reportMissingModuleSource]
@@ -63,22 +64,13 @@ from ..ui import build_url_display, build_wifi_info_display
 log = Logger(__name__)
 
 
-def probe_gl() -> bool:
-    """Check if gtk4paintablesink can use a GL context on the current display."""
-    probe = Gst.ElementFactory.make('gtk4paintablesink', None)
-    if not probe:
-        return False
-    paintable = probe.get_property('paintable')
-    result = bool(paintable and paintable.props.gl_context)
-    log.info('GL available for gtk4paintablesink: {}', result)
-    return result
-
-
 def build_display_sink_desc() -> str:
-    # On X11, GTK4 may not provide a GL context to gtk4paintablesink, causing glsinkbin
-    # to fail after the first frame (the wrapped GL context can't be initialized).
-    # Probe first and fall back to a software videoconvert path when GL is unavailable.
-    if probe_gl():
+    # On Wayland, GTK4 provides a proper GL context to gtk4paintablesink, so glsinkbin
+    # works for zero-copy GPU rendering. On X11, the wrapped GL context lacks the
+    # gst_gl_context_fill_info() implementation, causing glsinkbin to stall after the
+    # first frame. Probe the display server to choose the right path.
+    display_server = os.getenv('XDG_SESSION_TYPE', '').lower()
+    if display_server == 'wayland':
         return f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin'
     return f'videoconvert ! gtk4paintablesink name={GST_SINK_NAME}'
 
@@ -133,7 +125,6 @@ class ScannerPage(Adw.Bin):
         super().__init__(**kwargs)
 
         self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.REQUESTING)
-
 
         # Initialize zbar scanner
         self.zbar_scanner = zbar.ImageScanner()
@@ -274,7 +265,7 @@ class ScannerPage(Adw.Bin):
         if not self.gst_pipeline:
             return
         if to_pause:
-            if app_sink := self.gst_pipeline.get_by_name(GST_APP_SINK_NAME):
+            if app_sink := cast(GstApp.AppSink | None, self.gst_pipeline.get_by_name(GST_APP_SINK_NAME)):
                 app_sink.set_emit_signals(False)
             if source := self.gst_pipeline.get_by_name(GST_SOURCE_NAME):
                 source.set_state(Gst.State.PAUSED)
@@ -286,7 +277,7 @@ class ScannerPage(Adw.Bin):
         if source and source.__class__.__name__ == 'GstPipeWireSrc':
             self.stop_webcam()
         self.play_webcam()
-        if app_sink := self.gst_pipeline.get_by_name(GST_APP_SINK_NAME):
+        if app_sink := cast(GstApp.AppSink | None, self.gst_pipeline.get_by_name(GST_APP_SINK_NAME)):
             app_sink.set_emit_signals(True)
 
     @Gtk.Template.Callback()
@@ -295,12 +286,10 @@ class ScannerPage(Adw.Bin):
 
     @Gtk.Template.Callback()
     def on_btn_copy_clicked(self, button: Gtk.Button):
-        display = Gdk.Display.get_default()
-        if not display:
+        if not (display := Gdk.Display.get_default()):
             log.warning('No display available to access clipboard')
             return
-        clipboard = display.get_clipboard()
-        if not clipboard:
+        if not (clipboard := display.get_clipboard()):
             log.warning('No clipboard available on the display')
             return
         buffer = self.raw_result_display.get_buffer()
@@ -312,8 +301,7 @@ class ScannerPage(Adw.Bin):
     @Gtk.Template.Callback()
     def on_btn_filechooser_clicked(self, button: Gtk.Button):
         # We need a window for the dialog.
-        win = self.get_root()
-        if not isinstance(win, Gtk.Window):
+        if not isinstance(win := self.get_root(), Gtk.Window):
             log.warning('Root is not a window')
             return
 
@@ -322,8 +310,7 @@ class ScannerPage(Adw.Bin):
     @Gtk.Template.Callback()
     def on_webcam_device_selected(self, dropdown: Gtk.DropDown, *args):
         log.debug('Extra args for camera_dropdown callback: {}', args)
-        item = dropdown.get_selected_item()
-        if not item:
+        if not (item := dropdown.get_selected_item()):
             return
         assert isinstance(item, WebcamDeviceInfo)
         log.info('Selected device: {}', item)
@@ -465,8 +452,7 @@ class ScannerPage(Adw.Bin):
         if not gtk4_sink:
             # When glsinkbin wraps gtk4paintablesink, the inner element's name is not
             # discoverable via get_by_name() — retrieve it via the bin's "sink" property.
-            sink_bin = pipeline.get_by_name('sink_bin')
-            if sink_bin:
+            if sink_bin := pipeline.get_by_name('sink_bin'):
                 gtk4_sink = sink_bin.get_property('sink')
         if not gtk4_sink:
             log.error('Failed to get gtk4paintablesink element')
@@ -492,7 +478,7 @@ class ScannerPage(Adw.Bin):
             self.gst_pipeline.set_state(Gst.State.NULL)
 
     def enable_webcam_consumption(self, pipeline: Gst.Pipeline):
-        if app_sink := pipeline.get_by_name(GST_APP_SINK_NAME):
+        if app_sink := cast(GstApp.AppSink | None, pipeline.get_by_name(GST_APP_SINK_NAME)):
             log.debug('Appsink: {}', app_sink)
             app_sink.set_emit_signals(True)
             app_sink.connect('new-sample', self.on_new_webcam_sample)
@@ -500,7 +486,7 @@ class ScannerPage(Adw.Bin):
             log.warning('Appsink not found in pipeline')
 
     def disable_webcam_consumption(self, pipeline: Gst.Pipeline):
-        if app_sink := pipeline.get_by_name(GST_APP_SINK_NAME):
+        if app_sink := cast(GstApp.AppSink | None, pipeline.get_by_name(GST_APP_SINK_NAME)):
             log.debug('Appsink: {}', app_sink)
             app_sink.set_emit_signals(False)
             app_sink.disconnect_by_func(self.on_new_webcam_sample)
@@ -529,14 +515,11 @@ class ScannerPage(Adw.Bin):
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
             return Gst.FlowReturn.OK
-        sample = cast(Gst.Sample | None, appsink.try_pull_sample(0.5))
-        if not sample:
+        if not (sample := cast(Gst.Sample | None, appsink.try_pull_sample(1))):
             return Gst.FlowReturn.OK
-        buffer = sample.get_buffer()
-        if not buffer:
+        if not (buffer := sample.get_buffer()):
             return Gst.FlowReturn.OK
-        caps = sample.get_caps()
-        if not caps:
+        if not (caps := sample.get_caps()):
             return Gst.FlowReturn.OK
         struct = caps.get_structure(0)
         exist, width = struct.get_int('width')
@@ -547,10 +530,7 @@ class ScannerPage(Adw.Bin):
         if not exist:
             log.error('Failed to get height from caps')
             return Gst.FlowReturn.ERROR
-        success, mapinfo = buffer.map(Gst.MapFlags.READ)
-        if not success:
-            log.error('Failed to get mapinfo from Gst AppSink.')
-            return Gst.FlowReturn.ERROR
+        mapinfo = buffer.map(Gst.MapFlags.READ)
         # The documentation https://lazka.github.io/pgi-docs/#Gst-1.0/classes/MapInfo.html says that
         # the .data is a bytes, but in Ubuntu, it is a memoryview.
         image_data = mapinfo.data.tobytes() if isinstance(mapinfo.data, memoryview) else mapinfo.data
@@ -686,8 +666,7 @@ class ScannerPage(Adw.Bin):
         w = texture.get_width()
         h = texture.get_height()
         log.info('Texture size: {}x{}', w, h)
-        img_bytes = texture.save_to_png_bytes().get_data()
-        if not img_bytes:
+        if not (img_bytes := texture.save_to_png_bytes().get_data()):
             log.debug('No image data in texture. Ignore.')
             return
         img_file = io.BytesIO(img_bytes)
@@ -771,8 +750,7 @@ class ScannerPage(Adw.Bin):
 
     def display_wifi_as_saved(self):
         """Set the current wifi connection status as saved."""
-        box = self.result_bin.get_child()
-        if not box:
+        if not (box := self.result_bin.get_child()):
             return
         if first_child := cast(Gtk.Widget | None, box.get_first_child()):
             if (btn := first_child.get_next_sibling()) and isinstance(btn, Gtk.Button):

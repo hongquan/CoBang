@@ -1,6 +1,6 @@
 using Gtk 4.0;
 
-template $GeneratorQRCodePage: Box {
+template $OldGeneratorQRCodePage: Box {
   orientation: vertical;
   spacing: 12;
   halign: center;
@@ -9,6 +9,10 @@ template $GeneratorQRCodePage: Box {
   vexpand: true;
 
   Picture qr_picture {
+    alternative-text: _("Generated QR code");
+    accessibility {
+      label: _("Generated QR code");
+    }
     width-request: 192;
     height-request: 192;
     content-fit: contain;

@@ -3,7 +3,7 @@ using Adw 1;
 
 template $CoBangWindow: Adw.ApplicationWindow {
   title: _("CoBang: QR scanner for Linux");
-  height-request: 450;
+  height-request: 520;
   show => $on_shown();
 
   Adw.Breakpoint {
@@ -91,7 +91,9 @@ template $CoBangWindow: Adw.ApplicationWindow {
           title: _("Generator");
           icon-name: 'mail-outbox-symbolic';
 
-          child: $GeneratorPage generator_page {};
+          child: $GeneratorPage generator_page {
+            in-mobile-screen: bind template.in_mobile_screen;
+          };
         }
       }
     };

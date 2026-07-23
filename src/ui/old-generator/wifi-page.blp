@@ -24,10 +24,8 @@ FilterListModel wifi_filter_model {
   filter: wifi_search_fine_filter;
 }
 
-template $GeneratorWiFiPage : Adw.Bin {
-  Box {
-    orientation: vertical;
-    spacing: 12;
+template $OldGeneratorWiFiPage : Adw.Bin {
+  Adw.Bin {
     margin-top: 12;
     margin-bottom: 12;
     margin-start: 12;
@@ -108,6 +106,7 @@ template $GeneratorWiFiPage : Adw.Bin {
             spacing: 4;
             halign: fill;
             Label {
+              /* xgettext:no-translate */
               label: "•";
               hexpand: true;
               halign: end;
@@ -124,6 +123,7 @@ template $GeneratorWiFiPage : Adw.Bin {
             spacing: 4;
             halign: fill;
             Label {
+              /* xgettext:no-translate */
               label: "•";
               hexpand: true;
               halign: end;

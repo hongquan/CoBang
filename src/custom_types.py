@@ -46,7 +46,15 @@ class WifiNetworkInfo(GObject.GObject):
         'changed': (GObject.SignalFlags.RUN_LAST, None, ()),
     }
 
-    def __init__(self, ssid: str, password: str = '', key_mgmt: str = 'none', is_active: bool = False, signal_strength: int = 0, uuid: str = ''):
+    def __init__(
+        self,
+        ssid: str,
+        password: str = '',
+        key_mgmt: str = 'none',
+        is_active: bool = False,
+        signal_strength: int = 0,
+        uuid: str = '',
+    ):
         super().__init__()
         self.uuid = uuid
         self.ssid = ssid
@@ -55,3 +63,16 @@ class WifiNetworkInfo(GObject.GObject):
         self.is_active = is_active
         self.signal_strength = signal_strength
         # Caller should update signal_strength_icon after setting strength.
+
+
+class GeneratorChoiceItem(GObject.GObject):
+    """A single item for generator combo rows, with a display label and an internal value."""
+
+    __gtype_name__ = 'GeneratorChoiceItem'
+    label = GObject.Property(type=str)
+    value = GObject.Property(type=str)
+
+    def __init__(self, label: str, value: str):
+        super().__init__()
+        self.label = label
+        self.value = value

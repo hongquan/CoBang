@@ -12,15 +12,15 @@ log = Logger(__name__)
 
 
 def build_wifi_info_display(wifi: WifiInfoMessage) -> tuple[Gtk.Box, Gtk.Button] | None:
-    builder = Gtk.Builder.new_from_resource('/vn/hoabinh/quan/CoBang/gtk/wifi-display.ui')
-    box = cast(Gtk.Box | None, builder.get_object('wifi_form'))
-    if not box:
-        return None
+    builder = Gtk.Builder.new_from_resource('/vn/hoabinh/quan/CoBang/gtk/scanner/wifi.ui')
+    if not (box := cast(Gtk.Box | None, builder.get_object('wifi_form'))):
+        return
     if label_ssid_value := cast(Gtk.Label | None, builder.get_object('ssid_value')):
         label_ssid_value.set_text(wifi.ssid)
     if label_password_value := cast(Gtk.Label | None, builder.get_object('password_value')):
         label_password_value.set_text(wifi.password or '')
-    btn = cast(Gtk.Button | None, builder.get_object('btn_connect'))
+    if not (btn := cast(Gtk.Button | None, builder.get_object('btn_connect'))):
+        return
     if wifi.connected and btn:
         log.debug('Set sensitive for {}', btn)
         btn.set_sensitive(False)
@@ -31,7 +31,7 @@ def build_wifi_info_display(wifi: WifiInfoMessage) -> tuple[Gtk.Box, Gtk.Button]
 
 
 def build_url_display(url: SplitResult) -> Gtk.Box | None:
-    builder = Gtk.Builder.new_from_resource('/vn/hoabinh/quan/CoBang/gtk/url-display.ui')
+    builder = Gtk.Builder.new_from_resource('/vn/hoabinh/quan/CoBang/gtk/scanner/url.ui')
     btn = cast(Gtk.LinkButton | None, builder.get_object('btn_link'))
     box = cast(Gtk.Box | None, builder.get_object('box_url'))
     if btn:

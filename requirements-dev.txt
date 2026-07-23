@@ -1,1 +1,3 @@
 pygobject-stubs
+logbook-stubs
+types-qrcode

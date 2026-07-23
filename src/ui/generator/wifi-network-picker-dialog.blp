@@ -1,0 +1,100 @@
+using Gtk 4.0;
+using Adw 1;
+using Gio 2.0;
+
+Gio.ListStore wifi_network_picker_list_store {
+  item-type: typeof<$WifiNetworkInfo>;
+}
+
+EveryFilter wifi_network_picker_filter {
+  StringFilter wifi_network_picker_search_filter {
+    expression: expr item as <$WifiNetworkInfo>.ssid;
+    ignore-case: true;
+    match-mode: substring;
+    search: bind wifi_network_picker_search_entry.text;
+  }
+  BoolFilter {
+    expression: expr item as <$WifiNetworkInfo>.erroneous;
+    invert: true;
+  }
+}
+
+FilterListModel wifi_network_picker_filter_model {
+  model: wifi_network_picker_list_store;
+  filter: wifi_network_picker_filter;
+}
+
+template $GeneratorWifiNetworkPickerDialog: Adw.Dialog {
+  content-width: 460;
+  content-height: 540;
+  title: _("Choose a saved Wi-Fi network");
+
+  Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {
+      [start]
+      Button wifi_network_picker_back_button {
+        label: _("Back");
+        clicked => $on_back_clicked();
+      }
+    }
+
+    content: Box {
+      orientation: vertical;
+      spacing: 12;
+      margin-top: 12;
+      margin-bottom: 12;
+      margin-start: 12;
+      margin-end: 12;
+
+      SearchEntry wifi_network_picker_search_entry {
+        placeholder-text: _("Search WiFi networks…");
+        stop-search => $on_search_stopped();
+      }
+
+      ScrolledWindow {
+        vexpand: true;
+        hexpand: true;
+        hscrollbar-policy: never;
+        child: ListView wifi_network_picker_list_view {
+          model: SingleSelection wifi_network_picker_selection {
+            model: wifi_network_picker_filter_model;
+          };
+          activate => $on_network_activated();
+
+          factory: BuilderListItemFactory {
+            template ListItem {
+              child: Box {
+                spacing: 12;
+
+                Label {
+                  label: bind template.item as <$WifiNetworkInfo>.ssid;
+                  ellipsize: middle;
+                  hexpand: true;
+                  halign: start;
+                }
+
+                Image {
+                  icon-name: "dialog-warning-symbolic";
+                  visible: bind template.item as <$WifiNetworkInfo>.erroneous;
+                  valign: center;
+                  halign: end;
+                  tooltip-text: _("Failed to retrieve Wi-Fi password");
+                }
+
+                Image {
+                  icon-name: bind template.item as <$WifiNetworkInfo>.signal_strength_icon;
+                  visible: bind template.item as <$WifiNetworkInfo>.is_active;
+                  valign: center;
+                  halign: end;
+                }
+              };
+            }
+          };
+
+          styles ['rich-list']
+        };
+      }
+    };
+  }
+}

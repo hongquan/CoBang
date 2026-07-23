@@ -1,26 +1,69 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $GeneratorPage : Adw.Bin {
-  Adw.ViewStack view_stack {
-    enable-transitions: true;
-    visible-child-name: bind template.active-sub-page;
-    notify::visible-child-name => $on_view_stack_visible_child_name_changed();
+template $GeneratorPage: Adw.Bin {
+  Adw.MultiLayoutView generator_page_multilayout {
+    layout-name: bind $generator_page_layout_name(template.in_mobile_screen) as <string>;
 
-    Adw.ViewStackPage {
-      name: 'starting';
-      child: $GeneratorStartingPage starting_page {};
+    Adw.Layout {
+      name: 'desktop';
 
+      content: Box {
+        orientation: horizontal;
+        spacing: 12;
+        margin-top: 12;
+        margin-bottom: 12;
+        margin-start: 12;
+        margin-end: 12;
+
+        Adw.LayoutSlot {
+          id: 'preview';
+          valign: start;
+          halign: center;
+          width-request: 240;
+        }
+
+        Separator {
+          orientation: vertical;
+        }
+
+        Adw.LayoutSlot {
+          id: 'form';
+        }
+      };
     }
 
-    Adw.ViewStackPage {
-      name: 'qr-code-result';
-      child: $GeneratorQRCodePage qr_code_page {};
+    Adw.Layout {
+      name: 'mobile';
+
+      content: Box {
+        orientation: vertical;
+        spacing: 12;
+        margin-top: 12;
+        margin-bottom: 12;
+        margin-start: 12;
+        margin-end: 12;
+
+        Adw.LayoutSlot {
+          id: 'form';
+          vexpand: true;
+        }
+
+        Adw.LayoutSlot {
+          id: 'preview';
+          halign: center;
+        }
+      };
     }
 
-    Adw.ViewStackPage {
-      name: 'wifi';
-      child: $GeneratorWiFiPage wifi_page {};
+    [preview]
+    Adw.Bin {
+      hexpand: false;
+
+      $GeneratorQRPreviewPane qr_preview_widget {}
     }
+
+    [form]
+    $GeneratorForm form {}
   }
 }

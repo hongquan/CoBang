@@ -1,0 +1,17 @@
+[[repos]]
+repo = "builtin"
+hooks = [
+    { id = "check-added-large-files" },
+    { id = "check-merge-conflict" },
+    { id = "check-yaml" },
+    { id = "check-toml" },
+    { id = "end-of-file-fixer" },
+    { id = "trailing-whitespace" },
+]
+
+[[repos]]
+repo = "local"
+hooks = [
+    { id = "ruff-check", name = "ruff check", language = "system", entry = "ruff check --fix src", files = "src/.*\\.py$" },
+    { id = "ruff-format", name = "ruff format", language = "system", entry = "ruff format src", files = "src/.*\\.py$" },
+]
