@@ -43,13 +43,9 @@ modules:
         dest-filename: autogen.sh
         commands:
           - autoreconf -vfi -W none
-
   - name: python3-build-tools
     buildsystem: simple
-    build-commands:
-      [
-        'python3 -m pip install -U --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} wheel setuptools flit-core cffi',
-      ]
+    build-commands: ['python3 -m pip install -U --no-index --find-links="file://${PWD}" --prefix=${FLATPAK_DEST} wheel setuptools flit-core cffi']
     sources:
       - type: file
         url: https://files.pythonhosted.org/packages/a3/dc/17031897dae0efacfea57dfd3a82fdd2a2aeb58e0ff71b77b87e44edc772/setuptools-80.9.0-py3-none-any.whl
@@ -81,11 +77,8 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/a0/e3/59cd50310fc9b59512193629e1984c1f95e5c8ae6e5d8c69532ccc65a7fe/pycparser-2.23-py3-none-any.whl
         sha256: e5c6e8d3fbad53479cab09ac03729e0a9faf2bee3db8208a550daf5af81a5934
-
-  - flatpak/generated-sources.yml
-
+  - flatpak/generated-sources.yaml
   # We don't build GStreamer because org.gnome.Platform 47+ already provides it
-
   - name: libportal
     buildsystem: meson
     sources:
@@ -97,13 +90,11 @@ modules:
           project-id: 230124
           stable-only: true
           url-template: https://github.com/flatpak/libportal/archive/$version.tar.gz
-
   - name: intltool
     sources:
       - type: archive
         url: https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
         sha256: 67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd
-
   - name: pwquality
     buildsystem: autotools
     config-opts:
@@ -112,14 +103,12 @@ modules:
       - type: git
         tag: libpwquality-1.4.5
         url: https://github.com/libpwquality/libpwquality.git
-
   - name: libndp
     buildsystem: autotools
     sources:
       - type: git
         tag: v1.8
         url: https://github.com/jpirko/libndp.git
-
   # Ref: https://gitlab.gnome.org/GNOME/gnome-control-center/-/tree/main/build-aux/flatpak
   - name: polkit
     buildsystem: meson
@@ -138,7 +127,6 @@ modules:
       - type: archive
         url: https://github.com/polkit-org/polkit/archive/refs/tags/126.tar.gz
         sha256: 2814a7281989f6baa9e57bd33bbc5e148827e2721ccef22aaf28ab2b376068e8
-
   - name: udev
     config-opts:
       - --disable-hwdb
@@ -165,7 +153,6 @@ modules:
       - type: archive
         url: https://github.com/eudev-project/eudev/archive/refs/tags/v3.2.14.tar.gz
         sha256: c340e6c51dfc5531ac0c0fa84a34b72162acf525f9023eb9cf4931b782c8f177
-
   - name: NetworkManager
     buildsystem: meson
     build-options:
@@ -197,7 +184,6 @@ modules:
       - type: archive
         url: https://github.com/NetworkManager/NetworkManager/archive/refs/tags/1.54.1.tar.gz
         sha256: 3bec7f01698e416c58fe823d042de87fdc0e5ddf54d1871a8b65216070eb9a93
-
   - name: cobang
     builddir: true
     buildsystem: meson
