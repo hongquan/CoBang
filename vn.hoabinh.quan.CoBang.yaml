@@ -1,6 +1,6 @@
 id: vn.hoabinh.quan.CoBang
 runtime: org.gnome.Platform
-runtime-version: "50"
+runtime-version: '50'
 sdk: org.gnome.Sdk
 command: cobang
 finish-args:
@@ -22,8 +22,8 @@ cleanup:
   - /share/gtk-doc
   - /share/man
   - /share/pkgconfig
-  - "*.la"
-  - "*.a"
+  - '*.la'
+  - '*.a'
 modules:
   - name: libzbar
     # Ref: https://gitlab.gnome.org/World/Authenticator
@@ -83,8 +83,8 @@ modules:
     buildsystem: meson
     sources:
       - type: archive
-        url: https://github.com/flatpak/libportal/archive/0.9.1.tar.gz
-        sha256: ea422b789ae487e04194d387bea031fd7485bf88a18aef8c767f7d1c29496a4e
+        url: https://github.com/flatpak/libportal/archive/0.10.0.tar.gz
+        sha256: e1b6913c6d9015bfa918ace86f82c30940982add97aed9c18cc929c5327054fd
         x-checker-data:
           type: anitya
           project-id: 230124
@@ -147,8 +147,8 @@ modules:
       - /share/gtk-doc
       - /share/man
       - /share/pkgconfig
-      - "*.la"
-      - "*.a"
+      - '*.la'
+      - '*.a'
     sources:
       - type: archive
         url: https://github.com/eudev-project/eudev/archive/refs/tags/v3.2.14.tar.gz
