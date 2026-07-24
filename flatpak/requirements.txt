@@ -1,3 +1,5 @@
 Pillow
 Logbook
 qrcode
+# Needed by Logbook
+typing-extensions
