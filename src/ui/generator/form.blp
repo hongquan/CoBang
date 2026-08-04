@@ -47,6 +47,12 @@ template $GeneratorForm: Adw.PreferencesPage {
       text: bind template.wifi-ssid bidirectional;
     }
 
+    Adw.SwitchRow wifi_hidden_row {
+      title: _("Hidden network");
+      subtitle: _("Non-broadcasting network that hides its SSID");
+      active: bind template.wifi-hidden bidirectional;
+    }
+
     Adw.PasswordEntryRow wifi_password_row {
       title: _("Password");
       text: bind template.wifi-password bidirectional;

@@ -124,6 +124,8 @@ class GeneratorPage(Adw.Bin):
             parts = [f'S:{ssid}', f'T:{auth}']
             if password:
                 parts.append(f'P:{wifi_escape(password)}')
+            if self.form.wifi_hidden:
+                parts.append('H:true')
             return 'WIFI:' + ';'.join(parts) + ';;'
         return ''
 

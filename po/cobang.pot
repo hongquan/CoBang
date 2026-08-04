@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 13:31+0700\n"
+"POT-Creation-Date: 2026-08-04 11:53+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,7 +75,7 @@ msgid "Please open webcam or choose an image."
 msgstr ""
 
 #: src/ui/scanner-page.blp:425
-msgid "Scanning..."
+msgid "Scanning…"
 msgstr ""
 
 #: src/ui/scanner-page.blp:439
@@ -116,26 +116,74 @@ msgstr ""
 msgid "Main Menu"
 msgstr ""
 
-#: src/ui/window.blp:105
+#: src/ui/window.blp:107
 msgid "_Keyboard Shortcuts"
 msgstr ""
 
-#: src/ui/window.blp:110
+#: src/ui/window.blp:112
 msgid "_About"
 msgstr ""
 
-#: src/app.py:55
+#: src/app.py:56
 msgid "Support the developer"
 msgstr ""
 
-#: src/app.py:56
+#: src/app.py:57
 #, python-format
 msgid ""
 "QR code / barcode scanner for Linux.\n"
 "%(donate_link)s"
 msgstr ""
 
-#: src/messages.py:50
+#: src/consts.py:55
+msgid "Text / URL"
+msgstr ""
+
+#: src/consts.py:57
+msgid "WiFi"
+msgstr ""
+
+#: src/consts.py:58
+msgid "vCard"
+msgstr ""
+
+#: src/consts.py:71
+msgid "Lowest"
+msgstr ""
+
+#: src/consts.py:73
+msgid "Low"
+msgstr ""
+
+#: src/consts.py:75
+msgid "Medium"
+msgstr ""
+
+#: src/consts.py:76
+msgid "High"
+msgstr ""
+
+#: src/consts.py:92
+msgid "No Security"
+msgstr ""
+
+#: src/consts.py:98
+msgid "WPA2 Personal"
+msgstr ""
+
+#: src/consts.py:102
+msgid "WPA2 Enterprise"
+msgstr ""
+
+#: src/consts.py:104
+msgid "WPA3 Enterprise"
+msgstr ""
+
+#: src/consts.py:105 src/pages/scanner.py:236
+msgid "Unknown"
+msgstr ""
+
+#: src/messages.py:51
 msgid ""
 "Add an image by:\n"
 "\n"
@@ -146,17 +194,15 @@ msgid ""
 "Remote images (http://..., sftp://...) work too!"
 msgstr ""
 
-#. Prepare dialog for saving file
-#: src/pages/generator_qr_code.py:69
+#: src/pages/generator.py:194
 msgid "PNG Image"
 msgstr ""
 
-#. Create a file dialog to save the image
-#: src/pages/generator_qr_code.py:72
+#: src/pages/generator.py:195
 msgid "Save QR Code"
 msgstr ""
 
-#: src/pages/generator_qr_code.py:119 src/pages/scanner.py:300
+#: src/pages/generator.py:243 src/pages/scanner.py:298
 msgid "Copied!"
 msgstr ""
 
@@ -172,14 +218,10 @@ msgstr ""
 msgid "Found unrecognized text."
 msgstr ""
 
-#: src/pages/scanner.py:236
-msgid "Unknown"
-msgstr ""
-
-#: src/pages/scanner.py:770
+#: src/pages/scanner.py:758
 msgid "Saved"
 msgstr ""
 
-#: src/ui.py:29
+#: src/ui.py:27
 msgid "Connected"
 msgstr ""

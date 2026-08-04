@@ -54,6 +54,7 @@ class GeneratorForm(Adw.PreferencesPage):
     generator_type_store: Gio.ListStore = Gtk.Template.Child()
     wifi_auth_method_store: Gio.ListStore = Gtk.Template.Child()
     choose_saved_wifi_network_row: Adw.ButtonRow = Gtk.Template.Child()
+    wifi_hidden_row: Adw.SwitchRow = Gtk.Template.Child()
 
     # GObject.Property declared as class attributes to avoid zuban no-redef
     # false positives from decorator-style getter/setter pairs.
@@ -63,6 +64,7 @@ class GeneratorForm(Adw.PreferencesPage):
     wifi_password = GObject.Property(type=str, default='')
     # NetworkManager key_mgmt string, see WifiAuthMethod.
     wifi_auth_method = GObject.Property(type=str, default=WifiAuthMethod.WPA_PSK.value)
+    wifi_hidden = GObject.Property(type=bool, default=False)
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -71,6 +73,7 @@ class GeneratorForm(Adw.PreferencesPage):
             'wifi-ssid',
             'wifi-password',
             'wifi-auth-method',
+            'wifi-hidden',
         ):
             self.connect(f'notify::{prop}', self.on_content_property_changed)
         self.populate_type_store()
@@ -162,6 +165,7 @@ class GeneratorForm(Adw.PreferencesPage):
         self.text_content = ''
         self.wifi_ssid = ''
         self.wifi_password = ''
+        self.wifi_hidden = False
         self.select_wifi_auth_method(WifiAuthMethod.WPA_PSK)
 
     def select_content_type(self, content_type: ContentType):
@@ -206,6 +210,7 @@ class GeneratorForm(Adw.PreferencesPage):
         self.select_content_type(ContentType.WIFI)
         self.wifi_ssid = wifi_info.ssid
         self.wifi_password = wifi_info.password or ''
+        self.wifi_hidden = wifi_info.hidden
         try:
             auth_method = WifiAuthMethod(wifi_info.key_mgmt)
         except ValueError:
