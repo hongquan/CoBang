@@ -81,7 +81,8 @@ class GeneratorWifiNetworkPickerDialog(Adw.Dialog):
         """Handle activation of a list item (Enter / double-click)."""
         if not (item := self.wifi_network_picker_selection.get_selected_item()):
             return
-        self.pick_and_close(item)
+        if isinstance(item, WifiNetworkInfo):  # Just a type guard
+            self.pick_and_close(item)
 
     @Gtk.Template.Callback()
     def on_back_clicked(self, button: Gtk.Button):
