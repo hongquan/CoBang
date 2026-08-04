@@ -62,7 +62,6 @@
 - `src/pages/generator.py`: Orchestrates generator flow with `GeneratorPage`.
 - `src/pages/generator_form.py`: `GeneratorForm` collects QR content (text/WiFi), appearance, and quality settings.
 - `src/pages/generator_qr_preview_pane.py`: `GeneratorQRPreviewPane` displays the generated QR code and action buttons.
-- `src/pages/old_generator*.py`: Legacy generator pages (to be removed).
 - `src/messages.py`: Parsing utilities for scanned content (WiFi, vCard, URL). Tests cover `parse_wifi_message` and `mecard_unescape` (`tests/test_parse.py`).
 - `src/net.py`: NetworkManager helpers for Wi-Fi connection management.
 - `src/prep.py`: Wraps Gio MIME detection and PIL-based preprocessing (`make_grayscale`, `invert_and_make_grayscale`).
