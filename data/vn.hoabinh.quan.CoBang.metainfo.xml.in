@@ -58,6 +58,11 @@
   </kudos>
 
   <releases>
+    <release version="2.7.0" date="2026-08-04" urgency="medium">
+      <description translate="no">
+        <p>Support hidden Wifi network in QR generation.</p>
+      </description>
+    </release>
     <release version="2.6.0" date="2026-07-23" urgency="medium">
       <description translate="no">
         <p>New UI for QR generator: preview and adjust QR properties.</p>

@@ -42,6 +42,7 @@ class WifiInfoMessage:
             ssid=wifi_info.ssid,
             password=password,
             auth_type=auth_type,
+            hidden=wifi_info.hidden,
             connected=wifi_info.is_active,
         )
 

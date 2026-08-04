@@ -200,6 +200,7 @@ def get_saved_wifi_networks(nm_client: NM.Client) -> list[WifiNetworkInfo]:
                 ssid=ssid,
                 password='',
                 key_mgmt=key_mgmt,
+                hidden=wireless_setting.get_hidden(),
                 is_active=ssid in active_ssids,
                 signal_strength=strengths.get(ssid, 0),
             )
