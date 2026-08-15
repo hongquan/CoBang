@@ -103,7 +103,9 @@ msgid "Quit"
 msgstr "Quitter"
 
 #: src/ui/window.blp:5
-msgid "CoBang: QR scanner for Linux"
+#, fuzzy
+#| msgid "CoBang: QR scanner for Linux"
+msgid "CoBang: QR scanner"
 msgstr "CoBang: Scanner QR pour Linux"
 
 #: src/ui/window.blp:44 src/ui/window.blp:80
@@ -132,8 +134,11 @@ msgstr "Soutenir le développeur"
 
 #: src/app.py:57
 #, python-format
+#, fuzzy
+#| msgid ""
+#| "QR code / barcode scanner for Linux.\n"
 msgid ""
-"QR code / barcode scanner for Linux.\n"
+"QR code / barcode scanner.\n"
 "%(donate_link)s"
 msgstr ""
 "Scanner de code QR / code-barres pour Linux.\n"

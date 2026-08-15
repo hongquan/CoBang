@@ -108,7 +108,8 @@ msgstr "Çık"
 
 #: src/ui/window.blp:5
 #, fuzzy
-msgid "CoBang: QR scanner for Linux"
+#| msgid "CoBang: QR scanner for Linux"
+msgid "CoBang: QR scanner"
 msgstr "Linux için QR tarayıcı"
 
 #: src/ui/window.blp:44 src/ui/window.blp:80
@@ -139,8 +140,11 @@ msgstr ""
 
 #: src/app.py:57
 #, python-format
+#, fuzzy
+#| msgid ""
+#| "QR code / barcode scanner for Linux.\n"
 msgid ""
-"QR code / barcode scanner for Linux.\n"
+"QR code / barcode scanner.\n"
 "%(donate_link)s"
 msgstr ""
 

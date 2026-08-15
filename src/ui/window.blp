@@ -2,7 +2,7 @@ using Gtk 4.0;
 using Adw 1;
 
 template $CoBangWindow: Adw.ApplicationWindow {
-  title: _("CoBang: QR scanner for Linux");
+  title: _("CoBang: QR scanner");
   height-request: 520;
   show => $on_shown();
 
@@ -47,7 +47,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
           }
 
           ToggleButton toggle_generator {
-            icon-name: 'mail-outbox-symbolic';
+            icon-name: 'document-new-symbolic';
             tooltip-text: _("Generator");
             active: bind toggle_scanner.active inverted;
             group: toggle_scanner;
@@ -89,7 +89,7 @@ template $CoBangWindow: Adw.ApplicationWindow {
         Adw.ViewStackPage stackpage_generator {
           name: 'generator';
           title: _("Generator");
-          icon-name: 'mail-outbox-symbolic';
+          icon-name: 'document-new-symbolic';
 
           child: $GeneratorPage generator_page {
             in-mobile-screen: bind template.in_mobile_screen;
