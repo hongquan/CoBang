@@ -58,6 +58,12 @@
   </kudos>
 
   <releases>
+    <release version="2.7.2" date="2026-08-19" urgency="medium">
+      <description translate="no">
+        <p>Fix missing "generator" icon in Flatpak.</p>
+        <p>Shorten title.</p>
+      </description>
+    </release>
     <release version="2.7.1" date="2026-08-04" urgency="medium">
       <description translate="no">
         <p>Support GStreamer v1.26 in Flatpak.</p>
