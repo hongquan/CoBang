@@ -45,9 +45,12 @@ class DummyAgent(NM.SecretAgentOld):
         super().init()
 
     def do_get_secrets(self, connection, connection_path, setting_name, hints, flags, callback, user_data):
-        error = GLib.Error.new_literal(NM.SecretAgentError.quark(), 'Not implemented', NM.SecretAgentError.FAILED)
-        empty_secrets = GLib.Variant('a{sa{sv}}', {})
-        callback(self, connection, empty_secrets, error)
+        error = GLib.Error.new_literal(
+            NM.SecretAgentError.quark(),
+            'No secrets found',
+            NM.SecretAgentError.NOSECRETS,
+        )
+        callback(self, connection, None, error)
 
     def do_save_secrets(self, connection, connection_path, callback, user_data):
         callback(self, connection, None)
