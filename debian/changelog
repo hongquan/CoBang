@@ -1,3 +1,10 @@
+cobang (2.7.2-1) resolute; urgency=medium
+
+  * Fix missing "generator" icon in Flatpak.
+  * Shorten title.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Wed, 19 Aug 2026 04:39:01 +0700
+
 cobang (2.7.0-1) resolute; urgency=medium
 
   * Support hidden Wifi network in QR generation.
