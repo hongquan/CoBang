@@ -121,7 +121,8 @@ class GeneratorForm(Adw.PreferencesPage):
             self.wifi_network_picker = GeneratorWifiNetworkPickerDialog()
             self.wifi_network_picker.connect('wifi-picked', self.on_wifi_network_picked)
         self.emit('request-saved-wifi-networks')
-        self.wifi_network_picker.present(self.get_root())
+        if (window := self.get_root()) and isinstance(window, Gtk.Widget):
+            self.wifi_network_picker.present(window)
 
     def on_wifi_network_picked(
         self,

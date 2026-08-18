@@ -530,10 +530,20 @@ class ScannerPage(Adw.Bin):
         if not exist:
             log.error('Failed to get height from caps')
             return Gst.FlowReturn.ERROR
-        mapinfo = buffer.map(Gst.MapFlags.READ)
+        # The `buffer.map` API has been changed between python3-gst v1.26 and v1.28.
+        if Gst.VERSION_MINOR > 27:
+            mapinfo = buffer.map(Gst.MapFlags.READ)
+        else:
+            success, mapinfo = cast(tuple[bool, Gst.MapInfo], buffer.map(Gst.MapFlags.READ))
+            if not success:
+                log.error('Failed to get mapinfo from Gst AppSink.')
+                return Gst.FlowReturn.ERROR
         # The documentation https://lazka.github.io/pgi-docs/#Gst-1.0/classes/MapInfo.html says that
         # the .data is a bytes, but in Ubuntu, it is a memoryview.
         image_data = mapinfo.data.tobytes() if isinstance(mapinfo.data, memoryview) else mapinfo.data
+        if not image_data:
+            log.debug('Empty data from MapInfo')
+            return Gst.FlowReturn.OK
         img = zbar.Image(width, height, 'Y800', image_data)
         n = self.zbar_scanner.scan(img)
         log.info('Scanned {} symbols', n)

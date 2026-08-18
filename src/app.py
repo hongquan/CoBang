@@ -54,7 +54,7 @@ from .window import CoBangWindow
 DEVELOPPERS = ('Nguyễn Hồng Quân <ng.hong.quan@gmail.com>',)
 ARTISTS = ('Shadd Gallegos', 'Lucide')
 DONATE_TITLE = _('Support the developer')
-COMMENTS = _('QR code / barcode scanner for Linux.\n%(donate_link)s') % {
+COMMENTS = _('QR code / barcode scanner.\n%(donate_link)s') % {
     'donate_link': f"<a href='https://ko-fi.com/hongquanvn'>{DONATE_TITLE}</a>."
 }
 log = Logger(__name__)

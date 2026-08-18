@@ -88,8 +88,6 @@ class WifiAuthMethod(StrEnum):
     WPA_EAP_SUITE_B_192 = 'wpa-eap-suite-b-192'
 
     def label(self) -> str:
-        if self == self.NONE:
-            return _('No Security')
         if self == self.DYN_WEB:
             return 'Dynamic WEP'
         if self == self.OWE:
@@ -102,12 +100,10 @@ class WifiAuthMethod(StrEnum):
             return _('WPA2 Enterprise')
         if self == self.WPA_EAP_SUITE_B_192:
             return _('WPA3 Enterprise')
-        return _('Unknown')
+        return _('No Security')
 
     def qr_auth(self) -> str:
         """Map to the auth string used in the generator form's WiFi security store."""
-        if self == self.NONE:
-            return 'nopass'
         if self in (self.DYN_WEB, self.OWE):
             return 'WEP'
         if self == self.WPA_PSK:
@@ -116,7 +112,7 @@ class WifiAuthMethod(StrEnum):
             return 'WPA2-EAP'
         if self in (self.SAE, self.WPA_EAP_SUITE_B_192):
             return 'WPA3'
-        return 'WPA'
+        return 'nopass'
 
 
 GST_SOURCE_NAME = 'webcam_source'

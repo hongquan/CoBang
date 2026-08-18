@@ -104,8 +104,8 @@ msgid "Quit"
 msgstr "Ukončiť"
 
 #: src/ui/window.blp:5
-msgid "CoBang: QR scanner for Linux"
-msgstr "CoBang: skener QR kódov pre Linux"
+msgid "CoBang: QR scanner"
+msgstr "CoBang: skener QR kódov"
 
 #: src/ui/window.blp:44 src/ui/window.blp:80
 msgid "Scanner"
@@ -134,10 +134,10 @@ msgstr "Podporujte vývojára"
 #: src/app.py:57
 #, python-format
 msgid ""
-"QR code / barcode scanner for Linux.\n"
+"QR code / barcode scanner.\n"
 "%(donate_link)s"
 msgstr ""
-"Skener QR / čiarových kódov pre Linux.\n"
+"Skener QR / čiarových kódov.\n"
 "%(donate_link)s"
 
 #: src/consts.py:55

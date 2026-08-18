@@ -102,8 +102,8 @@ msgid "Quit"
 msgstr "Zatvori aplikaciju"
 
 #: src/ui/window.blp:5
-msgid "CoBang: QR scanner for Linux"
-msgstr "CoBang: QR skener za Linux"
+msgid "CoBang: QR scanner"
+msgstr "CoBang: QR skener"
 
 #: src/ui/window.blp:44 src/ui/window.blp:80
 msgid "Scanner"
@@ -132,10 +132,10 @@ msgstr "Podrži programera"
 #: src/app.py:57
 #, python-format
 msgid ""
-"QR code / barcode scanner for Linux.\n"
+"QR code / barcode scanner.\n"
 "%(donate_link)s"
 msgstr ""
-"Skener QR koda / crtičnog koda za Linux.\n"
+"Skener QR koda / crtičnog koda.\n"
 "%(donate_link)s"
 
 #: src/consts.py:55
