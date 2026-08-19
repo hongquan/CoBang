@@ -45,9 +45,12 @@ class DummyAgent(NM.SecretAgentOld):
         super().init()
 
     def do_get_secrets(self, connection, connection_path, setting_name, hints, flags, callback, user_data):
-        error = GLib.Error.new_literal(NM.SecretAgentError.quark(), 'Not implemented', NM.SecretAgentError.FAILED)
-        empty_secrets = GLib.Variant('a{sa{sv}}', {})
-        callback(self, connection, empty_secrets, error)
+        error = GLib.Error.new_literal(
+            NM.SecretAgentError.quark(),
+            'No secrets found',
+            NM.SecretAgentError.NOSECRETS,
+        )
+        callback(self, connection, None, error)
 
     def do_save_secrets(self, connection, connection_path, callback, user_data):
         callback(self, connection, None)
@@ -77,7 +80,10 @@ class NMWifiSecretsRetriever(GObject.GObject):
                 continue
 
             w_sec = conn.get_setting_wireless_security()
-            if w_sec and w_sec.get_key_mgmt() in ('wpa-eap', 'wpa-eap-suite-b-192'):
+            if not w_sec:
+                log.debug('Skipping connection {} with no security settings', conn.get_uuid())
+                continue
+            if w_sec.get_key_mgmt() in ('wpa-eap', 'wpa-eap-suite-b-192'):
                 # For WPA-EAP (802-1x), we need to request 802-1x secrets explicitly
                 conn.get_secrets_async(
                     NM.SETTING_802_1X_SETTING_NAME,
