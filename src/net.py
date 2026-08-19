@@ -80,7 +80,10 @@ class NMWifiSecretsRetriever(GObject.GObject):
                 continue
 
             w_sec = conn.get_setting_wireless_security()
-            if w_sec and w_sec.get_key_mgmt() in ('wpa-eap', 'wpa-eap-suite-b-192'):
+            if not w_sec:
+                log.debug('Skipping connection {} with no security settings', conn.get_uuid())
+                continue
+            if w_sec.get_key_mgmt() in ('wpa-eap', 'wpa-eap-suite-b-192'):
                 # For WPA-EAP (802-1x), we need to request 802-1x secrets explicitly
                 conn.get_secrets_async(
                     NM.SETTING_802_1X_SETTING_NAME,
