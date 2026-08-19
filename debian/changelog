@@ -1,3 +1,10 @@
+cobang (2.8.0-1) resolute; urgency=medium
+
+  * Fix retrieving password for saved WiFi network.
+  * Updated Slovak language.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Wed, 19 Aug 2026 16:37:15 +0700
+
 cobang (2.7.2-1) resolute; urgency=medium
 
   * Fix missing "generator" icon in Flatpak.
