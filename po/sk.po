@@ -1,7 +1,7 @@
 # Slovak translation for CoBang.
 # Copyright (C) 2025 Nguyễn Hồng Quân
 # This file is distributed under the same license as the CoBang project.
-# Jozef Gaal <preklady@mayday.sk>, 2025.
+# Jozef Gaal <preklady@mayday.sk>, 2025, 2026.
 #
 #, fuzzy
 msgid ""
@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: CoBang v2.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-04 11:53+0700\n"
-"PO-Revision-Date: 2025-11-30 11:49+0100\n"
+"PO-Revision-Date: 2026-08-19 00:33+0200\n"
 "Last-Translator: Jozef Gaal <preklady@mayday.sk>\n"
 "Language-Team: Jozef Gaal <preklady@mayday.sk>\n"
 "Language: sk_SK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.9\n"
 
 #: src/ui/scanner-page.blp:58
 msgid "Show result"
@@ -41,8 +41,7 @@ msgstr "Pozastaviť"
 
 #: src/ui/scanner-page.blp:168
 msgid "Sandboxed, webcam hardware info is not available."
-msgstr ""
-"V režime Sandbox nie sú k dispozícii informácie o hardvéri webovej kamery."
+msgstr "V režime Sandbox nie sú k dispozícii informácie o hardvéri webovej kamery."
 
 #: src/ui/scanner-page.blp:221
 msgid "Mirror"
@@ -77,9 +76,8 @@ msgid "Please open webcam or choose an image."
 msgstr "Otvorte prosím webovú kameru alebo vyberte obrázok."
 
 #: src/ui/scanner-page.blp:425
-#, fuzzy
 msgid "Scanning…"
-msgstr "Skenovanie..."
+msgstr "Skenovanie…"
 
 #: src/ui/scanner-page.blp:439
 msgid "No result found."
@@ -142,47 +140,47 @@ msgstr ""
 
 #: src/consts.py:55
 msgid "Text / URL"
-msgstr ""
+msgstr "Text / URL adresa"
 
 #: src/consts.py:57
 msgid "WiFi"
-msgstr ""
+msgstr "WiFi"
 
 #: src/consts.py:58
 msgid "vCard"
-msgstr ""
+msgstr "vCard"
 
 #: src/consts.py:71
 msgid "Lowest"
-msgstr ""
+msgstr "Najnižšia"
 
 #: src/consts.py:73
 msgid "Low"
-msgstr ""
+msgstr "Nízka"
 
 #: src/consts.py:75
 msgid "Medium"
-msgstr ""
+msgstr "Stredná"
 
 #: src/consts.py:76
 msgid "High"
-msgstr ""
+msgstr "Vysoká"
 
 #: src/consts.py:92
 msgid "No Security"
-msgstr ""
+msgstr "Žiadne zabepečenie"
 
 #: src/consts.py:98
 msgid "WPA2 Personal"
-msgstr ""
+msgstr "Osobný WPA2"
 
 #: src/consts.py:102
 msgid "WPA2 Enterprise"
-msgstr ""
+msgstr "Podnikový WPA2"
 
 #: src/consts.py:104
 msgid "WPA3 Enterprise"
-msgstr ""
+msgstr "Podnikový WPA3"
 
 #: src/consts.py:105 src/pages/scanner.py:236
 msgid "Unknown"
