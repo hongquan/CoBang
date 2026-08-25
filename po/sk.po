@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoBang v2.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 11:53+0700\n"
+"POT-Creation-Date: 2026-08-25 23:04+0700\n"
 "PO-Revision-Date: 2026-08-19 00:33+0200\n"
 "Last-Translator: Jozef Gaal <preklady@mayday.sk>\n"
 "Language-Team: Jozef Gaal <preklady@mayday.sk>\n"
@@ -41,7 +41,8 @@ msgstr "Pozastaviť"
 
 #: src/ui/scanner-page.blp:168
 msgid "Sandboxed, webcam hardware info is not available."
-msgstr "V režime Sandbox nie sú k dispozícii informácie o hardvéri webovej kamery."
+msgstr ""
+"V režime Sandbox nie sú k dispozícii informácie o hardvéri webovej kamery."
 
 #: src/ui/scanner-page.blp:221
 msgid "Mirror"
@@ -166,25 +167,21 @@ msgstr "Stredná"
 msgid "High"
 msgstr "Vysoká"
 
-#: src/consts.py:92
-msgid "No Security"
-msgstr "Žiadne zabepečenie"
-
-#: src/consts.py:98
+#: src/consts.py:96
 msgid "WPA2 Personal"
 msgstr "Osobný WPA2"
 
-#: src/consts.py:102
+#: src/consts.py:100
 msgid "WPA2 Enterprise"
 msgstr "Podnikový WPA2"
 
-#: src/consts.py:104
+#: src/consts.py:102
 msgid "WPA3 Enterprise"
 msgstr "Podnikový WPA3"
 
-#: src/consts.py:105 src/pages/scanner.py:236
-msgid "Unknown"
-msgstr "Neznáme"
+#: src/consts.py:103
+msgid "No Security"
+msgstr "Žiadne zabepečenie"
 
 #: src/messages.py:51
 msgid ""
@@ -228,7 +225,11 @@ msgstr "Našla sa URL adresa. Kliknutím ju otvoríte:"
 msgid "Found unrecognized text."
 msgstr "Našiel sa nerozpoznaný text."
 
-#: src/pages/scanner.py:758
+#: src/pages/scanner.py:236
+msgid "Unknown"
+msgstr "Neznáme"
+
+#: src/pages/scanner.py:768
 msgid "Saved"
 msgstr "Uložené"
 
