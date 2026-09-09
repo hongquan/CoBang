@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 11:53+0700\n"
+"POT-Creation-Date: 2026-08-25 23:04+0700\n"
 "PO-Revision-Date: 2025-04-21 23:49-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -167,25 +167,21 @@ msgstr ""
 msgid "High"
 msgstr ""
 
-#: src/consts.py:92
-msgid "No Security"
-msgstr ""
-
-#: src/consts.py:98
+#: src/consts.py:96
 msgid "WPA2 Personal"
 msgstr ""
 
-#: src/consts.py:102
+#: src/consts.py:100
 msgid "WPA2 Enterprise"
 msgstr ""
 
-#: src/consts.py:104
+#: src/consts.py:102
 msgid "WPA3 Enterprise"
 msgstr ""
 
-#: src/consts.py:105 src/pages/scanner.py:236
-msgid "Unknown"
-msgstr "Desconocido"
+#: src/consts.py:103
+msgid "No Security"
+msgstr ""
 
 #: src/messages.py:51
 msgid ""
@@ -230,7 +226,11 @@ msgstr "URL encontrada. Haga clic para abrir:"
 msgid "Found unrecognized text."
 msgstr "Se ha encontrado un texto no reconocido."
 
-#: src/pages/scanner.py:758
+#: src/pages/scanner.py:236
+msgid "Unknown"
+msgstr "Desconocido"
+
+#: src/pages/scanner.py:768
 msgid "Saved"
 msgstr "Guardado"
 

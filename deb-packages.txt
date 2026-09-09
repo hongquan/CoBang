@@ -12,3 +12,4 @@ python3-logbook
 python3-zbar
 python3-qrcode
 libgirepository-2.0-dev
+librsvg2-bin

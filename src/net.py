@@ -11,7 +11,7 @@ gi.require_version('GObject', '2.0')
 from gi.repository import NM, Gio, GLib, GObject  # type: ignore[attr-defined]
 from logbook import Logger
 
-from .consts import BRAND_NAME
+from .consts import APP_ID, BRAND_NAME
 from .custom_types import WifiNetworkInfo
 from .messages import WifiInfoMessage
 
@@ -27,24 +27,29 @@ class NMWifiKeyMn(StrEnum):
     WPA2_EAP = 'wpa-eap'
 
 
+# Doc: https://lazka.github.io/pgi-docs/#NM-1.0/classes/SecretAgentOld.html
+# Ref: https://github.com/NetworkManager/NetworkManager/blob/main/examples/python/gi/secret-agent.py
 class DummyAgent(NM.SecretAgentOld):
     """
     A minimal SecretAgent implementation.
-    Registering this agent satisfies NetworkManager's requirement for an active
-    secret agent in the caller session, allowing get_secrets_async to successfully
-    return system-stored or 802-1x secrets which would otherwise fail with
-    'No agents were available for this request'.
+
+    `NM.RemoteConnection.get_secrets_async` requires an active secret agent, or
+    it will get "No agents were available for this request" error. So
+    this DummyAgent just stand there to satisfy `RemoteConnection` without doing anything.
     """
 
     def __init__(self):
         super().__init__(
-            identifier='org.cobang.NetworkManager.SecretAgent',
+            identifier=f'{APP_ID}.NetworkManager.SecretAgent',
             auto_register=True,
             capabilities=NM.SecretAgentCapabilities.VPN_HINTS,
         )
         super().init()
 
     def do_get_secrets(self, connection, connection_path, setting_name, hints, flags, callback, user_data):
+        # We return NOSECRETS to tell NetworkManager to ask another agent for password.
+        # I have no idea why NetworkManager can ask another agent but still requires us
+        # to provide a dummy agent T.T
         error = GLib.Error.new_literal(
             NM.SecretAgentError.quark(),
             'No secrets found',

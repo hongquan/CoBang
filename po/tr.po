@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vn.hoabinh.quan.CoBang master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-04 11:53+0700\n"
+"POT-Creation-Date: 2026-08-25 23:04+0700\n"
 "PO-Revision-Date: 2024-01-05 18:40+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <takim@gnome.org.tr>\n"
@@ -173,24 +173,20 @@ msgstr ""
 msgid "High"
 msgstr ""
 
-#: src/consts.py:92
-msgid "No Security"
-msgstr ""
-
-#: src/consts.py:98
+#: src/consts.py:96
 msgid "WPA2 Personal"
 msgstr ""
 
-#: src/consts.py:102
+#: src/consts.py:100
 msgid "WPA2 Enterprise"
 msgstr ""
 
-#: src/consts.py:104
+#: src/consts.py:102
 msgid "WPA3 Enterprise"
 msgstr ""
 
-#: src/consts.py:105 src/pages/scanner.py:236
-msgid "Unknown"
+#: src/consts.py:103
+msgid "No Security"
 msgstr ""
 
 #: src/messages.py:51
@@ -239,7 +235,11 @@ msgstr "URL bulundu. Açmak için tıklayın."
 msgid "Found unrecognized text."
 msgstr ""
 
-#: src/pages/scanner.py:758
+#: src/pages/scanner.py:236
+msgid "Unknown"
+msgstr ""
+
+#: src/pages/scanner.py:768
 msgid "Saved"
 msgstr "Kaydedildi"
 

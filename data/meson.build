@@ -14,6 +14,26 @@ endif
 
 themedir = get_option('datadir') / 'icons/hicolor'
 install_data('vn.hoabinh.quan.CoBang.svg', install_dir: themedir / 'scalable/apps')
+
+rsvg = find_program('rsvg-convert', required: false)
+if rsvg.found()
+  custom_target(
+    'cobang-icon-128',
+    input: 'vn.hoabinh.quan.CoBang.svg',
+    output: 'vn.hoabinh.quan.CoBang.png',
+    command: [
+      rsvg,
+      '-w', '128',
+      '-h', '128',
+      '-a',
+      '@INPUT@',
+      '-o', '@OUTPUT@',
+    ],
+    install: true,
+    install_dir: themedir / '128x128' / 'apps',
+  )
+endif
+
 subdir('48x48')
 subdir('24x24')
 
