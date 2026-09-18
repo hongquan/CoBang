@@ -83,8 +83,8 @@ modules:
     buildsystem: meson
     sources:
       - type: archive
-        url: https://github.com/flatpak/libportal/archive/0.10.0.tar.gz
-        sha256: e1b6913c6d9015bfa918ace86f82c30940982add97aed9c18cc929c5327054fd
+        url: https://github.com/flatpak/libportal/archive/0.11.0.tar.gz
+        sha256: 71482afa68b3373268e7df7feaf96ce99eb1a6701f60ff43a0d1b2594605eae8
         x-checker-data:
           type: anitya
           project-id: 230124
