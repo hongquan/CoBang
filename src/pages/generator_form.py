@@ -22,11 +22,11 @@ from __future__ import annotations
 from collections.abc import Iterable
 from typing import Self
 
-from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
-    Adw,  # pyright: ignore[reportMissingModuleSource]
-    Gio,  # pyright: ignore[reportMissingModuleSource]
-    GObject,  # pyright: ignore[reportMissingModuleSource]
-    Gtk,  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import (
+    Adw,
+    Gio,
+    GObject,
+    Gtk,
 )
 from logbook import Logger
 

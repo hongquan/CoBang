@@ -43,7 +43,7 @@ gi.require_version('GdkPixbuf', '2.0')
 gi.require_version('Rsvg', '2.0')
 
 
-from gi.repository import Adw, Gio, GLib, Gst, Gtk, Xdp  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import Adw, Gio, GLib, Gst, Gtk, Xdp
 from logbook import Logger
 
 from .consts import APP_ID, BRAND_NAME, SHORT_NAME

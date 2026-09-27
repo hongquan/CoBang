@@ -1,4 +1,4 @@
-from gi.repository import GObject  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import GObject
 
 from .consts import DeviceSourceType
 

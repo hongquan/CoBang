@@ -27,11 +27,11 @@ gi.require_version('Gdk', '4.0')
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
-from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
-    Gdk,  # pyright: ignore[reportMissingModuleSource]
-    Gio,  # pyright: ignore[reportMissingModuleSource]
-    GObject,  # pyright: ignore[reportMissingModuleSource]
-    Gtk,  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import (
+    Gdk,
+    Gio,
+    GObject,
+    Gtk,
 )
 
 from ..consts import ErrorCorrectionLevel

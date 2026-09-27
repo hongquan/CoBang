@@ -22,16 +22,16 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING, Self, cast
 
-from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import (  # type: ignore[attr-defined]
     NM,  # type: ignore[attr-defined]
-    Adw,  # pyright: ignore[reportMissingModuleSource]
-    Gio,  # pyright: ignore[reportMissingModuleSource]
-    GLib,  # pyright: ignore[reportMissingModuleSource]
-    GObject,  # pyright: ignore[reportMissingModuleSource]
-    Gtk,  # pyright: ignore[reportMissingModuleSource]
-    Xdp,  # pyright: ignore[reportMissingModuleSource]
-    XdpGtk4,  # pyright: ignore[reportMissingModuleSource]
-)  # pyright: ignore[reportMissingModuleSource]
+    Adw,
+    Gio,
+    GLib,
+    GObject,
+    Gtk,
+    Xdp,
+    XdpGtk4,
+)
 from logbook import Logger
 
 from .consts import (
@@ -43,7 +43,7 @@ from .messages import WifiInfoMessage
 from .net import (
     DummyAgent,
     NMWifiSecretsRetriever,
-    add_wifi_connection,
+    WiFiSaver,
     get_saved_wifi_networks,
     is_connected_same_wifi,
 )
@@ -72,8 +72,10 @@ class CoBangWindow(Adw.ApplicationWindow):
     generator_page: GeneratorPage = Gtk.Template.Child()
 
     portal_parent: Xdp.Parent
+    nm_client: NM.Client | None = None
+    nm_wifi_secrets_retriever: NMWifiSecretsRetriever
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.portal_parent = XdpGtk4.parent_new_gtk(self)
         action = Gio.SimpleAction.new('paste-image', None)
@@ -93,7 +95,6 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.nm_dummy_agent = DummyAgent()
 
         # Initialize NM.Client
-        self.nm_client: NM.Client | None = None
         self.nm_wifi_secrets_retriever = NMWifiSecretsRetriever()
         self.nm_wifi_secrets_retriever.connect('wifi-secrets-retrieved', self.cb_wifi_secrets_retrieved)
         NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
@@ -185,7 +186,9 @@ class CoBangWindow(Adw.ApplicationWindow):
             log.error('No NM.Client available to connect to WiFi')
             return
         log.info('Requesting to connect to WiFi: {}', wifi_info)
-        add_wifi_connection(wifi_info, self.cb_wifi_connect_done, self.nm_client)
+        delegate = WiFiSaver()
+        delegate.new_connection_saved.connect(self.on_wifi_saved)
+        delegate.save_connection(wifi_info, self.nm_client)
 
     def cb_networkmanager_client_init_done(self, client: NM.Client, res: Gio.AsyncResult):
         """Callback for NM.Client initialization."""
@@ -204,7 +207,6 @@ class CoBangWindow(Adw.ApplicationWindow):
                 self.generator_page.set_wifi_network_error(uuid)
             return
         log.info('Retrieved password for UUID {}', uuid)
-        # self.generator_page.update_wifi_password(uuid, password)
         if self.generator_page:
             self.generator_page.update_wifi_password(uuid, password)
 
@@ -223,21 +225,13 @@ class CoBangWindow(Adw.ApplicationWindow):
             wifi_info.signal_strength_icon = icon_name_for_wifi_strength(wifi_info.signal_strength)
 
         log.info('Retrieved {} saved WiFi networks (sorted)', len(wifi_networks))
-        # self.generator_page.populate_wifi_networks(wifi_networks)
         if self.generator_page:
             self.generator_page.populate_wifi_networks(wifi_networks)
 
         # Asynchronously retrieve password for each connection
         self.nm_wifi_secrets_retriever.request_saved_wifi_secrets(self.nm_client)
 
-    def cb_wifi_connect_done(self, client: NM.Client, res: Gio.AsyncResult):
-        """Callback for WiFi connection attempt."""
-        try:
-            conn = client.add_connection_finish(res)
-            log.info('Successfully added and activated WiFi connection: {}', conn.get_id())
-        except GLib.Error as e:
-            log.error('Failed to add/activate WiFi connection: {}', e)
-            return
+    def on_wifi_saved(self, saver: WiFiSaver, ssid: str):
         self.scanner_page.display_wifi_as_saved()
 
     def activate_pause_button(self):

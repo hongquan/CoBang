@@ -26,15 +26,15 @@ from typing import Any, Self, cast
 from urllib.parse import SplitResult, urlsplit
 
 import zbar  # zuban: ignore[import-not-found]
-from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
-    Adw,  # pyright: ignore[reportMissingModuleSource]
-    Gdk,  # pyright: ignore[reportMissingModuleSource]
-    Gio,  # pyright: ignore[reportMissingModuleSource]
-    GLib,  # pyright: ignore[reportMissingModuleSource]
-    GObject,  # pyright: ignore[reportMissingModuleSource]
-    Gst,  # pyright: ignore[reportMissingModuleSource]
-    GstApp,  # pyright: ignore[reportMissingModuleSource]
-    Gtk,  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import (
+    Adw,
+    Gdk,
+    Gio,
+    GLib,
+    GObject,
+    Gst,
+    GstApp,
+    Gtk,
 )
 from logbook import Logger
 from PIL import Image

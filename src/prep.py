@@ -1,4 +1,4 @@
-from gi.repository import Gio, Gst  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import Gio, Gst
 from logbook import Logger
 from PIL import Image, ImageOps
 
