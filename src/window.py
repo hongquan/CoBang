@@ -73,7 +73,6 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     portal_parent: Xdp.Parent
     nm_client: NM.Client | None = None
-    wifi_secrets_retriever: WifiSecretsRetriever
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -95,8 +94,6 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.nm_dummy_agent = DummyAgent()
 
         # Initialize NM.Client
-        self.wifi_secrets_retriever = WifiSecretsRetriever()
-        self.wifi_secrets_retriever.wifi_secrets_retrieved.connect(self.cb_wifi_secrets_retrieved)
         NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
     @property
@@ -187,6 +184,7 @@ class CoBangWindow(Adw.ApplicationWindow):
             return
         log.info('Requesting to connect to WiFi: {}', wifi_info)
         delegate = WiFiSaver()
+        # This delegate will be used once and disposed.
         delegate.new_connection_saved.connect(self.on_wifi_saved)
         delegate.save_connection(wifi_info, self.nm_client)
 
@@ -228,10 +226,15 @@ class CoBangWindow(Adw.ApplicationWindow):
         if self.generator_page:
             self.generator_page.populate_wifi_networks(wifi_networks)
 
-        # Asynchronously retrieve password for each connection
-        self.wifi_secrets_retriever.request_saved_wifi_secrets(self.nm_client)
+        # Asynchronously retrieve password for each connection.
+        retriever = WifiSecretsRetriever()
+        # This delegate will be used once and disposed: it is not attached to
+        # the window, only its in-flight requests keep it alive.
+        retriever.wifi_secrets_retrieved.connect(self.cb_wifi_secrets_retrieved)
+        retriever.request_saved_wifi_secrets(self.nm_client)
 
     def on_wifi_saved(self, saver: WiFiSaver, ssid: str):
+        # `saver` is no longer used and will be dropped.
         self.scanner_page.display_wifi_as_saved()
 
     def activate_pause_button(self):

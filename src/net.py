@@ -67,6 +67,14 @@ class DummyAgent(NM.SecretAgentOld):
 
 
 class WifiSecretsRetriever(GObject.GObject):
+    """One-shot helper retrieving stored secrets of saved WiFi connections.
+
+    The caller creates it per batch and must not attach it to any long-lived
+    object: the bound method callbacks of its in-flight `get_secrets_async()`
+    requests are the only owners, so the instance is dropped after the last
+    secret has been delivered.
+    """
+
     __gtype_name__ = 'NMWifiSecretsRetriever'
 
     # Emits only terminal outcomes:
@@ -97,6 +105,9 @@ class WifiSecretsRetriever(GObject.GObject):
                     self.on_wifi_secrets_retrieved,
                 )
             else:
+                # Each in-flight request owns a reference to the bound method
+                # `self.on_wifi_secrets_retrieved`, which in turn keeps this
+                # retriever alive until its callback delivered the secret.
                 conn.get_secrets_async(
                     NM.SETTING_WIRELESS_SECURITY_SETTING_NAME,
                     None,
