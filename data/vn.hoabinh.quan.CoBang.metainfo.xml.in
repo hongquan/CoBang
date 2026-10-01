@@ -58,6 +58,12 @@
   </kudos>
 
   <releases>
+    <release version="2.9.0" date="2026-10-01" urgency="medium">
+      <description translate="no">
+        <p>Attempt to fix crash due to video frame being processed after Python interpreter was destroyed.</p>
+        <p>Update to GNOME 51 in Flatpak.</p>
+      </description>
+    </release>
     <release version="2.8.0" date="2026-08-19" urgency="medium">
       <description translate="no">
         <p>Fix retrieving password for saved WiFi network.</p>
