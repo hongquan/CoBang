@@ -66,7 +66,7 @@ class DummyAgent(NM.SecretAgentOld):
         pass
 
 
-class NMWifiSecretsRetriever(GObject.GObject):
+class WifiSecretsRetriever(GObject.GObject):
     __gtype_name__ = 'NMWifiSecretsRetriever'
 
     # Emits only terminal outcomes:

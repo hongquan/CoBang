@@ -42,8 +42,8 @@ from .consts import (
 from .messages import WifiInfoMessage
 from .net import (
     DummyAgent,
-    NMWifiSecretsRetriever,
     WiFiSaver,
+    WifiSecretsRetriever,
     get_saved_wifi_networks,
     is_connected_same_wifi,
 )
@@ -73,7 +73,7 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     portal_parent: Xdp.Parent
     nm_client: NM.Client | None = None
-    nm_wifi_secrets_retriever: NMWifiSecretsRetriever
+    wifi_secrets_retriever: WifiSecretsRetriever
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -95,8 +95,8 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.nm_dummy_agent = DummyAgent()
 
         # Initialize NM.Client
-        self.nm_wifi_secrets_retriever = NMWifiSecretsRetriever()
-        self.nm_wifi_secrets_retriever.wifi_secrets_retrieved.connect(self.cb_wifi_secrets_retrieved)
+        self.wifi_secrets_retriever = WifiSecretsRetriever()
+        self.wifi_secrets_retriever.wifi_secrets_retrieved.connect(self.cb_wifi_secrets_retrieved)
         NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
     @property
@@ -199,7 +199,7 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.nm_client = client
         log.debug('NM client: {}', client)
 
-    def cb_wifi_secrets_retrieved(self, _src: NMWifiSecretsRetriever, uuid: str, failed: bool, password: str):
+    def cb_wifi_secrets_retrieved(self, _src: WifiSecretsRetriever, uuid: str, failed: bool, password: str):
         """Callback for WiFi secrets retrieval."""
         if failed:
             log.info('Failed to retrieve WiFi secrets for UUID: {}', uuid)
@@ -229,7 +229,7 @@ class CoBangWindow(Adw.ApplicationWindow):
             self.generator_page.populate_wifi_networks(wifi_networks)
 
         # Asynchronously retrieve password for each connection
-        self.nm_wifi_secrets_retriever.request_saved_wifi_secrets(self.nm_client)
+        self.wifi_secrets_retriever.request_saved_wifi_secrets(self.nm_client)
 
     def on_wifi_saved(self, saver: WiFiSaver, ssid: str):
         self.scanner_page.display_wifi_as_saved()
