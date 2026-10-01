@@ -1,3 +1,10 @@
+cobang (2.9.0-1) resolute; urgency=medium
+
+  * Attempt to fix crash due to video frame being processed after Python interpreter was destroyed.
+  * Update to GNOME 51 in Flatpak.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Thu, 01 Oct 2026 23:07:54 +0700
+
 cobang (2.8.0-1) resolute; urgency=medium
 
   * Fix retrieving password for saved WiFi network.
