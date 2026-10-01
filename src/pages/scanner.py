@@ -534,13 +534,17 @@ class ScannerPage(Adw.Bin):
             log.error('Failed to get height from caps')
             return Gst.FlowReturn.ERROR
         # The `buffer.map` API has been changed between python3-gst v1.26 and v1.28.
-        if Gst.VERSION_MINOR > 27:
-            mapinfo = buffer.map(Gst.MapFlags.READ)
-        else:
-            success, mapinfo = cast(tuple[bool, Gst.MapInfo], buffer.map(Gst.MapFlags.READ))
+        # Some runtimes (e.g. GNOME 51) ship GStreamer 1.28 C libraries but older
+        # Python overrides, so we detect the return shape at runtime instead of
+        # relying solely on Gst.VERSION_MINOR.
+        mapped = buffer.map(Gst.MapFlags.READ)
+        if isinstance(mapped, tuple):
+            success, mapinfo = cast(tuple[bool, Gst.MapInfo], mapped)
             if not success:
                 log.error('Failed to get mapinfo from Gst AppSink.')
                 return Gst.FlowReturn.ERROR
+        else:
+            mapinfo = cast(Gst.MapInfo, mapped)
         # The documentation https://lazka.github.io/pgi-docs/#Gst-1.0/classes/MapInfo.html says that
         # the .data is a bytes, but in Ubuntu, it is a memoryview.
         image_data = mapinfo.data.tobytes() if isinstance(mapinfo.data, memoryview) else mapinfo.data
