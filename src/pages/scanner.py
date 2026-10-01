@@ -246,6 +246,7 @@ class ScannerPage(Adw.Bin):
     def on_mirror_switch_toggled(self, switch: Gtk.Switch, *args):
         if not self.gst_pipeline:
             return
+        self.disable_webcam_consumption(self.gst_pipeline)
         if source := self.gst_pipeline.get_by_name(GST_SOURCE_NAME):
             source.set_state(Gst.State.NULL)
         self.gst_pipeline.set_state(Gst.State.NULL)
@@ -321,6 +322,7 @@ class ScannerPage(Adw.Bin):
             return
         # Destroy the old pipeline if any.
         if self.gst_pipeline:
+            self.disable_webcam_consumption(self.gst_pipeline)
             self.gst_pipeline.set_state(Gst.State.NULL)
             self.detach_gstreamer_sink()
             self.gst_pipeline = None
@@ -478,6 +480,7 @@ class ScannerPage(Adw.Bin):
         log.info('Stopping webcam')
         self.scanner_state = ScannerState.IDLE
         if self.gst_pipeline:
+            self.disable_webcam_consumption(self.gst_pipeline)
             self.gst_pipeline.set_state(Gst.State.NULL)
 
     def enable_webcam_consumption(self, pipeline: Gst.Pipeline):
@@ -547,16 +550,20 @@ class ScannerPage(Adw.Bin):
         if not image_data:
             log.debug('Empty data from MapInfo')
             return Gst.FlowReturn.OK
+        GLib.idle_add(self.scan_image_data, width, height, image_data)
+        return Gst.FlowReturn.OK
+
+    def scan_image_data(self, width: int, height: int, image_data: bytes) -> bool:
         img = zbar.Image(width, height, 'Y800', image_data)
         n = self.zbar_scanner.scan(img)
         log.info('Scanned {} symbols', n)
         if not n:
-            return Gst.FlowReturn.OK
+            return False
         # Found QR code in webcam screenshot
         # Pause video to prevent further processing.
         self.btn_pause.set_active(True)
-        GLib.idle_add(self.display_result, img.symbols)
-        return Gst.FlowReturn.OK
+        self.display_result(img.symbols)
+        return False
 
     def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data: Any) -> bool:
         # A private GstV4l2Device or GstPipeWireDevice type
