@@ -1,4 +1,4 @@
-pygobject-stubs
+git+https://github.com/pygobject/pygobject-stubs@959c470
 logbook-stubs
 types-qrcode
 click

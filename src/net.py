@@ -1,4 +1,3 @@
-from collections.abc import Callable
 from enum import StrEnum
 
 import gi
@@ -11,7 +10,7 @@ gi.require_version('GObject', '2.0')
 from gi.repository import NM, Gio, GLib, GObject  # type: ignore[attr-defined]
 from logbook import Logger
 
-from .consts import APP_ID, BRAND_NAME
+from .consts import APP_ID
 from .custom_types import WifiNetworkInfo
 from .messages import WifiInfoMessage
 
@@ -67,15 +66,25 @@ class DummyAgent(NM.SecretAgentOld):
         pass
 
 
-class NMWifiSecretsRetriever(GObject.GObject):
+class WifiSecretsRetriever(GObject.GObject):
+    """One-shot helper retrieving stored secrets of saved WiFi connections.
+
+    The caller creates it per batch and must not attach it to any long-lived
+    object: the bound method callbacks of its in-flight `get_secrets_async()`
+    requests are the only owners, so the instance is dropped after the last
+    secret has been delivered.
+    """
+
     __gtype_name__ = 'NMWifiSecretsRetriever'
 
-    __gsignals__ = {
-        # Emits only terminal outcomes:
-        # - failed=True when get_secrets_finish() fails.
-        # - failed=False with password when a non-empty password string is retrieved.
-        'wifi-secrets-retrieved': (GObject.SignalFlags.RUN_LAST, None, (str, bool, str)),
-    }
+    # Emits only terminal outcomes:
+    # - failed=True when get_secrets_finish() fails.
+    # - failed=False with password when a non-empty password string is retrieved.
+    wifi_secrets_retrieved = GObject.Signal(
+        'wifi-secrets-retrieved',
+        flags=GObject.SignalFlags.RUN_LAST,
+        arg_types=(str, bool, str),
+    )
 
     def request_saved_wifi_secrets(self, nm_client: NM.Client):
         """Request wireless secrets asynchronously for all saved WiFi connections."""
@@ -96,6 +105,9 @@ class NMWifiSecretsRetriever(GObject.GObject):
                     self.on_wifi_secrets_retrieved,
                 )
             else:
+                # Each in-flight request owns a reference to the bound method
+                # `self.on_wifi_secrets_retrieved`, which in turn keeps this
+                # retriever alive until its callback delivered the secret.
                 conn.get_secrets_async(
                     NM.SETTING_WIRELESS_SECURITY_SETTING_NAME,
                     None,
@@ -123,12 +135,12 @@ class NMWifiSecretsRetriever(GObject.GObject):
             log.warning('get_secrets_async for connection {} threw an error: {}', uuid, e)
 
         if isinstance(password, str) and password:
-            self.emit('wifi-secrets-retrieved', uuid, False, password)
+            self.wifi_secrets_retrieved.emit(uuid, False, password)
             return
 
         # Sometimes we failed to get secrets, log here to debug later.
         log.debug('Retrieved no secrets for WiFi connection {} ({})', uuid, conn.get_path())
-        self.emit('wifi-secrets-retrieved', uuid, True, '')
+        self.wifi_secrets_retrieved.emit(uuid, True, '')
 
 
 def is_connected_same_wifi(ssid: str, client: NM.Client) -> bool:
@@ -143,31 +155,45 @@ def is_connected_same_wifi(ssid: str, client: NM.Client) -> bool:
     return conn.get_id() == ssid
 
 
-def add_wifi_connection(info: WifiInfoMessage, callback: Callable, nm_client: NM.Client):
-    conn = NM.RemoteConnection()
-    base = NM.SettingConnection.new()
-    connection_name = f'{info.ssid} ({BRAND_NAME})'
-    base.set_property(NM.SETTING_CONNECTION_ID, connection_name)
-    conn.add_setting(base)
-    ssid = GLib.Bytes.new(info.ssid.encode())
-    wireless = NM.SettingWireless.new()
-    wireless.set_property(NM.SETTING_WIRELESS_SSID, ssid)
-    wireless.set_property(NM.SETTING_WIRELESS_HIDDEN, info.hidden)
-    secure = NM.SettingWirelessSecurity.new()
-    try:
-        key_mn = NMWifiKeyMn[info.auth_type.name] if info.auth_type else None
-    except KeyError:
-        key_mn = None
-    if key_mn:
-        secure.set_property(NM.SETTING_WIRELESS_SECURITY_KEY_MGMT, key_mn)
-    if info.password:
-        if key_mn == NMWifiKeyMn.WPA:
-            secure.set_property(NM.SETTING_WIRELESS_SECURITY_PSK, info.password)
-        elif key_mn == NMWifiKeyMn.WEP:
-            secure.set_property(NM.SETTING_WIRELESS_SECURITY_WEP_KEY0, info.password)
-    conn.add_setting(wireless)
-    conn.add_setting(secure)
-    nm_client.add_connection_async(conn, True, None, callback)
+class WiFiSaver(GObject.GObject):
+    __gtype_name__ = 'WiFiSaver'
+
+    new_connection_saved = GObject.Signal('new-connection-saved', arg_types=(str,))
+
+    def save_connection(self, info: WifiInfoMessage, nm_client: NM.Client):
+        conn = NM.RemoteConnection()
+        base = NM.SettingConnection.new()
+        connection_name = info.ssid
+        base.set_property(NM.SETTING_CONNECTION_ID, connection_name)
+        conn.add_setting(base)
+        ssid = GLib.Bytes.new(info.ssid.encode())
+        wireless = NM.SettingWireless.new()
+        wireless.set_property(NM.SETTING_WIRELESS_SSID, ssid)
+        wireless.set_property(NM.SETTING_WIRELESS_HIDDEN, info.hidden)
+        secure = NM.SettingWirelessSecurity.new()
+        try:
+            key_mn = NMWifiKeyMn[info.auth_type.name] if info.auth_type else None
+        except KeyError:
+            key_mn = None
+        if key_mn:
+            secure.set_property(NM.SETTING_WIRELESS_SECURITY_KEY_MGMT, key_mn)
+        if info.password:
+            if key_mn == NMWifiKeyMn.WPA:
+                secure.set_property(NM.SETTING_WIRELESS_SECURITY_PSK, info.password)
+            elif key_mn == NMWifiKeyMn.WEP:
+                secure.set_property(NM.SETTING_WIRELESS_SECURITY_WEP_KEY0, info.password)
+        conn.add_setting(wireless)
+        conn.add_setting(secure)
+        nm_client.add_connection_async(conn, True, None, self.on_connection_added, ssid)
+
+    def on_connection_added(self, client: NM.Client, res: Gio.AsyncResult, ssid: str):
+        try:
+            conn = client.add_connection_finish(res)
+            log.info('Successfully added and activated WiFi connection: {}', conn.get_id())
+        except GLib.Error as e:
+            log.error('Failed to add/activate WiFi connection: {}', e)
+            return
+        self.new_connection_saved.emit(ssid)
 
 
 def get_saved_wifi_networks(nm_client: NM.Client) -> list[WifiNetworkInfo]:

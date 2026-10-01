@@ -1,4 +1,4 @@
-from gi.repository import GObject  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import GObject
 
 from .consts import DeviceSourceType
 
@@ -12,9 +12,7 @@ class WebcamDeviceInfo(GObject.GObject):
     path = GObject.Property(type=str)
     name = GObject.Property(type=str)
 
-    __gsignals__ = {
-        'changed': (GObject.SignalFlags.RUN_LAST, None, ()),
-    }
+    changed = GObject.Signal('changed', flags=GObject.SignalFlags.RUN_LAST)
 
     def __init__(self, source_type: DeviceSourceType, path: str, name: str):
         super().__init__()
@@ -45,9 +43,7 @@ class WifiNetworkInfo(GObject.GObject):
     # Icon name representing signal strength (e.g. network-wireless-signal-excellent-symbolic)
     signal_strength_icon = GObject.Property(type=str, default='network-wireless-signal-none-symbolic')
 
-    __gsignals__ = {
-        'changed': (GObject.SignalFlags.RUN_LAST, None, ()),
-    }
+    changed = GObject.Signal('changed', flags=GObject.SignalFlags.RUN_LAST)
 
     def __init__(
         self,

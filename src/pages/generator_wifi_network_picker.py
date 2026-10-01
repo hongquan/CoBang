@@ -21,11 +21,11 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
-    Adw,  # pyright: ignore[reportMissingModuleSource]
-    Gio,  # pyright: ignore[reportMissingModuleSource]
-    GObject,  # pyright: ignore[reportMissingModuleSource]
-    Gtk,  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import (
+    Adw,
+    Gio,
+    GObject,
+    Gtk,
 )
 from logbook import Logger
 
@@ -49,9 +49,11 @@ class GeneratorWifiNetworkPickerDialog(Adw.Dialog):
     wifi_network_picker_selection: Gtk.SingleSelection = Gtk.Template.Child()
     wifi_network_picker_back_button: Gtk.Button = Gtk.Template.Child()
 
-    __gsignals__ = {
-        'wifi-picked': (GObject.SignalFlags.RUN_FIRST, None, (WifiNetworkInfo,)),
-    }
+    wifi_picked = GObject.Signal(
+        'wifi-picked',
+        flags=GObject.SignalFlags.RUN_FIRST,
+        arg_types=(WifiNetworkInfo,),
+    )
 
     def populate_wifi_networks(self, wifi_networks: Iterable[WifiNetworkInfo]):
         """Populate the picker list store with the given networks."""
@@ -97,5 +99,5 @@ class GeneratorWifiNetworkPickerDialog(Adw.Dialog):
     def pick_and_close(self, wifi_info: WifiNetworkInfo):
         """Emit the wifi-picked signal and close the dialog."""
         log.info('WiFi network picked from dialog: {}', wifi_info.ssid)
-        self.emit('wifi-picked', wifi_info)
+        self.wifi_picked.emit(wifi_info)
         self.close()

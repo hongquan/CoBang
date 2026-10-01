@@ -26,15 +26,15 @@ from typing import Any, Self, cast
 from urllib.parse import SplitResult, urlsplit
 
 import zbar  # zuban: ignore[import-not-found]
-from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
-    Adw,  # pyright: ignore[reportMissingModuleSource]
-    Gdk,  # pyright: ignore[reportMissingModuleSource]
-    Gio,  # pyright: ignore[reportMissingModuleSource]
-    GLib,  # pyright: ignore[reportMissingModuleSource]
-    GObject,  # pyright: ignore[reportMissingModuleSource]
-    Gst,  # pyright: ignore[reportMissingModuleSource]
-    GstApp,  # pyright: ignore[reportMissingModuleSource]
-    Gtk,  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import (
+    Adw,
+    Gdk,
+    Gio,
+    GLib,
+    GObject,
+    Gst,
+    GstApp,
+    Gtk,
 )
 from logbook import Logger
 from PIL import Image
@@ -109,17 +109,20 @@ class ScannerPage(Adw.Bin):
     gst_pipeline: Gst.Pipeline | None = None
     dev_monitor: Gst.DeviceMonitor | None = None
 
-    @GObject.Signal('request-camera-access', flags=GObject.SignalFlags.RUN_LAST)
-    def signal_request_camera_access(self):
-        pass
-
-    @GObject.Signal('poll-wifi-connection-status', flags=GObject.SignalFlags.RUN_LAST, arg_types=(object,))
-    def signal_poll_wifi_connection_status(self, info: WifiInfoMessage):
-        pass
-
-    @GObject.Signal('request-connect-wifi', flags=GObject.SignalFlags.RUN_LAST, arg_types=(object,))
-    def signal_request_connect_wifi(self, wifi_info: WifiInfoMessage):
-        pass
+    signal_request_camera_access = GObject.Signal(
+        'request-camera-access',
+        flags=GObject.SignalFlags.RUN_LAST,
+    )
+    poll_wifi_connection_status = GObject.Signal(
+        'poll-wifi-connection-status',
+        flags=GObject.SignalFlags.RUN_LAST,
+        arg_types=(object,),
+    )
+    request_connect_wifi = GObject.Signal(
+        'request-connect-wifi',
+        flags=GObject.SignalFlags.RUN_LAST,
+        arg_types=(object,),
+    )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -318,6 +321,7 @@ class ScannerPage(Adw.Bin):
             return
         # Destroy the old pipeline if any.
         if self.gst_pipeline:
+            self.disable_webcam_consumption(self.gst_pipeline)
             self.gst_pipeline.set_state(Gst.State.NULL)
             self.detach_gstreamer_sink()
             self.gst_pipeline = None
@@ -366,7 +370,7 @@ class ScannerPage(Adw.Bin):
         if self.is_outside_sandbox:
             self.discover_webcam()
         else:
-            self.emit('request-camera-access')
+            self.signal_request_camera_access.emit()
 
     def discover_webcam(self):
         """Discover webcam devices using GStreamer device monitor."""
@@ -475,6 +479,7 @@ class ScannerPage(Adw.Bin):
         log.info('Stopping webcam')
         self.scanner_state = ScannerState.IDLE
         if self.gst_pipeline:
+            self.disable_webcam_consumption(self.gst_pipeline)
             self.gst_pipeline.set_state(Gst.State.NULL)
 
     def enable_webcam_consumption(self, pipeline: Gst.Pipeline):
@@ -531,13 +536,17 @@ class ScannerPage(Adw.Bin):
             log.error('Failed to get height from caps')
             return Gst.FlowReturn.ERROR
         # The `buffer.map` API has been changed between python3-gst v1.26 and v1.28.
-        if Gst.VERSION_MINOR > 27:
-            mapinfo = buffer.map(Gst.MapFlags.READ)
-        else:
-            success, mapinfo = cast(tuple[bool, Gst.MapInfo], buffer.map(Gst.MapFlags.READ))
+        # Some runtimes (e.g. GNOME 51) ship GStreamer 1.28 C libraries but older
+        # Python overrides, so we detect the return shape at runtime instead of
+        # relying solely on Gst.VERSION_MINOR.
+        mapped = buffer.map(Gst.MapFlags.READ)
+        if isinstance(mapped, tuple):
+            success, mapinfo = cast(tuple[bool, Gst.MapInfo], mapped)
             if not success:
                 log.error('Failed to get mapinfo from Gst AppSink.')
                 return Gst.FlowReturn.ERROR
+        else:
+            mapinfo = cast(Gst.MapInfo, mapped)
         # The documentation https://lazka.github.io/pgi-docs/#Gst-1.0/classes/MapInfo.html says that
         # the .data is a bytes, but in Ubuntu, it is a memoryview.
         image_data = mapinfo.data.tobytes() if isinstance(mapinfo.data, memoryview) else mapinfo.data
@@ -582,6 +591,7 @@ class ScannerPage(Adw.Bin):
                 if cam_path == ppl_source.get_property('device') or cam_path == ppl_source.get_property(
                     'target-object'
                 ):
+                    self.disable_webcam_consumption(self.gst_pipeline)
                     self.gst_pipeline.set_state(Gst.State.NULL)
             # Find the entry of just-removed in the list and remove it.
             try:
@@ -722,7 +732,7 @@ class ScannerPage(Adw.Bin):
             pass
         if wifi := parse_wifi_message(raw_data):
             log.info('Parsed wifi message: {}', wifi)
-            self.emit('poll-wifi-connection-status', wifi)
+            self.poll_wifi_connection_status.emit(wifi)
             self.scanner_state = ScannerState.WIFI_FOUND
             self.scanner_bottom_sheet.set_open(True)
             return
@@ -756,7 +766,7 @@ class ScannerPage(Adw.Bin):
 
     def on_wifi_connect_button_clicked(self, button: Gtk.Button, wifi_info: WifiInfoMessage):
         log.info('Connect button clicked for wifi: {}', wifi_info)
-        self.emit('request-connect-wifi', wifi_info)
+        self.request_connect_wifi.emit(wifi_info)
 
     def display_wifi_as_saved(self):
         """Set the current wifi connection status as saved."""

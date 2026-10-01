@@ -220,8 +220,9 @@ You can package as Flatpak from the source.
 .. code-block:: console
 
   $ flatpak-builder _build --force-clean vn.hoabinh.quan.CoBang.yaml
-  $ flatpak-builder --run _build vn.hoabinh.quan.CoBang.yaml cobang
+  $ flatpak-builder --run --env=WAYLAND_DISPLAY=wayland-1 _build vn.hoabinh.quan.CoBang.yaml cobang
 
+You may face some problems with ``flatpak-builder --run`` as admitted `here <flatpak-builder-issue>_`_.
 
 Alternatives
 ++++++++++++
@@ -261,6 +262,7 @@ Credit
 .. _FlatHub: https://flathub.org/apps/details/vn.hoabinh.quan.CoBang
 .. _Decoder: https://gitlab.gnome.org/World/decoder/
 .. _Megapixels: https://git.sr.ht/~martijnbraam/megapixels
+.. _flatpak-builder-issue: https://github.com/flatpak/flatpak-builder/issues/598
 .. _author: https://quan.hoabinh.vn
 .. _lucide: https://lucide.dev/icons/image-plus
 .. _lucide_license: https://lucide.dev/license

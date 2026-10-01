@@ -27,11 +27,11 @@ gi.require_version('Gdk', '4.0')
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 
-from gi.repository import (  # pyright: ignore[reportMissingModuleSource]
-    Gdk,  # pyright: ignore[reportMissingModuleSource]
-    Gio,  # pyright: ignore[reportMissingModuleSource]
-    GObject,  # pyright: ignore[reportMissingModuleSource]
-    Gtk,  # pyright: ignore[reportMissingModuleSource]
+from gi.repository import (
+    Gdk,
+    Gio,
+    GObject,
+    Gtk,
 )
 
 from ..consts import ErrorCorrectionLevel
@@ -65,12 +65,21 @@ class GeneratorQRPreviewPane(Gtk.Box):
     )
     error_correction = GObject.Property(type=str, default=ErrorCorrectionLevel.LOWEST.value)
 
-    __gsignals__ = {
-        'download-clicked': (GObject.SignalFlags.RUN_FIRST, None, (Gtk.Button,)),
-        'copy-clicked': (GObject.SignalFlags.RUN_FIRST, None, (Gtk.Button,)),
-        'new-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
-        'qr-property-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
-    }
+    download_clicked = GObject.Signal(
+        'download-clicked',
+        flags=GObject.SignalFlags.RUN_FIRST,
+        arg_types=(Gtk.Button,),
+    )
+    copy_clicked = GObject.Signal(
+        'copy-clicked',
+        flags=GObject.SignalFlags.RUN_FIRST,
+        arg_types=(Gtk.Button,),
+    )
+    new_clicked = GObject.Signal('new-clicked', flags=GObject.SignalFlags.RUN_FIRST)
+    qr_property_changed = GObject.Signal(
+        'qr-property-changed',
+        flags=GObject.SignalFlags.RUN_FIRST,
+    )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -110,7 +119,7 @@ class GeneratorQRPreviewPane(Gtk.Box):
         log.warning('No DropDown item matches error_correction={}', level.value)
 
     def on_qr_property_changed(self, *args):
-        self.emit('qr-property-changed')
+        self.qr_property_changed.emit()
 
     def reset(self):
         """Reset appearance and quality controls to their initial state."""
@@ -128,14 +137,14 @@ class GeneratorQRPreviewPane(Gtk.Box):
     @Gtk.Template.Callback()
     def on_btn_download_clicked(self, btn: Gtk.Button):
         """Emit signal when the download button is clicked."""
-        self.emit('download-clicked', btn)
+        self.download_clicked.emit(btn)
 
     @Gtk.Template.Callback()
     def on_btn_copy_clicked(self, btn: Gtk.Button):
         """Emit signal when the copy button is clicked."""
-        self.emit('copy-clicked', btn)
+        self.copy_clicked.emit(btn)
 
     @Gtk.Template.Callback()
     def on_btn_new_clicked(self, btn: Gtk.Button):
         """Emit signal when the new button is clicked."""
-        self.emit('new-clicked')
+        self.new_clicked.emit()
