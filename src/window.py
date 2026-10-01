@@ -122,11 +122,6 @@ class CoBangWindow(Adw.ApplicationWindow):
         self.job_viewstack.set_visible_child_name(name)
 
     @Gtk.Template.Callback()
-    def on_close_request(self, *args) -> bool:
-        self.scanner_page.shutdown_webcam()
-        return False
-
-    @Gtk.Template.Callback()
     def on_shown(self, *args):
         if self.get_application():
             outside_sandbox = not self.portal.running_under_sandbox() and not os.getenv(ENV_EMULATE_SANDBOX)

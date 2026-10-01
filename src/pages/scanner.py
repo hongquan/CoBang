@@ -483,14 +483,6 @@ class ScannerPage(Adw.Bin):
             self.disable_webcam_consumption(self.gst_pipeline)
             self.gst_pipeline.set_state(Gst.State.NULL)
 
-    def shutdown_webcam(self):
-        """Stop webcam and disable appsink signals before window teardown."""
-        if not self.gst_pipeline:
-            return
-        self.disable_webcam_consumption(self.gst_pipeline)
-        self.gst_pipeline.set_state(Gst.State.NULL)
-        self.gst_pipeline = None
-
     def enable_webcam_consumption(self, pipeline: Gst.Pipeline):
         if app_sink := cast(GstApp.AppSink | None, pipeline.get_by_name(GST_APP_SINK_NAME)):
             log.debug('Appsink: {}', app_sink)
@@ -527,15 +519,6 @@ class ScannerPage(Adw.Bin):
             self.play_webcam()
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
-        # This callback runs on a GStreamer streaming thread. During app teardown,
-        # Gst objects can be in a half-destroyed state, so guard against errors.
-        try:
-            return self.extract_webcam_sample(appsink)
-        except AttributeError:
-            log.exception('Error extracting webcam sample, likely during teardown')
-            return Gst.FlowReturn.ERROR
-
-    def extract_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if appsink.is_eos():
             return Gst.FlowReturn.OK
         if not (sample := cast(Gst.Sample | None, appsink.try_pull_sample(1))):
@@ -545,9 +528,6 @@ class ScannerPage(Adw.Bin):
         if not (caps := sample.get_caps()):
             return Gst.FlowReturn.OK
         struct = caps.get_structure(0)
-        if not struct:
-            log.debug('No structure in caps, likely during teardown')
-            return Gst.FlowReturn.OK
         exist, width = struct.get_int('width')
         if not exist:
             log.error('Failed to get width from caps')
@@ -574,8 +554,6 @@ class ScannerPage(Adw.Bin):
         return Gst.FlowReturn.OK
 
     def scan_image_data(self, width: int, height: int, image_data: bytes) -> bool:
-        if not self.gst_pipeline:
-            return False
         img = zbar.Image(width, height, 'Y800', image_data)
         n = self.zbar_scanner.scan(img)
         log.info('Scanned {} symbols', n)
