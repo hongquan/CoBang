@@ -70,9 +70,10 @@ class GeneratorPage(Adw.Bin):
     qr_preview_widget: GeneratorQRPreviewPane = Gtk.Template.Child()
     form: GeneratorForm = Gtk.Template.Child()
 
-    __gsignals__ = {
-        'request-saved-wifi-networks': (GObject.SignalFlags.RUN_FIRST, None, ()),
-    }
+    request_saved_wifi_networks = GObject.Signal(
+        'request-saved-wifi-networks',
+        flags=GObject.SignalFlags.RUN_FIRST,
+    )
 
     def __init__(self, **kwargs) -> None:
         """Initialize the generator page."""
@@ -80,15 +81,15 @@ class GeneratorPage(Adw.Bin):
         self.current_paintable: Gdk.Texture | None = None
         self.current_text: str = ''
         # React to form changes by regenerating the QR code.
-        self.form.connect('content-changed', self.on_form_content_changed)
+        self.form.content_changed.connect(self.on_form_content_changed)
         # The form asks the window to fetch saved WiFi networks when the picker is opened.
-        self.form.connect('request-saved-wifi-networks', self.on_form_request_saved_wifi_networks)
+        self.form.request_saved_wifi_networks.connect(self.on_form_request_saved_wifi_networks)
         # Preview-pane appearance/quality changes also regenerate the QR code.
-        self.qr_preview_widget.connect('qr-property-changed', self.on_form_content_changed)
+        self.qr_preview_widget.qr_property_changed.connect(self.on_form_content_changed)
         # Wire pane button signals to handlers.
-        self.qr_preview_widget.connect('download-clicked', self.on_btn_download_clicked)
-        self.qr_preview_widget.connect('copy-clicked', self.on_btn_copy_clicked)
-        self.qr_preview_widget.connect('new-clicked', self.on_btn_new_clicked)
+        self.qr_preview_widget.download_clicked.connect(self.on_btn_download_clicked)
+        self.qr_preview_widget.copy_clicked.connect(self.on_btn_copy_clicked)
+        self.qr_preview_widget.new_clicked.connect(self.on_btn_new_clicked)
 
     def on_form_content_changed(self, *args):
         """Regenerate QR code when any form field changes."""
@@ -96,7 +97,7 @@ class GeneratorPage(Adw.Bin):
 
     def on_form_request_saved_wifi_networks(self, _src: GeneratorForm):
         """Forward the form's request for saved WiFi networks up to the window."""
-        self.emit('request-saved-wifi-networks')
+        self.request_saved_wifi_networks.emit()
 
     @Gtk.Template.Callback()
     def generator_page_layout_name(self, wd: Self, is_mobile: bool) -> str:

@@ -27,9 +27,9 @@ Window
 
 ## Pattern
 
-### 1. Child Page: Declare Signal (2 ways)
+### 1. Child Page: Declare Signal (class attribute style)
 
-**Decorator style** (`generator_starting.py:38-44`):
+Prefer `GObject.Signal` as a class attribute (same style as `WiFiSaver`):
 
 ```python
 from gi.repository import GObject, Gtk
@@ -38,22 +38,16 @@ from gi.repository import GObject, Gtk
 class GeneratorStartingPage(Gtk.Box):
     __gtype_name__ = 'GeneratorStartingPage'
 
-    @GObject.Signal('generate-qr', flags=GObject.SignalFlags.RUN_LAST, arg_types=(str,))
-    def signal_generate_qr(self, text: str):  # Emitted when work is done
-        pass
+    generate_qr = GObject.Signal(
+        'generate-qr',
+        flags=GObject.SignalFlags.RUN_LAST,
+        arg_types=(str,),
+    )
+    switch_to_wifi = GObject.Signal('switch-to-wifi', flags=GObject.SignalFlags.RUN_LAST)
 ```
 
-**`__gsignals__` dict style** (`generator_wifi.py:46-50`):
-
-```python
-class GeneratorWiFiPage(Adw.Bin):
-    __gtype_name__ = 'GeneratorWiFiPage'
-
-    __gsignals__ = {
-        'generate-qr-for-wifi': (GObject.SignalFlags.RUN_FIRST, None, (WifiNetworkInfo,)),
-        'back-to-start': (GObject.SignalFlags.RUN_FIRST, None, ()),
-    }
-```
+If the natural attribute name would clash with a method, pick a distinct attribute
+(e.g. `signal_request_camera_access`) while keeping the signal string name stable.
 
 ### 2. Child Page: Emit Signal with Result
 
@@ -62,7 +56,7 @@ class GeneratorWiFiPage(Adw.Bin):
 def on_btn_generate_clicked(self, _btn: Gtk.Button):
     text = self.text_entry.get_text().strip()
     if text:
-        self.emit('generate-qr', text)  # Emit result upward
+        self.generate_qr.emit(text)  # Emit result upward
 ```
 
 ### 3. Parent Page: Wire Signal to Handler in `__init__`
@@ -78,10 +72,10 @@ class GeneratorPage(Adw.Bin):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Wire each child's signal to appropriate handler
-        self.starting_page.connect('generate-qr', self.on_qr_code_generation_requested)
-        self.starting_page.connect('switch-to-wifi', self.on_switch_to_wifi)
-        self.wifi_page.connect('generate-qr-for-wifi', self.on_generate_qr_for_wifi_network)
-        self.wifi_page.connect('back-to-start', self.on_back_to_start)
+        self.starting_page.generate_qr.connect(self.on_qr_code_generation_requested)
+        self.starting_page.switch_to_wifi.connect(self.on_switch_to_wifi)
+        self.wifi_page.generate_qr_for_wifi.connect(self.on_generate_qr_for_wifi_network)
+        self.wifi_page.back_to_start.connect(self.on_back_to_start)
 ```
 
 ### 4. Parent Page: Handle Result
@@ -116,9 +110,11 @@ def on_qr_code_generation_requested(self, _src: GeneratorStartingPage, text: str
 
 1. **Child page: Declare signal**
    ```python
-   @GObject.Signal('work-done', flags=GObject.SignalFlags.RUN_LAST, arg_types=(MyResult,))
-   def signal_work_done(self, result: MyResult):
-       pass
+   work_done = GObject.Signal(
+       'work-done',
+       flags=GObject.SignalFlags.RUN_LAST,
+       arg_types=(MyResult,),
+   )
    ```
 
 2. **Child page: Emit when work completes**
@@ -126,12 +122,12 @@ def on_qr_code_generation_requested(self, _src: GeneratorStartingPage, text: str
    @Gtk.Template.Callback()
    def on_work_trigger(self, _btn: Gtk.Button):
        result = self.perform_work()
-       self.emit('work-done', result)
+       self.work_done.emit(result)
    ```
 
 3. **Parent page: Wire signal in `__init__`**
    ```python
-   self.child_page.connect('work-done', self.on_child_work_done)
+   self.child_page.work_done.connect(self.on_child_work_done)
    ```
 
 4. **Parent page: Handle result (may coordinate with OTHER children)**

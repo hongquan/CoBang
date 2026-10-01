@@ -44,10 +44,11 @@ class GeneratorForm(Adw.PreferencesPage):
 
     __gtype_name__ = 'GeneratorForm'
 
-    __gsignals__ = {
-        'content-changed': (GObject.SignalFlags.RUN_FIRST, None, ()),
-        'request-saved-wifi-networks': (GObject.SignalFlags.RUN_FIRST, None, ()),
-    }
+    content_changed = GObject.Signal('content-changed', flags=GObject.SignalFlags.RUN_FIRST)
+    request_saved_wifi_networks = GObject.Signal(
+        'request-saved-wifi-networks',
+        flags=GObject.SignalFlags.RUN_FIRST,
+    )
 
     content_type_row: Adw.ComboRow = Gtk.Template.Child()
     wifi_auth_method_row: Adw.ComboRow = Gtk.Template.Child()
@@ -119,8 +120,8 @@ class GeneratorForm(Adw.PreferencesPage):
         """Open the WiFi network picker dialog and ask the window for networks."""
         if self.wifi_network_picker is None:
             self.wifi_network_picker = GeneratorWifiNetworkPickerDialog()
-            self.wifi_network_picker.connect('wifi-picked', self.on_wifi_network_picked)
-        self.emit('request-saved-wifi-networks')
+            self.wifi_network_picker.wifi_picked.connect(self.on_wifi_network_picked)
+        self.request_saved_wifi_networks.emit()
         if (window := self.get_root()) and isinstance(window, Gtk.Widget):
             self.wifi_network_picker.present(window)
 
@@ -146,7 +147,7 @@ class GeneratorForm(Adw.PreferencesPage):
 
     def on_content_property_changed(self, *args):
         """Emit a single signal when any QR-relevant property changes."""
-        self.emit('content-changed')
+        self.content_changed.emit()
 
     def get_selected_type_item(self) -> GeneratorChoiceItem | None:
         """Return the selected content type item."""

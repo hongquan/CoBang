@@ -69,12 +69,14 @@ class DummyAgent(NM.SecretAgentOld):
 class NMWifiSecretsRetriever(GObject.GObject):
     __gtype_name__ = 'NMWifiSecretsRetriever'
 
-    __gsignals__ = {
-        # Emits only terminal outcomes:
-        # - failed=True when get_secrets_finish() fails.
-        # - failed=False with password when a non-empty password string is retrieved.
-        'wifi-secrets-retrieved': (GObject.SignalFlags.RUN_LAST, None, (str, bool, str)),
-    }
+    # Emits only terminal outcomes:
+    # - failed=True when get_secrets_finish() fails.
+    # - failed=False with password when a non-empty password string is retrieved.
+    wifi_secrets_retrieved = GObject.Signal(
+        'wifi-secrets-retrieved',
+        flags=GObject.SignalFlags.RUN_LAST,
+        arg_types=(str, bool, str),
+    )
 
     def request_saved_wifi_secrets(self, nm_client: NM.Client):
         """Request wireless secrets asynchronously for all saved WiFi connections."""
@@ -122,12 +124,12 @@ class NMWifiSecretsRetriever(GObject.GObject):
             log.warning('get_secrets_async for connection {} threw an error: {}', uuid, e)
 
         if isinstance(password, str) and password:
-            self.emit('wifi-secrets-retrieved', uuid, False, password)
+            self.wifi_secrets_retrieved.emit(uuid, False, password)
             return
 
         # Sometimes we failed to get secrets, log here to debug later.
         log.debug('Retrieved no secrets for WiFi connection {} ({})', uuid, conn.get_path())
-        self.emit('wifi-secrets-retrieved', uuid, True, '')
+        self.wifi_secrets_retrieved.emit(uuid, True, '')
 
 
 def is_connected_same_wifi(ssid: str, client: NM.Client) -> bool:

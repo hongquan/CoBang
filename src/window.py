@@ -83,12 +83,12 @@ class CoBangWindow(Adw.ApplicationWindow):
         action.connect('activate', self.on_paste_image)
 
         # Connect signals from scanner page
-        self.scanner_page.connect('request-camera-access', self.on_camera_access_requested)
-        self.scanner_page.connect('poll-wifi-connection-status', self.on_wifi_connection_status_polled)
-        self.scanner_page.connect('request-connect-wifi', self.on_wifi_connecting_requested)
+        self.scanner_page.signal_request_camera_access.connect(self.on_camera_access_requested)
+        self.scanner_page.poll_wifi_connection_status.connect(self.on_wifi_connection_status_polled)
+        self.scanner_page.request_connect_wifi.connect(self.on_wifi_connecting_requested)
 
         # Connect signals from generator page
-        self.generator_page.connect('request-saved-wifi-networks', self.on_request_saved_wifi_networks)
+        self.generator_page.request_saved_wifi_networks.connect(self.on_request_saved_wifi_networks)
 
         # Keep a reference to the dummy agent on the window so it stays alive
         # and remains registered with NetworkManager.
@@ -96,7 +96,7 @@ class CoBangWindow(Adw.ApplicationWindow):
 
         # Initialize NM.Client
         self.nm_wifi_secrets_retriever = NMWifiSecretsRetriever()
-        self.nm_wifi_secrets_retriever.connect('wifi-secrets-retrieved', self.cb_wifi_secrets_retrieved)
+        self.nm_wifi_secrets_retriever.wifi_secrets_retrieved.connect(self.cb_wifi_secrets_retrieved)
         NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
     @property

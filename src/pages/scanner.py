@@ -109,17 +109,20 @@ class ScannerPage(Adw.Bin):
     gst_pipeline: Gst.Pipeline | None = None
     dev_monitor: Gst.DeviceMonitor | None = None
 
-    @GObject.Signal('request-camera-access', flags=GObject.SignalFlags.RUN_LAST)
-    def signal_request_camera_access(self):
-        pass
-
-    @GObject.Signal('poll-wifi-connection-status', flags=GObject.SignalFlags.RUN_LAST, arg_types=(object,))
-    def signal_poll_wifi_connection_status(self, info: WifiInfoMessage):
-        pass
-
-    @GObject.Signal('request-connect-wifi', flags=GObject.SignalFlags.RUN_LAST, arg_types=(object,))
-    def signal_request_connect_wifi(self, wifi_info: WifiInfoMessage):
-        pass
+    signal_request_camera_access = GObject.Signal(
+        'request-camera-access',
+        flags=GObject.SignalFlags.RUN_LAST,
+    )
+    poll_wifi_connection_status = GObject.Signal(
+        'poll-wifi-connection-status',
+        flags=GObject.SignalFlags.RUN_LAST,
+        arg_types=(object,),
+    )
+    request_connect_wifi = GObject.Signal(
+        'request-connect-wifi',
+        flags=GObject.SignalFlags.RUN_LAST,
+        arg_types=(object,),
+    )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -366,7 +369,7 @@ class ScannerPage(Adw.Bin):
         if self.is_outside_sandbox:
             self.discover_webcam()
         else:
-            self.emit('request-camera-access')
+            self.signal_request_camera_access.emit()
 
     def discover_webcam(self):
         """Discover webcam devices using GStreamer device monitor."""
@@ -722,7 +725,7 @@ class ScannerPage(Adw.Bin):
             pass
         if wifi := parse_wifi_message(raw_data):
             log.info('Parsed wifi message: {}', wifi)
-            self.emit('poll-wifi-connection-status', wifi)
+            self.poll_wifi_connection_status.emit(wifi)
             self.scanner_state = ScannerState.WIFI_FOUND
             self.scanner_bottom_sheet.set_open(True)
             return
@@ -756,7 +759,7 @@ class ScannerPage(Adw.Bin):
 
     def on_wifi_connect_button_clicked(self, button: Gtk.Button, wifi_info: WifiInfoMessage):
         log.info('Connect button clicked for wifi: {}', wifi_info)
-        self.emit('request-connect-wifi', wifi_info)
+        self.request_connect_wifi.emit(wifi_info)
 
     def display_wifi_as_saved(self):
         """Set the current wifi connection status as saved."""
