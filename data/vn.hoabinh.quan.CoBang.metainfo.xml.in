@@ -58,6 +58,11 @@
   </kudos>
 
   <releases>
+    <release version="2.9.1" date="2026-10-03" urgency="medium">
+      <description translate="no">
+        <p>Revert the attempt to fix crash in v2.9.0 because it does not work and introduces more bug.</p>
+      </description>
+    </release>
     <release version="2.9.0" date="2026-10-01" urgency="medium">
       <description translate="no">
         <p>Attempt to fix crash due to video frame being processed after Python interpreter was destroyed.</p>
