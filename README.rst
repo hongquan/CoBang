@@ -245,7 +245,7 @@ Credit
 .. [2] Ubuntu PPA requires to upload source package, not prebuilt binary. Read more at: https://help.launchpad.net/Packaging/PPA/Uploading
 
 
-.. _co_bang: https://nhipsongquehuong.com/bien-co-bang-thanh-do-thu-cong-dep-mat
+.. _co_bang: https://vietnamnet.vn/nghe-quanh-nam-ngoi-gay-tay-bien-co-dai-thanh-hang-hieu-2037215.html
 .. _Gtk: https://www.gtk.org/
 .. _GStreamer: https://gstreamer.freedesktop.org/
 .. _ZBar: https://github.com/mchehab/zbar
