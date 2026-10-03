@@ -244,7 +244,3 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     def process_file_from_commandline(self, file: Gio.File, mime_type: str):
         self.scanner_page.process_commandline_file(file, mime_type)
-
-    def do_close_request(self):
-        self.scanner_page.stop_webcam()
-        return False

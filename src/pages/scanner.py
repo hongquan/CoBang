@@ -321,7 +321,6 @@ class ScannerPage(Adw.Bin):
             return
         # Destroy the old pipeline if any.
         if self.gst_pipeline:
-            self.disable_webcam_consumption(self.gst_pipeline)
             self.gst_pipeline.set_state(Gst.State.NULL)
             self.detach_gstreamer_sink()
             self.gst_pipeline = None
@@ -479,7 +478,6 @@ class ScannerPage(Adw.Bin):
         log.info('Stopping webcam')
         self.scanner_state = ScannerState.IDLE
         if self.gst_pipeline:
-            self.disable_webcam_consumption(self.gst_pipeline)
             self.gst_pipeline.set_state(Gst.State.NULL)
 
     def enable_webcam_consumption(self, pipeline: Gst.Pipeline):
@@ -591,7 +589,6 @@ class ScannerPage(Adw.Bin):
                 if cam_path == ppl_source.get_property('device') or cam_path == ppl_source.get_property(
                     'target-object'
                 ):
-                    self.disable_webcam_consumption(self.gst_pipeline)
                     self.gst_pipeline.set_state(Gst.State.NULL)
             # Find the entry of just-removed in the list and remove it.
             try:
