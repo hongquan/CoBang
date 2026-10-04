@@ -111,7 +111,7 @@ class CoBangApplication(Adw.Application):
         We raise the application's main window, creating it if
         necessary.
         """
-        if not (win := self.props.active_window):
+        if not (win := self.get_active_window()):
             win = CoBangWindow(application=self)
         win.present()
 
@@ -127,14 +127,16 @@ class CoBangApplication(Adw.Application):
         if not mime_type or not mime_type.startswith('image/'):
             log.info('Not an image. Ignore.')
             return
-        if not (win := cast(CoBangWindow | None, self.props.active_window)):
+        if not (win := cast(CoBangWindow | None, self.get_active_window())):
             win = CoBangWindow(application=self)
         win.process_file_from_commandline(file, mime_type)
         win.present()
 
-    def on_about_action(self, *args):
+    def on_about_action(self, *args) -> None:
         """Callback for the app.about action."""
-        if win := cast(CoBangWindow | None, self.props.active_window):
+        if not (win := self.get_active_window()):
+            return
+        if isinstance(win, CoBangWindow):
             win.activate_pause_button()
         version = self.get_version() or '0.0'
         year = datetime.now().year
@@ -153,7 +155,7 @@ class CoBangApplication(Adw.Application):
         )
         # Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
         # about.set_translator_credits(_('translator-credits'))
-        about.present(self.props.active_window)
+        about.present(win)
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.
@@ -169,6 +171,12 @@ class CoBangApplication(Adw.Application):
         self.add_action(action)
         if shortcuts:
             self.set_accels_for_action(f'app.{name}', shortcuts)
+
+    def quit(self) -> None:
+        log.info('About to quit')
+        if (win := self.get_active_window()) and isinstance(win, CoBangWindow):
+            win.prepare_to_close()
+        super().quit()
 
 
 def main(version):

@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import io
 import os
+import threading
 from locale import gettext as _
 from typing import Any, Self, cast
 from urllib.parse import SplitResult, urlsplit
@@ -108,6 +109,10 @@ class ScannerPage(Adw.Bin):
 
     gst_pipeline: Gst.Pipeline | None = None
     dev_monitor: Gst.DeviceMonitor | None = None
+    # Because the `on_new_webcam_sample` callback is run in a GStreamer
+    # thread, which may be started when the Python interpreter has been destroyed,
+    # we use this event to short-circuit those threads when the app is about to quit.
+    shuttingdown: threading.Event
 
     signal_request_camera_access = GObject.Signal(
         'request-camera-access',
@@ -126,6 +131,7 @@ class ScannerPage(Adw.Bin):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.shuttingdown = threading.Event()
 
         self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.REQUESTING)
 
@@ -273,7 +279,7 @@ class ScannerPage(Adw.Bin):
             if source := self.gst_pipeline.get_by_name(GST_SOURCE_NAME):
                 source.set_state(Gst.State.PAUSED)
             return
-        # There is issue with the pipewiresrc when changing from PAUSED to PLAYING, an error is thrown:
+        # There is an issue with pipewiresrc when changing from PAUSED to PLAYING: an error is thrown:
         # "gst_caps_intersect_full: assertion 'GST_IS_CAPS (caps2)' failed".
         # So we stop the video and play again.
         source = self.gst_pipeline.get_by_name(GST_SOURCE_NAME)
@@ -405,12 +411,15 @@ class ScannerPage(Adw.Bin):
         flip_method = 'horizontal-flip' if self.mirror_switch.get_active() else 'none'
         # leaky=2 on the display queue prevents a stalled GL sink from back-pressuring the tee
         # and blocking the scan branch.
+        # In `appsink`, the `leaky-type` property is introduced in GStreamer 1.28 but
+        # somehow is not unrecognized in Ubuntu 26.04,
+        # so we still need to use the old `drop`.
         cmd = (
             f'pipewiresrc name={GST_SOURCE_NAME} fd={video_fd} ! '
             f'videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
             f'queue leaky=2 ! videoscale ! {build_display_sink_desc()} '
             't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
-            f'appsink name={GST_APP_SINK_NAME} max_buffers=2 drop=1'
+            f'appsink name={GST_APP_SINK_NAME} max_buffers=2 drop=1 leaky-type=2'
         )
         log.info('To build pipeline: {}', cmd)
         try:
@@ -434,11 +443,14 @@ class ScannerPage(Adw.Bin):
         source_desc = ' '.join(source_desc_parts)
         # leaky=2 on the display queue prevents a stalled GL sink from back-pressuring the tee
         # and blocking the scan branch.
+        # In `appsink`, the `leaky-type` property is introduced in GStreamer 1.28 but
+        # somehow is not unrecognized in Ubuntu 26.04,
+        # so we still need to use the old `drop`.
         cmd = (
             f'{source_desc} ! videoflip name={GST_FLIP_FILTER_NAME} method={flip_method} ! videoconvert ! tee name=t ! '
             f'queue leaky=2 ! videoscale ! {build_display_sink_desc()} '
             't. ! queue leaky=2 max-size-buffers=2 ! videoconvert ! video/x-raw,format=GRAY8 ! '
-            f'appsink name={GST_APP_SINK_NAME} max_buffers=2 drop=1'
+            f'appsink name={GST_APP_SINK_NAME} max_buffers=2 drop=1 leaky-type=2'
         )
         log.info('To build pipeline: {}', cmd)
         try:
@@ -496,6 +508,22 @@ class ScannerPage(Adw.Bin):
         else:
             log.warning('Appsink not found in pipeline')
 
+
+    def teardown_webcam(self):
+        """Synchronously stop the webcam and disconnect its sample callback.
+
+        Safe to call on shutdown: after this returns, no `on_new_webcam_sample`
+        callback can be running or be invoked again.
+        """
+        if not self.gst_pipeline:
+            return
+        self.disable_webcam_consumption(self.gst_pipeline)
+        # Setting NULL blocks until the streaming threads have been joined,
+        # guaranteeing no in-flight appsink callback remains.
+        self.gst_pipeline.set_state(Gst.State.NULL)
+        self.detach_gstreamer_sink()
+        self.gst_pipeline = None
+
     def play_webcam_and_enable_consumption(self, gst_pipeline: Gst.Pipeline):
         if not self.btn_pause.get_active():
             self.play_webcam()
@@ -516,6 +544,8 @@ class ScannerPage(Adw.Bin):
             self.play_webcam()
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
+        if self.shuttingdown.is_set():
+            return Gst.FlowReturn.FLUSHING
         if appsink.is_eos():
             return Gst.FlowReturn.OK
         if not (sample := cast(Gst.Sample | None, appsink.try_pull_sample(1))):
@@ -551,15 +581,8 @@ class ScannerPage(Adw.Bin):
         if not image_data:
             log.debug('Empty data from MapInfo')
             return Gst.FlowReturn.OK
-        img = zbar.Image(width, height, 'Y800', image_data)
-        n = self.zbar_scanner.scan(img)
-        log.info('Scanned {} symbols', n)
-        if not n:
-            return Gst.FlowReturn.OK
-        # Found QR code in webcam screenshot
-        # Pause video to prevent further processing.
-        self.btn_pause.set_active(True)
-        GLib.idle_add(self.display_result, img.symbols)
+        GLib.idle_add(self.decode_from_video_sample, image_data, width, height)
+        buffer.unmap(mapinfo)
         return Gst.FlowReturn.OK
 
     def on_device_monitor_message(self, bus: Gst.Bus, message: Gst.Message, user_data: Any) -> bool:
@@ -679,6 +702,17 @@ class ScannerPage(Adw.Bin):
             return
         self.decode_from_texture(paintable)
 
+    def decode_from_video_sample(self, image_data: bytes, width: int, height: int):
+        img = zbar.Image(width, height, 'Y800', image_data)
+        n = self.zbar_scanner.scan(img)
+        log.info('Scanned {} symbols', n)
+        if not n:
+            return
+        # Found QR code in webcam screenshot
+        # Pause video to prevent further processing.
+        self.btn_pause.set_active(True)
+        GLib.idle_add(self.display_result, img.symbols)
+
     def decode_from_texture(self, texture: Gdk.Texture):
         w = texture.get_width()
         h = texture.get_height()
@@ -708,7 +742,7 @@ class ScannerPage(Adw.Bin):
 
     def display_result(self, symbols: zbar.SymbolSet):
         # There can be more than one QR code in the image. We just pick the first.
-        # No need to to handle StopIteration exception, because this function is called
+        # No need to handle StopIteration exception, because this function is called
         # only when QR code is detected from the image.
         sym: zbar.Symbol = next(iter(symbols))
         log.info('QR type: {}', sym.type)

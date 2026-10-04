@@ -129,6 +129,10 @@ class CoBangWindow(Adw.ApplicationWindow):
             self.is_outside_sandbox = outside_sandbox
         GLib.timeout_add(1000, self.check_and_start_webcam)
 
+    @Gtk.Template.Callback()
+    def on_close_request(self, window):
+        self.prepare_to_close()
+
     def check_and_start_webcam(self):
         scan_source = self.scanner_page.scan_source_viewstack.get_visible_child_name()
         log.info('Scan source: {}', scan_source)
@@ -244,3 +248,10 @@ class CoBangWindow(Adw.ApplicationWindow):
 
     def process_file_from_commandline(self, file: Gio.File, mime_type: str):
         self.scanner_page.process_commandline_file(file, mime_type)
+
+    def prepare_to_close(self):
+        self.scanner_page.shuttingdown.set()
+        # Tear down the GStreamer pipeline synchronously. It is to make sure
+        # all the pending `on_new_webcam_sample` callbacks are processed before
+        # the Python interpreter is destroyed, avoiding crash (observed with Python 3.14).
+        self.scanner_page.teardown_webcam()
