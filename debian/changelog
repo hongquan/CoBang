@@ -1,3 +1,9 @@
+cobang (2.10.0-1) resolute; urgency=medium
+
+  * Fix a crash due to webcam appsink callback being called after the Python interpreter was destroyed.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Sun, 04 Oct 2026 23:19:41 +0700
+
 cobang (2.9.1-1) resolute; urgency=medium
 
   * Revert the attempt to fix crash in v2.9.0 because it does not work and introduces more bug.
