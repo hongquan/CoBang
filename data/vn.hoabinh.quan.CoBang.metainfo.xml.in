@@ -9,7 +9,7 @@
   <name>CoBang</name>
   <summary>QR code scanner for Linux desktop</summary>
   <description>
-    <p>A missing native QR Code and barcode scanner application for Linux desktop.</p>
+    <p>A native QR code and barcode scanner application for Linux desktop, filling the gap of a missing desktop-friendly scanner tool.</p>
     <p>CoBang can scan barcode, QR code from webcam or from static image.
  To be part of Linux desktop modernization, it is set to support Wayland (not XWayland), and only implement native GUI (no web crap).</p>
   </description>
@@ -50,7 +50,9 @@
   <url type="homepage">https://github.com/hongquan/CoBang</url>
   <url type="bugtracker">https://github.com/hongquan/CoBang/issues</url>
   <url type="translate">https://github.com/hongquan/CoBang/tree/main/po</url>
-  <developer_name>Nguyễn Hồng Quân</developer_name>
+  <developer id="vn.hoabinh.quan">
+    <name>Nguyễn Hồng Quân</name>
+  </developer>
   <update_contact>ng.hong.quan_AT_gmail.com</update_contact>
   <kudos>
     <kudo>ModernToolkit</kudo>
@@ -58,6 +60,11 @@
   </kudos>
 
   <releases>
+    <release version="2.10.0" date="2026-10-04" urgency="medium">
+      <description translate="no">
+        <p>Fix a crash due to webcam appsink callback being called after the Python interpreter was destroyed.</p>
+      </description>
+    </release>
     <release version="2.9.1" date="2026-10-03" urgency="medium">
       <description translate="no">
         <p>Revert the attempt to fix crash in v2.9.0 because it does not work and introduces more bug.</p>
