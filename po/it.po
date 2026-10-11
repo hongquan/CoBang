@@ -1,14 +1,14 @@
 # Italian translations for PROJECT.
 # Copyright (C) 2020 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# ALBANO BATTISTELLA <albanobattistella@gmail.com>, 2020,2021,2023,2024,2025.
+# ALBANO BATTISTELLA <albanobattistella@gmail.com>, 2020,2021,2023,2024,2025,2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-25 23:04+0700\n"
-"PO-Revision-Date: 2025-12-25 17:10+0200\n"
+"PO-Revision-Date: 2026-10-04 17:10+0200\n"
 "Last-Translator: Albano Battistella <albanobattistella@gmail.com>\n"
 "Language-Team: it <LL@li.org>\n"
 "Language: it\n"
@@ -76,9 +76,8 @@ msgid "Please open webcam or choose an image."
 msgstr "Apri la webcam o scegli un'immagine."
 
 #: src/ui/scanner-page.blp:425
-#, fuzzy
 msgid "Scanning…"
-msgstr "Scansione in corso..."
+msgstr "Scansione…"
 
 #: src/ui/scanner-page.blp:439
 msgid "No result found."
@@ -141,47 +140,47 @@ msgstr ""
 
 #: src/consts.py:55
 msgid "Text / URL"
-msgstr ""
+msgstr "Testo / URL"
 
 #: src/consts.py:57
 msgid "WiFi"
-msgstr ""
+msgstr "WiFi"
 
 #: src/consts.py:58
 msgid "vCard"
-msgstr ""
+msgstr "vCard"
 
 #: src/consts.py:71
 msgid "Lowest"
-msgstr ""
+msgstr "Più basso"
 
 #: src/consts.py:73
 msgid "Low"
-msgstr ""
+msgstr "Basso"
 
 #: src/consts.py:75
 msgid "Medium"
-msgstr ""
+msgstr "Medio"
 
 #: src/consts.py:76
 msgid "High"
-msgstr ""
+msgstr "Alto"
 
 #: src/consts.py:96
 msgid "WPA2 Personal"
-msgstr ""
+msgstr "WPA2 Personale"
 
 #: src/consts.py:100
 msgid "WPA2 Enterprise"
-msgstr ""
+msgstr "WPA2 Enterprise"
 
 #: src/consts.py:102
 msgid "WPA3 Enterprise"
-msgstr ""
+msgstr "WPA3 Enterprise"
 
 #: src/consts.py:103
 msgid "No Security"
-msgstr ""
+msgstr "Nessuna sicurezza"
 
 #: src/messages.py:51
 msgid ""
