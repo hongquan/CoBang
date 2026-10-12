@@ -39,7 +39,7 @@ log = Logger(__name__)
 
 
 @Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/generator/form.ui')
-class GeneratorForm(Adw.PreferencesPage):
+class GeneratorForm(Adw.Bin):
     """The form for configuring QR code content."""
 
     __gtype_name__ = 'GeneratorForm'

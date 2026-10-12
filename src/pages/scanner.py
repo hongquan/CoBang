@@ -249,19 +249,12 @@ class ScannerPage(Adw.Bin):
         return file.get_basename() or '' if file else ''
 
     @Gtk.Template.Callback()
-    def on_mirror_switch_toggled(self, switch: Gtk.Switch, *args):
+    def on_mirror_switch_toggled(self, switch: Gtk.Switch, state: bool) -> bool:
         if not self.gst_pipeline:
-            return
-        if source := self.gst_pipeline.get_by_name(GST_SOURCE_NAME):
-            source.set_state(Gst.State.NULL)
-        self.gst_pipeline.set_state(Gst.State.NULL)
-        if flip_filter := self.gst_pipeline.get_by_name(GST_FLIP_FILTER_NAME):
-            new_method = 'none' if switch.get_active() else 'horizontal-flip'
-            flip_filter.set_property('method', new_method)
-        if self.btn_pause.get_active():
-            self.gst_pipeline.set_state(Gst.State.PAUSED)
-        else:
-            self.gst_pipeline.set_state(Gst.State.PLAYING)
+            # Revert the state
+            return True
+        GLib.idle_add(self.flip_video, self.gst_pipeline, state)
+        return False
 
     def activate_pause_button(self):
         """Activate the Pause button."""
@@ -356,18 +349,6 @@ class ScannerPage(Adw.Bin):
             self.cb_file_read_from_drag_n_drop,
         )
         return True
-
-    def on_paste_image(self, *args):
-        display = Gdk.Display.get_default()
-        log.debug('Display: {}', display)
-        if not display:
-            return
-        clipboard = display.get_clipboard()
-        log.debug('Clipboard: {}', clipboard)
-        fmt = clipboard.get_formats()
-        log.debug('Clipboard formats: {}', fmt.get_gtypes())
-        # Try reading texture first.
-        clipboard.read_texture_async(None, self.cb_texture_read_from_clipboard)
 
     def request_camera_access(self):
         """Request camera access - emits signal for sandboxed, discovers devices otherwise."""
@@ -508,7 +489,6 @@ class ScannerPage(Adw.Bin):
         else:
             log.warning('Appsink not found in pipeline')
 
-
     def teardown_webcam(self):
         """Synchronously stop the webcam and disconnect its sample callback.
 
@@ -542,6 +522,19 @@ class ScannerPage(Adw.Bin):
             self.request_camera_access()
         elif not self.btn_pause.get_active():
             self.play_webcam()
+
+    def flip_video(self, pipeline: Gst.Pipeline, mirror: bool):
+        if source := pipeline.get_by_name(GST_SOURCE_NAME):
+            source.set_state(Gst.State.NULL)
+        pipeline.set_state(Gst.State.NULL)
+        if flip_filter := pipeline.get_by_name(GST_FLIP_FILTER_NAME):
+            # Ref: https://gstreamer.freedesktop.org/documentation/videofilter/videoflip.html?gi-language=c#named-constants
+            new_method = 'horizontal-flip' if mirror else 'none'
+            flip_filter.set_property('method', new_method)
+        if self.btn_pause.get_active():
+            pipeline.set_state(Gst.State.PAUSED)
+        else:
+            pipeline.set_state(Gst.State.PLAYING)
 
     def on_new_webcam_sample(self, appsink: GstApp.AppSink) -> Gst.FlowReturn:
         if self.shuttingdown.is_set():
@@ -621,6 +614,18 @@ class ScannerPage(Adw.Bin):
             except StopIteration:
                 pass
         return True
+
+    def receive_pasted_image(self, *args):
+        display = Gdk.Display.get_default()
+        log.debug('Display: {}', display)
+        if not display:
+            return
+        clipboard = display.get_clipboard()
+        log.debug('Clipboard: {}', clipboard)
+        fmt = clipboard.get_formats()
+        log.debug('Clipboard formats: {}', fmt.get_gtypes())
+        # Try reading texture first.
+        clipboard.read_texture_async(None, self.cb_texture_read_from_clipboard)
 
     def cb_texture_read_from_clipboard(self, clipboard: Gdk.Clipboard, result: Gio.AsyncResult):
         try:

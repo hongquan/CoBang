@@ -213,7 +213,7 @@ class CoBangWindow(Adw.ApplicationWindow):
             self.generator_page.update_wifi_password(uuid, password)
 
     def on_paste_image(self, *args):
-        self.scanner_page.on_paste_image()
+        self.scanner_page.receive_pasted_image()
 
     def on_request_saved_wifi_networks(self, _src: GeneratorPage):
         """Handle request to retrieve saved WiFi networks."""
