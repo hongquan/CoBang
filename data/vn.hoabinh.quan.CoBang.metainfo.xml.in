@@ -15,11 +15,15 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/hongquan/CoBang/refs/heads/main/misc/screenshots/CoBang_v1_4.png</image>
-      <caption>Scan from webcam.</caption>
+      <image>https://quan-images.b-cdn.net/app-screenshots/cobang/v2.10/Scan-webcam-light-flatpak.png</image>
+      <caption>Scan from webcam (Flatpak).</caption>
     </screenshot>
     <screenshot>
-      <image>https://quan-images.b-cdn.net/app-screenshots/cobang/Waiting-image-light.png</image>
+      <image>https://quan-images.b-cdn.net/app-screenshots/cobang/v2.10/Scan-webcam-dark-direct.png</image>
+      <caption>Scan from webcam (non-sandboxed).</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://quan-images.b-cdn.net/app-screenshots/cobang/v2.10/Scan-image-wait-light.png</image>
       <caption>Scan from image file.</caption>
     </screenshot>
     <screenshot>
@@ -47,7 +51,7 @@
        <caption>Choose WiFi network from a list (dark)</caption>
      </screenshot>
   </screenshots>
-  <url type="homepage">https://github.com/hongquan/CoBang</url>
+  <url type="homepage">https://cobang.quan.hoabinh.vn</url>
   <url type="bugtracker">https://github.com/hongquan/CoBang/issues</url>
   <url type="translate">https://github.com/hongquan/CoBang/tree/main/po</url>
   <developer id="vn.hoabinh.quan">
@@ -60,6 +64,13 @@
   </kudos>
 
   <releases>
+    <release version="2.11.0" date="2026-10-12" urgency="medium">
+      <description translate="no">
+        <p>Fix the logic of mirror switch button.</p>
+        <p>Eliminate redundant padding in Generator form.</p>
+        <p>Update Italian translation.</p>
+      </description>
+    </release>
     <release version="2.10.0" date="2026-10-04" urgency="medium">
       <description translate="no">
         <p>Fix a crash due to webcam appsink callback being called after the Python interpreter was destroyed.</p>
