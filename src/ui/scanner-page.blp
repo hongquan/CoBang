@@ -83,9 +83,7 @@ template $ScannerPage: Adw.Bin {
             Adw.Layout {
               name: 'webcam-requesting';
 
-              content: Box status_page_webcam_requesting {
-                orientation: vertical;
-
+              content: Adw.Bin status_page_webcam_requesting {
                 Image {
                   icon-name: 'edit-find-symbolic';
                   pixel-size: 128;
@@ -224,7 +222,7 @@ template $ScannerPage: Adw.Bin {
 
                     Switch mirror_switch {
                       active: true;
-                      notify::active => $on_mirror_switch_toggled();
+                      state-set => $on_mirror_switch_toggled();
                     }
                   }
                 }
