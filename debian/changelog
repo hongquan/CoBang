@@ -1,3 +1,11 @@
+cobang (2.11.0-1) resolute; urgency=medium
+
+  * Fix the logic of mirror switch button.
+  * Eliminate redundant padding in Generator form.
+  * Update Italian translation.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Mon, 12 Oct 2026 12:58:45 +0700
+
 cobang (2.10.0-1) resolute; urgency=medium
 
   * Fix a crash due to webcam appsink callback being called after the Python interpreter was destroyed.
