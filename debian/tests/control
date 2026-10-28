@@ -1,0 +1,7 @@
+Tests: installed-files
+Depends: @
+Restrictions: superficial
+
+Tests: metadata
+Depends: @, appstream, desktop-file-utils, libglib2.0-bin
+Restrictions: superficial

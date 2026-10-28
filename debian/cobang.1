@@ -1,0 +1,41 @@
+.TH COBANG 1 "2026-10-28" "cobang 2.11.0" "User Commands"
+.SH NAME
+cobang \- scan and generate QR codes and barcodes
+.SH SYNOPSIS
+.B cobang
+.RI [ image ]
+.SH DESCRIPTION
+.B cobang
+is a native GTK application that scans QR codes and barcodes, either from a
+webcam or from a still image, and decodes structured payloads such as URLs,
+Wi-Fi credentials and plain text.
+It can also generate QR codes from text or from a Wi-Fi network reported by
+NetworkManager.
+.PP
+The application is designed for Wayland and uses GTK 4 with libadwaita.
+When it runs inside a sandbox such as Flatpak, the webcam is reached through
+the XDG desktop portal, otherwise the V4L2 device is opened directly.
+.SH OPTIONS
+.B cobang
+takes no options.
+Any other argument is treated as the path of an image file to open; only the
+first one is used.
+.SH FILES
+.TP
+.I /usr/bin/cobang
+The launcher script.
+.TP
+.I /usr/share/cobang/
+The Python modules, GResource bundle and UI definitions of the application.
+.TP
+.I /usr/share/applications/vn.hoabinh.quan.CoBang.desktop
+The desktop entry, also used for D-Bus activation.
+.SH BUGS
+Report bugs at
+.UR https://github.com/hongquan/CoBang/issues
+.UE .
+.SH SEE ALSO
+.BR zbarcam (1),
+.BR zbarimg (1)
+.SH AUTHOR
+Nguyễn Hồng Quân <ng.hong.quan@gmail.com>

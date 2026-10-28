@@ -1,28 +1,36 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: cobang
 Upstream-Contact: Nguyễn Hồng Quân <ng.hong.quan@gmail.com>
-Source: <https://github.com/hongquan/CoBang>
+Source: https://github.com/hongquan/CoBang
 
 Files: *
-Copyright: 2020, Nguyễn Hồng Quân
+Copyright: 2020-2026 Nguyễn Hồng Quân <ng.hong.quan@gmail.com>
 License: GPL-3+
 
 Files: debian/*
-Copyright: 2020, Nguyễn Hồng Quân <ng.hong.quan@gmail.com>
+Copyright: 2020-2026 Nguyễn Hồng Quân <ng.hong.quan@gmail.com>
 License: Expat
 
-Files: data/*.xml
-Copyright: 2020, Nguyễn Hồng Quân <ng.hong.quan@gmail.com>
+Files: data/vn.hoabinh.quan.CoBang.metainfo.xml.in
+Copyright: 2020-2026 Nguyễn Hồng Quân <ng.hong.quan@gmail.com>
 License: MIT
 
-Files: src/img/wireframe-image-add.svg
-Copyright: Lucide
-License: ISC
-
-Files: data/*.svg
+Files: data/vn.hoabinh.quan.CoBang.svg
+       data/vn.hoabinh.quan.CoBang.png
+       data/24x24/vn.hoabinh.quan.CoBang.png
+       data/48x48/vn.hoabinh.quan.CoBang.png
 Copyright: Shadd Gallegos
 License: MIT
 
+Files: src/img/wireframe-image-add.svg
+Copyright: Lucide contributors
+License: ISC
+
+Files: po/*.po
+Copyright: 2020-2026 The CoBang translators
+License: GPL-3+
+Comment: Translations are contributed through the project's PO files. Each
+ file lists its own copyright holders and translators.
 
 License: GPL-3+
  This program is free software: you can redistribute it and/or modify it under
@@ -39,7 +47,6 @@ License: GPL-3+
  .
  On Debian systems, the complete text of the GNU General Public License
  can be found in `/usr/share/common-licenses/GPL-3'.
-
 
 License: Expat
  Permission is hereby granted, free of charge, to any person obtaining

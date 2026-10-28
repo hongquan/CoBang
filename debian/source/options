@@ -1,5 +1,5 @@
 tar-ignore = ".git"
+tar-ignore = ".github"
 tar-ignore = ".gitignore"
-tar-ignore = ".vscode"
 tar-ignore = "*.mo"
-extend-diff-ignore  = "(setup.py|setup.cfg|MANIFEST.in|meson.build|.mo|\\.agents|\\.github|agents\.md|gitlab-ci\.yml)"
+extend-diff-ignore = "(^|/)(__pycache__|\.pytest_cache|__build|_build)(/|$)|\.(mo|pyc)$"

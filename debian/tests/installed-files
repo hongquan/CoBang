@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+test -x /usr/bin/cobang
+test -f /usr/share/cobang/cobang.gresource
+test -f /usr/share/cobang/cobang/__init__.py
+test -f /usr/share/cobang/cobang/window.py
+test -f /usr/share/glib-2.0/schemas/vn.hoabinh.quan.CoBang.gschema.xml
+test -f /usr/share/dbus-1/services/vn.hoabinh.quan.CoBang.service
+test -f /usr/share/applications/vn.hoabinh.quan.CoBang.desktop
+test -f /usr/share/metainfo/vn.hoabinh.quan.CoBang.metainfo.xml
+test -f /usr/share/icons/hicolor/scalable/apps/vn.hoabinh.quan.CoBang.svg
+test -f /usr/share/icons/hicolor/48x48/apps/vn.hoabinh.quan.CoBang.png
+test -f /usr/share/icons/hicolor/24x24/apps/vn.hoabinh.quan.CoBang.png
+test -f /usr/share/locale/vi/LC_MESSAGES/cobang.mo

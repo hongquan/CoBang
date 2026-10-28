@@ -1,3 +1,20 @@
+cobang (2.11.0-2) resolute; urgency=medium
+
+  * Rework the packaging for Debian Policy 4.7.4.1 and for a lintian warning
+    free build:
+    - Bump debhelper compatibility level to 13.
+    - Build depend on ninja-build, gettext, python3 and appstream.
+    - Depend on python3 explicitly, and drop the dh-python machinery, because
+      CoBang never installs anything into the Python module path.
+    - Drop debian/install: it duplicated the icons that Meson already
+      installs, which breaks the build with "duplicate files".
+    - Ship a manual page, an autopkgtest suite, debian/upstream/metadata and
+      debian/gbp.conf.
+    - Complete the DEP-5 copyright information, and watch the upstream tags
+      page instead of the release page.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Wed, 28 Oct 2026 23:39:46 +0700
+
 cobang (2.11.0-1) resolute; urgency=medium
 
   * Fix the logic of mirror switch button.

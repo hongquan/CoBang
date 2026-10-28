@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+desktop-file-validate /usr/share/applications/vn.hoabinh.quan.CoBang.desktop
+appstreamcli validate --no-net /usr/share/metainfo/vn.hoabinh.quan.CoBang.metainfo.xml
+glib-compile-schemas --strict --dry-run /usr/share/glib-2.0/schemas
