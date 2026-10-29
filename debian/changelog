@@ -1,3 +1,10 @@
+cobang (2.11.1-1) resolute; urgency=medium
+
+  * No need to build libportal in Flatpak.
+  * Add more accessibility labels.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Thu, 29 Oct 2026 11:13:39 +0700
+
 cobang (2.11.0-2) resolute; urgency=medium
 
   * Rework the packaging for Debian Policy 4.7.4.1 and for a lintian warning
