@@ -64,6 +64,11 @@
   </kudos>
 
   <releases>
+    <release version="2.11.1" date="2026-10-25" urgency="medium">
+      <description translate="no">
+        <p>No need to build libportal in Flatpak.</p>
+      </description>
+    </release>
     <release version="2.11.0" date="2026-10-12" urgency="medium">
       <description translate="no">
         <p>Fix the logic of mirror switch button.</p>
