@@ -6,7 +6,7 @@ CyperusCoi
 
 A native QR Code and barcode scanner application for Linux desktop.
 
-.. image:: https://github.com/hongquan/CoBang/blob/main/data/vn.quokka.CyperusCoi.svg
+.. image:: https://quan-images.b-cdn.net/app-icons/vn.quokka.CyperusCoi.svg
     :width: 400
 
 
