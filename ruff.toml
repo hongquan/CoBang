@@ -52,4 +52,6 @@ lines-after-imports = 2
 'src/pages/generator.py' = ["E402"]
 'src/pages/generator_form.py' = ["E402"]
 'src/pages/generator_qr_preview_pane.py' = ["E402"]
+'src/pages/generator_wifi_network_picker.py' = ["E402"]
 'src/pages/scanner.py' = ["E402"]
+'dev/ui_smoke.py' = ["E402"]

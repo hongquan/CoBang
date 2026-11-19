@@ -29,21 +29,21 @@ import logbook
 from logbook.handlers import Handler, StringFormatterHandlerMixin
 
 
-gi.require_version('Gtk', '4.0')
-gi.require_version('Adw', '1')
+gi.require_version('Gtk', '3.0')
+gi.require_version('Handy', '1')
 gi.require_version('Gio', '2.0')
 gi.require_version('GObject', '2.0')
 gi.require_version('GLib', '2.0')
 gi.require_version('Gst', '1.0')
 gi.require_version('GstApp', '1.0')
 gi.require_version('Xdp', '1.0')
-gi.require_version('XdpGtk4', '1.0')
+gi.require_version('XdpGtk3', '1.0')
 gi.require_version('NM', '1.0')
 gi.require_version('GdkPixbuf', '2.0')
 gi.require_version('Rsvg', '2.0')
 
 
-from gi.repository import Adw, Gio, GLib, Gst, Gtk, Xdp
+from gi.repository import Gio, GLib, Gst, Gtk, Handy, Xdp
 from logbook import Logger
 
 from .consts import APP_ID, BRAND_NAME, SHORT_NAME
@@ -89,7 +89,7 @@ class GLibLogHandler(Handler, StringFormatterHandlerMixin):
         _log(level, message)
 
 
-class CoBangApplication(Adw.Application):
+class CoBangApplication(Gtk.Application):
     """The main application singleton class."""
 
     def __init__(self):
@@ -98,12 +98,20 @@ class CoBangApplication(Adw.Application):
             # CoBang can be activated by context menu in file manager
             flags=Gio.ApplicationFlags.HANDLES_OPEN,
         )
+        self._version = '0.0'
 
     def do_startup(self):
-        Adw.Application.do_startup(self)
+        Gtk.Application.do_startup(self)
+        # libhandy requires an explicit initialization call, before any of its
+        # widgets is created.
+        Handy.init()
         self.create_action('quit', lambda *_: self.quit(), ['<primary>q'])
         self.create_action('about', self.on_about_action)
         self.portal = Xdp.Portal()
+        # The Ctrl+V image paste shortcut used to be a ShortcutController entry
+        # in the scanner page UI file. GTK3 has no such builder construct,
+        # so we register the accelerator on the application instead.
+        self.set_accels_for_action('win.paste-image', ['<Primary>v'])
 
     def do_activate(self):
         """Called when the application is activated.
@@ -138,24 +146,25 @@ class CoBangApplication(Adw.Application):
             return
         if isinstance(win, CoBangWindow):
             win.activate_pause_button()
-        version = self.get_version() or '0.0'
         year = datetime.now().year
-        about = Adw.AboutDialog(
-            application_name=BRAND_NAME,
-            application_icon=APP_ID,
-            developer_name='Nguyễn Hồng Quân',
-            version=version,
-            developers=DEVELOPPERS,
-            artists=ARTISTS,
+        about = Gtk.AboutDialog(
+            program_name=BRAND_NAME,
+            logo_icon_name=APP_ID,
+            version=self._version,
+            authors=list(DEVELOPPERS),
+            artists=list(ARTISTS),
             license_type=Gtk.License.GPL_3_0,
             copyright=f'© 2020 - {year} Nguyễn Hồng Quân',
             website='https://github.com/hongquan/CoBang',
-            issue_url='https://github.com/hongquan/CoBang/issues',
             comments=COMMENTS,
         )
         # Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
         # about.set_translator_credits(_('translator-credits'))
-        about.present(win)
+        about.set_transient_for(win)
+        about.set_modal(True)
+        # Keep a reference, so the dialog is not garbage-collected while shown.
+        self._about_dialog = about
+        about.present()
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.
@@ -184,5 +193,7 @@ def main(version):
     Gst.init(None)
     GLibLogHandler().push_application()
     app = CoBangApplication()
-    app.set_version(version)
+    # GTK3 Gtk.Application has no set_version(); we keep the version for the
+    # About dialog.
+    app._version = version
     return app.run(sys.argv)

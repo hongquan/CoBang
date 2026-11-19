@@ -1,16 +1,16 @@
 ---
-name: cobang-release
-description: "Use when preparing a new CoBang release: reading current version from meson.build, choosing the next version, inferring changes from Git history, and adding a release entry in the AppStream metainfo file."
+name: cyperuscoi-release
+description: "Use when preparing a new CyperusCoi release: reading current version from meson.build, choosing the next version, inferring changes from Git history, and adding a release entry in the AppStream metainfo file."
 ---
 
-# cobang-release — Guide for making a CoBang release
+# cyperuscoi-release — Guide for making a CyperusCoi release
 
 ## When to use
 
-Whenever the user wants to cut a new release for CoBang.
+Whenever the user wants to cut a new release for CyperusCoi.
 This includes:
 - Preparing release metadata before tagging.
-- Adding a `<release>` entry to `data/vn.hoabinh.quan.CoBang.metainfo.xml.in`.
+- Adding a `<release>` entry to `data/vn.quokka.CyperusCoi.metainfo.xml.in`.
 - Verifying the version in `meson.build` matches the upcoming release.
 
 ## Workflow
@@ -23,7 +23,7 @@ Example: `meson.build`
 
 ```meson
 project(
-  'cobang',
+  'cyperuscoi',
   version: '2.5.2',
   ...
 )
@@ -39,7 +39,7 @@ Use the question tool to avoid assumptions.
 ### 3. Determine the Git revision range for the changelog
 
 Use the current version as the starting tag.
-CoBang tags are prefixed with `v`, so the range is:
+CyperusCoi tags are prefixed with `v`, so the range is:
 
 ```bash
 git log v<CURRENT_VERSION>..HEAD --oneline --decorate
@@ -79,7 +79,7 @@ Use today's date in `YYYY-MM-DD` format.
 
 ### 6. Add the `<release>` entry in the metainfo template
 
-Open `data/vn.hoabinh.quan.CoBang.metainfo.xml.in`.
+Open `data/vn.quokka.CyperusCoi.metainfo.xml.in`.
 
 Insert the new `<release>` block as the **first child** of the `<releases>` element, above existing `<release>` entries.
 
@@ -104,7 +104,7 @@ Use `urgency="medium"` unless there is a compelling reason to use `high` or `low
 Run:
 
 ```bash
-appstreamcli validate --no-net --explain data/vn.hoabinh.quan.CoBang.metainfo.xml.in
+appstreamcli validate --no-net --explain data/vn.quokka.CyperusCoi.metainfo.xml.in
 ```
 
 If validation fails, fix the XML and rerun.
@@ -158,6 +158,6 @@ If the user chooses `2.6.0`, the resulting entry could be:
 
 ## Notes
 
-- The file path is `data/vn.hoabinh.quan.CoBang.metainfo.xml.in`, not the generated `.metainfo.xml`.
+- The file path is `data/vn.quokka.CyperusCoi.metainfo.xml.in`, not the generated `.metainfo.xml`.
 - Existing entries use `description translate="no"`; preserve that attribute.
 - The release text uses `<p>` paragraphs only; do not use Markdown or lists.

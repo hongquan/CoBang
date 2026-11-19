@@ -20,17 +20,27 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Self, cast
+from typing import TYPE_CHECKING, cast
 
-from gi.repository import (  # type: ignore[attr-defined]
-    NM,  # type: ignore[attr-defined]
-    Adw,
+import gi
+
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Handy', '1')
+gi.require_version('NM', '1.0')
+gi.require_version('Xdp', '1.0')
+gi.require_version('XdpGtk3', '1.0')
+
+from gi.repository import (
+    NM,
+    Gdk,
     Gio,
     GLib,
     GObject,
     Gtk,
+    Handy,
     Xdp,
-    XdpGtk4,
+    XdpGtk3,
 )
 from logbook import Logger
 
@@ -55,16 +65,21 @@ from .ui import icon_name_for_wifi_strength
 log = Logger(__name__)
 
 
-# This UI file is to be compiled from *.blp file.
-@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/window.ui')
-class CoBangWindow(Adw.ApplicationWindow):
+# Equivalent of the former Adw.Breakpoint condition 'max-width: 550sp'.
+MOBILE_BREAKPOINT_PX = 550
+
+
+@Gtk.Template.from_resource('/vn/quokka/CyperusCoi/gtk/window.ui')
+class CoBangWindow(Handy.ApplicationWindow):
     __gtype_name__ = 'CoBangWindow'
     in_mobile_screen = GObject.Property(type=bool, default=False, nick='in-mobile-screen')
     # PyGobject seems not to support re-computing GObject.Property yet. So we will make it writable
     # and manually set new value later.
     is_outside_sandbox = GObject.Property(type=bool, default=False, nick='is-outside-sandbox')
 
-    job_viewstack: Adw.ViewStack = Gtk.Template.Child()
+    job_viewstack: Gtk.Stack = Gtk.Template.Child()
+    job_switcher: Handy.ViewSwitcher = Gtk.Template.Child()
+    job_toggler_box: Gtk.Box = Gtk.Template.Child()
     toggle_scanner: Gtk.ToggleButton = Gtk.Template.Child()
     toggle_generator: Gtk.ToggleButton = Gtk.Template.Child()
 
@@ -74,9 +89,13 @@ class CoBangWindow(Adw.ApplicationWindow):
     portal_parent: Xdp.Parent
     nm_client: NM.Client | None = None
 
+    # Guards against re-entrant `toggled` handlers while we synchronize the
+    # pair of job toggle buttons (GTK3 has no radio-group for ToggleButton).
+    _syncing_toggles: bool = False
+
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.portal_parent = XdpGtk4.parent_new_gtk(self)
+        self.portal_parent = XdpGtk3.parent_new_gtk(self)
         action = Gio.SimpleAction.new('paste-image', None)
         self.add_action(action)
         action.connect('activate', self.on_paste_image)
@@ -96,6 +115,48 @@ class CoBangWindow(Adw.ApplicationWindow):
         # Initialize NM.Client
         NM.Client.new_async(None, self.cb_networkmanager_client_init_done)
 
+        # Bindings which were done in the Blueprint UI file.
+        self.bind_property(
+            'in-mobile-screen',
+            self.job_switcher,
+            'visible',
+            GObject.BindingFlags.SYNC_CREATE | GObject.BindingFlags.INVERT_BOOLEAN,
+        )
+        self.bind_property(
+            'in-mobile-screen',
+            self.job_toggler_box,
+            'visible',
+            GObject.BindingFlags.SYNC_CREATE,
+        )
+        self.bind_property(
+            'in-mobile-screen',
+            self.scanner_page,
+            'in-mobile-screen',
+            GObject.BindingFlags.SYNC_CREATE,
+        )
+        self.bind_property(
+            'in-mobile-screen',
+            self.generator_page,
+            'in-mobile-screen',
+            GObject.BindingFlags.SYNC_CREATE,
+        )
+        self.bind_property(
+            'is-outside-sandbox',
+            self.scanner_page,
+            'is-outside-sandbox',
+            GObject.BindingFlags.SYNC_CREATE,
+        )
+        # Replacement for the Adw.Breakpoint: derive the mobile state from the
+        # window width.
+        self.connect('size-allocate', self.on_size_allocate)
+        self._sync_toggles(JobName.SCANNER)
+
+    def on_size_allocate(self, widget: Gtk.Widget, allocation: Gdk.Rectangle, *args) -> None:
+        mobile = allocation.width < MOBILE_BREAKPOINT_PX
+        if mobile != self.in_mobile_screen:
+            log.debug('Window width {}, in_mobile_screen = {}', allocation.width, mobile)
+            self.in_mobile_screen = mobile
+
     @property
     def portal(self) -> Xdp.Portal:
         app = self.get_application()
@@ -107,19 +168,46 @@ class CoBangWindow(Adw.ApplicationWindow):
         return app.portal
 
     @Gtk.Template.Callback()
-    def on_job_viewstack_visible_child_changed(self, viewstack: Adw.ViewStack, *args):
+    def on_job_viewstack_visible_child_changed(self, viewstack: Gtk.Stack, *args):
         visible_child_name = viewstack.get_visible_child_name()
+        if visible_child_name:
+            self._sync_toggles(visible_child_name)
         self.scanner_page.update_webcam_activity(visible_child_name == JobName.SCANNER)
 
-    @Gtk.Template.Callback()
-    def in_scanner_mode(self, wd: Self, child_name: str) -> bool:
-        # Note: self is of `Child` type, not `CoBangWindow`. It may change in the future version of PyGObject.
-        return child_name == JobName.SCANNER
+    def _sync_toggles(self, active_name: str):
+        """Mirror the job viewstack state onto the toggle buttons.
+
+        GTK3 ToggleButton has no `group` property, so we emulate the GTK4
+        radio-group behavior manually.
+        """
+        self._syncing_toggles = True
+        self.toggle_scanner.set_active(active_name == JobName.SCANNER)
+        self.toggle_generator.set_active(active_name == JobName.GENERATOR)
+        self._syncing_toggles = False
 
     @Gtk.Template.Callback()
-    def switch_to_scanner(self, button: Gtk.ToggleButton):
-        name = JobName.SCANNER if button.get_active() else JobName.GENERATOR
-        self.job_viewstack.set_visible_child_name(name)
+    def on_toggle_scanner_toggled(self, button: Gtk.ToggleButton):
+        if self._syncing_toggles:
+            return
+        if not button.get_active():
+            # Radio-button semantics: an active button can only be deactivated
+            # by activating its sibling.
+            self._syncing_toggles = True
+            button.set_active(True)
+            self._syncing_toggles = False
+            return
+        self.job_viewstack.set_visible_child_name(JobName.SCANNER)
+
+    @Gtk.Template.Callback()
+    def on_toggle_generator_toggled(self, button: Gtk.ToggleButton):
+        if self._syncing_toggles:
+            return
+        if not button.get_active():
+            self._syncing_toggles = True
+            button.set_active(True)
+            self._syncing_toggles = False
+            return
+        self.job_viewstack.set_visible_child_name(JobName.GENERATOR)
 
     @Gtk.Template.Callback()
     def on_shown(self, *args):
@@ -130,8 +218,11 @@ class CoBangWindow(Adw.ApplicationWindow):
         GLib.timeout_add(1000, self.check_and_start_webcam)
 
     @Gtk.Template.Callback()
-    def on_close_request(self, window):
+    def on_close_request(self, window, event) -> bool:
         self.prepare_to_close()
+        # Return False (don't stop the delete-event) so the window is closed
+        # as usual after the cleanup.
+        return False
 
     def check_and_start_webcam(self):
         scan_source = self.scanner_page.scan_source_viewstack.get_visible_child_name()

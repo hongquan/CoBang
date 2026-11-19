@@ -1,22 +1,33 @@
-======
-CoBang
-======
+==============
+CyperusCoi
+==============
 
 .. image:: https://madewithlove.now.sh/vn?heart=true&colorA=%23ffcd00&colorB=%23da251d
 
 A native QR Code and barcode scanner application for Linux desktop.
 
-.. image:: https://github.com/hongquan/CoBang/blob/main/data/vn.hoabinh.quan.CoBang.svg
+.. image:: https://github.com/hongquan/CoBang/blob/main/data/vn.quokka.CyperusCoi.svg
     :width: 400
 
 
-CoBang can scan barcode, QR code from webcam or static image, local or remote.
+CyperusCoi can scan barcode, QR code from webcam or static image, local or remote.
+
+This is a fork of `CoBang`_, ported from GTK 4 + libadwaita to **GTK 3 + libhandy**,
+to improve performance and reliability for X11 users, where the GTK 4 GStreamer
+video sink integration (`gtk4paintablesink`) suffers from GL context stalls and
+high CPU/GPU usage. On X11, CyperusCoi renders the webcam feed with the
+battle-tested Cairo-based ``gtksink`` (no GL context involved); on Wayland it
+keeps GPU-accelerated rendering through ``gtkglsink``.
 
 
 Name
 ++++
 
-It is "`Cỏ bàng <co_bang_>`_" (Lepironia articulata), in Vietnamese. This plant is used for making handicraft which has pattern like QR code.
+It is "`Cỏ cói <co_coi_>`_" (the mat sedge, genus *Cyperus*), in Vietnamese. This
+plant is used for weaving chiếu mats, whose grid pattern looks like the modules
+of a QR code. The name is a deliberate sibling of upstream CoBang, which is named
+after "`Cỏ bàng <co_bang_>`_" (*Lepironia articulata*) — another weaving plant.
+Same craft, lighter weave: GTK 3 + libhandy.
 
 Motivation
 ++++++++++
@@ -27,23 +38,20 @@ QR codes are more and more widely used in daily life, even in developing countri
 
   + Pretty old code.
   + Its integration of other library is not good: cannot embed webcam video into its window.
-  + Depend on X Window System.
 
 - `zbarcam`_:
 
   + Command-line tool, it creates a very basic window with only video display, no control buttons, no result display, no label.
   + Users have to come back to Terminal to see the result, and the result are just raw text, no decoding for structured data like WiFi info, URL etc.
-  + Depend on X Window System.
 
 - Some Electron-based programs in GitHub:
 
   + Using Electron stack, which is unnecessary fat [1]_.
   + The UI doesn't look native.
-  + Depend on X Window System.
 
-X-dependence is a major concern because I want to boost up the migration of Linux desktop from old X Window System to more modern Wayland. Those X-dependent applications drag the transition, not only does it make the OS installation big (have to include an X server next to Wayland compositor), but also waste time fixing bugs of X - Wayland cooperation.
-
-So I decide to build *CoBang*, a new, native Linux application for scanning QR code.
+So I build *CyperusCoi* (originally *CoBang*), a native Linux application for
+scanning QR code, and this fork keeps that goal while choosing the GTK 3 stack
+for smooth X11 operation.
 
 
 Screenshots
@@ -60,80 +68,54 @@ Install
 +++++++
 
 Due to dependence on GObject, GTK libraries and being a desktop app with extra desktop-integration files (icons, *\*.desktop* etc.),
-CoBang cannot be installed from `PyPI`_. You have to install it with OS package manager.
+CyperusCoi cannot be installed from `PyPI`_. You have to install it with OS package manager.
 
-Ubuntu
-------
+Because this fork is young, it is not yet packaged in the distribution
+channels that upstream CoBang uses (PPA, AUR, COPR, FlatHub). For now, build
+and install it from source (see `Development`_), with these Debian/Ubuntu
+packages: *gir1.2-gtk-3.0*, *gir1.2-handy-1*, *gir1.2-xdpgtk3-1.0*,
+*gstreamer1.0-gtk3* plus the rest of *deb-packages.txt*.
 
-CoBang is packaged as *\*.deb* file for Ubuntu and derivatives (Linux Mint etc.). You can install it from `PPA`_:
+It installs under its own name and id (``cyperuscoi``, ``vn.quokka.CyperusCoi``),
+so it can coexist with an upstream CoBang installation.
 
-.. code-block:: console
-
-  $ sudo add-apt-repository ppa:ng-hong-quan/ppa
-  $ sudo apt update
-  $ sudo apt install cobang
-
-Version 1+ is only available on distros which are as new as Ubuntu v24.10.
-
-
-ArchLinux
----------
-
-CoBang is available via AUR_.
-
-
-Fedora
-------
-
-CoBang is available via COPR_.
-
-
-Other distros
--------------
-
-Users of other distros can install CoBang from `FlatHub`_.
+Upstream CoBang remains available for distros from the `PPA`_, `AUR`_, `COPR`_
+and `FlatHub`_ channels:
 
 .. code-block:: console
 
   $ flatpak install flathub vn.hoabinh.quan.CoBang
 
-The release on FlatHub is lagging behind traditional distribution channels (PPA, AUR, COPR) because I often having difficulty building CoBang as Flatpak.
-
 
 Compatibility
 -------------
 
-Though being targeted at Wayland, this app can still work in X11 desktop environments, like `KDE`_ (in Kubuntu), `Xfce`_ (in Xubuntu), `LxQt`_ (in Lubuntu).
-But due to a gap between GTK and Qt, the app gets some minor quirky issue when running in Qt-based DEs like KDE and LxQt.
-CoBang should not be tried in VirtualBox virtual machine, because of poor graphics stack VirtualBox provides.
+This fork is primarily targeted at X11 desktop environments (KDE, Xfce, LxQt,
+Cinnamon, ...), where it uses the Cairo-based ``gtksink`` for the webcam view.
+On Wayland sessions it uses the GL-accelerated ``gtkglsink`` instead.
 
-Since v1.6, CoBang has different webcam access methods, depending on whether it runs inside sandbox (Flatpak) or not. Outside sandbox, it tries to access webcam directly as V4L2 device.
-Inside sandbox, it accesses indirectly via `xdg-desktop-portal`_, and depending on how much the portal supports, CoBang may not see your webcam.
-
-From v1.0 to v1.5, CoBang only accessed webcam via `xdg-desktop-portal`_.
+Since v1.6, this app has different webcam access methods, depending on whether it runs inside sandbox (Flatpak) or not. Outside sandbox, it tries to access webcam directly as V4L2 device.
+Inside sandbox, it accesses indirectly via `xdg-desktop-portal`_, and depending on how much the portal supports, the app may not see your webcam.
 
 
 Development
 +++++++++++
 
-This section is for someone who wants to join development of CoBang.
+This section is for someone who wants to join development of CyperusCoi.
 
-CoBang is written in Python, using `GTK+ <gtk_>`_ for UI, `GStreamer`_ for webcam capture and a part of `ZBar`_ for decoding QR code from image.
+CyperusCoi is written in Python, using `GTK+ <gtk_>`_ 3 with `libhandy`_ for UI,
+`GStreamer`_ for webcam capture and a part of `ZBar`_ for decoding QR code from image.
 
 
 Install dependencies
 --------------------
 
-Though being written in Python, but as a GTK app, most of CoBang's Python dependencies can be only installed from OS package manager.
+Though being written in Python, but as a GTK app, most of CyperusCoi's Python dependencies can be only installed from OS package manager.
 They are listed in *deb-packages.txt* file, under the name of Debian packages. On Debian, Ubuntu and derivates, you can quickly install them with this command:
 
 .. code-block:: console
 
   $ xargs -a deb-packages.txt sudo apt install
-
-.. code-block:: nu
-
-  > open --raw deb-packages.txt | lines | sudo apt install ...$in
 
 On other distros (Fedora, ArchLinux etc.), please try to figure out equivalent package names and install with your favorite package manager.
 
@@ -143,129 +125,69 @@ Some Python packages which aid development can be installed with ``pip``, and li
 Run from source
 ---------------
 
-Due to the dependence on system libraries and GTK ecosystem, CoBang requires a build step and cannot be run directly from source.
+Due to the dependence on system libraries and GTK ecosystem, CyperusCoi requires a build step and cannot be run directly from source.
 However, you can still try running it in development by:
 
 .. code-block:: console
 
-  $ meson setup __build --prefix ~/.local/
-  $ just build
-  $ just install
-  $ G_MESSAGES_DEBUG=cobang cobang
+  $ meson setup build --prefix ~/.local/
+  $ meson compile -C build
+  $ meson install -C build
+  $ G_MESSAGES_DEBUG=cyperuscoi cyperuscoi
 
-These steps will install CoBang to *~/.local/*. Everytime we modify source code, we only need to run the ``meson install ...`` step again.
+These steps will install CyperusCoi to *~/.local/*. Everytime we modify source code, we only need to run the ``meson install ...`` step again.
 
 To uninstall, do:
 
 .. code-block:: console
 
-  $ just uninstall
+  $ ninja -C build uninstall
+
+Non-visual UI tests (useful in headless environments) and resource consistency
+checks:
+
+.. code-block:: console
+
+  $ xvfb-run -a python3 dev/ui_smoke.py
+  $ python3 dev/check_ui_paths.py
 
 
 Translation
 -----------
 
-Script to extract strings for translation and to update *\*.po* files are written in Nu shell. Please install `Nu`_ before running.
+Strings are extracted with ``xgettext`` (the ``.ui`` files are extracted as Glade):
 
-.. code-block:: nu
+.. code-block:: console
 
-  > ./dev/extract-for-translating.nu
-  > ./dev/update-translated.nu
+  $ ./dev/extract-for-translating.nu
+  $ ./dev/update-translated.nu
+
+The gettext domain stays ``cobang``, so existing CoBang translations carry over.
 
 
 Package for Debian/Ubuntu
 -------------------------
 
-This repo is organized in two branches:
-
-- ``main``: Main place for development. Latest code is here.
-- ``packaging/ubuntu``: This branch is based on ``main``, but added *debian* folder, used for building *\*.deb* file.
-
-Follow this step to package:
-
-- Checkout to ``main`` branch, and export source code:
-
-  .. code-block:: console
-
-    $ export VER='0.1.0'  # Change to version you want
-    $ git archive --format=tar --prefix=cobang-$VER/ HEAD | gzip -c > ../cobang_$VER.orig.tar.gz
-
-  .. code-block:: nu
-
-    > let VER = '0.1.0'  # Change to version you want
-    > git archive --format=tar --prefix=cobang-($VER)/ HEAD | gzip -c o> ../cobang_($VER).orig.tar.gz
-
-- Move the *\*.orig.tar.gz* file to somewhere, then extract it, as *cobang-0.1.0* for example.
-
-- Checkout to ``packaging/ubuntu`` branch, copy *debian* folder and *setup.py* file, putting to just-extracted *cobang-0.1.0* folder.
-
-- If you are about to build *deb* file locally, run:
-
-  .. code-block:: console
-
-    $ debuild -us -uc
-
-- If you are about to create source package which are suitable to build on Ubuntu's PPA [2]_, run:
-
-  .. code-block:: console
-
-    $ debuild -S
+Follow the packaging flow of upstream CoBang (see the upstream README), adapting
+the package name to *cyperuscoi* and the app id to *vn.quokka.CyperusCoi*.
 
 
-Package as Flatpak
-------------------
-
-You can package as Flatpak from the source.
-
-.. code-block:: console
-
-  $ flatpak-builder _build --force-clean vn.hoabinh.quan.CoBang.yaml
-  $ flatpak-builder --run --env=WAYLAND_DISPLAY=wayland-1 _build vn.hoabinh.quan.CoBang.yaml cobang
-
-You may face some problems with ``flatpak-builder --run`` as admitted `here <flatpak-builder-issue>_`_.
-
-Alternatives
-++++++++++++
-
-These applications were born after CoBang, that is why they are not mentioned in "Motivation" section.
-
-- `Decoder`_: Scan and generate QR code. Built with GTK4 and targeting Flatpak environment.
-- `Megapixels`_: Camera application for Linux phones. The only one can access PinePhone camera. Can read QR code.
-
-
-Credit
-++++++
-
-- Brought to you by `Nguyễn Hồng Quân <author_>`_.
-- Application logo is from Shadd Gallegos.
-- Picture icon is modified from `Lucide`_ (available under `ISC license <lucide_license_>`_).
-- Some contributors who proposed nicer UI for this app.
-
-.. [1] Every Electron application brings along a pair of NodeJS + Chromium, which make the package size > 50MB, no matter how small the application code is. To make the situation worse, those NodeJS + Chromium set are not shared. It means that if you installed two Electron apps, you end up having two set of NodeJS & Chromium in your system!
-.. [2] Ubuntu PPA requires to upload source package, not prebuilt binary. Read more at: https://help.launchpad.net/Packaging/PPA/Uploading
-
-
-.. _co_bang: https://vietnamnet.vn/nghe-quanh-nam-ngoi-gay-tay-bien-co-dai-thanh-hang-hieu-2037215.html
-.. _Gtk: https://www.gtk.org/
-.. _GStreamer: https://gstreamer.freedesktop.org/
-.. _ZBar: https://github.com/mchehab/zbar
-.. _zbarcam: https://github.com/mchehab/zbar
+.. _CoBang: https://github.com/hongquan/CoBang
 .. _QtQR: https://launchpad.net/qr-tools
-.. _PyPI: https://pypi.org/
+.. _zbarcam: https://github.com/mchehab/zbar
+.. _PyPI: https://pypi.org
 .. _PPA: https://launchpad.net/~ng-hong-quan/+archive/ubuntu/ppa
-.. _AUR: https://aur.archlinux.org/packages/cobang/
-.. _COPR: https://copr.fedorainfracloud.org/coprs/nunodias/CoBang/
-.. _KDE: https://kde.org/
-.. _Xfce: https://www.xfce.org/
-.. _LxQt: https://lxqt.github.io/
-.. _Logbook: https://pypi.org/project/Logbook/
+.. _AUR: https://aur.archlinux.org/packages/cobang
+.. _COPR: https://copr.fedorainfracloud.org/coprs/ng-hong-quan/CoBang/
 .. _FlatHub: https://flathub.org/apps/details/vn.hoabinh.quan.CoBang
-.. _Decoder: https://gitlab.gnome.org/World/decoder/
-.. _Megapixels: https://git.sr.ht/~martijnbraam/megapixels
-.. _flatpak-builder-issue: https://github.com/flatpak/flatpak-builder/issues/598
-.. _author: https://quan.hoabinh.vn
-.. _lucide: https://lucide.dev/icons/image-plus
-.. _lucide_license: https://lucide.dev/license
-.. _nu: https://www.nushell.sh/
-.. _xdg-desktop-portal: https://flatpak.github.io/xdg-desktop-portal/
-..
+.. _gtk: https://www.gtk.org/
+.. _libhandy: https://gitlab.gnome.org/GNOME/libhandy
+.. _GStreamer: https://gstreamer.freedesktop.org/
+.. _ZBar: https://zbar.sourceforge.net/
+.. _Nu: https://www.nushell.sh
+.. _xdg-desktop-portal: https://github.com/flatpak/xdg-desktop-portal
+.. _KDE: https://kde.org/
+.. _Xfce: https://xfce.org/
+.. _LxQt: https://lxqt-project.org/
+.. _co_coi: https://en.wikipedia.org/wiki/Cyperus_corymbosus
+.. _co_bang: https://en.wikipedia.org/wiki/Lepironia

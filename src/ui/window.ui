@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <template class="CoBangWindow" parent="HdyApplicationWindow">
+    <property name="title" translatable="yes">CyperusCoi: QR scanner</property>
+    <property name="default-width">800</property>
+    <property name="default-height">520</property>
+    <signal name="show" handler="on_shown"/>
+    <signal name="delete-event" handler="on_close_request"/>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="margin-bottom">4</property>
+        <child>
+          <object class="HdyHeaderBar">
+            <property name="visible">True</property>
+            <property name="show-close-button">True</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="orientation">horizontal</property>
+                <child>
+                  <object class="HdyViewSwitcher" id="job_switcher">
+                    <property name="visible">True</property>
+                    <property name="name">function-switcher</property>
+                    <property name="policy">wide</property>
+                    <property name="stack">job_viewstack</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox" id="job_toggler_box">
+                    <property name="visible">False</property>
+                    <property name="no-show-all">True</property>
+                    <property name="orientation">horizontal</property>
+                    <property name="halign">center</property>
+                    <style>
+                      <class name="linked"/>
+                    </style>
+                    <child>
+                      <object class="GtkToggleButton" id="toggle_scanner">
+                        <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Scanner</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="icon-name">view-reveal-symbolic</property>
+                          </object>
+                        </child>
+                        <signal name="toggled" handler="on_toggle_scanner_toggled"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkToggleButton" id="toggle_generator">
+                        <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Generator</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="icon-name">document-new-symbolic</property>
+                          </object>
+                        </child>
+                        <signal name="toggled" handler="on_toggle_generator_toggled"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Main Menu</property>
+                <property name="menu-model">primary_menu</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="icon-name">open-menu-symbolic</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="pack_type">end</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="visible">True</property>
+            <property name="height-request">400</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <child>
+              <object class="GtkStack" id="job_viewstack">
+                <property name="visible">True</property>
+                <property name="name">job-viewstack</property>
+                <property name="vexpand">True</property>
+                <property name="margin-start">4</property>
+                <property name="margin-end">4</property>
+                <property name="margin-bottom">4</property>
+                <signal name="notify::visible-child" handler="on_job_viewstack_visible_child_changed"/>
+                <child>
+                  <object class="ScannerPage" id="scanner_page">
+                    <property name="visible">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">scanner</property>
+                    <property name="title" translatable="yes">Scanner</property>
+                    <property name="icon-name">view-reveal-symbolic</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GeneratorPage" id="generator_page">
+                    <property name="visible">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">generator</property>
+                    <property name="title" translatable="yes">Generator</property>
+                    <property name="icon-name">document-new-symbolic</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+  <menu id="primary_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Keyboard Shortcuts</attribute>
+        <attribute name="action">win.show-help-overlay</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">About</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

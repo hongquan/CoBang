@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+
+  <object class="GtkListStore" id="wifi_network_picker_list_store">
+    <columns>
+      <!-- ssid -->
+      <column type="gchararray"/>
+      <!-- signal strength icon name -->
+      <column type="gchararray"/>
+      <!-- erroneous -->
+      <column type="gboolean"/>
+      <!-- is_active -->
+      <column type="gboolean"/>
+      <!-- WifiNetworkInfo object -->
+      <column type="GObject"/>
+    </columns>
+  </object>
+
+  <object class="GtkTreeModelFilter" id="wifi_network_picker_filter_model">
+    <property name="child-model">wifi_network_picker_list_store</property>
+  </object>
+
+  <template class="GeneratorWifiNetworkPickerDialog" parent="GtkDialog">
+    <property name="title" translatable="yes">Choose a saved Wi-Fi network</property>
+    <property name="modal">True</property>
+    <property name="default-width">460</property>
+    <property name="default-height">540</property>
+    <signal name="delete-event" handler="on_delete_event"/>
+    <child type="titlebar">
+      <object class="HdyHeaderBar">
+        <property name="visible">True</property>
+        <property name="show-close-button">False</property>
+        <child>
+          <object class="GtkButton" id="wifi_network_picker_back_button">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Back</property>
+            <signal name="clicked" handler="on_back_clicked"/>
+          </object>
+          <packing>
+            <property name="pack_type">start</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">12</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+        <child>
+          <object class="GtkSearchEntry" id="wifi_network_picker_search_entry">
+            <property name="visible">True</property>
+            <property name="placeholder-text" translatable="yes">Search WiFi networks…</property>
+            <signal name="stop-search" handler="on_search_stopped"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="visible">True</property>
+            <property name="vexpand">True</property>
+            <property name="hexpand">True</property>
+            <property name="hscrollbar-policy">never</property>
+            <child>
+              <object class="GtkTreeView" id="wifi_network_picker_list_view">
+                <property name="visible">True</property>
+                <property name="headers-visible">False</property>
+                <property name="model">wifi_network_picker_filter_model</property>
+                <signal name="row-activated" handler="on_network_activated"/>
+                <child>
+                  <object class="GtkTreeViewColumn">
+                    <property name="title" translatable="yes">Network</property>
+                    <property name="expand">True</property>
+                    <child>
+                      <object class="GtkCellRendererText">
+                        <property name="ellipsize">middle</property>
+                      </object>
+                      <attributes>
+                        <attribute name="text">0</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn">
+                    <property name="title">Warning</property>
+                    <child>
+                      <object class="GtkCellRendererPixbuf">
+                        <property name="icon-name">dialog-warning-symbolic</property>
+                      </object>
+                      <attributes>
+                        <attribute name="visible">2</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn">
+                    <property name="title">Signal</property>
+                    <child>
+                      <object class="GtkCellRendererPixbuf"/>
+                      <attributes>
+                        <attribute name="icon-name">1</attribute>
+                        <attribute name="visible">3</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    </object>
+  </child>
+  </template>
+</interface>

@@ -12,10 +12,24 @@ import click
 
 
 # Known GObject namespaces likely to appear as base classes in src/.
-KNOWN_GOBJECT_NS = frozenset({
-    'GObject', 'Gtk', 'Gdk', 'Adw', 'Gio', 'GLib', 'Gst', 'NM', 'Xdp',
-    'Pango', 'Graphene', 'GdkPixbuf', 'Soup', 'WebKit',
-})
+KNOWN_GOBJECT_NS = frozenset(
+    {
+        'GObject',
+        'Gtk',
+        'Gdk',
+        'Handy',
+        'Gio',
+        'GLib',
+        'Gst',
+        'NM',
+        'Xdp',
+        'Pango',
+        'Graphene',
+        'GdkPixbuf',
+        'Soup',
+        'WebKit',
+    }
+)
 
 
 def display_width(s: str) -> int:
@@ -25,7 +39,7 @@ def display_width(s: str) -> int:
 
 class ClassInfo(NamedTuple):
     name: str
-    file: str       # relative to project root
+    file: str  # relative to project root
     line: int
 
 
@@ -70,32 +84,25 @@ def collect_classes(project_root: Path) -> dict[str, ClassInfo]:
                     break
 
     # Filter out data classes (GObject.GObject direct subclass without .blp template)
-    data_classes = {
-        name for name, info in raw.items()
-        if is_data_class(name, raw, project_root)
-    }
-    return {
-        name: info
-        for name, info in raw.items()
-        if name not in data_classes
-    }
+    data_classes = {name for name, info in raw.items() if is_data_class(name, raw, project_root)}
+    return {name: info for name, info in raw.items() if name not in data_classes}
 
 
 def has_template_file(class_name: str, project_root: Path) -> bool:
-    """Check if a .blp template file exists for this class."""
+    """Check if a .ui template file exists for this class."""
     src_ui = project_root / 'src' / 'ui'
     if not src_ui.is_dir():
         return False
-    for blp_file in src_ui.rglob('*.blp'):
-        content = blp_file.read_text()
-        if f'$ {class_name}' in content or f'template ${class_name}' in content:
+    for ui_file in src_ui.rglob('*.ui'):
+        content = ui_file.read_text()
+        if f'class="{class_name}"' in content:
             return True
     return False
 
 
 def is_data_class(name: str, classes: dict[str, ClassInfo], project_root: Path) -> bool:
     """Heuristic: a class is a data object if it inherits directly from GObject.GObject
-    and has no .blp template file."""
+    and has no .ui template file."""
     cls_info = classes.get(name)
     if not cls_info:
         return False
@@ -126,10 +133,12 @@ def collect_template_child_parents(tree: ast.Module) -> list[tuple[str, str]]:
         if not isinstance(node, ast.ClassDef):
             continue
         for item in node.body:
-            if (isinstance(item, ast.AnnAssign)
-                    and isinstance(item.value, ast.Call)
-                    and isinstance(item.value.func, ast.Attribute)
-                    and item.value.func.attr == 'Child'):
+            if (
+                isinstance(item, ast.AnnAssign)
+                and isinstance(item.value, ast.Call)
+                and isinstance(item.value.func, ast.Attribute)
+                and item.value.func.attr == 'Child'
+            ):
                 # Extract type name from annotation
                 if isinstance(item.annotation, ast.Name):
                     results.append((node.name, item.annotation.id))
@@ -155,9 +164,11 @@ def collect_direct_instantiations(tree: ast.Module, known_names: set[str]) -> li
         for item in node.body:
             if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 for call_node in ast.walk(item):
-                    if (isinstance(call_node, ast.Call)
-                            and isinstance(call_node.func, ast.Name)
-                            and call_node.func.id in known_names):
+                    if (
+                        isinstance(call_node, ast.Call)
+                        and isinstance(call_node.func, ast.Name)
+                        and call_node.func.id in known_names
+                    ):
                         results.append((node.name, call_node.func.id))
 
     return results
@@ -186,10 +197,7 @@ def build_edges(classes: dict[str, ClassInfo], project_root: Path) -> list[tuple
                 edges.append((parent, child))
 
     # Filter out data-class children
-    data_classes = {
-        name for name in classes
-        if is_data_class(name, classes, project_root)
-    }
+    data_classes = {name for name in classes if is_data_class(name, classes, project_root)}
     return [(p, c) for p, c in edges if c not in data_classes]
 
 
@@ -207,7 +215,7 @@ def find_app_entry_points(classes: dict[str, ClassInfo]) -> set[str]:
                 continue
             for base in node.bases:
                 qn = qualname(base)
-                if qn and qn.startswith(('Gtk.Application', 'Adw.Application')):
+                if qn and qn.startswith(('Gtk.Application', 'Handy.Application')):
                     entry_points.add(name)
                     break
     return entry_points
@@ -277,8 +285,8 @@ def render_tree(
     # Connectors and extensions
     conn_last = '└─ '
     conn_mid = '├─ '
-    ext_last = '    '   # 4 spaces
-    ext_mid = '│   '    # │ + 3 spaces
+    ext_last = '    '  # 4 spaces
+    ext_mid = '│   '  # │ + 3 spaces
 
     # First pass: compute max display width of (prefix + connector + name)
     def max_width(name: str, prefix: str, is_root: bool) -> int:
@@ -286,7 +294,7 @@ def render_tree(
         cw = display_width(prefix) + display_width(connector) + display_width(name)
         kids = children_map.get(name, [])
         for idx, child in enumerate(kids):
-            child_is_last = (idx == len(kids) - 1)
+            child_is_last = idx == len(kids) - 1
             if is_root:
                 ext = ' '
             else:
@@ -311,7 +319,7 @@ def render_tree(
         lines.append(f'{prefix}{connector}{name}{padding}({cls.file}:{cls.line})')
         kids = children_map.get(name, [])
         for idx, child in enumerate(kids):
-            child_is_last = (idx == len(kids) - 1)
+            child_is_last = idx == len(kids) - 1
             extension = ' ' if is_root else (ext_last if is_last else ext_mid)
             _render(child, prefix + extension, child_is_last, False)
 

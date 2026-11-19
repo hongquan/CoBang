@@ -2,9 +2,9 @@ from enum import IntEnum, StrEnum
 from locale import gettext as _
 
 
-SHORT_NAME = 'cobang'
-BRAND_NAME = 'CoBang'
-APP_ID = 'vn.hoabinh.quan.CoBang'
+SHORT_NAME = 'cyperuscoi'
+BRAND_NAME = 'CyperusCoi'
+APP_ID = 'vn.quokka.CyperusCoi'
 
 ENV_EMULATE_SANDBOX = 'COBANG_LIKE_IN_SANDBOX'
 

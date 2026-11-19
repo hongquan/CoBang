@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+
+  <object class="GtkAdjustment" id="pixel_size_adjustment">
+    <property name="lower">1</property>
+    <property name="upper">32</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">5</property>
+  </object>
+
+  <object class="GtkAdjustment" id="border_size_adjustment">
+    <property name="lower">0</property>
+    <property name="upper">16</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">4</property>
+  </object>
+
+  <template class="GeneratorQRPreviewPane" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <property name="spacing">8</property>
+    <property name="halign">center</property>
+    <property name="valign">start</property>
+    <property name="width-request">240</property>
+    <child>
+      <object class="GtkOverlay" id="qr_preview_overlay">
+        <property name="visible">True</property>
+        <property name="width-request">192</property>
+        <property name="height-request">192</property>
+        <child>
+          <object class="GtkImage" id="qr_preview">
+            <property name="visible">True</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+          </object>
+        </child>
+        <child type="overlay">
+          <object class="GtkBox" id="qr_placeholder">
+            <property name="visible">False</property>
+            <property name="no-show-all">True</property>
+            <property name="width-request">192</property>
+            <property name="height-request">192</property>
+            <style>
+              <class name="qr-placeholder"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox" id="options_box">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">8</property>
+        <property name="halign">fill</property>
+        <property name="margin-top">4</property>
+        <child>
+          <object class="GtkBox" id="pixel_box">
+            <property name="visible">True</property>
+            <property name="orientation">horizontal</property>
+            <property name="spacing">8</property>
+            <property name="halign">center</property>
+            <property name="tooltip-text" translatable="yes">Pixel size</property>
+            <child>
+              <object class="GtkLabel" id="pixel_label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Pixel</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="qr_pixel_size_row">
+                <property name="visible">True</property>
+                <property name="adjustment">pixel_size_adjustment</property>
+                <property name="numeric">True</property>
+                <property name="width-chars">3</property>
+                <property name="max-width-chars">3</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="border_box">
+            <property name="visible">True</property>
+            <property name="orientation">horizontal</property>
+            <property name="spacing">8</property>
+            <property name="halign">center</property>
+            <property name="tooltip-text" translatable="yes">Border</property>
+            <child>
+              <object class="GtkLabel" id="border_label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Border</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="qr_border_size_row">
+                <property name="visible">True</property>
+                <property name="adjustment">border_size_adjustment</property>
+                <property name="numeric">True</property>
+                <property name="width-chars">3</property>
+                <property name="max-width-chars">3</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="color_box">
+            <property name="visible">True</property>
+            <property name="orientation">horizontal</property>
+            <property name="spacing">8</property>
+            <property name="halign">center</property>
+            <child>
+              <object class="GtkLabel" id="color_label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Colors</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="btn_foreground">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Foreground color</property>
+                <property name="use-alpha">False</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkColorButton" id="btn_background">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Background color</property>
+                <property name="use-alpha">False</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="quality_box">
+            <property name="visible">True</property>
+            <property name="orientation">horizontal</property>
+            <property name="spacing">8</property>
+            <property name="halign">center</property>
+            <child>
+              <object class="GtkLabel" id="quality_label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Error Correction:</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkComboBoxText" id="row_error_correction">
+                <property name="visible">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox" id="action_buttons">
+        <property name="visible">True</property>
+        <property name="orientation">horizontal</property>
+        <property name="spacing">6</property>
+        <property name="halign">center</property>
+        <child>
+          <object class="GtkButton" id="btn_download">
+            <property name="visible">True</property>
+            <property name="tooltip-text" translatable="yes">Save QR Code</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="icon-name">document-save-symbolic</property>
+              </object>
+            </child>
+            <signal name="clicked" handler="on_btn_download_clicked"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="btn_copy">
+            <property name="visible">True</property>
+            <property name="tooltip-text" translatable="yes">Copy to Clipboard</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="icon-name">edit-copy-symbolic</property>
+              </object>
+            </child>
+            <signal name="clicked" handler="on_btn_copy_clicked"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="btn_new">
+            <property name="visible">True</property>
+            <property name="tooltip-text" translatable="yes">New QR code</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="icon-name">document-new-symbolic</property>
+              </object>
+            </child>
+            <signal name="clicked" handler="on_btn_new_clicked"/>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

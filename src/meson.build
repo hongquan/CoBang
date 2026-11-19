@@ -1,29 +1,12 @@
 pkgdatadir = get_option('prefix') / get_option('datadir') / meson.project_name()
-moduledir = pkgdatadir / 'cobang'
+moduledir = pkgdatadir / 'cyperuscoi'
 gnome = import('gnome')
 
-blueprints = custom_target('blueprints',
-  input: files(
-    'ui/shortcuts-dialog.blp',
-    'ui/window.blp',
-    'ui/scanner/wifi.blp',
-    'ui/scanner/url.blp',
-    'ui/generator-page.blp',
-    'ui/generator/form.blp',
-    'ui/generator/wifi-network-picker-dialog.blp',
-    'ui/generator/qr-preview-pane.blp',
-    'ui/scanner-page.blp',
-  ),
-  output: 'gtk',
-  command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@/ui', '@INPUT@'],
-)
-
-gnome.compile_resources('cobang',
-  'cobang.gresource.xml',
+gnome.compile_resources('cyperuscoi',
+  'cyperuscoi.gresource.xml',
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,
-  dependencies: blueprints,
 )
 
 python = import('python')
@@ -35,15 +18,15 @@ conf.set('localedir', get_option('prefix') / get_option('localedir'))
 conf.set('pkgdatadir', pkgdatadir)
 
 configure_file(
-  input: 'cobang.in',
-  output: 'cobang',
+  input: 'cyperuscoi.in',
+  output: 'cyperuscoi',
   configuration: conf,
   install: true,
   install_dir: get_option('bindir'),
   install_mode: 'r-xr-xr-x'
 )
 
-cobang_sources = [
+cyperuscoi_sources = [
   '__init__.py',
   'consts.py',
   'app.py',
@@ -55,6 +38,6 @@ cobang_sources = [
   'custom_types.py',
 ]
 
-install_data(cobang_sources, install_dir: moduledir)
+install_data(cyperuscoi_sources, install_dir: moduledir)
 
 subdir('pages')

@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=vn.quokka.CyperusCoi
+Exec=@bindir@/cyperuscoi --gapplication-service

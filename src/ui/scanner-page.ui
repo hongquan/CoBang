@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+
+  <object class="GtkFileFilter" id="file_filter">
+    <mime-types>
+      <mime-type>image/svg+xml</mime-type>
+      <mime-type>image/png</mime-type>
+      <mime-type>image/jpeg</mime-type>
+      <mime-type>image/webp</mime-type>
+      <mime-type>image/gif</mime-type>
+    </mime-types>
+  </object>
+
+  <object class="GtkListStore" id="webcam_store">
+    <columns>
+      <!-- Device display name -->
+      <column type="gchararray"/>
+      <!-- WebcamDeviceInfo object -->
+      <column type="GObject"/>
+    </columns>
+  </object>
+
+  <template class="ScannerPage" parent="GtkBin">
+    <child>
+      <object class="GtkBox" id="scanner_root_box">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="HdyFlap" id="scanner_flap">
+            <property name="visible">True</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="orientation">horizontal</property>
+            <property name="flap-position">end</property>
+            <property name="fold-policy">never</property>
+            <property name="reveal-flap">True</property>
+            <property name="modal">False</property>
+            <property name="swipe-to-open">False</property>
+            <property name="swipe-to-close">False</property>
+            <child type="content">
+              <object class="GtkBox" id="toolbarview_scanner">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <child>
+                  <object class="GtkStack" id="scan_source_viewstack">
+                    <property name="visible">True</property>
+                    <property name="name">scan-source-viewstack</property>
+                    <property name="vexpand">True</property>
+                    <signal name="notify::visible-child" handler="on_scan_source_viewstack_visible_child_changed"/>
+                    <child>
+                      <object class="GtkStack" id="webcam_multilayout">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkBox" id="status_page_webcam_requesting">
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkImage" id="image_webcam_searching">
+                                <property name="visible">True</property>
+                                <property name="icon-name">edit-find-symbolic</property>
+                                <property name="pixel-size">128</property>
+                                <property name="vexpand">True</property>
+                                <property name="valign">center</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">webcam-requesting</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="HdyStatusPage" id="webcam_unavailable_page">
+                            <property name="visible">True</property>
+                            <property name="title" translatable="yes">Webcam</property>
+                            <property name="icon-name">camera-disabled-symbolic</property>
+                            <property name="description" translatable="yes">No webcam detected.</property>
+                          </object>
+                          <packing>
+                            <property name="name">webcam-unavailable</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="webcam_page">
+                            <property name="visible">True</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">8</property>
+                            <child>
+                              <object class="GtkImage" id="image_webcam_placeholder">
+                                <property name="visible">True</property>
+                                <property name="icon-name">camera-web-symbolic</property>
+                                <property name="pixel-size">256</property>
+                                <property name="vexpand">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkOverlay" id="webcam_overlay">
+                                <property name="visible">False</property>
+                                <property name="no-show-all">True</property>
+                                <child>
+                                  <object class="GtkBox" id="webcam_display">
+                                    <property name="visible">True</property>
+                                    <property name="width-request">360</property>
+                                    <property name="height-request">240</property>
+                                  </object>
+                                </child>
+                                <child type="overlay">
+                                  <object class="GtkBox" id="box_playpause">
+                                    <property name="visible">True</property>
+                                    <property name="orientation">horizontal</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">end</property>
+                                    <property name="spacing">2</property>
+                                    <child>
+                                      <object class="GtkToggleButton" id="btn_play">
+                                        <property name="visible">True</property>
+                                        <property name="tooltip-text" translatable="yes">Play</property>
+                                        <property name="active">True</property>
+                                        <style>
+                                          <class name="osd"/>
+                                        </style>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="visible">True</property>
+                                            <property name="icon-name">media-playback-start-symbolic</property>
+                                          </object>
+                                        </child>
+                                        <signal name="toggled" handler="on_btn_play_toggled"/>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkToggleButton" id="btn_pause">
+                                        <property name="visible">True</property>
+                                        <property name="tooltip-text" translatable="yes">Pause</property>
+                                        <style>
+                                          <class name="osd"/>
+                                        </style>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="visible">True</property>
+                                            <property name="icon-name">media-playback-pause-symbolic</property>
+                                          </object>
+                                        </child>
+                                        <signal name="toggled" handler="on_btn_pause_toggled"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox" id="box_webcam_settings">
+                                <property name="visible">True</property>
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">4</property>
+                                <property name="margin-start">4</property>
+                                <property name="margin-end">4</property>
+                                <child>
+                                  <object class="GtkLabel" id="label_sandboxed_webcam">
+                                    <property name="visible">False</property>
+                                    <property name="no-show-all">True</property>
+                                    <property name="label" translatable="yes">Sandboxed, webcam hardware info is not available.</property>
+                                    <property name="wrap">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="margin-bottom">4</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox" id="box_webcam_selector">
+                                    <property name="visible">False</property>
+                                    <property name="no-show-all">True</property>
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">4</property>
+                                    <child>
+                                      <object class="GtkLabel" id="label_webcam_selector">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Webcam</property>
+                                        <property name="halign">start</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkComboBox" id="webcam_dropdown">
+                                        <property name="visible">True</property>
+                                        <property name="margin-bottom">4</property>
+                                        <property name="model">webcam_store</property>
+                                        <child>
+                                          <object class="GtkCellRendererText"/>
+                                          <attributes>
+                                            <attribute name="text">0</attribute>
+                                          </attributes>
+                                        </child>
+                                        <signal name="changed" handler="on_webcam_device_selected"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox" id="box_mirror">
+                                    <property name="visible">False</property>
+                                    <property name="no-show-all">True</property>
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">4</property>
+                                    <child>
+                                      <object class="GtkLabel" id="label_mirror">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Mirror</property>
+                                        <property name="halign">start</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkSwitch" id="mirror_switch">
+                                        <property name="visible">True</property>
+                                        <property name="active">True</property>
+                                        <signal name="state-set" handler="on_mirror_switch_toggled"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">webcam-available</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="name">webcam</property>
+                        <property name="title" translatable="yes">Webcam</property>
+                        <property name="icon-name">camera-web-symbolic</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="box_image_source">
+                        <property name="visible">True</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">4</property>
+                        <child>
+                          <object class="GtkFrame" id="frame_image">
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="vexpand">True</property>
+                            <style>
+                              <class name="needs-highlight"/>
+                            </style>
+                            <child>
+                              <object class="GtkBox" id="box_image_empty">
+                                <property name="visible">True</property>
+                                <property name="orientation">vertical</property>
+                                <property name="valign">center</property>
+                                <child>
+                                  <object class="GtkImage" id="pasted_image">
+                                    <property name="visible">False</property>
+                                    <property name="no-show-all">True</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox" id="box_image_hint">
+                                    <property name="visible">True</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkImage" id="image_wireframe">
+                                        <property name="visible">True</property>
+                                        <property name="resource">/vn/quokka/CyperusCoi/img/wireframe-image-add.svg</property>
+                                        <property name="pixel-size">128</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox" id="image_guide_box">
+                                        <property name="visible">True</property>
+                                        <property name="orientation">vertical</property>
+                                        <property name="spacing">2</property>
+                                        <property name="margin-top">8</property>
+                                        <child>
+                                          <object class="GtkBox">
+                                            <property name="visible">True</property>
+                                            <property name="orientation">horizontal</property>
+                                            <property name="spacing">4</property>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="label">•</property>
+                                                <property name="halign">end</property>
+                                                <property name="hexpand">True</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="label" translatable="yes">Drag and drop an image here.</property>
+                                                <property name="wrap">True</property>
+                                                <property name="selectable">True</property>
+                                                <property name="halign">start</property>
+                                                <property name="hexpand">True</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkBox">
+                                            <property name="visible">True</property>
+                                            <property name="orientation">horizontal</property>
+                                            <property name="spacing">4</property>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="label">•</property>
+                                                <property name="halign">end</property>
+                                                <property name="hexpand">True</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="label" translatable="yes">Press Ctrl+V to paste an image.</property>
+                                                <property name="wrap">True</property>
+                                                <property name="selectable">True</property>
+                                                <property name="halign">start</property>
+                                                <property name="hexpand">True</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkBox">
+                                            <property name="visible">True</property>
+                                            <property name="orientation">horizontal</property>
+                                            <property name="spacing">4</property>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="label">•</property>
+                                                <property name="halign">end</property>
+                                                <property name="hexpand">True</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="label" translatable="yes">Click the button below to choose a file.</property>
+                                                <property name="wrap">True</property>
+                                                <property name="selectable">True</property>
+                                                <property name="halign">start</property>
+                                                <property name="hexpand">True</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkBox">
+                                            <property name="visible">True</property>
+                                            <property name="orientation">horizontal</property>
+                                            <property name="spacing">4</property>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="label">•</property>
+                                                <property name="halign">end</property>
+                                                <property name="hexpand">True</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="label" translatable="yes">Remote images (http://…, sftp://…) also work.</property>
+                                                <property name="wrap">True</property>
+                                                <property name="selectable">True</property>
+                                                <property name="halign">start</property>
+                                                <property name="hexpand">True</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">4</property>
+                            <child>
+                              <object class="GtkButton" id="btn_filechooser">
+                                <property name="visible">True</property>
+                                <signal name="clicked" handler="on_btn_filechooser_clicked"/>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">True</property>
+                                    <property name="orientation">horizontal</property>
+                                    <property name="spacing">4</property>
+                                    <child>
+                                      <object class="GtkImage" id="image_filechooser">
+                                        <property name="visible">True</property>
+                                        <property name="icon-name">document-open-symbolic</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Choose an image</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label_chosen_file">
+                                <property name="visible">False</property>
+                                <property name="no-show-all">True</property>
+                                <property name="ellipsize">middle</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                  <class name="dimmed"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="name">image</property>
+                        <property name="title" translatable="yes">Image</property>
+                        <property name="icon-name">image-x-generic-symbolic</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="HdyViewSwitcherBar" id="scan_source_switcher_bar">
+                    <property name="visible">True</property>
+                    <property name="stack">scan_source_viewstack</property>
+                    <property name="reveal">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="flap">
+              <object class="GtkBox" id="box_result">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">4</property>
+                <property name="margin-start">4</property>
+                <child>
+                  <object class="GtkFrame" id="result_display_frame">
+                    <property name="visible">True</property>
+                    <property name="width-request">212</property>
+                    <property name="vexpand">True</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="orientation">vertical</property>
+                        <property name="margin-top">12</property>
+                        <child>
+                          <object class="GtkLabel" id="label_idle">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Please open webcam or choose an image.</property>
+                            <property name="selectable">True</property>
+                            <property name="wrap">True</property>
+                            <property name="margin-start">4</property>
+                            <property name="margin-end">4</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="box_scanning">
+                            <property name="visible">False</property>
+                            <property name="no-show-all">True</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">4</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Scanning…</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image_scanning">
+                                <property name="visible">True</property>
+                                <property name="icon-name">system-search-symbolic</property>
+                                <property name="pixel-size">64</property>
+                                <style>
+                                  <class name="scanning-image"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label_no_result">
+                            <property name="visible">False</property>
+                            <property name="no-show-all">True</property>
+                            <property name="label" translatable="yes">No result found.</property>
+                            <property name="selectable">True</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="label_result_title">
+                            <property name="visible">False</property>
+                            <property name="no-show-all">True</property>
+                            <property name="selectable">True</property>
+                            <property name="opacity">0.8</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="result_bin">
+                            <property name="visible">False</property>
+                            <property name="no-show-all">True</property>
+                            <property name="orientation">vertical</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkExpander" id="raw_result_expander">
+                    <property name="visible">True</property>
+                    <property name="margin-bottom">4</property>
+                    <property name="vexpand">False</property>
+                    <property name="valign">end</property>
+                    <property name="label" translatable="yes">Raw result</property>
+                    <child>
+                      <object class="GtkOverlay">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <property name="visible">True</property>
+                            <property name="height-request">80</property>
+                            <child>
+                              <object class="GtkTextView" id="raw_result_display">
+                                <property name="visible">True</property>
+                                <property name="monospace">True</property>
+                                <property name="editable">False</property>
+                                <property name="wrap-mode">char</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child type="overlay">
+                          <object class="GtkButton" id="btn_copy">
+                            <property name="visible">True</property>
+                            <property name="tooltip-text" translatable="yes">Copy</property>
+                            <property name="halign">end</property>
+                            <property name="valign">end</property>
+                            <property name="margin-bottom">2</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">edit-copy-symbolic</property>
+                              </object>
+                            </child>
+                            <signal name="clicked" handler="on_btn_copy_clicked"/>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="btn_show_result">
+            <property name="visible">False</property>
+            <property name="no-show-all">True</property>
+            <property name="label" translatable="yes">Show result</property>
+            <property name="halign">center</property>
+            <property name="margin-top">8</property>
+            <property name="margin-bottom">8</property>
+            <signal name="clicked" handler="on_btn_show_result_clicked"/>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

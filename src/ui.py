@@ -2,7 +2,7 @@ from locale import gettext as _
 from typing import cast
 from urllib.parse import SplitResult
 
-from gi.repository import Gtk
+from gi.repository import Gdk, Gtk
 from logbook import Logger
 
 from .messages import WifiInfoMessage
@@ -12,7 +12,7 @@ log = Logger(__name__)
 
 
 def build_wifi_info_display(wifi: WifiInfoMessage) -> tuple[Gtk.Box, Gtk.Button] | None:
-    builder = Gtk.Builder.new_from_resource('/vn/hoabinh/quan/CoBang/gtk/scanner/wifi.ui')
+    builder = Gtk.Builder.new_from_resource('/vn/quokka/CyperusCoi/gtk/scanner/wifi.ui')
     if not (box := cast(Gtk.Box | None, builder.get_object('wifi_form'))):
         return None
     if label_ssid_value := cast(Gtk.Label | None, builder.get_object('ssid_value')):
@@ -31,7 +31,7 @@ def build_wifi_info_display(wifi: WifiInfoMessage) -> tuple[Gtk.Box, Gtk.Button]
 
 
 def build_url_display(url: SplitResult) -> Gtk.Box | None:
-    builder = Gtk.Builder.new_from_resource('/vn/hoabinh/quan/CoBang/gtk/scanner/url.ui')
+    builder = Gtk.Builder.new_from_resource('/vn/quokka/CyperusCoi/gtk/scanner/url.ui')
     btn = cast(Gtk.LinkButton | None, builder.get_object('btn_link'))
     box = cast(Gtk.Box | None, builder.get_object('box_url'))
     if btn:
@@ -40,7 +40,8 @@ def build_url_display(url: SplitResult) -> Gtk.Box | None:
     return box
 
 
-def on_secondary_icon_pressed(entry: Gtk.Entry, pos: Gtk.EntryIconPosition):
+def on_secondary_icon_pressed(entry: Gtk.Entry, pos: Gtk.EntryIconPosition, event: Gdk.Event):
+    """GTK3 icon-press delivers (entry, icon_pos, event)."""
     visible = entry.get_visibility()
     entry.set_visibility(not visible)
 

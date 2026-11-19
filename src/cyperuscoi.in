@@ -37,9 +37,9 @@ locale.textdomain('cobang')
 if __name__ == '__main__':
     from gi.repository import Gio
 
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'cobang.gresource'))
+    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'cyperuscoi.gresource'))
     resource._register()
 
-    from cobang import app
+    from cyperuscoi import app
 
     sys.exit(app.main(VERSION))

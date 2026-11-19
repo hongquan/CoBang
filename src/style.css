@@ -1,28 +1,35 @@
 .text-xs {
-  font-size: 0.75rem;
+    font-size: 75%;
 }
 
-.needs-highlight:focus-within {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px var(--accent-color);
+/* libadwaita-only class, re-implemented for the GTK3 Adwaita theme */
+.dimmed {
+    opacity: 0.55;
 }
 
+/* GTK3 has no :focus-within; use :focus on the frame itself (it is focusable) */
+.needs-highlight:focus {
+    border-color: @theme_selected_bg_color;
+    box-shadow: 0 0 0 2px @theme_selected_bg_color;
+}
+
+/* GTK3 CSS has no transform property: animate opacity instead of translation */
 @keyframes scanning {
-  0% {
-    transform: translateX(-10px);
-  }
-  50% {
-    transform: translateX(10px);
-  }
-  100% {
-    transform: translateX(-10px);
-  }
+    0% {
+        opacity: 0.35;
+    }
+    50% {
+        opacity: 1.0;
+    }
+    100% {
+        opacity: 0.35;
+    }
 }
 .scanning-image {
-  animation: scanning 2s infinite linear;
+    animation: scanning 2s infinite linear;
 }
 
 .qr-placeholder {
-  border: 1px dashed alpha(currentColor, 0.4);
-  border-radius: 6px;
+    border: 1px dashed alpha(currentColor, 0.4);
+    border-radius: 6px;
 }

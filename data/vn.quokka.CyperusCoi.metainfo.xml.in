@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>vn.hoabinh.quan.CoBang</id>
-  <launchable type="desktop-id">vn.hoabinh.quan.CoBang.desktop</launchable>
+  <id>vn.quokka.CyperusCoi</id>
+  <launchable type="desktop-id">vn.quokka.CyperusCoi.desktop</launchable>
   <translation type="gettext">cobang</translation>
 
   <metadata_license>MIT</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
-  <name>CoBang</name>
+  <name>CyperusCoi</name>
   <summary>QR code scanner for Linux desktop</summary>
   <description>
     <p>A native QR code and barcode scanner application for Linux desktop, filling the gap of a missing desktop-friendly scanner tool.</p>
-    <p>CoBang can scan barcode, QR code from webcam or from static image.
- To be part of Linux desktop modernization, it is set to support Wayland (not XWayland), and only implement native GUI (no web crap).</p>
+    <p>CyperusCoi can scan barcode, QR code from webcam or from static image, on both Wayland and X11.
+It is a fork of CoBang, ported to GTK 3 + libhandy for better performance and reliability on X11.</p>
   </description>
   <screenshots>
     <screenshot type="default">
@@ -54,7 +54,7 @@
   <url type="homepage">https://cobang.quan.hoabinh.vn</url>
   <url type="bugtracker">https://github.com/hongquan/CoBang/issues</url>
   <url type="translate">https://github.com/hongquan/CoBang/tree/main/po</url>
-  <developer id="vn.hoabinh.quan">
+  <developer id="vn.quokka">
     <name>Nguyễn Hồng Quân</name>
   </developer>
   <update_contact>ng.hong.quan_AT_gmail.com</update_contact>

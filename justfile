@@ -10,7 +10,7 @@ install:
 uninstall:
    ninja -C __build uninstall
    # Sometimes, the old files still remain, making the app load old UI files.
-   rm -rf ~/.local/share/cobang/
+   rm -rf ~/.local/share/cyperuscoi/
 
 reinstall: uninstall install
 

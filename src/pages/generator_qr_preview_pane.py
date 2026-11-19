@@ -23,34 +23,41 @@ import gi
 from logbook import Logger
 
 
-gi.require_version('Gdk', '4.0')
-gi.require_version('Gtk', '4.0')
-gi.require_version('Adw', '1')
+gi.require_version('Gdk', '3.0')
+gi.require_version('Gtk', '3.0')
+gi.require_version('GdkPixbuf', '2.0')
 
 from gi.repository import (
     Gdk,
-    Gio,
+    GdkPixbuf,
     GObject,
     Gtk,
 )
 
 from ..consts import ErrorCorrectionLevel
-from ..custom_types import GeneratorChoiceItem
 
 
 log = Logger(__name__)
 
 
-@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/generator/qr-preview-pane.ui')
+# Maximum dimension of the displayed preview image.
+QR_PREVIEW_MAX_SIZE = 192
+
+
+@Gtk.Template.from_resource('/vn/quokka/CyperusCoi/gtk/generator/qr-preview-pane.ui')
 class GeneratorQRPreviewPane(Gtk.Box):
     """A pane displaying the generated QR code preview, action buttons, and
     appearance / quality controls that affect the rendered output."""
 
     __gtype_name__ = 'GeneratorQRPreviewPane'
 
-    qr_preview: Gtk.Picture = Gtk.Template.Child()
-    error_correction_store: Gio.ListStore = Gtk.Template.Child()
-    row_error_correction: Gtk.DropDown = Gtk.Template.Child()
+    qr_preview: Gtk.Image = Gtk.Template.Child()
+    qr_placeholder: Gtk.Box = Gtk.Template.Child()
+    qr_pixel_size_row: Gtk.SpinButton = Gtk.Template.Child()
+    qr_border_size_row: Gtk.SpinButton = Gtk.Template.Child()
+    btn_foreground: Gtk.ColorButton = Gtk.Template.Child()
+    btn_background: Gtk.ColorButton = Gtk.Template.Child()
+    row_error_correction: Gtk.ComboBoxText = Gtk.Template.Child()
 
     qr_pixel_size = GObject.Property(type=float, default=8.0)
     qr_border_size = GObject.Property(type=float, default=3.0)
@@ -83,6 +90,14 @@ class GeneratorQRPreviewPane(Gtk.Box):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        binding_flags = GObject.BindingFlags.BIDIRECTIONAL | GObject.BindingFlags.SYNC_CREATE
+        # Bindings which were done in the Blueprint UI file.
+        self.qr_pixel_size_row.bind_property('value', self, 'qr-pixel-size', binding_flags)
+        self.qr_border_size_row.bind_property('value', self, 'qr-border-size', binding_flags)
+        self.btn_foreground.bind_property('rgba', self, 'foreground-color', binding_flags)
+        self.btn_background.bind_property('rgba', self, 'background-color', binding_flags)
+        self.bind_property('qr-empty', self.qr_placeholder, 'visible', GObject.BindingFlags.SYNC_CREATE)
+
         for prop in (
             'qr-pixel-size',
             'qr-border-size',
@@ -92,31 +107,32 @@ class GeneratorQRPreviewPane(Gtk.Box):
         ):
             self.connect(f'notify::{prop}', self.on_qr_property_changed)
         self.populate_error_correction_store()
-        self.row_error_correction.connect('notify::selected', self.on_row_error_correction_selected)
-        # Sync the DropDown to the property's default value.
+        self.row_error_correction.connect('changed', self.on_row_error_correction_selected)
+        # Sync the ComboBox to the property's default value.
         self.select_error_correction_level(ErrorCorrectionLevel(self.error_correction))
 
     def populate_error_correction_store(self):
-        """Populate the error-correction dropdown from ErrorCorrectionLevel."""
-        self.error_correction_store.remove_all()
-        for level in ErrorCorrectionLevel:
-            self.error_correction_store.append(GeneratorChoiceItem(label=level.label(), value=level.value))
+        """Populate the error-correction combobox from ErrorCorrectionLevel."""
+        self.row_error_correction.remove_all()
+        self.error_correction_levels = list(ErrorCorrectionLevel)
+        for level in self.error_correction_levels:
+            self.row_error_correction.append_text(level.label())
 
-    def on_row_error_correction_selected(self, row_error_correction: Gtk.DropDown, *args):
-        """Reflect the DropDown selection into error_correction and emit qr-property-changed."""
-        item = row_error_correction.get_selected_item()
-        if not isinstance(item, GeneratorChoiceItem):
+    def on_row_error_correction_selected(self, row_error_correction: Gtk.ComboBoxText, *args):
+        """Reflect the combobox selection into error_correction and emit qr-property-changed."""
+        index = row_error_correction.get_active()
+        if not 0 <= index < len(self.error_correction_levels):
             return
-        self.set_property('error-correction', item.value)
+        self.set_property('error-correction', self.error_correction_levels[index].value)
         self.on_qr_property_changed()
 
     def select_error_correction_level(self, level: ErrorCorrectionLevel):
-        """Select the DropDown row matching the given error-correction level."""
-        for index, item in enumerate(self.error_correction_store):
+        """Select the combobox row matching the given error-correction level."""
+        for index, item in enumerate(self.error_correction_levels):
             if item.value == level.value:
-                self.row_error_correction.set_selected(index)
+                self.row_error_correction.set_active(index)
                 return
-        log.warning('No DropDown item matches error_correction={}', level.value)
+        log.warning('No ComboBox item matches error_correction={}', level.value)
 
     def on_qr_property_changed(self, *args):
         self.qr_property_changed.emit()
@@ -129,10 +145,24 @@ class GeneratorQRPreviewPane(Gtk.Box):
         self.background_color = Gdk.RGBA(red=1, green=1, blue=1, alpha=1)
         self.select_error_correction_level(ErrorCorrectionLevel.LOWEST)
 
-    def set_paintable(self, paintable: Gdk.Paintable | None):
-        """Set the paintable displayed in the QR code preview."""
-        self.qr_preview.set_paintable(paintable)
-        self.qr_empty = paintable is None
+    def set_pixbuf(self, pixbuf: GdkPixbuf.Pixbuf | None):
+        """Set the pixbuf displayed in the QR code preview.
+
+        GTK3 GtkImage does not scale its pixbuf to the widget allocation like
+        GTK4 GtkPicture (with content-fit) does, so we scale it explicitly.
+        """
+        if pixbuf is None:
+            self.qr_preview.clear()
+            self.qr_empty = True
+            return
+        width = pixbuf.get_width()
+        height = pixbuf.get_height()
+        longest = max(width, height)
+        if longest > QR_PREVIEW_MAX_SIZE:
+            scale = QR_PREVIEW_MAX_SIZE / longest
+            pixbuf = pixbuf.scale_simple(round(width * scale), round(height * scale), GdkPixbuf.InterpType.BILINEAR)
+        self.qr_preview.set_from_pixbuf(pixbuf)
+        self.qr_empty = False
 
     @Gtk.Template.Callback()
     def on_btn_download_clicked(self, btn: Gtk.Button):

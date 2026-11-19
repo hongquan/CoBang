@@ -1,5 +1,5 @@
 project(
-  'cobang',
+  'cyperuscoi',
   version: '2.11.1',
   meson_version: '>= 1.0.0',
   default_options: [

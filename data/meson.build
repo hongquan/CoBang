@@ -1,6 +1,6 @@
 desktop_file = i18n.merge_file(
-  input: 'vn.hoabinh.quan.CoBang.desktop.in',
-  output: 'vn.hoabinh.quan.CoBang.desktop',
+  input: 'vn.quokka.CyperusCoi.desktop.in',
+  output: 'vn.quokka.CyperusCoi.desktop',
   type: 'desktop',
   po_dir: '../po',
   install: true,
@@ -13,14 +13,14 @@ if desktop_utils.found()
 endif
 
 themedir = get_option('datadir') / 'icons/hicolor'
-install_data('vn.hoabinh.quan.CoBang.svg', install_dir: themedir / 'scalable/apps')
+install_data('vn.quokka.CyperusCoi.svg', install_dir: themedir / 'scalable/apps')
 
 rsvg = find_program('rsvg-convert', required: false)
 if rsvg.found()
   custom_target(
     'cobang-icon-128',
-    input: 'vn.hoabinh.quan.CoBang.svg',
-    output: 'vn.hoabinh.quan.CoBang.png',
+    input: 'vn.quokka.CyperusCoi.svg',
+    output: 'vn.quokka.CyperusCoi.png',
     command: [
       rsvg,
       '-w', '128',
@@ -38,8 +38,8 @@ subdir('48x48')
 subdir('24x24')
 
 appstream_file = i18n.merge_file(
-  input: 'vn.hoabinh.quan.CoBang.metainfo.xml.in',
-  output: 'vn.hoabinh.quan.CoBang.metainfo.xml',
+  input: 'vn.quokka.CyperusCoi.metainfo.xml.in',
+  output: 'vn.quokka.CyperusCoi.metainfo.xml',
   po_dir: '../po',
   install: true,
   install_dir: get_option('datadir') / 'metainfo',
@@ -53,7 +53,7 @@ test(
 )
 
 install_data(
-  'vn.hoabinh.quan.CoBang.gschema.xml',
+  'vn.quokka.CyperusCoi.gschema.xml',
   install_dir: get_option('datadir') / 'glib-2.0' / 'schemas',
 )
 
@@ -67,8 +67,8 @@ test(
 service_conf = configuration_data()
 service_conf.set('bindir', get_option('prefix') / get_option('bindir'))
 configure_file(
-  input: 'vn.hoabinh.quan.CoBang.service.in',
-  output: 'vn.hoabinh.quan.CoBang.service',
+  input: 'vn.quokka.CyperusCoi.service.in',
+  output: 'vn.quokka.CyperusCoi.service',
   configuration: service_conf,
   install_dir: get_option('datadir') / 'dbus-1' / 'services',
 )

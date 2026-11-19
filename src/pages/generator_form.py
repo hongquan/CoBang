@@ -20,13 +20,18 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Self
+
+import gi
+
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Handy', '1')
 
 from gi.repository import (
-    Adw,
     Gio,
     GObject,
     Gtk,
+    Handy,
 )
 from logbook import Logger
 
@@ -38,8 +43,8 @@ from .generator_wifi_network_picker import GeneratorWifiNetworkPickerDialog
 log = Logger(__name__)
 
 
-@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/generator/form.ui')
-class GeneratorForm(Adw.Bin):
+@Gtk.Template.from_resource('/vn/quokka/CyperusCoi/gtk/generator/form.ui')
+class GeneratorForm(Gtk.Bin):
     """The form for configuring QR code content."""
 
     __gtype_name__ = 'GeneratorForm'
@@ -50,12 +55,16 @@ class GeneratorForm(Adw.Bin):
         flags=GObject.SignalFlags.RUN_FIRST,
     )
 
-    content_type_row: Adw.ComboRow = Gtk.Template.Child()
-    wifi_auth_method_row: Adw.ComboRow = Gtk.Template.Child()
-    generator_type_store: Gio.ListStore = Gtk.Template.Child()
-    wifi_auth_method_store: Gio.ListStore = Gtk.Template.Child()
-    choose_saved_wifi_network_row: Adw.ButtonRow = Gtk.Template.Child()
-    wifi_hidden_row: Adw.SwitchRow = Gtk.Template.Child()
+    content_type_row: Handy.ComboRow = Gtk.Template.Child()
+    wifi_auth_method_row: Handy.ComboRow = Gtk.Template.Child()
+    text_row: Handy.ActionRow = Gtk.Template.Child()
+    wifi_ssid_row: Handy.ActionRow = Gtk.Template.Child()
+    wifi_password_row: Handy.ActionRow = Gtk.Template.Child()
+    wifi_hidden_row: Handy.ActionRow = Gtk.Template.Child()
+    choose_saved_wifi_network_row: Handy.ActionRow = Gtk.Template.Child()
+    group_text: Handy.PreferencesGroup = Gtk.Template.Child()
+    group_wifi: Handy.PreferencesGroup = Gtk.Template.Child()
+    group_vcard: Handy.PreferencesGroup = Gtk.Template.Child()
 
     # GObject.Property declared as class attributes to avoid zuban no-redef
     # false positives from decorator-style getter/setter pairs.
@@ -69,6 +78,15 @@ class GeneratorForm(Adw.Bin):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
+        # libhandy 1.x HdyComboRow has no "model"/"expression" builder support:
+        # keep the Gio.ListStores in Python and bind them with bind_name_model().
+        self.generator_type_store = Gio.ListStore.new(GeneratorChoiceItem)
+        self.wifi_auth_method_store = Gio.ListStore.new(GeneratorChoiceItem)
+        self.populate_type_store()
+        self.populate_security_store()
+        self.content_type_row.bind_name_model(self.generator_type_store, self.get_item_label)
+        self.wifi_auth_method_row.bind_name_model(self.wifi_auth_method_store, self.get_item_label)
+
         for prop in (
             'text-content',
             'wifi-ssid',
@@ -77,40 +95,101 @@ class GeneratorForm(Adw.Bin):
             'wifi-hidden',
         ):
             self.connect(f'notify::{prop}', self.on_content_property_changed)
-        self.populate_type_store()
-        self.populate_security_store()
-        self.content_type_row.connect('notify::selected', self.on_content_type_row_selected)
-        self.wifi_auth_method_row.connect('notify::selected', self.on_wifi_auth_method_row_selected)
+        self.connect('notify::content-type', lambda *a: self.update_group_visibility())
+        self.content_type_row.connect('notify::selected-index', self.on_content_type_row_selected)
+        self.wifi_auth_method_row.connect('notify::selected-index', self.on_wifi_auth_method_row_selected)
         # Sync the ComboRow to the property's default value.
         self.select_wifi_auth_method(WifiAuthMethod(self.wifi_auth_method))
+
+        self.build_suffix_widgets()
+        self.update_group_visibility()
         # Lazily-created dialog for picking a saved Wi-Fi network.
         self.wifi_network_picker: GeneratorWifiNetworkPickerDialog | None = None
 
-    @Gtk.Template.Callback()
-    def is_text_type(self, wd: Self, value: str) -> bool:
-        """Whether the text/URL row should be visible for the current type."""
-        return value == ContentType.TEXT.value
+    @staticmethod
+    def get_item_label(item: GObject.GObject) -> str:
+        """Name function for HdyComboRow.bind_name_model()."""
+        return item.label if isinstance(item, GeneratorChoiceItem) else ''
 
-    @Gtk.Template.Callback()
-    def is_wifi_type(self, wd: Self, value: str) -> bool:
-        """Whether the WiFi rows should be visible for the current type."""
-        return value == ContentType.WIFI.value
+    @staticmethod
+    def add_row_suffix(row: Handy.ActionRow, widget: Gtk.Widget):
+        """Attach a suffix widget to an HdyActionRow.
 
-    @Gtk.Template.Callback()
-    def is_vcard_type(self, wd: Self, value: str) -> bool:
-        """Whether the vCard empty state should be visible for the current type."""
-        return value == ContentType.VCARD.value
+        libhandy 1.8 has no HdyActionRow.add_suffix() (that is libadwaita's
+        AdwActionRow API), but the row's internal "suffixes" GtkBox can be
+        addressed via its GtkBuildable name. Falls back to add_prefix().
+        """
+        content = row.get_child()
+        suffix_box = None
+        if isinstance(content, Gtk.Box):
+            for child in content.get_children():
+                if Gtk.Buildable.get_name(child) == 'suffixes':
+                    suffix_box = child
+                    break
+        if suffix_box is not None:
+            suffix_box.add(widget)
+        else:
+            log.warning('HdyActionRow suffix box not found; falling back to prefix')
+            row.add_prefix(widget)
 
-    def on_content_type_row_selected(self, content_type_row: Adw.ComboRow, *args):
+    def build_suffix_widgets(self):
+        """Build and attach the row suffix widgets (libhandy 1.x has no EntryRow etc.)."""
+        binding_flags = GObject.BindingFlags.BIDIRECTIONAL | GObject.BindingFlags.SYNC_CREATE
+
+        self.text_entry = Gtk.Entry()
+        self.text_entry.set_hexpand(True)
+        self.text_entry.set_width_chars(24)
+        self.add_row_suffix(self.text_row, self.text_entry)
+        self.text_entry.bind_property('text', self, 'text-content', binding_flags)
+
+        self.wifi_ssid_entry = Gtk.Entry()
+        self.wifi_ssid_entry.set_hexpand(True)
+        self.wifi_ssid_entry.set_width_chars(24)
+        self.add_row_suffix(self.wifi_ssid_row, self.wifi_ssid_entry)
+        self.wifi_ssid_entry.bind_property('text', self, 'wifi-ssid', binding_flags)
+
+        self.wifi_password_entry = Gtk.Entry()
+        self.wifi_password_entry.set_hexpand(True)
+        self.wifi_password_entry.set_width_chars(24)
+        self.wifi_password_entry.set_visibility(False)
+        self.wifi_password_entry.set_input_purpose(Gtk.InputPurpose.PASSWORD)
+        self.wifi_password_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, 'dialog-password-symbolic')
+        self.wifi_password_entry.connect('icon-press', self.on_password_icon_pressed)
+        self.add_row_suffix(self.wifi_password_row, self.wifi_password_entry)
+        self.wifi_password_entry.bind_property('text', self, 'wifi-password', binding_flags)
+
+        self.wifi_hidden_switch = Gtk.Switch()
+        self.add_row_suffix(self.wifi_hidden_row, self.wifi_hidden_switch)
+        self.wifi_hidden_row.set_activatable_widget(self.wifi_hidden_switch)
+        self.wifi_hidden_switch.bind_property('active', self, 'wifi-hidden', binding_flags)
+
+    @staticmethod
+    def on_password_icon_pressed(entry: Gtk.Entry, icon_pos: Gtk.EntryIconPosition, event):
+        """Toggle the password visibility on clicking the secondary icon."""
+        entry.set_visibility(not entry.get_visibility())
+
+    def update_group_visibility(self):
+        """Show only the group matching the current content type.
+
+        Replaces the $is_text_type / $is_wifi_type / $is_vcard_type closures.
+        """
+        content_type = self.content_type
+        self.group_text.set_visible(content_type == ContentType.TEXT.value)
+        self.group_wifi.set_visible(content_type == ContentType.WIFI.value)
+        self.group_vcard.set_visible(content_type == ContentType.VCARD.value)
+
+    def on_content_type_row_selected(self, content_type_row: Handy.ComboRow, *args):
         """Reflect the ComboRow selection into content_type and emit content-changed."""
-        if not isinstance(item := content_type_row.get_selected_item(), GeneratorChoiceItem):
+        item = self.get_selected_type_item()
+        if item is None:
             return
         self.set_property('content-type', item.value)
         self.on_content_property_changed()
 
-    def on_wifi_auth_method_row_selected(self, wifi_auth_method_row: Adw.ComboRow, *args):
+    def on_wifi_auth_method_row_selected(self, wifi_auth_method_row: Handy.ComboRow, *args):
         """Reflect the security ComboRow selection into wifi_auth_method and emit content-changed."""
-        if not isinstance(item := wifi_auth_method_row.get_selected_item(), GeneratorChoiceItem):
+        item = self.get_selected_security_item()
+        if item is None:
             return
         self.set_property('wifi-auth-method', item.value)
         self.on_content_property_changed()
@@ -122,8 +201,9 @@ class GeneratorForm(Adw.Bin):
             self.wifi_network_picker = GeneratorWifiNetworkPickerDialog()
             self.wifi_network_picker.wifi_picked.connect(self.on_wifi_network_picked)
         self.request_saved_wifi_networks.emit()
-        if (window := self.get_root()) and isinstance(window, Gtk.Widget):
-            self.wifi_network_picker.present(window)
+        if (window := self.get_root()) and isinstance(window, Gtk.Window):
+            self.wifi_network_picker.set_transient_for(window)
+        self.wifi_network_picker.show()
 
     def on_wifi_network_picked(
         self,
@@ -151,15 +231,19 @@ class GeneratorForm(Adw.Bin):
 
     def get_selected_type_item(self) -> GeneratorChoiceItem | None:
         """Return the selected content type item."""
-        if not isinstance(item := self.content_type_row.get_selected_item(), GeneratorChoiceItem):
+        index = self.content_type_row.get_selected_index()
+        if index < 0:
             return None
-        return item
+        item = self.generator_type_store.get_item(index)
+        return item if isinstance(item, GeneratorChoiceItem) else None
 
     def get_selected_security_item(self) -> GeneratorChoiceItem | None:
         """Return the selected WiFi security item."""
-        if not isinstance(item := self.wifi_auth_method_row.get_selected_item(), GeneratorChoiceItem):
+        index = self.wifi_auth_method_row.get_selected_index()
+        if index < 0:
             return None
-        return item
+        item = self.wifi_auth_method_store.get_item(index)
+        return item if isinstance(item, GeneratorChoiceItem) else None
 
     def reset(self):
         """Reset the form to its initial state."""
@@ -174,7 +258,7 @@ class GeneratorForm(Adw.Bin):
         """Select the ComboRow row matching the given content type."""
         for index, item in enumerate(self.generator_type_store):
             if item.value == content_type.value:
-                self.content_type_row.set_selected(index)
+                self.content_type_row.set_selected_index(index)
                 return
         log.warning('No ComboRow item matches content_type={}', content_type.value)
 
@@ -182,7 +266,7 @@ class GeneratorForm(Adw.Bin):
         """Select the security ComboRow row matching the given auth method."""
         for index, item in enumerate(self.wifi_auth_method_store):
             if item.value == auth_method.value:
-                self.wifi_auth_method_row.set_selected(index)
+                self.wifi_auth_method_row.set_selected_index(index)
                 return
         log.warning('No ComboRow item matches wifi_auth_method={}', auth_method.value)
 

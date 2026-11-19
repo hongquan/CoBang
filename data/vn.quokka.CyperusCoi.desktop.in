@@ -1,13 +1,13 @@
 [Desktop Entry]
-Name=CoBang
+Name=CyperusCoi
 GenericName=QR code scanner
-X-GNOME-FullName=CoBang QR code scanner
+X-GNOME-FullName=CyperusCoi QR code scanner
 Comment=Scan and decode QR from camera or static image
 Keywords=qr;code;qr-code;qr-decoder;qr-scanner;
-Exec=cobang %u
+Exec=cyperuscoi %u
 Terminal=false
 Type=Application
-Icon=vn.hoabinh.quan.CoBang
+Icon=vn.quokka.CyperusCoi
 StartupNotify=true
 MimeType=image/bmp;image/jpeg;image/gif;image/png;image/tiff;image/x-bmp;image/x-ico;image/x-png;image/x-pcx;image/x-tga;image/xpm;image/svg+xml;image/webp;image/jxl;
 Categories=GTK;Office;Graphics;AudioVideo;Video;Scanning;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="cobang">
-	<schema id="vn.hoabinh.quan.CoBang" path="/vn/hoabinh/quan/CoBang/">
+	<schema id="vn.quokka.CyperusCoi" path="/vn/quokka/CyperusCoi/">
         <key name="window-size" type="(ii)">
             <default>(300,120)</default>
         </key>

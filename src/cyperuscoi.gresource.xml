@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/vn/quokka/CyperusCoi">
+    <!-- GTK3 has no AdwApplication-style auto-detection of the shortcuts UI,
+         so this file is loaded explicitly and given to
+         GtkApplicationWindow.set_help_overlay() -->
+    <file alias="shortcuts-dialog.ui" preprocess="xml-stripblanks">ui/shortcuts-dialog.ui</file>
+    <file alias="gtk/window.ui" preprocess="xml-stripblanks">ui/window.ui</file>
+    <file alias="gtk/scanner-page.ui" preprocess="xml-stripblanks">ui/scanner-page.ui</file>
+    <file alias="gtk/scanner/wifi.ui" preprocess="xml-stripblanks">ui/scanner/wifi.ui</file>
+    <file alias="gtk/scanner/url.ui" preprocess="xml-stripblanks">ui/scanner/url.ui</file>
+    <file alias="gtk/generator-page.ui" preprocess="xml-stripblanks">ui/generator-page.ui</file>
+    <file alias="gtk/generator/form.ui" preprocess="xml-stripblanks">ui/generator/form.ui</file>
+    <file alias="gtk/generator/wifi-network-picker-dialog.ui" preprocess="xml-stripblanks">ui/generator/wifi-network-picker-dialog.ui</file>
+    <file alias="gtk/generator/qr-preview-pane.ui" preprocess="xml-stripblanks">ui/generator/qr-preview-pane.ui</file>
+    <file preprocess="xml-stripblanks">img/wireframe-image-add.svg</file>
+    <file>style.css</file>
+  </gresource>
+</gresources>

@@ -23,19 +23,30 @@ import io
 import os
 import threading
 from locale import gettext as _
-from typing import Any, Self, cast
+from typing import Any, cast
 from urllib.parse import SplitResult, urlsplit
+
+import gi
+
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('Handy', '1')
+gi.require_version('Gdk', '3.0')
+gi.require_version('GdkPixbuf', '2.0')
+gi.require_version('Gst', '1.0')
+gi.require_version('GstApp', '1.0')
 
 import zbar  # zuban: ignore[import-not-found]
 from gi.repository import (
-    Adw,
     Gdk,
+    GdkPixbuf,
     Gio,
     GLib,
     GObject,
     Gst,
     GstApp,
     Gtk,
+    Handy,
 )
 from logbook import Logger
 from PIL import Image
@@ -66,46 +77,72 @@ log = Logger(__name__)
 
 
 def build_display_sink_desc() -> str:
-    # On Wayland, GTK4 provides a proper GL context to gtk4paintablesink, so glsinkbin
+    # On Wayland, GTK3 provides a proper GL context to gtkglsink, so glsinkbin
     # works for zero-copy GPU rendering. On X11, the wrapped GL context lacks the
     # gst_gl_context_fill_info() implementation, causing glsinkbin to stall after the
     # first frame. Probe the display server to choose the right path.
     display_server = os.getenv('XDG_SESSION_TYPE', '').lower()
     if display_server == 'wayland':
-        return f'glsinkbin sink="gtk4paintablesink name={GST_SINK_NAME}" name=sink_bin'
-    return f'videoconvert ! gtk4paintablesink name={GST_SINK_NAME}'
+        return f'glsinkbin sink="gtkglsink name={GST_SINK_NAME}" name=sink_bin'
+    # gtksink draws via Cairo into a plain GtkWidget: no GL context involved,
+    # which avoids the GL stalls seen on X11.
+    return f'videoconvert ! gtksink name={GST_SINK_NAME}'
 
 
-@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/scanner-page.ui')
-class ScannerPage(Adw.Bin):
+# Maximum dimension of the preview GtkImage for the image source.
+PASTED_IMAGE_MAX_SIZE = 720
+
+
+@Gtk.Template.from_resource('/vn/quokka/CyperusCoi/gtk/scanner-page.ui')
+class ScannerPage(Gtk.Bin):
     __gtype_name__ = 'ScannerPage'
 
     scanner_state = GObject.Property(type=int, default=0, nick='scanner-state')
     in_mobile_screen = GObject.Property(type=bool, default=False, nick='in-mobile-screen')
     is_outside_sandbox = GObject.Property(type=bool, default=False, nick='is-outside-sandbox')
+    # Whether the webcam display box currently holds a video widget.
+    has_webcam_frame = GObject.Property(type=bool, default=False, nick='has-webcam-frame')
 
-    webcam_store: Gio.ListStore = Gtk.Template.Child()
+    webcam_store: Gtk.ListStore = Gtk.Template.Child()
     file_filter: Gtk.FileFilter = Gtk.Template.Child()
 
-    scanner_page_multilayout: Adw.MultiLayoutView = Gtk.Template.Child()
-    scan_source_viewstack: Adw.ViewStack = Gtk.Template.Child()
-    webcam_multilayout: Adw.MultiLayoutView = Gtk.Template.Child()
-    webcam_display: Gtk.Picture = Gtk.Template.Child()
+    scanner_flap: Handy.Flap = Gtk.Template.Child()
+    toolbarview_scanner: Gtk.Box = Gtk.Template.Child()
+    scan_source_viewstack: Gtk.Stack = Gtk.Template.Child()
+    webcam_multilayout: Gtk.Stack = Gtk.Template.Child()
+    image_webcam_searching: Gtk.Image = Gtk.Template.Child()
+    webcam_unavailable_page: Handy.StatusPage = Gtk.Template.Child()
+    image_webcam_placeholder: Gtk.Image = Gtk.Template.Child()
+    webcam_overlay: Gtk.Overlay = Gtk.Template.Child()
+    webcam_display: Gtk.Box = Gtk.Template.Child()
     box_playpause: Gtk.Box = Gtk.Template.Child()
+    btn_play: Gtk.ToggleButton = Gtk.Template.Child()
     btn_pause: Gtk.ToggleButton = Gtk.Template.Child()
+    box_webcam_settings: Gtk.Box = Gtk.Template.Child()
+    label_sandboxed_webcam: Gtk.Label = Gtk.Template.Child()
+    box_webcam_selector: Gtk.Box = Gtk.Template.Child()
+    label_webcam_selector: Gtk.Label = Gtk.Template.Child()
+    webcam_dropdown: Gtk.ComboBox = Gtk.Template.Child()
+    box_mirror: Gtk.Box = Gtk.Template.Child()
     mirror_switch: Gtk.Switch = Gtk.Template.Child()
-    frame_image: Gtk.AspectFrame = Gtk.Template.Child()
+    frame_image: Gtk.Frame = Gtk.Template.Child()
 
-    pasted_image: Gtk.Picture = Gtk.Template.Child()
-    image_drop_target: Gtk.DropTargetAsync = Gtk.Template.Child()
+    pasted_image: Gtk.Image = Gtk.Template.Child()
+    box_image_hint: Gtk.Box = Gtk.Template.Child()
+    image_wireframe: Gtk.Image = Gtk.Template.Child()
+    image_filechooser: Gtk.Image = Gtk.Template.Child()
     btn_filechooser: Gtk.Button = Gtk.Template.Child()
     label_chosen_file: Gtk.Label = Gtk.Template.Child()
-    scanner_bottom_sheet: Adw.BottomSheet = Gtk.Template.Child()
+    btn_show_result: Gtk.Button = Gtk.Template.Child()
     result_display_frame: Gtk.Frame = Gtk.Template.Child()
-    result_bin: Adw.Bin = Gtk.Template.Child()
+    label_idle: Gtk.Label = Gtk.Template.Child()
+    box_scanning: Gtk.Box = Gtk.Template.Child()
+    label_no_result: Gtk.Label = Gtk.Template.Child()
+    label_result_title: Gtk.Label = Gtk.Template.Child()
+    result_bin: Gtk.Box = Gtk.Template.Child()
+    image_scanning: Gtk.Image = Gtk.Template.Child()
     raw_result_display: Gtk.TextView = Gtk.Template.Child()
     raw_result_expander: Gtk.Expander = Gtk.Template.Child()
-    webcam_dropdown: Gtk.DropDown = Gtk.Template.Child()
 
     gst_pipeline: Gst.Pipeline | None = None
     dev_monitor: Gst.DeviceMonitor | None = None
@@ -113,6 +150,13 @@ class ScannerPage(Adw.Bin):
     # thread, which may be started when the Python interpreter has been destroyed,
     # we use this event to short-circuit those threads when the app is about to quit.
     shuttingdown: threading.Event
+
+    # The Gio.File of the last image passed via file chooser, clipboard or DnD.
+    pasted_file: Gio.File | None = None
+    # Reference to keep the native file chooser alive while it is open.
+    _file_chooser: Gtk.FileChooserNative | None = None
+    # Guards for mirrored toggle buttons and state switches.
+    _syncing_playpause: bool = False
 
     signal_request_camera_access = GObject.Signal(
         'request-camera-access',
@@ -129,11 +173,78 @@ class ScannerPage(Adw.Bin):
         arg_types=(object,),
     )
 
+    # GtkListStore columns for the webcam device chooser.
+    WEBCAM_COL_NAME = 0
+    WEBCAM_COL_DEVICE = 1
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.shuttingdown = threading.Event()
 
-        self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.REQUESTING)
+        self.webcam_multilayout.set_visible_child_name(WebcamPageLayoutName.REQUESTING)
+
+        # Bindings which were done in the Blueprint UI file.
+        self.bind_property(
+            'has-webcam-frame',
+            self.image_webcam_placeholder,
+            'visible',
+            GObject.BindingFlags.SYNC_CREATE | GObject.BindingFlags.INVERT_BOOLEAN,
+        )
+        self.bind_property(
+            'has-webcam-frame',
+            self.webcam_overlay,
+            'visible',
+            GObject.BindingFlags.SYNC_CREATE,
+        )
+        self.bind_property(
+            'has-webcam-frame',
+            self.box_mirror,
+            'visible',
+            GObject.BindingFlags.SYNC_CREATE,
+        )
+        self.bind_property(
+            'is-outside-sandbox',
+            self.label_sandboxed_webcam,
+            'visible',
+            GObject.BindingFlags.SYNC_CREATE | GObject.BindingFlags.INVERT_BOOLEAN,
+        )
+        self.bind_property(
+            'is-outside-sandbox',
+            self.box_webcam_selector,
+            'visible',
+            GObject.BindingFlags.SYNC_CREATE,
+        )
+        self.pasted_image.bind_property(
+            'visible',
+            self.box_image_hint,
+            'visible',
+            GObject.BindingFlags.SYNC_CREATE | GObject.BindingFlags.INVERT_BOOLEAN,
+        )
+
+        self.connect('notify::in-mobile-screen', self.on_in_mobile_screen_changed)
+        self.connect('notify::scanner-state', self.on_scanner_state_changed)
+
+        # Drag & drop on the image frame (the DropTargetAsync builder object
+        # has no GTK3 counterpart).
+        self.frame_image.drag_dest_set(
+            Gtk.DestDefaults.ALL,
+            [Gtk.TargetEntry.new('text/uri-list', 0, 0)],
+            Gdk.DragAction.COPY,
+        )
+        self.frame_image.connect('drag-data-received', self.on_drag_data_received)
+
+        # GTK3 builder has no `accessibility` construct: set the Atk names manually.
+        for widget, name in (
+            (self.image_webcam_searching, 'Find'),
+            (self.image_webcam_placeholder, 'Webcam'),
+            (self.image_wireframe, 'Add here'),
+            (self.image_filechooser, 'Open'),
+            (self.image_scanning, 'Scanning'),
+        ):
+            widget.get_accessible().set_name(name)
+
+        self.on_in_mobile_screen_changed()
+        self.on_scanner_state_changed()
 
         # Initialize zbar scanner
         self.zbar_scanner = zbar.ImageScanner()
@@ -153,8 +264,34 @@ class ScannerPage(Adw.Bin):
 
     def open_file_chooser_dialog(self, parent_window: Gtk.Window):
         """Open file chooser dialog to select an image file"""
-        dlg = Gtk.FileDialog(default_filter=self.file_filter, modal=True)
-        dlg.open(parent_window, None, self.cb_file_dialog)
+        dlg = Gtk.FileChooserNative.new(
+            _('Choose an image'),
+            parent_window,
+            Gtk.FileChooserAction.OPEN,
+            _('_Open'),
+            _('_Cancel'),
+        )
+        dlg.set_filter(self.file_filter)
+        dlg.set_modal(True)
+        dlg.connect('response', self.on_file_chooser_response)
+        # Native dialogs need a Python reference to survive until the response.
+        self._file_chooser = dlg
+        dlg.show()
+
+    def on_file_chooser_response(self, dialog: Gtk.FileChooserNative, response: int):
+        self._file_chooser = None
+        if response != Gtk.ResponseType.ACCEPT:
+            return
+        file = dialog.get_file()
+        if not file:
+            log.info('No file chosen.')
+            return
+        mime_type = guess_mimetype(file)
+        log.info('MIME type: {}', mime_type)
+        if not mime_type or not mime_type.startswith('image/'):
+            log.info('Not an image. Ignore.')
+            return
+        self.process_passed_image_file(file, mime_type)
 
     def process_commandline_file(self, file: Gio.File, mime_type: str):
         """Process a file passed from command line arguments"""
@@ -175,10 +312,10 @@ class ScannerPage(Adw.Bin):
     def set_webcam_availability(self, available: bool):
         """Set webcam availability status"""
         layout = WebcamPageLayoutName.AVAILABLE if available else WebcamPageLayoutName.UNAVAILABLE
-        self.webcam_multilayout.set_layout_name(layout)
+        self.webcam_multilayout.set_visible_child_name(layout)
 
     @Gtk.Template.Callback()
-    def on_scan_source_viewstack_visible_child_changed(self, viewstack: Adw.ViewStack, *args):
+    def on_scan_source_viewstack_visible_child_changed(self, viewstack: Gtk.Stack, *args):
         self.reset_result()
         visible_child_name = viewstack.get_visible_child_name()
         if visible_child_name == ScanSourceName.WEBCAM:
@@ -190,63 +327,76 @@ class ScannerPage(Adw.Bin):
             return
         self.stop_webcam()
 
-    @Gtk.Template.Callback()
-    def is_empty(self, wd: Self, value: Any) -> bool:
-        return not bool(value)
+    def on_in_mobile_screen_changed(self, *args):
+        """Reconfigure the result Flap and dependent boxes for the new layout.
 
-    @Gtk.Template.Callback()
-    def has_some(self, wd: Self, value: Any) -> bool:
-        return bool(value)
+        Replaces the Adw.MultiLayoutView layout switching: on desktop the flap
+        is a permanently visible side panel, on mobile it behaves like a
+        bottom sheet.
+        """
+        flap = self.scanner_flap
+        if self.in_mobile_screen:
+            flap.set_orientation(Gtk.Orientation.VERTICAL)
+            flap.set_flap_position(Gtk.PackType.END)
+            flap.set_fold_policy(Handy.FlapFoldPolicy.ALWAYS)
+            flap.set_modal(True)
+            flap.set_swipe_to_open(True)
+            flap.set_swipe_to_close(True)
+            flap.set_reveal_flap(True)
+            self.toolbarview_scanner.set_hexpand(False)
+            self.box_webcam_settings.set_orientation(Gtk.Orientation.VERTICAL)
+            self.box_webcam_selector.set_halign(Gtk.Align.FILL)
+            self.box_webcam_selector.set_hexpand(False)
+            self.label_webcam_selector.set_hexpand(True)
+            self.box_mirror.set_halign(Gtk.Align.FILL)
+            self.box_mirror.set_valign(Gtk.Align.CENTER)
+        else:
+            flap.set_orientation(Gtk.Orientation.HORIZONTAL)
+            flap.set_flap_position(Gtk.PackType.END)
+            flap.set_fold_policy(Handy.FlapFoldPolicy.NEVER)
+            flap.set_modal(False)
+            flap.set_swipe_to_open(False)
+            flap.set_swipe_to_close(False)
+            flap.set_reveal_flap(True)
+            self.toolbarview_scanner.set_hexpand(True)
+            self.box_webcam_settings.set_orientation(Gtk.Orientation.HORIZONTAL)
+            self.box_webcam_selector.set_halign(Gtk.Align.START)
+            self.box_webcam_selector.set_hexpand(True)
+            self.label_webcam_selector.set_hexpand(False)
+            self.box_mirror.set_halign(Gtk.Align.END)
+            self.box_mirror.set_valign(Gtk.Align.CENTER)
+        self.update_show_result_button()
 
-    @Gtk.Template.Callback()
-    def vertical_in_mobile_screen(self, wd: Self, is_mobile: bool) -> Gtk.Orientation:
-        return Gtk.Orientation.VERTICAL if is_mobile else Gtk.Orientation.HORIZONTAL
+    def on_scanner_state_changed(self, *args):
+        """Update the result panel widgets for the new scanner state.
 
-    @Gtk.Template.Callback()
-    def box_mirror_halign(self, wd: Self, is_mobile: bool) -> Gtk.Align:
-        return Gtk.Align.FILL if is_mobile else Gtk.Align.END
+        Replaces the $is_idle / $is_scanning / $is_no_result /
+        $has_scanning_result / $scanning_result_title builder closures.
+        """
+        state = self.scanner_state
+        self.label_idle.set_visible(state == ScannerState.IDLE)
+        self.box_scanning.set_visible(state == ScannerState.SCANNING)
+        self.label_no_result.set_visible(state == ScannerState.NO_RESULT)
+        has_result = state > ScannerState.NO_RESULT
+        self.label_result_title.set_visible(has_result)
+        self.result_bin.set_visible(has_result)
+        if has_result:
+            self.label_result_title.set_text(self.scanning_result_title_text(state))
+        self.update_show_result_button()
 
-    @Gtk.Template.Callback()
-    def box_mirror_valign(self, wd: Self, is_mobile: bool) -> Gtk.Align:
-        return Gtk.Align.FILL if is_mobile else Gtk.Align.CENTER
-
-    @Gtk.Template.Callback()
-    def box_webcam_selector_halign(self, wd: Self, is_mobile: bool) -> Gtk.Align:
-        return Gtk.Align.FILL if is_mobile else Gtk.Align.START
-
-    @Gtk.Template.Callback()
-    def scanner_page_layout_name(self, wd: Self, is_mobile: bool) -> str:
-        return 'bottom-sheet' if is_mobile else 'sidebar'
-
-    @Gtk.Template.Callback()
-    def is_idle(self, wd: Self, value: int) -> bool:
-        return value == ScannerState.IDLE
-
-    @Gtk.Template.Callback()
-    def is_scanning(self, wd: Self, value: int) -> bool:
-        return value == ScannerState.SCANNING
-
-    @Gtk.Template.Callback()
-    def is_no_result(self, wd: Self, value: int) -> bool:
-        return value == ScannerState.NO_RESULT
-
-    @Gtk.Template.Callback()
-    def has_scanning_result(self, wd: Self, value: int) -> bool:
-        return value > ScannerState.NO_RESULT
-
-    @Gtk.Template.Callback()
-    def scanning_result_title(self, wd: Self, value: int) -> str:
-        if value == ScannerState.WIFI_FOUND:
+    def scanning_result_title_text(self, state: int) -> str:
+        if state == ScannerState.WIFI_FOUND:
             return _('Found a wifi configuration')
-        if value == ScannerState.URL_FOUND:
+        if state == ScannerState.URL_FOUND:
             return _('Found a URL. Click to open:')
-        if value == ScannerState.TEXT_FOUND:
+        if state == ScannerState.TEXT_FOUND:
             return _('Found unrecognized text.')
         return _('Unknown')
 
-    @Gtk.Template.Callback()
-    def passed_image_name(self, wd: Self, file: Gio.File | None) -> str:
-        return file.get_basename() or '' if file else ''
+    def update_show_result_button(self):
+        """The 'Show result' button only makes sense in mobile (bottom sheet) mode."""
+        has_result = self.scanner_state > ScannerState.NO_RESULT
+        self.btn_show_result.set_visible(self.in_mobile_screen and has_result)
 
     @Gtk.Template.Callback()
     def on_mirror_switch_toggled(self, switch: Gtk.Switch, state: bool) -> bool:
@@ -261,12 +411,29 @@ class ScannerPage(Adw.Bin):
         self.btn_pause.set_active(True)
 
     @Gtk.Template.Callback()
+    def on_btn_play_toggled(self, button: Gtk.ToggleButton):
+        if self._syncing_playpause:
+            return
+        self._syncing_playpause = True
+        self.btn_pause.set_active(not button.get_active())
+        self._syncing_playpause = False
+        self.apply_play_pause(playing=button.get_active())
+
+    @Gtk.Template.Callback()
     def on_btn_pause_toggled(self, button: Gtk.ToggleButton):
-        to_pause = button.get_active()
-        self.scanner_state = ScannerState.IDLE if to_pause else ScannerState.SCANNING
+        if self._syncing_playpause:
+            return
+        playing = not button.get_active()
+        self._syncing_playpause = True
+        self.btn_play.set_active(playing)
+        self._syncing_playpause = False
+        self.apply_play_pause(playing=playing)
+
+    def apply_play_pause(self, playing: bool):
+        self.scanner_state = ScannerState.SCANNING if playing else ScannerState.IDLE
         if not self.gst_pipeline:
             return
-        if to_pause:
+        if not playing:
             if app_sink := cast(GstApp.AppSink | None, self.gst_pipeline.get_by_name(GST_APP_SINK_NAME)):
                 app_sink.set_emit_signals(False)
             if source := self.gst_pipeline.get_by_name(GST_SOURCE_NAME):
@@ -284,16 +451,11 @@ class ScannerPage(Adw.Bin):
 
     @Gtk.Template.Callback()
     def on_btn_show_result_clicked(self, button: Gtk.Button):
-        self.scanner_bottom_sheet.set_open(True)
+        self.scanner_flap.set_reveal_flap(True)
 
     @Gtk.Template.Callback()
     def on_btn_copy_clicked(self, button: Gtk.Button):
-        if not (display := Gdk.Display.get_default()):
-            log.warning('No display available to access clipboard')
-            return
-        if not (clipboard := display.get_clipboard()):
-            log.warning('No clipboard available on the display')
-            return
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         buffer = self.raw_result_display.get_buffer()
         buffer.select_range(buffer.get_start_iter(), buffer.get_end_iter())
         buffer.copy_clipboard(clipboard)
@@ -310,12 +472,15 @@ class ScannerPage(Adw.Bin):
         self.open_file_chooser_dialog(win)
 
     @Gtk.Template.Callback()
-    def on_webcam_device_selected(self, dropdown: Gtk.DropDown, *args):
-        log.debug('Extra args for camera_dropdown callback: {}', args)
-        if not (item := dropdown.get_selected_item()):
+    def on_webcam_device_selected(self, combo: Gtk.ComboBox):
+        model = combo.get_model()
+        active = combo.get_active()
+        if not model or active < 0:
             return
-        assert isinstance(item, WebcamDeviceInfo)
-        log.info('Selected device: {}', item)
+        device_info = model.get_value(model.get_iter((active,)), self.WEBCAM_COL_DEVICE)
+        if not isinstance(device_info, WebcamDeviceInfo):
+            return
+        log.info('Selected device: {}', device_info)
         if self.scan_source_viewstack.get_visible_child_name() != ScanSourceName.WEBCAM:
             return
         # Destroy the old pipeline if any.
@@ -324,31 +489,38 @@ class ScannerPage(Adw.Bin):
             self.detach_gstreamer_sink()
             self.gst_pipeline = None
         # Build a new pipeline.
-        pipeline = self.build_gstreamer_pipeline(item.source_type, item.path)
+        pipeline = self.build_gstreamer_pipeline(device_info.source_type, device_info.path)
         if not pipeline:
             return
         self.attach_gstreamer_sink_to_window(pipeline)
         # Let GTK prepare the UI fully for painting video. Without this, the video from pipewiresrc may not be displayed.
-        if item.source_type == DeviceSourceType.PIPEWIRE:
+        if device_info.source_type == DeviceSourceType.PIPEWIRE:
             GLib.idle_add(self.play_webcam_and_enable_consumption, pipeline)
         else:
             self.play_webcam_and_enable_consumption(pipeline)
 
-    @Gtk.Template.Callback()
-    def on_image_drop_target_accept(self, target: Gtk.DropTargetAsync, drop: Gdk.Drop):
-        fmt = drop.get_formats()
-        log.info('Drop formats: {}', fmt.to_string())
-        return fmt.contain_gtype(Gio.File)
-
-    @Gtk.Template.Callback()
-    def on_image_dropped(self, target: Gtk.DropTargetAsync, drop: Gdk.Drop, x: float, y: float):
-        drop.read_value_async(
-            Gio.File,
-            GObject.PRIORITY_DEFAULT_IDLE,
-            None,
-            self.cb_file_read_from_drag_n_drop,
-        )
-        return True
+    def on_drag_data_received(
+        self,
+        widget: Gtk.Widget,
+        drag_context: Gdk.DragContext,
+        x: int,
+        y: int,
+        data: Gtk.SelectionData,
+        info: int,
+        time: int,
+    ):
+        uris = data.get_uris()
+        if not uris:
+            Gtk.drag_finish(drag_context, False, False, time)
+            return
+        file = Gio.File.new_for_uri(uris[0])
+        Gtk.drag_finish(drag_context, True, False, time)
+        mime_type = guess_mimetype(file)
+        log.info('MIME type: {}', mime_type)
+        if not mime_type or not mime_type.startswith('image/'):
+            log.info('Not an image. Ignore.')
+            return
+        self.process_passed_image_file(file, mime_type)
 
     def request_camera_access(self):
         """Request camera access - emits signal for sandboxed, discovers devices otherwise."""
@@ -374,14 +546,19 @@ class ScannerPage(Adw.Bin):
             if not device_name or not device_path:
                 log.info('Unsupported device: {}', d.get_path_string())
                 continue
-            self.webcam_store.append(WebcamDeviceInfo(source_type=src_type, path=device_path, name=device_name))
+            self.webcam_store.append(
+                (device_name, WebcamDeviceInfo(source_type=src_type, path=device_path, name=device_name))
+            )
             log.debug(
-                'Added {} ({}) to webcam_store. Total items: {}', src_type, device_path, self.webcam_store.get_n_items()
+                'Added {} ({}) to webcam_store. Total items: {}',
+                src_type,
+                device_path,
+                self.webcam_store.iter_n_children(None),
             )
         # If found any device, set the first one as selected.
-        if next(iter(self.webcam_store), None):
-            self.webcam_multilayout.set_layout_name(WebcamPageLayoutName.AVAILABLE)
-            self.webcam_dropdown.set_selected(0)
+        if self.webcam_store.get_iter_first():
+            self.webcam_multilayout.set_visible_child_name(WebcamPageLayoutName.AVAILABLE)
+            self.webcam_dropdown.set_active(0)
         # Continue to monitor for new devices.
         bus = self.dev_monitor.get_bus()
         bus.add_watch(GLib.PRIORITY_DEFAULT, self.on_device_monitor_message, None)
@@ -444,22 +621,35 @@ class ScannerPage(Adw.Bin):
         return pipeline
 
     def attach_gstreamer_sink_to_window(self, pipeline: Gst.Pipeline):
-        gtk4_sink = pipeline.get_by_name(GST_SINK_NAME)
-        if not gtk4_sink:
-            # When glsinkbin wraps gtk4paintablesink, the inner element's name is not
+        sink = pipeline.get_by_name(GST_SINK_NAME)
+        if not sink:
+            # When glsinkbin wraps gtkglsink, the inner element's name is not
             # discoverable via get_by_name() — retrieve it via the bin's "sink" property.
             if sink_bin := pipeline.get_by_name('sink_bin'):
-                gtk4_sink = sink_bin.get_property('sink')
-        if not gtk4_sink:
-            log.error('Failed to get gtk4paintablesink element')
+                sink = sink_bin.get_property('sink')
+        if not sink:
+            log.error('Failed to get the gtksink/gtkglsink element')
             return
-        log.info('Gtk4 sink: {}', gtk4_sink)
-        paintable = gtk4_sink.get_property('paintable')
-        self.webcam_display.set_paintable(paintable)
+        log.info('Sink element: {}', sink)
+        # gtksink / gtkglsink expose the rendering GtkWidget instead of a paintable.
+        widget = sink.get_property('widget')
+        if not widget:
+            log.error('The sink element has no widget to display')
+            return
+        self.clear_webcam_display()
+        self.webcam_display.pack_start(widget, True, True, 0)
+        widget.show_all()
+        self.has_webcam_frame = True
         self.gst_pipeline = pipeline
 
     def detach_gstreamer_sink(self):
-        self.webcam_display.set_paintable(None)
+        self.clear_webcam_display()
+        self.has_webcam_frame = False
+
+    def clear_webcam_display(self):
+        for child in self.webcam_display.get_children():
+            self.webcam_display.remove(child)
+            child.destroy()
 
     def play_webcam(self):
         log.info('Playing webcam')
@@ -589,9 +779,11 @@ class ScannerPage(Adw.Bin):
                 log.info('Unsupported device: {} {}', src_type, added_dev.get_path_string())
                 return True
             # Check if this cam already in the list, add to list if not.
-            found = any(True for d in self.webcam_store if d.path == cam_path)
+            found = self.find_store_position(cam_path) is not None
             if not found:
-                self.webcam_store.append(WebcamDeviceInfo(source_type=src_type, path=cam_path, name=cam_name))
+                self.webcam_store.append(
+                    (cam_name, WebcamDeviceInfo(source_type=src_type, path=cam_path, name=cam_name))
+                )
                 log.debug('{} was not in the store. Added.', cam_path)
             return True
         elif message.type == Gst.MessageType.DEVICE_REMOVED:
@@ -607,86 +799,46 @@ class ScannerPage(Adw.Bin):
                 ):
                     self.gst_pipeline.set_state(Gst.State.NULL)
             # Find the entry of just-removed in the list and remove it.
-            try:
-                pos = next(i for i, d in enumerate(self.webcam_store) if d.path == cam_path)
+            pos = self.find_store_position(cam_path)
+            if pos is not None:
                 log.debug('To remove {} from list', cam_path)
-                self.webcam_store.remove(pos)
-            except StopIteration:
-                pass
+                self.webcam_store.remove(self.webcam_store.iter_nth_child(None, pos))
         return True
 
+    def find_store_position(self, cam_path: str) -> int | None:
+        """Return the row index of the given webcam device path, or None."""
+        model = self.webcam_store
+        itr = model.get_iter_first()
+        pos = 0
+        while itr is not None:
+            device_info = model.get_value(itr, self.WEBCAM_COL_DEVICE)
+            if isinstance(device_info, WebcamDeviceInfo) and device_info.path == cam_path:
+                return pos
+            itr = model.iter_next(itr)
+            pos += 1
+        return None
+
     def receive_pasted_image(self, *args):
-        display = Gdk.Display.get_default()
-        log.debug('Display: {}', display)
-        if not display:
-            return
-        clipboard = display.get_clipboard()
+        # Prefer the asynchronous request_* clipboard API (GTK3 clipboard
+        # "wait_*" probes are synchronous and can stall the UI).
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         log.debug('Clipboard: {}', clipboard)
-        fmt = clipboard.get_formats()
-        log.debug('Clipboard formats: {}', fmt.get_gtypes())
-        # Try reading texture first.
-        clipboard.read_texture_async(None, self.cb_texture_read_from_clipboard)
+        clipboard.request_image(self.cb_image_read_from_clipboard)
 
-    def cb_texture_read_from_clipboard(self, clipboard: Gdk.Clipboard, result: Gio.AsyncResult):
-        try:
-            texture = clipboard.read_texture_finish(result)
-            log.info('Texture: {}', texture)
-            if not texture:
-                return
-            self.pasted_image.set_paintable(texture)
-            self.pasted_image.set_visible(True)
-            self.decode_from_texture(texture)
+    def cb_image_read_from_clipboard(self, clipboard: Gtk.Clipboard, pixbuf: GdkPixbuf.Pixbuf | None):
+        if pixbuf is not None:
+            log.info('Got image from clipboard: {}x{}', pixbuf.get_width(), pixbuf.get_height())
+            self.display_pasted_pixbuf(pixbuf)
+            self.decode_from_pixbuf(pixbuf)
             return
-        except GLib.Error:
-            log.debug('No texture in clipboard')
-        # If there is no texture, try reading file.
-        clipboard.read_value_async(
-            Gio.File,
-            GObject.PRIORITY_DEFAULT_IDLE,
-            None,
-            self.cb_file_read_from_clipboard,
-        )
+        log.debug('No image in clipboard, trying URIs')
+        clipboard.request_uris(self.cb_uris_read_from_clipboard)
 
-    def cb_file_read_from_clipboard(self, clipboard: Gdk.Clipboard, result: Gio.AsyncResult):
-        try:
-            image = cast(Gio.File, clipboard.read_value_finish(result))
-            log.info('File: {}', image)
-            mime_type = guess_mimetype(image)
-            log.info('MIME type: {}', mime_type)
-            if not mime_type or not mime_type.startswith('image/'):
-                log.info('Not an image. Ignore.')
-                return
-            self.process_passed_image_file(image, mime_type)
-        except GLib.Error:
-            log.debug('No file in clipboard')
-
-    def cb_file_read_from_drag_n_drop(self, drop: Gdk.Drop, result: Gio.AsyncResult):
-        try:
-            file = drop.read_value_finish(result)
-        except GLib.Error as e:
-            log.info('Failed to read file from drop: {}', e)
+    def cb_uris_read_from_clipboard(self, clipboard: Gtk.Clipboard, uris: list[str] | None):
+        if not uris:
+            log.debug('No URI in clipboard')
             return
-        finally:
-            drop.finish(Gdk.DragAction.COPY)
-        if not file:
-            log.info('No file chosen.')
-            return
-        mime_type = guess_mimetype(file)
-        log.info('MIME type: {}', mime_type)
-        if not mime_type or not mime_type.startswith('image/'):
-            log.info('Not an image. Ignore.')
-            return
-        self.process_passed_image_file(file, mime_type)
-
-    def cb_file_dialog(self, dialog: Gtk.FileDialog, result: Gio.AsyncResult):
-        try:
-            file = dialog.open_finish(result)
-        except GLib.Error as e:
-            log.info('Failed to open file: {}', e)
-            return
-        if not file:
-            log.info('No file chosen.')
-            return
+        file = Gio.File.new_for_uri(uris[0])
         mime_type = guess_mimetype(file)
         log.info('MIME type: {}', mime_type)
         if not mime_type or not mime_type.startswith('image/'):
@@ -696,16 +848,39 @@ class ScannerPage(Adw.Bin):
 
     def process_passed_image_file(self, chosen_file: Gio.File, content_type: str):
         self.reset_result()
-        # The file can be remote, so we should read asynchronously
-        self.pasted_image.set_file(chosen_file)
-        GLib.main_context_default().iteration(False)
-        self.pasted_image.set_visible(True)
-        paintable = cast(Gdk.Texture | None, self.pasted_image.get_paintable())
-        log.info('Paintable: {}', paintable)
-        if not paintable:
-            log.debug('No paintable. Ignore.')
+        pixbuf = self.load_pixbuf_from_file(chosen_file)
+        if not pixbuf:
+            log.debug('No image data. Ignore.')
             return
-        self.decode_from_texture(paintable)
+        self.pasted_file = chosen_file
+        self.display_pasted_pixbuf(pixbuf)
+        self.decode_from_pixbuf(pixbuf)
+
+    def display_pasted_pixbuf(self, pixbuf: GdkPixbuf.Pixbuf):
+        """Scale (if needed) and show the image in the pasted_image GtkImage."""
+        self.pasted_image.set_from_pixbuf(scale_pixbuf_to_fit(pixbuf, PASTED_IMAGE_MAX_SIZE))
+        self.pasted_image.set_visible(True)
+        basename = self.pasted_file.get_basename() if self.pasted_file else ''
+        self.label_chosen_file.set_text(basename or '')
+        self.label_chosen_file.set_visible(bool(basename))
+
+    def load_pixbuf_from_file(self, file: Gio.File) -> GdkPixbuf.Pixbuf | None:
+        """Load a GdkPixbuf from a local or remote Gio.File."""
+        try:
+            stream = file.read(None)
+        except GLib.Error as e:
+            log.error('Failed to read file {}: {}', file.get_uri(), e)
+            return None
+        try:
+            return GdkPixbuf.Pixbuf.new_from_stream(stream, None)
+        except GLib.Error as e:
+            log.error('Failed to load image {}: {}', file.get_uri(), e)
+            return None
+        finally:
+            try:
+                stream.close()
+            except GLib.Error:
+                pass
 
     def decode_from_video_sample(self, image_data: bytes, width: int, height: int):
         img = zbar.Image(width, height, 'Y800', image_data)
@@ -718,16 +893,17 @@ class ScannerPage(Adw.Bin):
         self.btn_pause.set_active(True)
         GLib.idle_add(self.display_result, img.symbols)
 
-    def decode_from_texture(self, texture: Gdk.Texture):
-        w = texture.get_width()
-        h = texture.get_height()
-        log.info('Texture size: {}x{}', w, h)
-        if not (img_bytes := texture.save_to_png_bytes().get_data()):
-            log.debug('No image data in texture. Ignore.')
+    def decode_from_pixbuf(self, pixbuf: GdkPixbuf.Pixbuf):
+        w = pixbuf.get_width()
+        h = pixbuf.get_height()
+        log.info('Pixbuf size: {}x{}', w, h)
+        success, img_bytes = pixbuf.save_to_bufferv('png', [], [])
+        if not success or not img_bytes:
+            log.debug('No image data in pixbuf. Ignore.')
             return
         img_file = io.BytesIO(img_bytes)
         rgba_img = Image.open(img_file)
-        # ZBar needs grayscale image, the Gdk.Paintable is RGBA,
+        # ZBar needs grayscale image, the GdkPixbuf is RGB/RGBA,
         # we need to convert it to grayscale, replacing transparency with white.
         # Because the source image can have alpha channel, we need to convert it to LA.
         grayscale = make_grayscale(rgba_img, w, h)
@@ -740,7 +916,7 @@ class ScannerPage(Adw.Bin):
             zimg = zbar.Image(w, h, 'Y800', grayscale.tobytes())
             n = self.zbar_scanner.scan(zimg)
         if not n:
-            log.info('No QR code found in texture.')
+            log.info('No QR code found in image.')
             self.scanner_state = ScannerState.NO_RESULT
             return
         GLib.idle_add(self.display_result, zimg.symbols)
@@ -762,7 +938,7 @@ class ScannerPage(Adw.Bin):
             if url.scheme and url.netloc:
                 log.info('Parsed URL: {}', url)
                 self.display_url(url)
-                self.scanner_bottom_sheet.set_open(True)
+                self.scanner_flap.set_reveal_flap(True)
                 return
         except ValueError:
             pass
@@ -770,25 +946,33 @@ class ScannerPage(Adw.Bin):
             log.info('Parsed wifi message: {}', wifi)
             self.poll_wifi_connection_status.emit(wifi)
             self.scanner_state = ScannerState.WIFI_FOUND
-            self.scanner_bottom_sheet.set_open(True)
+            self.scanner_flap.set_reveal_flap(True)
             return
         # Non-welknown QR code. Just display the raw data.
         log.info('Unknown QR code. Display raw data.')
         self.scanner_state = ScannerState.TEXT_FOUND
         self.raw_result_expander.set_expanded(True)
-        self.scanner_bottom_sheet.set_open(True)
+        self.scanner_flap.set_reveal_flap(True)
+
+    def set_result_child(self, widget: Gtk.Widget | None):
+        """Set (or clear) the child of the result bin (a GtkBox in GTK3)."""
+        for child in self.result_bin.get_children():
+            self.result_bin.remove(child)
+        if widget is not None:
+            self.result_bin.add(widget)
+            widget.show_all()
 
     def build_wifi_display(self, wifi: WifiInfoMessage):
         match build_wifi_info_display(wifi):
             case (box, btn_connect):
                 btn_connect.connect('clicked', self.on_wifi_connect_button_clicked, wifi)
-                self.result_bin.set_child(box)
+                self.set_result_child(box)
         return None
 
     def display_url(self, url: SplitResult):
         log.debug('Displaying URL: {}', url)
         box = build_url_display(url)
-        self.result_bin.set_child(box)
+        self.set_result_child(box)
         self.scanner_state = ScannerState.URL_FOUND
 
     def reset_result(self):
@@ -796,9 +980,11 @@ class ScannerPage(Adw.Bin):
         self.scanner_state = ScannerState.IDLE
         buffer = self.raw_result_display.get_buffer()
         buffer.set_text('')
-        self.result_bin.set_child(None)
+        self.set_result_child(None)
         self.pasted_image.set_visible(False)
-        self.pasted_image.set_file(None)
+        self.pasted_image.clear()
+        self.pasted_file = None
+        self.label_chosen_file.set_visible(False)
 
     def on_wifi_connect_button_clicked(self, button: Gtk.Button, wifi_info: WifiInfoMessage):
         log.info('Connect button clicked for wifi: {}', wifi_info)
@@ -806,11 +992,30 @@ class ScannerPage(Adw.Bin):
 
     def display_wifi_as_saved(self):
         """Set the current wifi connection status as saved."""
-        if not (box := self.result_bin.get_child()):
-            return
-        if first_child := cast(Gtk.Widget | None, box.get_first_child()):
-            if (btn := first_child.get_next_sibling()) and isinstance(btn, Gtk.Button):
-                btn.set_sensitive(False)
-                btn.set_label(_('Saved'))
+        # GTK3 has no Widget.get_first_child()/get_next_sibling(); walk the
+        # result subtree breadth-first to find the connect button.
+        widgets = list(self.result_bin.get_children())
+        while widgets:
+            widget = widgets.pop(0)
+            if isinstance(widget, Gtk.Button):
+                widget.set_sensitive(False)
+                widget.set_label(_('Saved'))
                 return
+            if hasattr(widget, 'get_children'):
+                widgets.extend(widget.get_children())
         log.warning('Not able to find connect button in wifi display box')
+
+
+def scale_pixbuf_to_fit(pixbuf: GdkPixbuf.Pixbuf, max_size: int) -> GdkPixbuf.Pixbuf:
+    """Scale a pixbuf down (keeping the aspect ratio) if it exceeds max_size.
+
+    GTK3 GtkImage does not scale its pixbuf to the widget allocation like
+    GTK4 GtkPicture does, so we scale explicitly for display.
+    """
+    width = pixbuf.get_width()
+    height = pixbuf.get_height()
+    longest = max(width, height)
+    if longest <= max_size:
+        return pixbuf
+    scale = max_size / longest
+    return pixbuf.scale_simple(round(width * scale), round(height * scale), GdkPixbuf.InterpType.BILINEAR)

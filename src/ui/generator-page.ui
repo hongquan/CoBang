@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <template class="GeneratorPage" parent="GtkBin">
+    <child>
+      <object class="GtkBox" id="generator_page_box">
+        <property name="visible">True</property>
+        <property name="orientation">horizontal</property>
+        <property name="spacing">12</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">12</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <child>
+          <object class="GtkBox" id="box_preview">
+            <property name="visible">True</property>
+            <property name="hexpand">False</property>
+            <child>
+              <object class="GeneratorQRPreviewPane" id="qr_preview_widget">
+                <property name="visible">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSeparator" id="page_separator">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+          </object>
+        </child>
+        <child>
+          <object class="GeneratorForm" id="form">
+            <property name="visible">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

@@ -19,10 +19,9 @@
 
 from __future__ import annotations
 
-import io
 from datetime import datetime
 from locale import gettext as _
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING
 
 import gi
 import qrcode
@@ -37,14 +36,14 @@ from .generator_form import GeneratorForm
 from .generator_qr_preview_pane import GeneratorQRPreviewPane
 
 
-gi.require_version('Gdk', '4.0')
-gi.require_version('Gtk', '4.0')
-gi.require_version('Adw', '1')
+gi.require_version('Gdk', '3.0')
+gi.require_version('Gtk', '3.0')
+gi.require_version('GdkPixbuf', '2.0')
+gi.require_version('Handy', '1')
 
 from gi.repository import (
-    Adw,
     Gdk,
-    Gio,
+    GdkPixbuf,
     GLib,
     GObject,
     Gtk,
@@ -58,15 +57,17 @@ def wifi_escape(s: str) -> str:
     return s.replace('\\', r'\\').replace(';', r'\;').replace(',', r'\,').replace('"', r'\"')
 
 
-@Gtk.Template.from_resource('/vn/hoabinh/quan/CoBang/gtk/generator-page.ui')
-class GeneratorPage(Adw.Bin):
+@Gtk.Template.from_resource('/vn/quokka/CyperusCoi/gtk/generator-page.ui')
+class GeneratorPage(Gtk.Bin):
     """The new QR code generator page."""
 
     __gtype_name__ = 'GeneratorPage'
 
     in_mobile_screen = GObject.Property(type=bool, default=False, nick='in-mobile-screen')
 
-    generator_page_multilayout: Adw.MultiLayoutView = Gtk.Template.Child()
+    generator_page_box: Gtk.Box = Gtk.Template.Child()
+    box_preview: Gtk.Box = Gtk.Template.Child()
+    page_separator: Gtk.Separator = Gtk.Template.Child()
     qr_preview_widget: GeneratorQRPreviewPane = Gtk.Template.Child()
     form: GeneratorForm = Gtk.Template.Child()
 
@@ -78,8 +79,10 @@ class GeneratorPage(Adw.Bin):
     def __init__(self, **kwargs) -> None:
         """Initialize the generator page."""
         super().__init__(**kwargs)
-        self.current_paintable: Gdk.Texture | None = None
+        self.current_pixbuf: GdkPixbuf.Pixbuf | None = None
         self.current_text: str = ''
+        # Reference to keep the native save dialog alive while it is open.
+        self._save_dialog: Gtk.FileChooserNative | None = None
         # React to form changes by regenerating the QR code.
         self.form.content_changed.connect(self.on_form_content_changed)
         # The form asks the window to fetch saved WiFi networks when the picker is opened.
@@ -90,6 +93,29 @@ class GeneratorPage(Adw.Bin):
         self.qr_preview_widget.download_clicked.connect(self.on_btn_download_clicked)
         self.qr_preview_widget.copy_clicked.connect(self.on_btn_copy_clicked)
         self.qr_preview_widget.new_clicked.connect(self.on_btn_new_clicked)
+        # The Adw.MultiLayoutView of the Blueprint UI is replaced by a single
+        # GtkBox whose orientation and child order are switched on demand.
+        self.connect('notify::in-mobile-screen', self.on_in_mobile_screen_changed)
+
+    def on_in_mobile_screen_changed(self, *args):
+        """Switch between the desktop (preview | form) and mobile (form / preview) layouts."""
+        box = self.generator_page_box
+        if self.in_mobile_screen:
+            box.set_orientation(Gtk.Orientation.VERTICAL)
+            self.page_separator.set_orientation(Gtk.Orientation.HORIZONTAL)
+            box.reorder_child(self.form, 0)
+            box.reorder_child(self.page_separator, 1)
+            box.reorder_child(self.box_preview, 2)
+            self.form.set_vexpand(True)
+            self.box_preview.set_halign(Gtk.Align.CENTER)
+        else:
+            box.set_orientation(Gtk.Orientation.HORIZONTAL)
+            self.page_separator.set_orientation(Gtk.Orientation.VERTICAL)
+            box.reorder_child(self.box_preview, 0)
+            box.reorder_child(self.page_separator, 1)
+            box.reorder_child(self.form, 2)
+            self.form.set_vexpand(False)
+            self.box_preview.set_halign(Gtk.Align.START)
 
     def on_form_content_changed(self, *args):
         """Regenerate QR code when any form field changes."""
@@ -98,10 +124,6 @@ class GeneratorPage(Adw.Bin):
     def on_form_request_saved_wifi_networks(self, _src: GeneratorForm):
         """Forward the form's request for saved WiFi networks up to the window."""
         self.request_saved_wifi_networks.emit()
-
-    @Gtk.Template.Callback()
-    def generator_page_layout_name(self, wd: Self, is_mobile: bool) -> str:
-        return 'mobile' if is_mobile else 'desktop'
 
     def build_qr_text(self) -> str:
         """Build the raw text that should be encoded into the QR code."""
@@ -152,22 +174,40 @@ class GeneratorPage(Adw.Bin):
                 fill_color=self.rgba_to_hex(self.qr_preview_widget.foreground_color),
                 back_color=self.rgba_to_hex(self.qr_preview_widget.background_color),
             )
-            buf = io.BytesIO()
-            img.save(buf)
-            texture = Gdk.Texture.new_from_bytes(GLib.Bytes.new(buf.getvalue()))
-        except GLib.Error as e:
+            pixbuf = self.pixbuf_from_qrcode_image(img)
+        except (GLib.Error, ValueError) as e:
             log.error('Failed to generate QR code image: {}', e)
             self.clear_preview()
             return
 
-        self.current_paintable = texture
-        self.qr_preview_widget.set_paintable(texture)
+        self.current_pixbuf = pixbuf
+        self.qr_preview_widget.set_pixbuf(pixbuf)
+
+    def pixbuf_from_qrcode_image(self, img) -> GdkPixbuf.Pixbuf:
+        """Convert the qrcode PIL image to a GdkPixbuf (without a PNG detour)."""
+        pil_img = img.get_image() if hasattr(img, 'get_image') else img
+        if pil_img.mode == 'RGBA':
+            has_alpha = True
+        else:
+            pil_img = pil_img.convert('RGB')
+            has_alpha = False
+        width, height = pil_img.size
+        channels = 4 if has_alpha else 3
+        return GdkPixbuf.Pixbuf.new_from_bytes(
+            GLib.Bytes.new(pil_img.tobytes()),
+            GdkPixbuf.Colorspace.RGB,
+            has_alpha,
+            8,
+            width,
+            height,
+            width * channels,
+        )
 
     def clear_preview(self):
-        """Clear the preview picture and current paintable."""
-        self.current_paintable = None
+        """Clear the preview image and current pixbuf."""
+        self.current_pixbuf = None
         self.current_text = ''
-        self.qr_preview_widget.set_paintable(None)
+        self.qr_preview_widget.set_pixbuf(None)
 
     def error_correction_for_level(self, level: str) -> int:
         """Map the form error-correction value (L/M/Q/H) to a qrcode error constant."""
@@ -188,63 +228,64 @@ class GeneratorPage(Adw.Bin):
 
     def on_btn_download_clicked(self, _src: GeneratorQRPreviewPane, _btn: Gtk.Button):
         """Save the generated QR code to a PNG file."""
-        if not isinstance(self.current_paintable, Gdk.Texture):
+        if not isinstance(self.current_pixbuf, GdkPixbuf.Pixbuf):
             log.warning('No QR code to save')
             return
-
-        filter_png = Gtk.FileFilter(mime_types=['image/png'], name=_('PNG Image'))
-        file_dialog = Gtk.FileDialog(title=_('Save QR Code'), modal=True, default_filter=filter_png)
-        now = datetime.now()
-        default_filename = f'qrcode_{now:%Y%m%d_%H%M%S}.png'
-        file = Gio.File.new_for_path(default_filename)
-        file_dialog.set_initial_file(file)
 
         if not isinstance(root := self.get_root(), Gtk.Window):
             log.warning('Generator page is not inside a window, cannot show save dialog')
             return
-        file_dialog.save(root, None, self.on_save_dialog_response, self.current_paintable)
+        filter_png = Gtk.FileFilter()
+        filter_png.set_name(_('PNG Image'))
+        filter_png.add_mime_type('image/png')
+        dlg = Gtk.FileChooserNative.new(
+            _('Save QR Code'),
+            root,
+            Gtk.FileChooserAction.SAVE,
+            _('_Save'),
+            _('_Cancel'),
+        )
+        dlg.set_filter(filter_png)
+        dlg.set_modal(True)
+        dlg.set_do_overwrite_confirmation(True)
+        now = datetime.now()
+        dlg.set_current_name(f'qrcode_{now:%Y%m%d_%H%M%S}.png')
+        dlg.connect('response', self.on_save_dialog_response)
+        self._save_dialog = dlg
+        dlg.show()
 
-    def on_save_dialog_response(self, dialog: Gtk.FileDialog, result: Gio.AsyncResult, paintable: Gdk.Texture):
-        if not (file := dialog.save_finish(result)):
+    def on_save_dialog_response(self, dialog: Gtk.FileChooserNative, response: int):
+        if response != Gtk.ResponseType.ACCEPT:
+            self._save_dialog = None
+            return
+        file = dialog.get_file()
+        self._save_dialog = None
+        if not file:
+            log.info('No file chosen.')
+            return
+        pixbuf = self.current_pixbuf
+        if not isinstance(pixbuf, GdkPixbuf.Pixbuf):
+            log.warning('No QR code to save')
+            return
+        if not (path := file.get_path()):
+            log.warning('The chosen location is not a local file')
             return
         try:
-            bytes_data = paintable.save_to_png_bytes()
-            file.replace_contents_bytes_async(
-                bytes_data,
-                etag=None,
-                make_backup=False,
-                flags=Gio.FileCreateFlags.NONE,
-                cancellable=None,
-                callback=self.on_file_write_finished,
-            )
+            pixbuf.savev(path, 'png', [], [])
         except GLib.Error as e:
             log.error('Failed to save QR code: {}', e)
         except OSError as e:
             log.error('Failed to save QR code due to file system error: {}', e)
 
-    def on_file_write_finished(self, file: Gio.File, result: Gio.AsyncResult):
-        try:
-            file.replace_contents_finish(result)
-        except GLib.Error as e:
-            log.error('Failed to write QR code to file: {}', e)
-
     def on_btn_copy_clicked(self, _src: GeneratorQRPreviewPane, button: Gtk.Button):
         """Copy the generated QR code image to the clipboard."""
-        if not isinstance(self.current_paintable, Gdk.Texture):
+        if not isinstance(self.current_pixbuf, GdkPixbuf.Pixbuf):
             log.warning('No QR code to copy')
             return
-
-        content_provider = Gdk.ContentProvider.new_for_bytes('image/png', self.current_paintable.save_to_png_bytes())
-        if not isinstance(display := Gdk.Display.get_default(), Gdk.Display):
-            log.warning('No default display available')
-            return
-        clipboard = display.get_clipboard()
-        try:
-            clipboard.set_content(content_provider)
-            button.set_tooltip_text(_('Copied!'))
-            GLib.timeout_add_seconds(3, lambda: button.set_tooltip_text(None))
-        except GLib.Error as e:
-            log.error('Failed to copy QR code to clipboard: {}', e)
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        clipboard.set_image(self.current_pixbuf)
+        button.set_tooltip_text(_('Copied!'))
+        GLib.timeout_add_seconds(3, lambda: button.set_tooltip_text(None))
 
     def on_btn_new_clicked(self, _src: GeneratorQRPreviewPane):
         """Reset the form and preview to start a new QR code."""

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <template class="GeneratorForm" parent="GtkBin">
+    <child>
+      <object class="HdyClamp">
+        <property name="visible">True</property>
+        <property name="maximum-size">600</property>
+        <property name="tightening-threshold">400</property>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="visible">True</property>
+            <property name="hscrollbar-policy">never</property>
+            <property name="vexpand">True</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="HdyPreferencesGroup" id="group_type">
+                    <property name="visible">True</property>
+                    <property name="title" translatable="yes">Type</property>
+                    <child>
+                      <object class="HdyComboRow" id="content_type_row">
+                        <property name="visible">True</property>
+                        <property name="title" translatable="yes">Type</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="HdyPreferencesGroup" id="group_text">
+                    <property name="visible">True</property>
+                    <property name="title" translatable="yes">Content</property>
+                    <child>
+                      <object class="HdyActionRow" id="text_row">
+                        <property name="visible">True</property>
+                        <property name="title" translatable="yes">Text or URL</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="HdyPreferencesGroup" id="group_wifi">
+                    <property name="visible">True</property>
+                    <property name="title" translatable="yes">WiFi</property>
+                    <child>
+                      <object class="HdyActionRow" id="choose_saved_wifi_network_row">
+                        <property name="visible">True</property>
+                        <property name="activatable">True</property>
+                        <property name="title" translatable="yes">Choose one of saved networks…</property>
+                        <signal name="activated" handler="on_choose_saved_wifi_network_clicked"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow" id="wifi_ssid_row">
+                        <property name="visible">True</property>
+                        <property name="title" translatable="yes">SSID</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow" id="wifi_hidden_row">
+                        <property name="visible">True</property>
+                        <property name="title" translatable="yes">Hidden network</property>
+                        <property name="subtitle" translatable="yes">Non-broadcasting network that hides its SSID</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyActionRow" id="wifi_password_row">
+                        <property name="visible">True</property>
+                        <property name="title" translatable="yes">Password</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HdyComboRow" id="wifi_auth_method_row">
+                        <property name="visible">True</property>
+                        <property name="title" translatable="yes">Security</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="HdyPreferencesGroup" id="group_vcard">
+                    <property name="visible">True</property>
+                    <property name="title" translatable="yes">Content</property>
+                    <child>
+                      <object class="HdyStatusPage">
+                        <property name="visible">True</property>
+                        <property name="title" translatable="yes">vCard QR is not available yet</property>
+                        <property name="description" translatable="yes">Will be available in a next release.</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
