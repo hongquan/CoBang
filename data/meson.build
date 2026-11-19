@@ -14,6 +14,7 @@ endif
 
 themedir = get_option('datadir') / 'icons/hicolor'
 install_data('vn.quokka.CyperusCoi.svg', install_dir: themedir / 'scalable/apps')
+install_data('vn.quokka.CyperusCoi-symbolic.svg', install_dir: themedir / 'scalable/apps')
 
 rsvg = find_program('rsvg-convert', required: false)
 if rsvg.found()

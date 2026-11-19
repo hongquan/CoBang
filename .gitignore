@@ -111,9 +111,6 @@ venv.bak/
 .vscode
 .helix
 .zed
-
-.aider.*
-
 # PyCharm
 .idea
 
@@ -123,5 +120,12 @@ venv.bak/
 node_modules
 
 /subprojects/blueprint-compiler
+.aider.*
+.maki
 .claude
 .agents/ui-debug/
+
+# Generated icon PNGs (rendered from SVG sources by meson)
+/data/vn.quokka.CyperusCoi.png
+/data/24x24/vn.quokka.CyperusCoi.png
+/data/48x48/vn.quokka.CyperusCoi.png
