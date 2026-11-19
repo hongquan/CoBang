@@ -53,10 +53,9 @@ from .window import CoBangWindow
 
 DEVELOPPERS = ('Nguyễn Hồng Quân <ng.hong.quan@gmail.com>',)
 ARTISTS = ('Shadd Gallegos', 'Lucide')
+DONATE_URL = 'https://ko-fi.com/hongquanvn'
 DONATE_TITLE = _('Support the developer')
-COMMENTS = _('QR code / barcode scanner.\n%(donate_link)s') % {
-    'donate_link': f"<a href='https://ko-fi.com/hongquanvn'>{DONATE_TITLE}</a>."
-}
+COMMENTS = _('QR code / barcode scanner.')
 log = Logger(__name__)
 
 
@@ -158,6 +157,9 @@ class CoBangApplication(Gtk.Application):
             website='https://github.com/hongquan/CoBang',
             comments=COMMENTS,
         )
+        # GTK3's AboutDialog has no dedicated donation field; a credit section
+        # is the standard place, and it renders <a href> entries as links.
+        about.add_credit_section(_('Donations'), [f"<a href='{DONATE_URL}'>{DONATE_TITLE}</a>"])
         # Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
         # about.set_translator_credits(_('translator-credits'))
         about.set_transient_for(win)
