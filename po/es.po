@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 23:04+0700\n"
+"POT-Creation-Date: 2026-11-20 22:17+0700\n"
 "PO-Revision-Date: 2025-04-21 23:49-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -22,73 +22,73 @@ msgstr ""
 msgid "Show result"
 msgstr "Mostrar resultado"
 
-#: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:102
-#: src/ui/scanner-page.blp:188
+#: src/ui/scanner-page.blp:79 src/ui/scanner-page.blp:103
+#: src/ui/scanner-page.blp:192
 msgid "Webcam"
 msgstr "Cámara web"
 
-#: src/ui/scanner-page.blp:104
+#: src/ui/scanner-page.blp:105
 msgid "No webcam detected."
 msgstr "No se ha detectado ninguna cámara web."
 
-#: src/ui/scanner-page.blp:139
+#: src/ui/scanner-page.blp:143
 msgid "Play"
 msgstr "Reproducir"
 
-#: src/ui/scanner-page.blp:149
+#: src/ui/scanner-page.blp:153
 msgid "Pause"
 msgstr "Pausar"
 
-#: src/ui/scanner-page.blp:168
+#: src/ui/scanner-page.blp:172
 msgid "Sandboxed, webcam hardware info is not available."
 msgstr ""
 
-#: src/ui/scanner-page.blp:221
+#: src/ui/scanner-page.blp:225
 msgid "Mirror"
 msgstr "Espejo"
 
-#: src/ui/scanner-page.blp:238
+#: src/ui/scanner-page.blp:242
 msgid "Image"
 msgstr "Imagen"
 
-#: src/ui/scanner-page.blp:283
+#: src/ui/scanner-page.blp:290
 msgid "Drag and drop an image here."
 msgstr "Arrastra y suelta una imagen aquí."
 
-#: src/ui/scanner-page.blp:295
+#: src/ui/scanner-page.blp:302
 msgid "Press Ctrl+V to paste an image."
 msgstr "Pulsa Ctrl+V para pegar una imagen."
 
-#: src/ui/scanner-page.blp:311
+#: src/ui/scanner-page.blp:318
 msgid "Click the button below to choose a file."
 msgstr "Haz clic en el botón de abajo para elegir un archivo."
 
-#: src/ui/scanner-page.blp:327
+#: src/ui/scanner-page.blp:334
 msgid "Remote images (http://…, sftp://…) also work."
 msgstr "Las imágenes remotas (http://…, sftp://…) también funcionan."
 
-#: src/ui/scanner-page.blp:369
+#: src/ui/scanner-page.blp:379
 msgid "Choose an image"
 msgstr "Seleccione una imagen"
 
-#: src/ui/scanner-page.blp:411
+#: src/ui/scanner-page.blp:421
 msgid "Please open webcam or choose an image."
 msgstr "Por favor, abre la webcam o elige una imagen."
 
-#: src/ui/scanner-page.blp:425
+#: src/ui/scanner-page.blp:435
 #, fuzzy
 msgid "Scanning…"
 msgstr "Escaneando..."
 
-#: src/ui/scanner-page.blp:439
+#: src/ui/scanner-page.blp:452
 msgid "No result found."
 msgstr "No se encontraron resultados."
 
-#: src/ui/scanner-page.blp:461
+#: src/ui/scanner-page.blp:474
 msgid "Raw result"
 msgstr "Resultado en bruto"
 
-#: src/ui/scanner-page.blp:467
+#: src/ui/scanner-page.blp:480
 msgid "Copy"
 msgstr "Copiar"
 
@@ -106,38 +106,39 @@ msgstr "Salir"
 msgid "CoBang: QR scanner"
 msgstr "CoBang: Escáner QR"
 
-#: src/ui/window.blp:44 src/ui/window.blp:80
+#: src/ui/window.blp:45 src/ui/window.blp:81
 msgid "Scanner"
 msgstr "Escáner"
 
-#: src/ui/window.blp:51 src/ui/window.blp:91
+#: src/ui/window.blp:52 src/ui/window.blp:92
 msgid "Generator"
 msgstr "Generador"
 
-#: src/ui/window.blp:62
+#: src/ui/window.blp:63
 msgid "Main Menu"
 msgstr "Menú principal"
 
-#: src/ui/window.blp:107
+#: src/ui/window.blp:108
 msgid "_Keyboard Shortcuts"
 msgstr "_Atajos de teclado"
 
-#: src/ui/window.blp:112
+#: src/ui/window.blp:113
 msgid "_About"
 msgstr "_Acerca de"
 
-#: src/app.py:56
+#: src/app.py:57
 msgid "Support the developer"
 msgstr "Apoyar al desarrollador"
 
-#: src/app.py:57
-#, python-format
-msgid ""
-"QR code / barcode scanner.\n"
-"%(donate_link)s"
-msgstr ""
-"Código QR / escáner de código de barras.\n"
-"%(donate_link)s"
+#: src/app.py:58
+msgid "QR code / barcode scanner."
+msgstr "Código QR / escáner de código de barras."
+
+#. Adw.AboutDialog has no donation field; a credit entry of the form
+#. "Title https://url" is parsed into a link row.
+#: src/app.py:157
+msgid "Donations"
+msgstr "Donaciones"
 
 #: src/consts.py:55
 msgid "Text / URL"
@@ -201,36 +202,36 @@ msgstr ""
 "\n"
 "¡Las imágenes remotas (http://..., sftp://...) también funcionan!"
 
-#: src/pages/generator.py:194
+#: src/pages/generator.py:195
 #, fuzzy
 msgid "PNG Image"
 msgstr "Imagen"
 
-#: src/pages/generator.py:195
+#: src/pages/generator.py:196
 msgid "Save QR Code"
 msgstr "Guardar código QR"
 
-#: src/pages/generator.py:243 src/pages/scanner.py:298
+#: src/pages/generator.py:244 src/pages/scanner.py:300
 msgid "Copied!"
 msgstr "¡Copiado!"
 
-#: src/pages/scanner.py:231
+#: src/pages/scanner.py:240
 msgid "Found a wifi configuration"
 msgstr "Configuración wifi encontrada"
 
-#: src/pages/scanner.py:233
+#: src/pages/scanner.py:242
 msgid "Found a URL. Click to open:"
 msgstr "URL encontrada. Haga clic para abrir:"
 
-#: src/pages/scanner.py:235
+#: src/pages/scanner.py:244
 msgid "Found unrecognized text."
 msgstr "Se ha encontrado un texto no reconocido."
 
-#: src/pages/scanner.py:236
+#: src/pages/scanner.py:245
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: src/pages/scanner.py:768
+#: src/pages/scanner.py:814
 msgid "Saved"
 msgstr "Guardado"
 
