@@ -1,3 +1,13 @@
+cobang (2.12.0-1) resolute; urgency=medium
+
+  * Adopt the new app icon, designed by Jakub Steiner (GNOME Design
+    team), released under CC0, with a symbolic variant.
+  * Generate the sized PNG icons at build time instead of committing
+    them.
+  * Update donation link and X11 guidance in the About dialog.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Fri, 27 Nov 2026 00:03:38 +0700
+
 cobang (2.11.1-1) resolute; urgency=medium
 
   * No need to build libportal in Flatpak.
