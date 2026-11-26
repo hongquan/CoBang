@@ -52,11 +52,10 @@ from .window import CoBangWindow
 
 
 DEVELOPPERS = ('Nguyễn Hồng Quân <ng.hong.quan@gmail.com>',)
-ARTISTS = ('Shadd Gallegos', 'Lucide')
+ARTISTS = ('Jakub Steiner', 'Lucide')
+DONATE_URL = 'https://ko-fi.com/hongquanvn'
 DONATE_TITLE = _('Support the developer')
-COMMENTS = _('QR code / barcode scanner.\n%(donate_link)s') % {
-    'donate_link': f"<a href='https://ko-fi.com/hongquanvn'>{DONATE_TITLE}</a>."
-}
+COMMENTS = _('QR code / barcode scanner.')
 log = Logger(__name__)
 
 
@@ -153,6 +152,9 @@ class CoBangApplication(Adw.Application):
             issue_url='https://github.com/hongquan/CoBang/issues',
             comments=COMMENTS,
         )
+        # Adw.AboutDialog has no donation field; a credit entry of the form
+        # "Title https://url" is parsed into a link row.
+        about.add_credit_section(_('Donations'), [f'{DONATE_TITLE} {DONATE_URL}'])
         # Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
         # about.set_translator_credits(_('translator-credits'))
         about.present(win)

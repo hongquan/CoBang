@@ -12,6 +12,15 @@ A native QR Code and barcode scanner application for Linux desktop.
 
 CoBang can scan barcode, QR code from webcam or static image, local or remote.
 
+.. note::
+
+   CoBang is a GTK4 application. If you are on an X11 desktop — Linux Mint in
+   particular — use `CyperusCoi`_, the GTK3 fork of CoBang, instead. GTK4's
+   GStreamer video sink (``gtk4paintablesink``) suffers from GL context stalls
+   and high CPU/GPU usage on X11, while CyperusCoi renders the webcam feed with
+   the Cairo-based ``gtksink``. It installs under its own name, so it can
+   coexist with CoBang.
+
 
 Name
 ++++
@@ -75,6 +84,15 @@ CoBang is packaged as *\*.deb* file for Ubuntu and derivatives (Linux Mint etc.)
 
 Version 1+ is only available on distros which are as new as Ubuntu v24.10.
 
+Linux Mint (X11) users: the same PPA also hosts *cyperuscoi*, the GTK3 fork which
+runs more smoothly on X11:
+
+.. code-block:: console
+
+  $ sudo apt install cyperuscoi
+
+See the `CyperusCoi`_ repository for details.
+
 
 ArchLinux
 ---------
@@ -106,6 +124,8 @@ Compatibility
 Though being targeted at Wayland, this app can still work in X11 desktop environments, like `KDE`_ (in Kubuntu), `Xfce`_ (in Xubuntu), `LxQt`_ (in Lubuntu).
 But due to a gap between GTK and Qt, the app gets some minor quirky issue when running in Qt-based DEs like KDE and LxQt.
 CoBang should not be tried in VirtualBox virtual machine, because of poor graphics stack VirtualBox provides.
+
+If CoBang behaves poorly on your X11 session (stalled webcam feed, high CPU/GPU usage), switch to `CyperusCoi`_, the GTK3 fork designed for X11.
 
 Since v1.6, CoBang has different webcam access methods, depending on whether it runs inside sandbox (Flatpak) or not. Outside sandbox, it tries to access webcam directly as V4L2 device.
 Inside sandbox, it accesses indirectly via `xdg-desktop-portal`_, and depending on how much the portal supports, CoBang may not see your webcam.
@@ -222,7 +242,7 @@ You can package as Flatpak from the source.
   $ flatpak-builder _build --force-clean vn.hoabinh.quan.CoBang.yaml
   $ flatpak-builder --run --env=WAYLAND_DISPLAY=wayland-1 _build vn.hoabinh.quan.CoBang.yaml cobang
 
-You may face some problems with ``flatpak-builder --run`` as admitted `here <flatpak-builder-issue>_`_.
+You may face some problems with ``flatpak-builder --run`` as admitted `here <flatpak-builder-issue_>`_.
 
 Alternatives
 ++++++++++++
@@ -237,7 +257,7 @@ Credit
 ++++++
 
 - Brought to you by `Nguyễn Hồng Quân <author_>`_.
-- Application logo is from Shadd Gallegos.
+- Application icon is designed by `Jakub Steiner`_ for the `GNOME app icon requests`_ project, released under `CC0 1.0`_.
 - Picture icon is modified from `Lucide`_ (available under `ISC license <lucide_license_>`_).
 - Some contributors who proposed nicer UI for this app.
 
@@ -246,6 +266,7 @@ Credit
 
 
 .. _co_bang: https://vietnamnet.vn/nghe-quanh-nam-ngoi-gay-tay-bien-co-dai-thanh-hang-hieu-2037215.html
+.. _CyperusCoi: https://tangled.org/quan.hoabinh.vn/CyperusCoi
 .. _Gtk: https://www.gtk.org/
 .. _GStreamer: https://gstreamer.freedesktop.org/
 .. _ZBar: https://github.com/mchehab/zbar
@@ -264,6 +285,9 @@ Credit
 .. _Megapixels: https://git.sr.ht/~martijnbraam/megapixels
 .. _flatpak-builder-issue: https://github.com/flatpak/flatpak-builder/issues/598
 .. _author: https://quan.hoabinh.vn
+.. _Jakub Steiner: https://gitlab.gnome.org/jimmac
+.. _GNOME app icon requests: https://gitlab.gnome.org/Teams/Design/app-icon-requests
+.. _CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
 .. _lucide: https://lucide.dev/icons/image-plus
 .. _lucide_license: https://lucide.dev/license
 .. _nu: https://www.nushell.sh/
