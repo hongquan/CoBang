@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg height="16px" viewBox="0 0 16 16" width="16px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <filter id="a" height="100%" width="100%" x="0%" y="0%">
+        <feColorMatrix color-interpolation-filters="sRGB" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/>
+    </filter>
+    <mask id="b">
+        <g filter="url(#a)">
+            <rect fill-opacity="0.5" height="19.2" width="19.2" x="-1.6" y="-1.6"/>
+        </g>
+    </mask>
+    <clipPath id="c">
+        <rect height="152" width="192"/>
+    </clipPath>
+    <mask id="d">
+        <g filter="url(#a)">
+            <rect fill-opacity="0.5" height="19.2" width="19.2" x="-1.6" y="-1.6"/>
+        </g>
+    </mask>
+    <clipPath id="e">
+        <rect height="152" width="192"/>
+    </clipPath>
+    <mask id="f">
+        <g filter="url(#a)">
+            <rect fill-opacity="0.557687" height="19.2" width="19.2" x="-1.6" y="-1.6"/>
+        </g>
+    </mask>
+    <clipPath id="g">
+        <rect height="152" width="192"/>
+    </clipPath>
+    <g fill="#241f31">
+        <path d="m 0 0 v 5 h 5 v -5 z m 2 2 h 1 v 1 h -1 z m 0 0"/>
+        <path d="m 0 9 v 5 h 5 v -5 z m 2 2 h 1 v 1 h -1 z m 0 0"/>
+        <path d="m 9 0 v 5 h 5 v -5 z m 2 2 h 1 v 1 h -1 z m 0 0"/>
+        <path d="m 10 10 h 2 v 2 h -2 z m 0 0"/>
+        <path d="m 6 2 h 2 v 2 h -2 z m 0 0"/>
+        <path d="m 10 14 h 2 v 2 h -2 z m 0 0"/>
+        <path d="m 12 10 h 2 v 2 h -2 z m 0 0"/>
+        <path d="m 8 10 h 2 v 2 h -2 z m 0 0"/>
+        <path d="m 14 14 h 2 v 2 h -2 z m 0 0"/>
+        <path d="m 8 12 h 2 v 2 h -2 z m 0 0"/>
+        <path d="m 12 12 h 2 v 2 h -2 z m 0 0"/>
+    </g>
+    <g mask="url(#b)">
+        <g clip-path="url(#c)" transform="matrix(1 0 0 1 -168 -16)">
+            <path d="m 169 22 v 0.96875 h -1 v 1.03125 h 16 v -2 h -1.023438 v 0.96875 h -0.96875 v -0.96875 h -1.023437 v 0.96875 h -0.976563 v -0.96875 h -1.007812 v 0.96875 h -1 v -0.96875 h -1.019531 v 0.96875 h -0.980469 v -0.96875 h -1.023438 v 0.96875 h -0.96875 v -0.96875 h -1.023437 v 0.96875 h -0.976563 v -0.96875 h -1.007812 v 0.96875 h -0.976562 v -0.96875 z m 0 0"/>
+        </g>
+    </g>
+    <path d="m -49.753906 39.996094 v -15 c 0 -2.207032 -1.789063 -4 -4 -4 h -15" fill="none" stroke="#1a5fb4" stroke-width="10"/>
+    <path d="m -49.753906 35.996094 v -15 c 0 -2.207032 -1.789063 -4 -4 -4 h -15" fill="none" stroke="#62a0ea" stroke-width="10"/>
+    <g mask="url(#d)">
+        <g clip-path="url(#e)" transform="matrix(1 0 0 1 -168 -16)">
+            <path d="m -13.167063 261.912874 h 116" fill="none" stroke="#f66151" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" transform="matrix(1 0 0 1 27.167063 -181.912874)"/>
+        </g>
+    </g>
+    <g mask="url(#f)">
+        <g clip-path="url(#g)" transform="matrix(1 0 0 1 -168 -16)">
+            <path d="m 80 88 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 80 92 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 84 88 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 88 88 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 88 92 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 84 96 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 80 100 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 92 96 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 96 92 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 92 100 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 88 104 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 84 108 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 80 108 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 100 96 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 88 56 h 8 v 8 h -8 z m 0 0"/>
+            <path d="m 54.832937 231.912874 v 20 h 20 v -20 z m 0 0" fill="none" stroke="#000000" stroke-linecap="square" stroke-width="4" transform="matrix(1 0 0 1 27.167063 -181.912874)"/>
+            <path d="m 48 56 h 8 v 8 h -8 z m 0 0"/>
+            <path d="m 14.832937 231.912874 v 20 h 20 v -20 z m 0 0" fill="none" stroke="#000000" stroke-linecap="square" stroke-width="4" transform="matrix(1 0 0 1 27.167063 -181.912874)"/>
+            <path d="m 48 96 h 8 v 8 h -8 z m 0 0"/>
+            <path d="m 14.832937 271.912874 v 20 h 20 v -20 z m 0 0" fill="none" stroke="#000000" stroke-linecap="square" stroke-width="4" transform="matrix(1 0 0 1 27.167063 -181.912874)"/>
+            <path d="m 68 68 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 72 64 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 68 52 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 72 48 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 72 52 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 72 56 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 68 108 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 68 100 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 72 96 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 72 92 h 4 v 4 h -4 z m 0 0"/>
+            <path d="m 68 92 h 4 v 4 h -4 z m 0 0"/>
+        </g>
+    </g>
+</svg>

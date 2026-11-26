@@ -14,12 +14,18 @@ endif
 
 themedir = get_option('datadir') / 'icons/hicolor'
 install_data('vn.hoabinh.quan.CoBang.svg', install_dir: themedir / 'scalable/apps')
+install_data(
+  'vn.hoabinh.quan.CoBang-symbolic.svg',
+  install_dir: themedir / 'symbolic/apps',
+)
+
+icon_svg = files('vn.hoabinh.quan.CoBang.svg')
 
 rsvg = find_program('rsvg-convert', required: false)
 if rsvg.found()
   custom_target(
     'cobang-icon-128',
-    input: 'vn.hoabinh.quan.CoBang.svg',
+    input: icon_svg,
     output: 'vn.hoabinh.quan.CoBang.png',
     command: [
       rsvg,
@@ -32,10 +38,10 @@ if rsvg.found()
     install: true,
     install_dir: themedir / '128x128' / 'apps',
   )
-endif
 
-subdir('48x48')
-subdir('24x24')
+  subdir('48x48')
+  subdir('24x24')
+endif
 
 appstream_file = i18n.merge_file(
   input: 'vn.hoabinh.quan.CoBang.metainfo.xml.in',

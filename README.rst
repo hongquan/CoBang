@@ -257,7 +257,7 @@ Credit
 ++++++
 
 - Brought to you by `Nguyễn Hồng Quân <author_>`_.
-- Application logo is from Shadd Gallegos.
+- Application icon is designed by `Jakub Steiner`_ for the `GNOME app icon requests`_ project, released under `CC0 1.0`_.
 - Picture icon is modified from `Lucide`_ (available under `ISC license <lucide_license_>`_).
 - Some contributors who proposed nicer UI for this app.
 
@@ -285,6 +285,9 @@ Credit
 .. _Megapixels: https://git.sr.ht/~martijnbraam/megapixels
 .. _flatpak-builder-issue: https://github.com/flatpak/flatpak-builder/issues/598
 .. _author: https://quan.hoabinh.vn
+.. _Jakub Steiner: https://gitlab.gnome.org/jimmac
+.. _GNOME app icon requests: https://gitlab.gnome.org/Teams/Design/app-icon-requests
+.. _CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
 .. _lucide: https://lucide.dev/icons/image-plus
 .. _lucide_license: https://lucide.dev/license
 .. _nu: https://www.nushell.sh/

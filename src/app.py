@@ -52,7 +52,7 @@ from .window import CoBangWindow
 
 
 DEVELOPPERS = ('Nguyễn Hồng Quân <ng.hong.quan@gmail.com>',)
-ARTISTS = ('Shadd Gallegos', 'Lucide')
+ARTISTS = ('Jakub Steiner', 'Lucide')
 DONATE_URL = 'https://ko-fi.com/hongquanvn'
 DONATE_TITLE = _('Support the developer')
 COMMENTS = _('QR code / barcode scanner.')
