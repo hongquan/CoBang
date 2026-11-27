@@ -59,6 +59,7 @@ Guidelines:
 - Use plain English in the style of existing `<release>` entries.
 - Keep bullets short (one sentence each, `<p>...</p>`).
 - Merge related commits: if several commits all refine one feature, describe the feature once.
+- **Fix commits within the same release**: if a commit fixes another commit in the same unreleased range (e.g. "Fix invisible yellow line" fixing an icon commit added since the last tag), it must NOT get its own bullet. Fold it into the bullet of the feature it fixes, or drop it if the buggy change is fully superseded. Release notes describe the diff against the *previous release*, not the commit history.
 - Mention user-visible behavior only; omit internal refactor chores unless they affect behavior.
 - If many commits exist after the last tag, focus on the most meaningful 3–6 changes.
 
