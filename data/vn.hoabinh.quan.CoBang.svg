@@ -83,6 +83,11 @@
        id="rect2" />
   </clipPath>
   <mask
+     maskUnits="userSpaceOnUse"
+     x="-12.8"
+     y="-12.8"
+     width="153.6"
+     height="153.6"
      id="d">
     <g
        filter="url(#a)"
