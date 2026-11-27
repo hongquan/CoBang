@@ -1,3 +1,11 @@
+cobang (2.13.0-1) resolute; urgency=medium
+
+  * Recolor the app icon to match the colors of lepironia articulata.
+  * Fix the invisible yellow line in the app icon when rendered in
+    browsers.
+
+ -- Nguyễn Hồng Quân <ng.hong.quan@gmail.com>  Fri, 27 Nov 2026 21:04:57 +0700
+
 cobang (2.12.0-1) resolute; urgency=medium
 
   * Adopt the new app icon, designed by Jakub Steiner (GNOME Design
