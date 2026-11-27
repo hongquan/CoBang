@@ -6,7 +6,7 @@ CoBang
 
 A native QR Code and barcode scanner application for Linux desktop.
 
-.. image:: https://github.com/hongquan/CoBang/blob/main/data/vn.hoabinh.quan.CoBang.svg
+.. image:: https://quan-images.b-cdn.net/app-icons/vn.hoabinh.quan.CoBang.svg
     :width: 400
 
 
@@ -257,7 +257,8 @@ Credit
 ++++++
 
 - Brought to you by `Nguyễn Hồng Quân <author_>`_.
-- Application icon is designed by `Jakub Steiner`_ for the `GNOME app icon requests`_ project, released under `CC0 1.0`_.
+- Application icon is based on a design by `Jakub Steiner`_ for the `GNOME app icon requests`_ project
+  (released under `CC0 1.0`_), recolored to match the color of Lepironia articulata grass.
 - Picture icon is modified from `Lucide`_ (available under `ISC license <lucide_license_>`_).
 - Some contributors who proposed nicer UI for this app.
 
