@@ -64,6 +64,12 @@
   </kudos>
 
   <releases>
+    <release version="2.13.0" date="2026-11-27" urgency="medium">
+      <description translate="no">
+        <p>Recolor the app icon to match the colors of lepironia articulata.</p>
+        <p>Fix the invisible yellow line in the app icon when rendered in browsers.</p>
+      </description>
+    </release>
     <release version="2.12.0" date="2026-11-27" urgency="medium">
       <description translate="no">
         <p>Adopt the new app icon, designed by Jakub Steiner (GNOME Design team), released under CC0, with a symbolic variant.</p>
